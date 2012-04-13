@@ -1,0 +1,90 @@
+README for AADLib examples
+==========================
+
+These examples illustrate some use of the AADLib AADL component
+libraries, adapted from exising AADL models (either v1 or v2) to
+AADLv2, and the AADLib AADL components library.
+
+For each example:
+
+ - "make help" return the list of available targets for this example,
+   from the following list:
+
+ - "make parse-aadl" : compile the example using Ocarina
+ - "make c"          : generate architecture C code derived from the AADL
+                       model, using the Ocarina/C code generator
+ - "make build_c"    : generate and compile C code
+ - "make ada"        : generate architecture Ada code
+ - "make build_ada"  : generate and compile C code
+ - "make real"       : check REAL theorems applicable to this model
+ - "make cheddar"    : check scheduling of the corresponding model
+ - "arinc653_conf"   : generate ARINC653 XML descriptor from AADLv2 model
+ - "make clean"      : remove generated files
+
+In addition, the following target is always available:
+
+ - "make check"      : run all available targets, for regression testing
+
+Here is a short description of each example
+
+* aocs: model of an Attitude Orbital Constrol System, derived from
+ design document from
+ http://control.ee.ethz.ch/~ceg/AocsFramework/index.html
+ (XXX)	
+
+* ardupilot: models the ardupilot UAV platform, adapted from the POK
+ project (see http://pok.safety-critical.eu)
+
+* arinc653_annex: models from the ARINC653 annex document for AADLv2
+
+* asl: work in progress REAL theorems in preparaton for the ASL annex
+ as part of SAE AS2/C committee work
+
+* avionices_nasa: 
+
+* behavior_annex: models from the Behavior annex language for AADLv2
+
+* data_modeling_annex: models from the Data Modeling annex document
+ for AADLv2
+
+* fcs: models a naive Flight Control Systems, adapted from a lab on
+ scheduling analysis tools developped by C. Pagetti from ONERA; and
+ adapted for AADL teaching classes by J. Hugues at ISAE.  Only the
+ architecture is developped, to be analyzed with Cheddar.
+
+* line_follower: a line follower robot for the Arduino platform, using
+ some parts available from SparkFun Electronics.
+
+* mixin: this example demonstrates how to support multiple inheritace
+ in AADLv2, using the mixin pattern defined in many object-oriented
+ languages like Ada.
+
+* memory: this examples demonstrates how to define logical and
+ hardware memory layout, and how to ensure they match. This example
+ was build in collaboration between F. Singhoff and S. Rubini (UBO)
+ and J. Hugues (ISAE)
+
+* radar: a naive model of a radar system, made in collaboration with
+ F. Singhoff from UBO, P. Disseaux from Ellidiss and Nader KHAMMASSI
+ from Virtualys and J. Hugues (ISAE). Adapted to AADLv2
+
+* rap: Ravenscar Avionics Platform, written by Olivier Gilles during
+ his PhD. This models builds upon the Generic Avionics Platform.
+ (XXX)	
+
+* ravenscar: case study issued from the ``Guide for the use of the Ada
+ Ravenscar Profile in high integrity systems'' written by Alan Burns,
+ Brian Dobbing and Tullio Vardanega; adapted to AADLv1 by Bechir
+ Zalila duing his PhD. This models has been translated to AADLv2, and
+ extended to include REAL theorems to check Ravenscar patterns.
+
+* rma: two tasks with different period on the same node, can be
+ checked by Cheddar, or can generate code for either PolyORB-HI/C or
+ Ada.
+
+* time_triggered: shows how to implement a time-triggered architecture
+ using delayed connections.
+
+* uxv: models a series of UAV and UGV from ISAE DMIA lab. Initial
+ models were build by Cedric Chedaleux, Fabrice Cotdeloup and Sladana
+ Yousri-Stojkovic while students at ISAE.

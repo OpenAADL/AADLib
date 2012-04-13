@@ -1,0 +1,279 @@
+--------------------------------------------------------------------------------
+--  EMS412 -- AADL: fcs.aadl
+--------------------------------------------------------------------------------
+--  This AADL package models the Flight Control System from this lab
+--  session, a set of periodic threads interacting with some devices.
+--------------------------------------------------------------------------------
+
+package Flight_Control_System
+public
+
+----------
+-- Data --
+----------
+
+data pos_c 
+  --  Required Position
+end pos_c;
+
+data pos_o 
+  --  Observed Position
+end pos_o;
+
+data acc_c
+  --  Required Acceleration
+end acc_c;
+
+data acc_o
+  --  Observed Acceleration
+end acc_o;
+
+data angle_c
+  --  Required Angle
+end angle_c;
+
+data angle_o
+  --  Observed angle
+end angle_o;
+
+data order end order;
+data angle end angle;
+data position end position;
+
+data acc
+  --  Acceleration
+end acc;
+
+data acc_i end acc_i;
+data pos_i end pos_i;
+
+-------------
+-- Threads --
+-------------
+
+thread NL
+  --  Navigation Law
+features
+  pos_c : in  data port pos_c;
+  pos_o : in  data port pos_o;
+  acc_c : out data port acc_c;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 120 ms;
+  Compute_Execution_Time => 0 ms .. 20 ms;
+  Deadline               => 120 ms;
+  Priority               => 2;
+end NL;
+
+thread NF
+  --  Navigation Filter
+features
+  pos_i : in  data port pos_i;
+  pos_o : out data port pos_o;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 120 ms;
+  Compute_Execution_Time => 0 ms .. 10 ms;
+  Deadline               => 120 ms;
+  Priority               => 1;
+end NF;
+
+thread PL
+  --  Piloting Law
+features
+  acc_c   : in  data port acc_c;
+  acc_o   : in  data port acc_o;
+  angle_c : out data port angle_c;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 40 ms;
+  Compute_Execution_Time => 0 ms .. 5 ms;
+  Deadline               => 40 ms;
+  Priority               => 4;
+end PL;
+
+thread PF
+  --  Piloting Filter
+features
+  acc_i : in  data port acc_i;
+  acc_o : out data port acc_o;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 40 ms;
+  Compute_Execution_Time => 0 ms .. 5 ms;
+  Deadline               => 40 ms;
+  Priority               => 3;
+end PF;
+
+thread FL
+  --  Feddback Law
+features
+  angle_c : in  data port angle_c;
+  angle_o : in  data port angle_o;
+  order   : out data port order;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 10 ms;
+  Compute_Execution_Time => 0 ms .. 2 ms;
+  Deadline               => 10 ms;
+  Priority               => 7;
+end FL;
+
+thread FF
+  --  Feedback Filter
+features
+  angle   : in  data port angle;
+  angle_o : out data port angle_o;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 10 ms;
+  Compute_Execution_Time => 0 ms .. 1 ms;
+  Deadline               => 10 ms;
+  Priority               => 6;
+end FF;
+
+thread AP
+  --  Acceleration Position Acquisition
+features
+  position : in  data port position;
+  acc      : in  data port acc;
+  acc_i    : out data port acc_i;
+  pos_i    : out data port pos_i;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 10 ms;
+  Compute_Execution_Time => 0 ms .. 1 ms;
+  Deadline               => 10 ms;
+  Priority               => 5;
+end AP;
+
+---------------
+-- Processor --
+---------------
+
+processor cpurm
+features
+  i2c   : requires bus access i2c;
+end cpurm;
+
+processor implementation cpurm.impl
+properties
+  Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+end cpurm.impl;
+
+---------------
+-- Processes --
+---------------
+
+process node_a
+features
+  pos_c    : in  data port pos_c;
+  order    : out data port order;
+  angle    : in  data port angle;
+  position : in  data port position;
+  acc      : in  data port acc;
+end node_a;
+
+process implementation node_a.impl
+subcomponents
+  FF : thread FF;
+  NL : thread NL;
+  NF : thread NF;
+  PL : thread PL;
+  PF : thread PF;
+  FL : thread FL;
+  AP : thread AP;
+connections
+  --  Inter-thread communication
+  port NL.acc_c   -> PL.acc_c;
+  port PL.angle_c -> FL.angle_c;
+  port NF.pos_o   -> NL.pos_o;
+  port PF.acc_o   -> PL.acc_o;
+  port FF.angle_o -> FL.angle_o;
+  port AP.acc_i   -> PF.acc_i;
+  port AP.pos_i   -> NF.pos_i;
+
+  -- Process/thread communication
+  port pos_c     -> NL.pos_c;
+  port FL.order -> order;
+  port angle    -> FF.angle;
+  port position -> AP.position;
+  port acc       -> AP.acc;
+end node_a.impl;
+
+-------------
+-- Devices --
+-------------
+
+device Operator
+features
+  pos_c : out data port pos_c;
+  i2c   : requires bus access i2c;
+end Operator;
+
+device GPS
+features
+  position : out data port position;
+  i2c   : requires bus access i2c;
+end GPS;
+
+device IMU
+features
+  angle : out data port angle;
+  acc   : out data port acc;
+  i2c   : requires bus access i2c;
+end IMU;
+
+device Platform
+features
+  order : in data port order;
+  i2c   : requires bus access i2c;
+end Platform;
+
+---------
+-- Bus --
+---------
+
+bus I2C 
+  --  I2C bus
+end I2C;
+
+------------
+-- System --
+------------
+
+system fcs 
+end fcs;
+
+system implementation fcs.impl
+subcomponents
+   node_a   : process   node_a.impl;
+   cpu_rm   : processor cpurm.impl;
+   operator : device    Operator;
+   GPS      : device    GPS;
+   IMU      : device    IMU;
+   platform : device    Platform;
+   i2c      : bus       i2c;
+
+connections
+  port operator.pos_c -> node_a.pos_c
+  { Actual_Connection_Binding => (reference (i2c));};
+  port node_a.order   -> platform.order
+  { Actual_Connection_Binding => (reference (i2c));};
+  port GPS.position   -> node_a.position
+  { Actual_Connection_Binding => (reference (i2c));};
+  port IMU.angle      -> node_a.angle
+  { Actual_Connection_Binding => (reference (i2c));};
+  port IMU.acc        -> node_a.acc
+  { Actual_Connection_Binding => (reference (i2c));};
+
+  bus access i2c -> GPS.i2c;
+  bus access i2c -> IMU.i2c;
+  bus access i2c -> platform.i2c;
+  bus access i2c -> cpu_rm.i2c;
+
+properties
+   Actual_Processor_Binding => (reference (cpu_rm)) applies to node_a;
+end fcs.impl;
+
+end Flight_Control_System;

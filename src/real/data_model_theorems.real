@@ -1,0 +1,211 @@
+--------------------------------------------------------------------------------
+-- This set of REAL theorems defines implicit constraints defined in
+-- the "Data Modeling" annex document of AADLv2.
+--
+-- All AADLv2 models using this property set shall be compliant with
+-- this set of rules.
+--
+-- For each property, we define the list of constraints attached
+
+--------------------------------------------------------------------------------
+--  Global theorem: this theorem gathers all sub theorem defined in this file.
+
+theorem check_data_model_annex
+  foreach s in system_set do
+         requires (check_code_Set
+	       and check_data_digits
+	       and check_data_scale
+	       and check_data_representation
+	       and check_dimension
+	       and check_element_names
+	       and check_enumerators
+	       and check_ieee754_precision
+	       and check_integer_range
+	       and check_number_representation
+	       and check_real_range
+	       and check_representation);
+                   
+   check (1 = 1);
+end check_data_model_annex;
+
+--------------------------------------------------------------------------------
+--  Code_Set property
+
+theorem check_code_set
+  foreach d in data_set do
+
+  --  1/ Check that the "Code_Set" property is applied only to data
+  --     type whose representation is a char or a string
+
+  check ((not property_exists (d, "data_model::code_set"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and (get_property_value (d, "data_model::data_representation") = 
+	                       "character"
+	          or get_property_value (d, "data_model::data_representation") = 
+	                       "string")));
+end check_code_set;
+
+--------------------------------------------------------------------------------
+--  Data_Digits property
+
+theorem check_data_digits
+  foreach d in data_set do
+
+  --  1/ Check that the "Data_Digits" property is applied only to data
+  --     type whose representation is fixed
+
+  check ((not property_exists (d, "data_model::data_digits"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and get_property_value (d, "data_model::data_representation") = 
+	               "fixed"));
+end check_data_digits;
+
+--------------------------------------------------------------------------------
+--  Data_Scale property
+
+theorem check_data_scale
+  foreach d in data_set do
+
+  --  1/ Check that the "Data_Scale" property is applied only to data
+  --     type whose representation is fixed
+
+  check ((not property_exists (d, "data_model::data_scale"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and get_property_value (d, "data_model::data_representation") = 
+	               "fixed"));
+end check_data_scale;
+
+--------------------------------------------------------------------------------
+--  Data_Representation property
+
+theorem check_data_representation
+  foreach d in data_set do
+
+  --  1/ Check that the "Data_Representation" property is applied only to data
+  --     type that are not defined using other mechanism like Type_Source_Name
+
+  check ((not property_exists (d, "data_model::data_representation"))
+   	 or (not property_exists (d, "type_source_name")));
+end check_data_representation;
+
+--------------------------------------------------------------------------------
+--  Dimension property
+
+theorem check_dimension
+  foreach d in data_set do
+
+  --  1/ Check that the "Dimension" property is applied only to data
+  --     type whose representation is array.
+
+  check ((not property_exists (d, "data_model::dimension"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and get_property_value (d, "data_model::data_representation") = 
+	                       "array"));
+end check_dimension;
+
+--------------------------------------------------------------------------------
+--  Element_Names property
+
+theorem check_element_names
+  foreach d in data_set do
+
+  --  1/ Check that the "Element_Names" property is applied only to data
+  --     type whose representation is a struct or a union.
+
+  check ((not property_exists (d, "data_model::element_names"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and (get_property_value (d, "data_model::data_representation") = 
+	                       "struct"
+	          or get_property_value (d, "data_model::data_representation") = 
+	                       "union")));
+end check_element_names;
+
+--------------------------------------------------------------------------------
+--  Enumerators property
+
+theorem check_enumerators
+  foreach d in data_set do
+
+  --  1/ Check that the "Enumerators" property is applied only to data
+  --     type whose representation is an enumerator.
+
+  check ((not property_exists (d, "data_model::enumerators"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and get_property_value (d, "data_model::data_representation") = 
+	                       "enum"));
+end check_enumerators;
+
+--------------------------------------------------------------------------------
+--  IEEE754_Precision property
+
+theorem check_ieee754_precision
+  foreach d in data_set do
+
+  --  1/ Check that the "IEEE754_Precision" property is applied only to data
+  --     type whose representation is float.
+
+  check ((not property_exists (d, "data_model::IEEE754_Precision"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and get_property_value (d, "data_model::data_representation") = 
+	                       "float"));
+end check_ieee754_precision;
+
+--------------------------------------------------------------------------------
+--  Integer_Range property
+
+theorem check_integer_range
+  foreach d in data_set do
+
+  --  1/ Check that the "Integer_Range" property is applied only to data
+  --     type whose representation is integer.
+
+  check ((not property_exists (d, "data_model::integer_range"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and get_property_value (d, "data_model::data_representation") = 
+	                       "integer"));
+end check_integer_range;
+
+--------------------------------------------------------------------------------
+--  Number_Representation property
+
+theorem check_number_representation
+  foreach d in data_set do
+
+  --  1/ Check that the "Number_Representation" property is applied only to data
+  --     type whose representation is integer.
+
+  check ((not property_exists (d, "data_model::number_representation"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and get_property_value (d, "data_model::data_representation") = 
+	                       "integer"));
+end check_number_representation;
+    
+--------------------------------------------------------------------------------
+--  Real_Range property
+
+theorem check_real_range
+  foreach d in data_set do
+
+  --  1/ Check that the "Real_Range" property is applied only to data
+  --     type whose representation is float.
+
+  check ((not property_exists (d, "data_model::real_range"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and get_property_value (d, "data_model::data_representation") = 
+	                       "float"));
+end check_real_range;
+    
+--------------------------------------------------------------------------------
+--  Representation
+
+theorem check_representation
+  foreach d in data_set do
+
+  --  1/ Check that the "Representation" property is applied only to
+  --     data type whose representation is enumerator
+
+  check ((not property_exists (d, "data_model::representation"))
+   	 or (property_exists (d, "data_model::data_representation") 
+	     and get_property_value (d, "data_model::data_representation") = 
+	                       "enum"));
+end check_representation;

@@ -1,0 +1,651 @@
+make  check-local
+make[1]: entrant dans le répertoire « /home/hugues/arduino/examples/memory »
+ocarina -aadlv2 -y -I../../src/property_set -I../../src/aadl -I.  ./prodcons.aadl
+ocarina -aadlv2 -y -I../../src/property_set -I../../src/aadl -I.  -g real_theorem \
+		-real_lib ./mem3.real \
+		-real_lib ./soft.real \
+		-real_lib ./vxworks.real \
+		-r vxworks.impl \
+		./prodcons.aadl
+check_memory 2082K_COMPONENT_IMPLEMENTATIONprodcons.aadl:17:03 execution for instance at prodcons.aadl:43:07
+requirement : check_memory_segment
+requirement : check_memory_segment_structure
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+  vxworks.impl_logical_as_system_reserved_it_vector: 182 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_reserved: 194 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_boot_line: 206 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_exception_msg: 218 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_initial_stack: 230 component instance vxworks_platform.aadl:32:03
+Content of set sub_memories (mem3.real:34:10) is 
+  vxworks.impl_logical_as_system_reserved_it_vector: 182 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_reserved: 194 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_boot_line: 206 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_exception_msg: 218 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_initial_stack: 230 component instance vxworks_platform.aadl:32:03
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+  vxworks.impl_logical_as_system_image_seg_text: 256 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_bss: 272 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_data: 284 component instance vxworks_platform.aadl:32:03
+Content of set sub_memories (mem3.real:34:10) is 
+  vxworks.impl_logical_as_system_image_seg_text: 256 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_bss: 272 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_data: 284 component instance vxworks_platform.aadl:32:03
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+Content of set sub_segments (mem3.real:26:10) is 
+Content of set sub_memories (mem3.real:34:10) is 
+theorem check_memory_segment_structure is: TRUE
+requirement : check_memory_segment_size
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 2#1#E32
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#40000#
+Content of set sub_segments (mem3.real:50:10) is 
+  vxworks.impl_logical_as_system_reserved_it_vector: 182 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_reserved: 194 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_boot_line: 206 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_exception_msg: 218 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_initial_stack: 230 component instance vxworks_platform.aadl:32:03
+Content of set sized_sub_segments (mem3.real:57:29) is 
+  vxworks.impl_logical_as_system_reserved_it_vector: 182 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_reserved: 194 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_boot_line: 206 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_exception_msg: 218 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_initial_stack: 230 component instance vxworks_platform.aadl:32:03
+     -> value for seg_size is 16#1000#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#120#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#5E0#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#100#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#100#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#700#
+Content of set sub_segments (mem3.real:50:10) is 
+  vxworks.impl_logical_as_system_image_seg_text: 256 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_bss: 272 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_data: 284 component instance vxworks_platform.aadl:32:03
+Content of set sized_sub_segments (mem3.real:57:29) is 
+  vxworks.impl_logical_as_system_image_seg_text: 256 component instance vxworks_platform.aadl:32:03
+     -> value for seg_size is 0.0
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 3000
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 0.0
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 0.0
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 0.0
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#1000#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 2#1#E32
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#400000#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#40000#
+theorem check_memory_segment_size is: TRUE
+requirement : check_contiguous_segment
+requirement : check_memory_segment_size
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 2#1#E32
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#40000#
+Content of set sub_segments (mem3.real:50:10) is 
+  vxworks.impl_logical_as_system_reserved_it_vector: 182 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_reserved: 194 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_boot_line: 206 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_exception_msg: 218 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_initial_stack: 230 component instance vxworks_platform.aadl:32:03
+Content of set sized_sub_segments (mem3.real:57:29) is 
+  vxworks.impl_logical_as_system_reserved_it_vector: 182 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_reserved: 194 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_boot_line: 206 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_exception_msg: 218 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_initial_stack: 230 component instance vxworks_platform.aadl:32:03
+     -> value for seg_size is 16#1000#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#120#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#5E0#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#100#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#100#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#700#
+Content of set sub_segments (mem3.real:50:10) is 
+  vxworks.impl_logical_as_system_image_seg_text: 256 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_bss: 272 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_data: 284 component instance vxworks_platform.aadl:32:03
+Content of set sized_sub_segments (mem3.real:57:29) is 
+  vxworks.impl_logical_as_system_image_seg_text: 256 component instance vxworks_platform.aadl:32:03
+     -> value for seg_size is 0.0
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 3000
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 0.0
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 0.0
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 0.0
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#1000#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 2#1#E32
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#400000#
+Content of set sub_segments (mem3.real:50:10) is 
+Content of set sized_sub_segments (mem3.real:57:29) is 
+     -> value for seg_size is 16#40000#
+theorem check_memory_segment_size is: TRUE
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+Content of set sub_segments (mem3.real:79:10) is 
+   Evaluating all_defined
+mem3.real:306:01    value for all_defined after evaluating check_located_segment is 0.00000E+00
+Content of set seg_start (mem3.real:88:20) is 
+   Evaluating nb_contiguous
+mem3.real:277:01    value for nb_contiguous after evaluating has_succ is 0.00000E+00
+     -> value for nb_non_contiguous is 0.0
+theorem check_contiguous_segment is: TRUE
+theorem check_memory_segment is: TRUE
+requirement : check_segment_mapping
+Content of set sub_segments (mem3.real:130:23) is 
+  vxworks.impl_logical_as_system_memory_pool: 159 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved: 172 component instance vxworks_platform.aadl:68:03
+  vxworks.impl_logical_as_system_image: 246 component instance vxworks_platform.aadl:36:03
+     -> value for end_as is 4294967296
+   Evaluating over
+     -> value for end_address is 4286840832
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+     -> value for end_address is 4096
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+     -> value for end_address is 4096.0
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+   value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+     -> value for end_address is 4286840832
+     -> value for end_address is 4096
+     -> value for end_address is 4096.0
+   value for end_sub_segments after evaluating max_end_address is 4.28684E+09
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 4286840832
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+  vxworks.impl_logical_as_system_reserved_it_vector: 182 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_reserved: 194 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_boot_line: 206 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_exception_msg: 218 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved_initial_stack: 230 component instance vxworks_platform.aadl:32:03
+     -> value for end_as is 4096
+   Evaluating over
+     -> value for end_address is 288
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+     -> value for end_address is 1792
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+     -> value for end_address is 2048
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+     -> value for end_address is 2304
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+     -> value for end_address is 4096
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+   value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+     -> value for end_address is 288
+     -> value for end_address is 1792
+     -> value for end_address is 2048
+     -> value for end_address is 2304
+     -> value for end_address is 4096
+   value for end_sub_segments after evaluating max_end_address is 4.09600E+03
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 288
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 1792
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 2048
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 2304
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 4096
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+  vxworks.impl_logical_as_system_image_seg_text: 256 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_bss: 272 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_image_seg_data: 284 component instance vxworks_platform.aadl:32:03
+     -> value for end_as is 4096.0
+   Evaluating over
+     -> value for end_address is 7096
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+     -> value for end_address is 12288.0
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+     -> value for end_address is 8192.0
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+   value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+     -> value for end_address is 7096
+     -> value for end_address is 12288.0
+     -> value for end_address is 8192.0
+   value for end_sub_segments after evaluating max_end_address is 1.22880E+04
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 7096
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 12288.0
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 8192.0
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 0.0
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 4096.0
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+  vxworks.impl_physical_as_ram: 336 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_physical_as_rom: 352 component instance vxworks_platform.aadl:32:03
+     -> value for end_as is 4294967296
+   Evaluating over
+     -> value for end_address is 4194304
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+     -> value for end_address is 4286840832
+Content of set s (mem3.real:329:12) is 
+     -> value for nb is 0.0
+   value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+     -> value for end_address is 4194304
+     -> value for end_address is 4286840832
+   value for end_sub_segments after evaluating max_end_address is 4.28684E+09
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 4194304
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+Content of set sub_segments (mem3.real:130:23) is 
+     -> value for end_as is 4286840832
+   Evaluating over
+mem3.real:321:01    value for over after evaluating overlap is 0.00000E+00
+   Evaluating end_sub_segments
+mem3.real:344:01    value for end_sub_segments after evaluating max_end_address is 0.00000E+00
+theorem check_segment_mapping is: TRUE
+requirement : check_word_align
+theorem check_word_align is: TRUE
+theorem check_memory is: TRUE
+
+check_logical_to_physical 2082K_COMPONENT_IMPLEMENTATIONprodcons.aadl:17:03 execution for instance at prodcons.aadl:52:03
+requirement : check_memory_binding
+Content of set logical_as (mem3.real:165:09) is 
+  vxworks.impl_logical_as: 149 component instance vxworks_platform.aadl:107:02
+Content of set processors (mem3.real:173:21) is 
+  vxworks.impl_processor1: 140 component instance vxworks_platform.aadl:20:03
+Content of set physical_as (mem3.real:175:09) is 
+  vxworks.impl_physical_as: 326 component instance vxworks_platform.aadl:127:02
+theorem check_memory_binding is: TRUE
+requirement : check_page_align
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+Content of set sub_segments (mem3.real:233:10) is 
+     -> value for page_size is 1
+   Evaluating ok
+mem3.real:358:01    value for ok after evaluating check_sub_segment_align is 0.00000E+00
+theorem check_page_align is: TRUE
+requirement : check_no_vm_mapping
+requirement : check_memory_binding
+Content of set logical_as (mem3.real:165:09) is 
+  vxworks.impl_logical_as: 149 component instance vxworks_platform.aadl:107:02
+Content of set processors (mem3.real:173:21) is 
+  vxworks.impl_processor1: 140 component instance vxworks_platform.aadl:20:03
+Content of set physical_as (mem3.real:175:09) is 
+  vxworks.impl_physical_as: 326 component instance vxworks_platform.aadl:127:02
+theorem check_memory_binding is: TRUE
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+Content of set logical_segments (mem3.real:195:10) is 
+   Evaluating nb
+mem3.real:373:01    value for nb after evaluating nb_bound_segment is 0.00000E+00
+theorem check_no_vm_mapping is: TRUE
+theorem check_logical_to_physical is: TRUE
+
+check_soft_binding 2082K_COMPONENT_IMPLEMENTATIONprodcons.aadl:17:03 execution for instance at prodcons.aadl:60:03
+requirement : check_text_size
+Content of set threads (soft.real:12:17) is 
+  vxworks.impl_process1_init1: 23 component instance producer_consummer_software.aadl:47:03
+  vxworks.impl_process1_producer1: 61 component instance producer_consummer_software.aadl:62:03
+  vxworks.impl_process1_consumer1: 99 component instance producer_consummer_software.aadl:77:03
+Content of set logical_as (soft.real:14:09) is 
+  vxworks.impl_logical_as: 149 component instance vxworks_platform.aadl:107:02
+Content of set sub_segments (soft.real:23:09) is 
+  vxworks.impl_logical_as_system_memory_pool: 159 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_system_reserved: 172 component instance vxworks_platform.aadl:68:03
+  vxworks.impl_logical_as_boot_code_and_data: 300 component instance vxworks_platform.aadl:32:03
+  vxworks.impl_logical_as_it_stack: 308 component instance vxworks_platform.aadl:32:03
+Content of set text_sub_segments (soft.real:36:10) is 
+Content of set text_sub_sub_segments (soft.real:44:10) is 
+soft.real:53:11 theorem check_text_size is: FALSE
+prodcons.aadl:60:03 make[1]: quittant le répertoire « /home/hugues/arduino/examples/memory »

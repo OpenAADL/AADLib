@@ -1,0 +1,494 @@
+package traxsterv3_sw
+public
+
+with types;
+
+
+
+------------------------------------------------------------------
+--------------------------    ARM7    ----------------------------
+------------------------------------------------------------------ 
+
+
+-----------------
+-- SUBPROGRAMS --
+-----------------
+ -- Build Telemetry message from measures
+ -- coming from sensor measurements.
+subprogram Telemetry_Management
+features
+  US1_meas : in parameter types::US_meas_dat;
+  US2_meas : in parameter types::US_meas_dat;
+  COMPASS_meas : in parameter types::COMPASS_meas_dat;
+  TM_frame : out parameter types::TM_frame_dat;
+end Telemetry_Management;
+subprogram implementation Telemetry_Management.impl
+properties
+  Source_Name 			    => "manage_telemetry";
+  Source_Text 			    => ("main_functions.c");
+  Source_Language 	   	    => C;
+end Telemetry_Management.impl;
+
+ -- Receive Telecommand message from ARM9
+subprogram Telecommand_Management
+features
+  ACTUATORS_cmd : out parameter types::ACTUATORS_cmd_dat;
+  TC_frame : in parameter types::TC_frame_dat;
+end Telecommand_Management;
+subprogram implementation Telecommand_Management.impl
+properties
+  Source_Name 			    => "manage_telecommand";
+  Source_Text 			    => ("main_functions.c");
+  Source_Language 	   	    => C;
+end Telecommand_Management.impl;
+
+
+ -- Perform ultrasound sensor measurement
+subprogram UltraSound_Data_Processing
+features
+  US1_meas :         out parameter types::US_meas_dat;
+  US2_meas :         out parameter types::US_meas_dat;
+end UltraSound_Data_Processing;
+subprogram implementation UltraSound_Data_Processing.impl
+calls 
+  Main: {
+  	US1_acquisition : subprogram ultrasound_sfr08::Read_Acquisition;
+  	US2_acquisition : subprogram ultrasound_sfr08::Read_Acquisition;
+  };
+connections
+  --parameter US_acquisition.device_address -> ; *** get the device address from device property
+  parameter US1_acquisition.US_meas -> US1_meas;
+  parameter US2_acquisition.US_meas -> US2_meas;
+end UltraSound_Data_Processing.impl;
+
+-- Perform Compass sensor measurement
+subprogram Compass_Data_Processing
+features
+  COMPASS_meas :         out parameter types::COMPASS_meas_dat;
+end COMPASS_Data_Processing;
+subprogram implementation COMPASS_Data_Processing.impl
+calls 
+  Main: {
+  	COMPASS_acquisition : subprogram compass_hmc6352::Read_Acquisition;
+  };
+connections
+  parameter COMPASS_acquisition.COMPASS_meas -> COMPASS_meas;
+end Compass_Data_Processing.impl;
+
+-- Perform motor control
+subprogram ACTUATORS_control
+features
+  ACTUATORS_cmd :        in parameter types::ACTUATORS_cmd_dat;
+end ACTUATORS_control;
+subprogram implementation ACTUATORS_control.impl
+calls 
+  Main: {
+  	ACTUATORS_command : subprogram variator_blctlv12::Apply_speed;
+  };
+connections
+	parameter ACTUATORS_cmd -> ACTUATORS_command.ACTUATORS_cmd;
+end ACTUATORS_control.impl;
+
+----------------------
+-- END SUBPROGRAMS ---
+----------------------
+
+-------------
+-- THREADS --
+-------------
+
+-- Telemetry Management  
+thread TM_Manager  
+features         
+  US1_meas:  in data port  types::US_meas_dat;
+  US2_meas : in data port types::US_meas_dat;
+  COMPASS_meas : in data port types::COMPASS_meas_dat;
+  TM_frame:       out data port types::TM_frame_dat;
+end TM_Manager;   
+thread implementation TM_Manager.impl
+calls 
+  call1 : {
+    TM_Spg : subprogram Telemetry_Management.impl;
+  };
+connections
+  parameter US1_meas -> TM_Spg.US1_meas;
+  parameter US2_meas -> TM_Spg.US2_meas;
+  parameter COMPASS_meas -> TM_Spg.COMPASS_meas;
+  parameter TM_Spg.TM_frame -> TM_frame;
+properties       
+  Dispatch_Protocol      	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time 	=> 100 Us .. 100 Us;
+end TM_Manager.impl;
+
+
+-- Executes Telecomand Management  
+thread TC_Manager  
+features         
+  TC_frame:       in data port types::TC_frame_dat;
+  ACTUATORS_cmd:   out data port  types::ACTUATORS_cmd_dat;
+  -- Telecommand Management
+end TC_Manager;   
+thread implementation TC_Manager.impl
+calls 
+  call1 : {
+    TC_Spg : subprogram Telecommand_Management.impl;
+  };
+connections
+  parameter TC_Spg.actuators_cmd -> actuators_cmd;
+  parameter TC_frame -> TC_Spg.TC_frame;
+properties       
+  Dispatch_Protocol      	=> Periodic;
+  Period		        	=> 10 ms;
+  Compute_Execution_Time 	=> 100 Us .. 100 Us;
+end TC_Manager.impl;
+
+--UltraSound
+thread US_Manager 
+features         
+  US1_meas :         out data port types::US_meas_dat;
+  US2_meas :         out data port types::US_meas_dat;
+end US_Manager;  
+thread implementation US_manager.impl
+calls 
+  Mycall : {
+    UDP_Spg : subprogram UltraSound_Data_Processing.impl;
+  };
+connections
+  parameter UDP_Spg.US1_meas -> US1_meas;
+  parameter UDP_Spg.US2_meas -> US2_meas;
+properties       
+  Dispatch_Protocol       	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time  	=> 1 Us .. 1 Us;
+end US_manager.impl;
+
+--COMPASS
+thread COMPASS_Manager 
+features         
+  COMPASS_meas :         out data port types::COMPASS_meas_dat;
+end COMPASS_Manager;  
+thread implementation COMPASS_manager.impl
+calls 
+  Mycall : {
+    PDP_Spg : subprogram Compass_Data_Processing.impl;
+  };
+connections
+  parameter PDP_Spg.COMPASS_meas -> COMPASS_meas;
+properties       
+  Dispatch_Protocol       	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time  	=> 1 Us .. 1 Us;
+end COMPASS_manager.impl;
+
+--Motors control
+thread ACTUATORS_Manager 
+features         
+  ACTUATORS_cmd :      in data port types::ACTUATORS_cmd_dat;
+end ACTUATORS_Manager;  
+thread implementation ACTUATORS_Manager.impl
+calls 
+  Mycall : {
+    ACD_Spg : subprogram ACTUATORS_control.impl;
+  };
+connections
+  parameter  ACTUATORS_cmd -> ACD_Spg.ACTUATORS_cmd;
+properties       
+  Dispatch_Protocol       	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time  	=> 1 Us .. 1 Us;
+end ACTUATORS_Manager.impl;
+------------------
+-- END THREADS ---
+------------------  
+ 
+
+
+---------------
+-- Processes --
+---------------
+process proc_1
+features
+  TM_frame:	out data port  types::TM_frame_dat;
+  TC_frame:	in data port  types::TC_frame_dat;
+end proc_1;
+
+process implementation proc_1.impl
+subcomponents
+  TM_manager: thread TM_Manager.impl;
+  TC_manager: thread TC_Manager.impl;
+  US_manager: thread US_Manager.impl;
+  COMPASS_manager: thread COMPASS_Manager.impl;
+  ACTUATORS_manager :  thread ACTUATORS_Manager.impl;
+connections
+  -- list all connections between threads --
+  DataCnx1 : port US_manager.US1_meas -> TM_manager.US1_meas;
+  DataCnx2 : port US_manager.US2_meas -> TM_manager.US2_meas;
+  DataCnx3 : port COMPASS_manager.COMPASS_meas -> TM_manager.COMPASS_meas;
+  DataCnx4 : port TC_manager.ACTUATORS_cmd -> ACTUATORS_Manager.ACTUATORS_cmd;
+ end proc_1.impl;
+
+ 
+ 
+
+------------------------------------------------------------------
+--------------------------    ARM9    ----------------------------
+------------------------------------------------------------------ 
+
+
+-----------------
+-- SUBPROGRAMS --
+-----------------
+subprogram Command_Law_Management
+features
+  State_estimation:  in parameter types::state_estimation_dat;
+  TC_frame:          out parameter types::TC_frame_dat;
+end Command_Law_Management;
+subprogram implementation Command_Law_Management.impl
+properties
+  Source_Name 			    => "manage_command_law";
+  Source_Text 			    => ("main_functions.c");
+  Source_Language 	   	    => C;
+end Command_Law_Management.impl;
+
+subprogram State_Estimation_management
+features
+  State_estimation : out parameter types::State_estimation_dat;
+  TM_frame:          in parameter types::TM_frame_dat;
+  INERTIAL_GPS_meas: in parameter types::INERTIAL_GPS_meas_dat;
+  TELEMETER_meas:    in parameter types::TELEMETER_meas_dat;
+  Decision:          in parameter types::Decision_dat;
+end State_Estimation_management;
+subprogram implementation State_Estimation_management.impl
+properties
+  Source_Name 			    => "manage_command_law";
+  Source_Text 			    => ("main_functions.c");
+  Source_Language 	   	    => C;
+end State_Estimation_management.impl;
+
+
+subprogram Decision_management
+features
+  Decision :            out parameter types::Decision_dat;
+  CAMERA_meas:          in parameter types::CAMERA_meas_dat;
+end Decision_management;
+subprogram implementation Decision_management.impl
+properties
+  Source_Name 			    => "manage_decision";
+  Source_Text 			    => ("main_functions.c");
+  Source_Language 	   	    => C;
+end Decision_management.impl;
+
+subprogram Camera_Data_Processing
+features
+  CAMERA_meas   :         out parameter types::CAMERA_meas_dat;
+end Camera_Data_Processing;
+subprogram implementation Camera_Data_Processing.impl
+calls 
+  Main: {
+  	Image_acquisition : subprogram camera_usb::Read_Acquisition;
+  };
+connections
+  parameter Image_acquisition.CAMERA_meas -> CAMERA_meas;
+end Camera_Data_Processing.impl;
+
+subprogram Telemeter_Data_Processing
+features
+  TELEMETER_meas   :         out parameter types::TELEMETER_meas_dat;
+end Telemeter_Data_Processing;
+subprogram implementation Telemeter_Data_Processing.impl
+calls 
+  Main: {
+  	Telemeter_acquisition : subprogram telemeter_urg04lx::Read_Acquisition;
+  };
+connections
+  parameter Telemeter_acquisition.TELEMETER_meas -> TELEMETER_meas;
+end Telemeter_Data_Processing.impl;
+
+subprogram Inertial_Gps_Data_Processing
+features
+  INERTIAL_GPS_meas   :         out parameter types::INERTIAL_GPS_meas_dat;
+end Inertial_Gps_Data_Processing;
+subprogram implementation Inertial_Gps_Data_Processing.impl
+calls 
+  Main: {
+  	Inertial_Gps_acquisition : subprogram inertial_gps_ig500n::Read_Acquisition;
+  };
+connections
+  parameter Inertial_Gps_acquisition.INERTIAL_GPS_meas -> INERTIAL_GPS_meas;
+end Inertial_Gps_Data_Processing.impl;
+
+
+
+---------------------
+-- END SUBPROGRAMS --
+---------------------
+
+-------------
+-- THREADS --
+-------------
+
+-- Command law Management  
+thread CL_Manager  
+features         
+  State_estimation : in data port types::State_estimation_dat;
+  TC_frame         : out data port types::TC_frame_dat;
+end CL_Manager;   
+thread implementation CL_Manager.impl
+calls 
+  call1 : {
+    CL_Spg : subprogram Command_Law_Management.impl;
+  };
+connections
+  parameter State_estimation -> CL_Spg.State_estimation;
+  parameter CL_Spg.TC_frame -> TC_frame;
+properties       
+  Dispatch_Protocol      	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time 	=> 100 Us .. 100 Us;
+end CL_Manager.impl;
+
+
+-- State estimation  Management  
+thread SE_Manager  
+features         
+  State_estimation : out data port types::State_estimation_dat;
+  TM_frame:          in data port types::TM_frame_dat;
+  INERTIAL_GPS_meas: in data port types::INERTIAL_GPS_meas_dat;
+  TELEMETER_meas:    in data port types::TELEMETER_meas_dat;
+  Decision:   		 in data port types::Decision_dat;
+end SE_Manager;   
+thread implementation SE_Manager.impl
+calls 
+  call1 : {
+    SE_Spg : subprogram State_Estimation_management.impl;
+  };
+connections
+  parameter SE_Spg.State_estimation -> State_estimation;
+  parameter TM_frame -> SE_Spg.TM_frame;
+  parameter INERTIAL_GPS_meas -> SE_Spg.INERTIAL_GPS_meas;
+  parameter TELEMETER_meas -> SE_Spg.TELEMETER_meas;
+  parameter Decision -> SE_Spg.Decision;
+properties       
+  Dispatch_Protocol      	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time 	=> 100 Us .. 100 Us;
+end SE_Manager.impl;
+
+-- Decision  Management  
+thread D_Manager  
+features         
+  Decision :      out data port types::Decision_dat;
+  CAMERA_meas:    in data port types::CAMERA_meas_dat;
+end D_Manager;   
+thread implementation D_Manager.impl
+calls 
+  call1 : {
+    D_Spg : subprogram Decision_management.impl;
+  };
+connections
+  parameter D_Spg.Decision -> Decision;
+  parameter CAMERA_meas -> D_Spg.CAMERA_meas;
+properties       
+  Dispatch_Protocol      	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time 	=> 100 Us .. 100 Us;
+end D_Manager.impl;
+
+
+-- Camera  Management  
+thread CAMERA_Manager 
+features         
+  CAMERA_meas:    out data port types::CAMERA_meas_dat;
+  
+end CAMERA_Manager;  
+thread implementation CAMERA_manager.impl
+calls 
+  Mycall : {
+    CAMERA_Spg : subprogram Camera_Data_Processing.impl;
+  };
+connections
+  parameter CAMERA_Spg.CAMERA_meas -> CAMERA_meas;
+properties       
+  Dispatch_Protocol       	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time  	=> 1 Us .. 1 Us;
+end CAMERA_manager.impl;
+
+-- Telemeter  Management  
+thread TELEMETER_Manager 
+features         
+  TELEMETER_meas:    out data port types::TELEMETER_meas_dat;
+  
+end TELEMETER_Manager;  
+thread implementation TELEMETER_Manager.impl
+calls 
+  Mycall : {
+    TDP_Spg : subprogram Telemeter_Data_Processing.impl;
+  };
+connections
+  parameter TDP_Spg.TELEMETER_meas -> TELEMETER_meas;
+properties       
+  Dispatch_Protocol       	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time  	=> 1 Us .. 1 Us;
+end TELEMETER_Manager.impl;
+
+
+
+-- Inertial_Gps  Management  
+thread INERTIAL_GPS_Manager 
+features         
+  INERTIAL_GPS_meas:    out data port types::INERTIAL_GPS_meas_dat;
+  
+end INERTIAL_GPS_Manager;  
+thread implementation INERTIAL_GPS_Manager.impl
+calls 
+  Mycall : {
+    IGDP_Spg : subprogram Inertial_Gps_Data_Processing.impl;
+  };
+connections
+  parameter IGDP_Spg.INERTIAL_GPS_meas -> INERTIAL_GPS_meas;
+properties       
+  Dispatch_Protocol       	=> Periodic;
+  Period			        => 10 ms;
+  Compute_Execution_Time  	=> 1 Us .. 1 Us;
+end INERTIAL_GPS_Manager.impl;
+
+-----------------
+-- END THREADS --
+----------------- 
+ 
+
+
+---------------
+-- Processes --
+---------------
+process proc_2
+features
+    TC_frame:	out data port  types::TC_frame_dat;
+    TM_frame:	in data port  types::TM_frame_dat;
+end proc_2;
+
+process implementation proc_2.impl
+subcomponents
+  CL_manager: thread CL_manager.impl;
+  SE_manager: thread SE_manager.impl;
+  D_manager: thread D_manager.impl;
+  TELEMETER_manager: thread TELEMETER_manager.impl;
+  INERTIAL_GPS_manager: thread INERTIAL_GPS_manager.impl;
+  CAMERA_manager: thread CAMERA_manager.impl;
+connections
+  -- list all connections between threads --
+   DataCnx10 : port TELEMETER_manager.TELEMETER_meas -> SE_manager.TELEMETER_meas;
+   DataCnx11 : port INERTIAL_GPS_manager.INERTIAL_GPS_meas -> SE_manager.INERTIAL_GPS_meas;
+   DataCnx12 : port CAMERA_manager.CAMERA_meas -> D_manager.CAMERA_meas;
+   DataCnx13 : port SE_manager.State_estimation -> CL_manager.State_estimation;
+   DataCnx14 : port D_manager.Decision -> SE_manager.Decision;
+end proc_2.impl;
+
+
+end traxsterv3_sw;
+-------------------
+-- End Processes --
+-------------------

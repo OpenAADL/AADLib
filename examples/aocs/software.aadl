@@ -1,0 +1,196 @@
+package software
+public
+  with dataaocs;
+
+  ---------------------------
+  -- Thread definition    --
+  ---------------------------
+  
+  thread Attitude_Control_Function
+  features
+    nominal_attitude : in data port dataaocs::attitude;
+    sensored_attitude : in data port dataaocs::GYR_data;
+    sun_direction : in data port dataaocs::FSS_data;
+    reference_torque : out data port dataaocs::RW_data;
+  end Attitude_Control_Function;
+  
+  thread Orbit_Control_Function
+  features
+    nominal_orbit : in data port dataaocs::orbit;
+    reference_force : out data port dataaocs::THU_data;
+  end Orbit_Control_Function;
+  
+  thread Telecommand_Processing
+  features
+    telecommand : in data port dataaocs::telecommand;
+    nominal_attitude : out data port dataaocs::attitude;
+    nominal_orbit : out data port dataaocs::orbit;
+    
+    -- Command to power up/down sensor/actuator --
+    power_status_FSS : out data port dataaocs::power_status; 
+    power_status_CSS : out data port dataaocs::power_status; 
+    power_status_SPS : out data port dataaocs::power_status; 
+    power_status_ES : out data port dataaocs::power_status; 
+    power_status_MGM : out data port dataaocs::power_status; 
+    power_status_GYR : out data port dataaocs::power_status; 
+    power_status_STR : out data port dataaocs::power_status;  
+    power_status_GPS : out data port dataaocs::power_status;
+    power_status_TRU : out data port dataaocs::power_status; 
+    power_status_RW : out data port dataaocs::power_status;  
+    power_status_MGT : out data port dataaocs::power_status;
+    
+    manoeuvre_command : out data port dataaocs::manoeuvre_command;
+    
+    -- Failure detection and isolation parameters --
+    attitude_window : out data port dataaocs::attitude_window;
+    check_thresholds : out data port dataaocs::check_thresholds;
+    
+    -- Ground station requests for mode switching
+    Force_mode_to_NM : out event port;
+    Force_mode_to_SM : out event port;
+    
+    -- To be continued : Command reconfigurations
+  end Telecommand_Processing;
+  
+  thread Telemetry_Processing
+  features
+    torque_command : in data port dataaocs::RW_data;
+    force_command : out data port dataaocs::THU_data;
+    sensor_data1 : in data port dataaocs::FSS_data;
+    sensor_data2 : in data port dataaocs::CSS_data;
+    sensor_data3 : in data port dataaocs::SPS_data;
+    sensor_data4 : in data port dataaocs::ES_data;
+    sensor_data5 : in data port dataaocs::MGM_data;
+    sensor_data6 : in data port dataaocs::GYR_data;
+    sensor_data7 : in data port dataaocs::STR_data;
+    sensor_data8 : in data port dataaocs::GPS_data;
+    telemetry : out data port dataaocs::telemetry;
+  end Telemetry_Processing;
+  
+  thread Failure_Detection_Isolation
+  features
+    -- Attitude Anomaly Detection -- 
+    sensored_attitude : in data port dataaocs::GYR_data;
+    sun_direction : in data port dataaocs::FSS_data;
+    attitude_window : in data port dataaocs::attitude_window;
+    
+    -- Single/Multi Sensor Check --
+    sensor_data1 : in data port dataaocs::FSS_data;
+    sensor_data2 : in data port dataaocs::CSS_data;
+    sensor_data3 : in data port dataaocs::SPS_data;
+    sensor_data4 : in data port dataaocs::ES_data;
+    sensor_data5 : in data port dataaocs::MGM_data;
+    sensor_data6 : in data port dataaocs::GYR_data;
+    sensor_data7 : in data port dataaocs::STR_data;
+    sensor_data8 : in data port dataaocs::GPS_data;
+    check_thresholds : in data port dataaocs::check_thresholds;
+    
+    -- Watchdog alarm --
+    watchdog_event : out event port;
+    anomaly_detected : in event port;
+  end Failure_Detection_Isolation;
+  
+  thread Failure_Recovery
+  features
+    reset : in data port dataaocs::reset; -- reset AOCS software
+    Changing_mode_to_SM : out event port;
+    Changing_mode_to_NM : out event port;
+    reconfiguration_command :out data port dataaocs::reconfiguration_command; -- command for reconfiguring a sensor or actuator sent to Reconfiguration thread
+  end Failure_Recovery;
+  
+  thread Reconfigurations
+  features
+    command : in data port dataaocs::reconfiguration_command;
+    -- Allow single reconfiguration or all systems reconfiguration
+    FSS_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    CSS_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    SPS_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    ES_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    MGM_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    GYR_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    STR_reconfiguration : out data port dataaocs::reconfigure_sensor;  
+    GPS_reconfiguration : out data port dataaocs::reconfigure_sensor;
+    THU_reconfiguration : out data port dataaocs::reconfigure_actuator;
+    RW_reconfiguration : out data port dataaocs::reconfigure_actuator;
+    MGT_reconfiguration : out data port dataaocs::reconfigure_actuator;
+  end Reconfigurations;
+  
+  thread Manoeuvre_Execution
+  features
+    command : in data port dataaocs::manoeuvre_command;
+    torque_command : out data port dataaocs::RW_data; -- give torque command to reaction wheel for changing satellite attitude
+    force_command : out data port dataaocs::THU_data; -- give force command to thrusters for modifying spacecraft orbit
+  end Manoeuvre_Execution;
+  
+  ------------------------------------
+  --     Thread implementation      --
+  ------------------------------------
+  
+  thread implementation Attitude_Control_Function.impl
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 0.25 ms; -- about half the period time
+    Period => 500 us;
+    Deadline => 500 us;
+    Priority => 1;
+  end Attitude_Control_Function.impl;
+  
+  thread implementation Orbit_Control_Function.impl
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 0.25 ms;
+    Period => 5 min;
+    Deadline => 5 min;
+    Priority => 1;
+  end Orbit_Control_Function.impl;
+  
+  thread implementation Telecommand_Processing.impl
+  properties
+    Dispatch_Protocol => Aperiodic; -- Aperiodic telecommand messages from ground station
+    Compute_Execution_Time => 0 ms .. 0.1 ms;
+  end Telecommand_Processing.impl;
+  
+  thread implementation Telemetry_Processing.impl
+  properties
+    Dispatch_Protocol => Periodic; -- Notify ground at periodic interval
+    Compute_Execution_Time => 0 ms .. 0.25 ms;
+    Period => 2000 ms;
+    Deadline => 2000 ms;
+    Priority => 1;
+  end Telemetry_Processing.impl;
+  
+  thread implementation Failure_Detection_Isolation.impl
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 0.05 ms;
+    Period => 60000 ms;
+    Deadline => 600000 ms;
+    Priority => 1;
+  end Failure_Detection_Isolation.impl;
+  
+  thread implementation Failure_Recovery.impl
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 0.05 ms;
+    Period => 60000 ms;
+    Deadline => 60000 ms;
+    Priority => 1;
+  end Failure_Recovery.impl;
+  
+  thread implementation Manoeuvre_Execution.impl
+  properties
+    Dispatch_Protocol => Aperiodic; -- Depends on telecommand message
+    Compute_Execution_Time => 0 ms .. 0.1 ms;
+  end Manoeuvre_Execution.impl;
+  
+end software;
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+-- The LPR530AL device is a two-axis analogue gyrometer
+
+package Devices::LPR530AL
+public
+  with Data_Sheet;
+  with Unit;
+
+  --------------
+  -- LPR530AL --
+  --------------
+
+  device LPR530AL
+  features
+    Theta_X : out data port Unit::Rotation;
+    Theta_Y : out data port Unit::Rotation;
+
+  properties
+    Data_Sheet::UUID => "XXX";
+  end LPR530AL;
+
+  device implementation LPR530AL.impl
+  end LPR530AL.impl;
+
+end Devices::LPR530AL;

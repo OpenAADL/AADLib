@@ -1,0 +1,16 @@
+property set ARINC653_Extended is
+
+  Access_Type : list of ARINC653_Extended::Supported_Access_Type_Ext 
+    applies to (memory);
+  -- Access_Type : Supported_Access_Type applies to (memory);
+
+  Memory_Kind : ARINC653_Extended::Supported_Memory_Kind_Ext 
+     applies to (memory);
+
+  Supported_Memory_Kind_Ext : type enumeration 
+     (text, stack, heap, bss, data_seg, image, memory_system_pool);
+  
+  Supported_Access_Type_Ext : type enumeration 
+     (read, write, write_once, slow_write, limited_write_cycles, execute);
+  
+end ARINC653_Extended;

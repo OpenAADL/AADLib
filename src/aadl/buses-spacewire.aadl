@@ -1,0 +1,19 @@
+package Buses::SpaceWire
+public
+  with Bus_Properties;
+
+  feature group LVDS
+  features
+    none;
+  end LVDS;
+
+  bus SpaceWire
+  properties
+    Bus_Properties::Channel_Type => Full_Duplex;
+    Bus_Properties::Bandwidth_Scale =>  2 MBytesps .. 400 MBytesps ;
+  end SpaceWire;
+
+  bus implementation SpaceWire.impl
+  end SpaceWire.impl;
+
+end Buses::SpaceWire;

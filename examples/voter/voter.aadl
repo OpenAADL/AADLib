@@ -1,0 +1,64 @@
+--  This AADL model illustrates how to define a generic voter system
+
+package Voter
+public
+
+  abstract Voting_Entity
+  features
+    Value : out data port;
+  end Voting_Entity;
+
+  abstract Voter
+  prototypes
+    Voter : abstract Voting_Entity;
+  features
+    Value : out data port;
+  end Voter;
+
+  abstract implementation Voter.Three
+  subcomponents
+    Voter_1 : abstract Voter;
+    Voter_2 : abstract Voter;
+    Voter_3 : abstract Voter;
+
+--  annex behavior_specification {**
+  -- Should define here semantics for this policy
+  -- e.g. on error from #1, activate #2
+  --**};
+  end Voter.Three;
+
+  -----------------------------------------------------------------------------
+  -- Example of use
+
+  -- #1 Staying at an abstract level
+
+  abstract Abstract_Function extends Voting_Entity
+  end Abstract_Function;
+
+  abstract Voter_Function extends Voter
+  end Voter_Function;
+
+  abstract implementation Voter_Function.i
+     extends Voter.Three (Component => abstract Abstract_Function)
+  end Voter_Function.i;
+
+  -- # 2 we use the voting system with three instances of the same
+  -- subprogram. 
+
+  -- XXX we should probably do N version programming, hence giving
+  -- three different subprograms as parameters
+
+  subprogram Concrete_Function extends Voting_Entity
+  end Concrete_Function;
+
+  thread Voter_Thread extends Voter
+  end Voter_Thread;
+
+  thread implementation Voter_Thread.i extends Voter_Function.i
+  end Voter_Thread.i;
+
+  thread implementation Voter_Thread.i2
+     extends Voter.Three (Component => subprogram Concrete_Function)
+  end Voter_Thread.i2;
+
+end Voter;

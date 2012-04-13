@@ -1,0 +1,117 @@
+package Types
+public
+  with Data_Model;
+
+  ----------
+  -- Data --
+  ----------
+  
+  data Signed_Integer
+  properties
+    Data_Model::Data_Representation => Integer;  -- 16 bits??
+    Data_Model::Number_Representation => Signed; 
+  end Signed_Integer;
+  
+  data TM_frame_dat
+  properties
+    --Data_Model::Base_Type => classifier (types::Signed_Integer);
+    Data_Model::Data_Representation => array;
+    Data_Model::Dimension => (64); -- NB_MAX_ENTIERS_TM_CICAS
+  end TM_frame_dat;
+  
+  data TC_frame_dat
+  properties
+    --Data_Model::Base_Type => classifier (types::Signed_Integer);
+    Data_Model::Data_Representation => array;
+    Data_Model::Dimension => (64); -- NB_MAX_ENTIERS_TC_CICAS
+  end TC_frame_dat;
+
+  data I2C_address
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end I2C_address;
+  
+  data TIMER_channel
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end TIMER_channel;
+  
+  data PWM_channel
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end PWM_channel;
+
+  data US_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end US_meas_dat;
+  
+  data PRESSURE_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end PRESSURE_meas_dat;
+  
+  data COMPASS_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end COMPASS_meas_dat;
+  
+  data ODOMETER_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end ODOMETER_meas_dat;
+  
+  data RECEIVER_cmd_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end RECEIVER_cmd_dat;
+  
+  data ACTUATORS_cmd_dat
+  properties
+    --Data_Model::Base_Type => classifier (types::Signed_Integer);
+    Data_Model::Data_Representation => array;
+    Data_Model::Dimension => (4); --  
+  end ACTUATORS_cmd_dat;
+
+  data INERTIAL_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end INERTIAL_meas_dat;
+  
+  data INERTIAL_GPS_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end INERTIAL_GPS_meas_dat;
+  
+  data GPS_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end GPS_meas_dat;
+  
+  data TELEMETER_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end TELEMETER_meas_dat;
+  
+  data Decision_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end Decision_dat;
+  
+  data CAMERA_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end CAMERA_meas_dat;
+  
+  data CAMERA_IP_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end CAMERA_IP_meas_dat;
+
+  data State_estimation_dat
+  properties
+    Data_Model::Data_Representation => array;
+    Data_Model::Dimension => (64);  
+  end State_estimation_dat;
+  
+end types;

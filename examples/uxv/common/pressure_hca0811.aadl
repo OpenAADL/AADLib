@@ -1,0 +1,76 @@
+package pressure_hca0811
+public
+  with types;
+  with buses;
+  with buses::I2C;
+  with Electricity_Properties;
+  
+  -----------------
+  --   DEVICE   --
+  -----------------
+  device PRESSURE   
+  features
+    Serial_Wire :    requires bus access Buses::I2C::I2C.impl;     
+    proc_evt : out event port;
+  end  PRESSURE;
+  device implementation PRESSURE.impl
+  properties
+    Implemented_As 	=> classifier (pressure_hca0811::PRESSURE_Driver.impl);
+    Initialize_Entrypoint => classifier (pressure_hca0811::Initialize);
+    Electricity_Properties::Idle_Current =>  0.1 mA; -- no  data  estimated value
+    Electricity_Properties::Run_Current =>  5 mA;
+    Electricity_Properties::Peak_Current => 100 mA; -- to measure
+    Electricity_Properties::Core_Voltage => 5.0 V;
+    Electricity_Properties::Acquisition_Time => 2 ms;
+    Electricity_Properties::Peak_Time => 1 ms;
+    Electricity_Properties::VIH_min => 2.0 V; 
+    Electricity_Properties::VIL_max => 1.0 V; 
+    Electricity_Properties::VOH_min => 3.2 V; 
+    Electricity_Properties::VOL_max => 0.4 V;  
+    Electricity_Properties::Device_Type => Slave;  
+  end PRESSURE.impl;
+  
+  -----------------------------------
+  --  PRESSURE DRIVER FOR I2C INTERFACE --
+  -----------------------------------
+  abstract PRESSURE_Driver
+end PRESSURE_Driver;
+abstract implementation PRESSURE_Driver.impl
+end PRESSURE_Driver.impl;
+
+-----------------
+-- SUBPROGRAMS --
+----------------- 
+-- These subprograms model the high-level view of the serial line
+-- protocol stack. They define an API used by the stack to send and
+-- receive data, and perform node's initialisation.
+
+subprogram Initialize
+properties
+  Source_Name => "initialize";
+  Source_Text => ("pressure_hca0811.c");
+  Source_Language => C;
+end Initialize;
+
+subprogram Read_Acquisition
+features
+  device_address       : in parameter types::I2C_address; 
+  PRESSURE_meas        : out parameter types::PRESSURE_meas_dat;
+properties
+  Source_Name => "read_acquisition";
+  Source_Text => ("pressure_hca0811.c");
+  Source_Language => C;
+end Read_Acquisition;
+
+subprogram Start_Acquisition
+features
+  device_address       : in parameter types::I2C_address; 
+properties
+  Source_Name => "start_acquisition";
+  Source_Text => ("pressure_hca0811.c");
+  Source_Language => C;
+end Start_Acquisition;
+   
+  
+end pressure_hca0811;
+ 

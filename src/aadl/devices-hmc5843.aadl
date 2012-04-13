@@ -1,0 +1,30 @@
+-- This package models a HMC5843 device, a three-axis magnetometer
+-- produced by Honeywell, and packaged by Sparkfun as a breakout-board
+-- wih all required connection pins.
+
+package Devices::HMC5843
+public
+  with Data_Sheet, Buses::I2C, Electricity_Properties;
+
+  -------------
+  -- HMC5843 --
+  -------------
+
+  device HMC5843
+  features
+    GND  : in out event port;
+    VCC  : in out event port
+    {Electricity_Properties::Input_Voltage => 3.3V;};
+    I2C_Bus : feature group Buses::I2C::I2C_Pins;
+
+    I2C_Link : requires bus access Buses::I2C::I2C.impl;
+  properties
+    Data_Sheet::UUID => 
+      "http://www.sparkfun.com/commerce/product_info.php?products_id=9371";
+    Data_Sheet::Version => "SEN-09371";
+  end HMC5843;
+
+  device implementation HMC5843.impl
+  end HMC5843.impl;
+
+end Devices::HMC5843;

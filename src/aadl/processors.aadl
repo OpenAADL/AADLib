@@ -1,0 +1,14 @@
+--  This package is the root of the library of processors
+
+package Processors
+public
+
+  -----------------
+  -- Generic_CPU --
+  -----------------
+
+  processor Generic_CPU
+    -- Empty processor definition, for refinement purposes
+  end Generic_CPU;
+
+end Processors;

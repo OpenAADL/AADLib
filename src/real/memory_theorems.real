@@ -1,0 +1,51 @@
+--------------------------------------------------------------------------------
+-- This set of REAL theorems defines implicit constraints defined when
+-- dealing with memory constraints in AADL models
+--
+-- For each property, we define the list of constraints attached
+
+--------------------------------------------------------------------------------
+--  Global theorem: this theorem gathers all sub theorem defined in this file.
+
+theorem check_memory_constraints
+foreach s in system_set do
+   requires (check_memory_requirements_partitions
+     	 and check_memory_requirements_threads
+	);
+   check (1=1);	 
+end check_memory_constraints;
+
+--------------------------------------------------------------------------------
+-- For each process, we take its associated memory component and check
+-- that this memory segment is larger than the requirements of each
+-- thread of the partition.
+
+theorem check_memory_requirements_partitions
+   foreach prs in process_set do
+      Thrs := { x in Thread_Set | is_subcomponent_of (x, prs)};
+
+      mems := { x in Memory_Set | is_bound_to (Prs, x)};
+
+      check
+         (
+            (sum (property (Thrs, "Source_Stack_Size")) 
+           + sum (property (Thrs, "Source_Data_Size")) 
+           + sum (property (Thrs, "Source_Code_Size")))
+           <= (sum (property (mems, "Word_Count")))
+         );
+end check_memory_requirements_partitions;
+
+--------------------------------------------------------------------------------
+-- For each thread, check that its Source_Code_Size property is correct
+-- regarding its called subprograms
+
+theorem check_memory_requirements_threads
+   foreach thr in thread_set do
+      spgs := {x in Subprogram_Set | Is_Called_By (x, thr)};
+
+      check ((sum (property (spgs, "Source_Code_Size")) 
+      	    < property (thr, "Source_Code_Size"))
+            and
+            (sum (property (spgs, "Source_Data_Size")) 
+	    < property (thr, "Source_Data_Size")));
+end check_memory_requirements_threads;

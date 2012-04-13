@@ -1,0 +1,28 @@
+package Unit
+public
+  with Data_Model;
+
+  ------------------
+  -- Acceleration --
+  ------------------
+
+  data Acceleration
+  --  Model of an acceleration
+  properties
+    Data_Model::Data_Representation => Float;
+    Data_Model::Measurement_Unit => "g/s^2";
+    Data_Model::Real_Range => 0.0 .. 9.0;
+  end Acceleration;
+
+  --------------------
+  -- Rotation speed --
+  --------------------
+
+  data Rotation
+  --  Model of a rotation
+  properties
+    Data_Model::Data_Representation => Float;
+    Data_Model::Measurement_Unit => "rad/s";
+  end Rotation;
+
+end Unit;

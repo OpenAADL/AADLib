@@ -1,0 +1,20 @@
+-- This package models VME bus
+
+package Buses::VME
+public
+  with Bus_Properties;
+
+  bus VME
+  properties
+    Bus_Properties::Available_Bandwidth =>
+    (40 MBytesps,  -- VMEbus32, VMEbus IEEE-1014
+     80 MBytesps,  -- VME64
+     160 MBytesps, -- VME64x
+     320 MBytesps  -- VME320
+    );
+  end VME;
+
+  bus implementation VME.i
+  end VME.i;
+
+end Buses::VME;

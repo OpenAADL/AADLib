@@ -1,0 +1,25 @@
+-- The ADXL335 device is a 3-axis analogue accelerometer
+
+package Devices::ADXL335
+public
+  with Data_Sheet;
+  with Unit;
+
+  -------------
+  -- ADXL335 --
+  -------------
+
+  device ADXL335
+  features
+    X : out data port Unit::Acceleration;
+    Y : out data port Unit::Acceleration;
+    Z : out data port Unit::Acceleration;
+
+  properties
+    Data_Sheet::UUID => "http://www.sparkfun.com/products/9265";
+  end ADXL335;
+
+  device implementation ADXL335.impl
+  end ADXL335.impl;
+
+end Devices::ADXL335;

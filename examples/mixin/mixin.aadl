@@ -1,0 +1,94 @@
+-- This package demonstrates how to support multiple inheritace in
+-- AADLv2, using the mixin pattern defined in many object-oriented
+-- languages like Ada.
+
+package Mixin
+public
+
+  -- Here, we define two interfaces
+
+  abstract Interface_1
+  features
+    Port_1 : in event port;
+  end Interface_1;
+
+  abstract implementation Interface_1.impl
+  end Interface_1.impl;
+
+  abstract Interface_2
+  features
+    Port_2 : in event port;
+  end Interface_2;
+
+  abstract implementation Interface_2.impl
+  end Interface_2.impl;
+
+  -- The mixin component type and implementation "inherits" features
+  -- from both interfaces; mixin implementation details how the
+  -- inheritance of features/properties is handled.
+  --
+  -- Note that:
+  -- a) properties are _NOT_ inherited, only features. 
+  --
+  -- b) in case of name collision for features, it is up to the user
+  -- to decide how to solve the issue: either create a separate port,
+  -- or connect one port to several subcomponents, and vice versa with
+  -- out ports.
+  --
+  -- c) we could have inherited from Interface_1, and then add ports
+  -- from Interface_2, but this would break symmetry between the two
+  -- interfaces inherited, and would also inherit properties, which is
+  -- to be avoided.
+
+  abstract Mixin
+  features
+    Port_1 : in event port;
+    Port_2 : in event port;
+  end Mixin;
+
+  abstract implementation Mixin.impl
+  subcomponents
+    Mix_1 : abstract Interface_1;
+    Mix_2 : abstract Interface_2;
+
+  connections
+    port Port_1 -> Mix_1.Port_1;
+    port Port_2 -> Mix_2.Port_2;
+  end Mixin.impl;
+
+  -- Now, let us implement elements
+
+  device Buzzer
+    --  Buzz when its event port is triggered
+  features
+    Port_1 : in event port;
+  end Buzzer;
+
+  device implementation Buzzer.impl
+  end Buzzer.impl;
+
+  device Light 
+    --  Flash light when its event port is triggered
+  features
+    Port_2 : in event port;
+  end Light;
+
+  device implementation Light.impl
+  end Light.impl;
+
+  --  And then, instantiate the Mixin
+  --
+  --  Here, we directly inherits features from the mixin, and
+  --  connections as part of the extension of the corresponding
+  --  component implemnetation.
+
+  system Demo extends Mixin
+  end Demo;
+
+  system implementation Demo.impl extends Mixin.impl
+  subcomponents
+    Mix_1 : refined to device Buzzer.impl;
+    Mix_2 : refined to device Light.impl;
+  end Demo.impl;
+
+end Mixin;

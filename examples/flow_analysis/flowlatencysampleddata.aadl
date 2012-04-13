@@ -1,0 +1,461 @@
+--  XXX Crediat authors of this model !
+
+-- This file contains a model that illustrates end-to-end latency due
+-- to sampled processing sampled processing occurs through event data
+-- port communication.
+--
+-- The event data ports are configured to be of queue size one with
+-- the latest data in the queue.
+--
+-- The example is a signal flow from a sensor through three processing
+-- steps to an actuator.
+--
+-- The first and third processing steps operate at twice the rate of
+-- the second step.
+--
+-- In the simulated execution the sensor device reads the clock time
+-- and passes it as the data value.
+--
+-- This allows the final element of the end to end flow, the actuator,
+-- to compare it against the clock time to determine the latency.
+--
+-- The result would be logged to get a simulated execution trace.
+--
+-- The steps have a compute execution time that can vary between the
+-- specified ranges.
+--
+-- The sensor device is the originator of the signal stream.
+-- The sensors operate under two scenarios:
+--
+-- 1) the sensor periodically probes the environment, i.e., executes
+-- periodically.
+--
+-- 2) the sensor reading is triggered by some physical event that
+-- occurs randomly with a maximum rate.
+--
+-- The sampling latency is affected by whether the system operates
+-- with respect to a global clock (synchronous system) or independent
+-- clock (asynchronous system). 
+--
+-- The models below are set up to execute under a synchronous and an
+-- asynchronous system.
+
+package Flowlatencysampleddata
+public
+  with Data_Model;
+  with ARINC653;
+  
+  data timedata
+  end timedata;
+
+  -- The processing steps are defined as threads inside processes. This
+  -- allows them to be distributed onto different processors or execute
+  -- on the same processor.
+  --
+  -- The threads are periodic threads that use event data port
+  -- connections to sample at dispatch time.  This controls the amount
+  -- of jitter in end-to-end latency.
+  --
+  -- In a separate model we will describe the same architecture that
+  -- samples the data stream deterministically.
+  --
+  -- Step1 executes at a rate of 20 Hz and has a deadline or maximum
+  -- latency of 45 ms.
+  
+  thread step1
+  features
+    ined: in event data port timedata { Queue_Size => 0; };
+    outed: out event data port timedata;
+  flows
+    flow1: flow path ined -> outed { latency => 45 ms .. 45 ms;};
+  properties
+    period => 50 ms;
+    deadline => 45 ms;
+    Compute_Execution_Time => 6 ms .. 10 ms;
+  end step1;
+
+  thread implementation step1.periodic
+  flows
+    flow1: flow path ined -> outed;
+  properties
+    Dispatch_Protocol => Periodic;
+  end step1.periodic;
+  
+  thread implementation step1.aperiodic
+  flows
+    flow1: flow path ined -> outed;
+  properties
+    Dispatch_Protocol => Aperiodic;
+  end step1.aperiodic;
+  
+  -- step2??
+
+  thread step2
+  features
+    ined: in event data port timedata { Queue_Size => 0; };
+    outed: out event data port timedata;
+  flows
+    flow1: flow path ined -> outed { latency => 70 ms .. 70 ms;};
+  properties
+    period => 100 ms;
+    deadline => 70 ms;
+    Compute_Execution_Time => 15 ms .. 23 ms;
+    end step2;
+    
+    thread implementation step2.periodic
+    flows
+      flow1: flow path ined -> outed;
+    properties
+      Dispatch_Protocol => Periodic;
+    end step2.periodic;
+    
+    thread implementation step2.aperiodic
+    flows
+      flow1: flow path ined -> outed;
+    properties
+      Dispatch_Protocol => Aperiodic;
+    end step2.aperiodic;
+    
+  -- step3??
+
+  thread step3
+  features
+    ined: in event data port timedata { Queue_Size => 0; };
+    outed: out event data port timedata;
+  flows
+    flow1: flow path ined -> outed { latency => 45 ms .. 45 ms;};
+  properties
+    period => 50 ms;
+    deadline => 45 ms;
+    Compute_Execution_Time => 6 ms .. 10 ms;
+  end step3;
+    
+  thread implementation step3.periodic
+  flows
+    flow1: flow path ined -> outed;
+  properties
+    Dispatch_Protocol => Periodic;
+  end step3.periodic;
+  
+  thread implementation step3.aperiodic
+  flows
+    flow1: flow path ined -> outed;
+  properties
+    Dispatch_Protocol => Aperiodic;
+  end step3.aperiodic;
+  
+  -- At the beginning of each dispatch the sensor device reads the
+  -- clock and passes it as the value of its output
+  
+  device sensor
+  features
+    outed: out event data port timedata;
+    devbus: requires bus access devicebus.basic;
+  flows
+    flow1: flow source outed { latency => 2 ms .. 2 ms;};
+  properties
+    period => 50 ms;
+    deadline => 2 ms;
+    Compute_Execution_Time => 1 ms .. 2 ms;
+  end sensor;
+  
+  -- sensor periodically senses the physical environment
+  device implementation sensor.periodic
+  flows
+    flow1: flow source outed;
+  properties
+    Device_Dispatch_Protocol => Periodic;
+  end sensor.periodic;
+  
+  -- Then sensor detects an in the physical environment occurs
+  -- randomly with a maximum rate of the period
+
+  device implementation sensor.aperiodic
+  flows
+    flow1: flow source outed;
+  properties
+    Device_Dispatch_Protocol => Aperiodic;
+  end sensor.aperiodic;
+  
+  -- The actuator will read the clock and log the difference to the
+  -- received data (sensor clock time) as its last action
+  
+  device actuator
+  features
+    ined: in event data port timedata { Queue_Size => 0; };
+    devbus: requires bus access devicebus.basic;
+  flows
+    flow1: flow sink ined { latency => 3 ms .. 3 ms;};
+  properties
+    period => 50 ms;
+    deadline => 3 ms;
+    Compute_Execution_Time => 1 ms .. 3 ms;
+  end actuator;
+  
+  -- output is sampled. This reducees the latency jitter.
+  device implementation actuator.periodic
+  flows
+    flow1: flow sink ined;
+  properties
+    Device_Dispatch_Protocol => Periodic;
+  end actuator.periodic;
+
+  -- arrival of data causes actuator to become active. 
+  -- This reduces end-to-end lantecy at the expense of increased litter.
+  device implementation actuator.aperiodic
+  flows
+    flow1: flow sink ined;
+  properties
+    Device_Dispatch_Protocol => Aperiodic;
+  end actuator.aperiodic;
+  
+  process Pstep1
+  features
+    ined: in event data port timedata;
+    outed: out event data port timedata;
+  flows
+    flow1: flow path ined -> outed;
+  end Pstep1;
+  
+  process implementation Pstep1.periodic
+  subcomponents
+    Tstep1: thread Step1.periodic;
+  connections
+    cin: port ined -> Tstep1.ined;
+    cout: port Tstep1.outed -> outed;
+  flows
+    flow1: flow path ined -> cin -> Tstep1.flow1 -> cout -> outed;
+  end Pstep1.periodic;
+  
+  process implementation Pstep1.aperiodic
+  subcomponents
+    Tstep1: thread Step1.aperiodic;
+  connections
+    cin: port ined -> Tstep1.ined;
+    cout: port Tstep1.outed -> outed;
+  flows
+    flow1: flow path ined -> cin -> Tstep1.flow1 -> cout -> outed;
+  end Pstep1.aperiodic;
+
+  process Pstep2
+  features
+    ined: in event data port timedata;
+    outed: out event data port timedata;
+  flows
+    flow1: flow path ined -> outed;
+  end Pstep2;
+  
+  process implementation Pstep2.periodic
+  subcomponents
+    Tstep2: thread Step2.periodic;
+  connections
+    cin: port ined -> Tstep2.ined;
+    cout: port Tstep2.outed -> outed;
+  flows
+    flow1: flow path ined -> cin -> Tstep2.flow1 -> cout -> outed;
+  end Pstep2.periodic;
+  
+  process implementation Pstep2.aperiodic
+  subcomponents
+    Tstep2: thread Step2.aperiodic;
+  connections
+    cin: port ined -> Tstep2.ined;
+    cout: port Tstep2.outed -> outed;
+  flows
+    flow1: flow path ined -> cin -> Tstep2.flow1 -> cout -> outed;
+  end Pstep2.aperiodic;
+
+  process Pstep3
+  features
+    ined: in event data port timedata;
+    outed: out event data port timedata;
+  flows
+    flow1: flow path ined -> outed;
+  end Pstep3;
+  
+  process implementation Pstep3.periodic
+  subcomponents
+    Tstep3: thread Step3.periodic;
+  connections
+    cin: port ined -> Tstep3.ined;
+    cout: port Tstep3.outed -> outed;
+  flows
+    flow1: flow path ined -> cin -> Tstep3.flow1 -> cout -> outed;
+  end Pstep3.periodic;
+  
+  process implementation Pstep3.aperiodic
+  subcomponents
+    Tstep3: thread Step3.aperiodic;
+  connections
+    cin: port ined -> Tstep3.ined;
+    cout: port Tstep3.outed -> outed;
+  flows
+    flow1: flow path ined -> cin -> Tstep3.flow1 -> cout -> outed;
+  end Pstep3.aperiodic;
+
+  system application
+  features
+    db: requires bus access devicebus.basic;
+  end application;
+  
+  -- This application configuration has all processing steps as well
+  -- as the sensor and actuator as periodic tasks.
+  --
+  -- The connections are delayed connections to allow for
+  -- deterministic sampling at each step.
+  --
+  -- The worst-case end-to-end latency for this sytem on a synchronous
+  -- execution platform is the sum of the periods of the three
+  -- processing steps plus the actuator period (sampling latencies)
+  -- plus the deadline of the actuator (303ms).
+  --
+  -- The worst-case end-to-end latency for this sytem on an
+  -- asynchronous execution platform is the sum of computational
+  -- latency (deadline of predecessor) rounded up to the next multiple
+  -- of the periods of the three processing steps plus the actuator
+  -- period (sampling latencies) plus the deadline of the predecessor
+  -- of the sampler (sensor, three steps) plus the deadline of the
+  -- actuator (415 ms).
+
+  system implementation application.allperiodicsampled
+  subcomponents
+    sense: device sensor.periodic;
+    actuate: device actuator.periodic;
+    compute1: process Pstep1.periodic;
+    compute2: process Pstep2.periodic;
+    compute3: process Pstep3.periodic;
+  connections
+    senseconn: port sense.outed -> compute1.ined;
+    compute12: port compute1.outed -> compute2.ined;
+    compute23: port compute2.outed -> compute3.ined;
+    actuateconn: port compute3.outed -> actuate.ined;
+    bus access db -> sense.devbus;
+    bus access db -> actuate.devbus;
+  flows
+    etelatency: end to end flow sense.flow1 -> senseconn -> compute1.flow1
+    -> compute12 -> compute2.flow1 -> compute23 -> compute3.flow1
+    -> actuateconn -> actuate.flow1 { latency => 303 ms .. 303 ms;};
+  end application.allperiodicsampled;
+
+  -- This application configuration has all processing steps as well
+  -- as the actuator as aperiodic tasks.
+  --
+  -- The sensor can be periodic or aperiodic with the same result in latency
+  --
+  -- The worst-case end-to-end latency for this system on a
+  -- synchronous or asynchronous execution platform is the sum of the
+  -- deadlines of the three processing steps plus the actuator
+  -- deadline and sensor deadline (computational latency) (165 ms).
+
+  system implementation application.alldatadriven
+  subcomponents
+    sense: device sensor.periodic;
+    actuate: device actuator.aperiodic;
+    compute1: process Pstep1.aperiodic;
+    compute2: process Pstep2.aperiodic;
+    compute3: process Pstep3.aperiodic;
+  connections
+    senseconn: port sense.outed -> compute1.ined;
+    compute12: port compute1.outed -> compute2.ined;
+    compute23: port compute2.outed -> compute3.ined;
+    actuateconn: port compute3.outed -> actuate.ined;
+    bus access db -> sense.devbus;
+    bus access db -> actuate.devbus;
+  flows
+    etelatency: end to end flow sense.flow1 -> senseconn -> compute1.flow1
+    -> compute12 -> compute2.flow1 -> compute23 -> compute3.flow1
+    -> actuateconn -> actuate.flow1 { latency => 165 ms .. 165 ms;};
+  end application.alldatadriven;
+  
+  
+  -- hardware platforms: single processor, dual processor
+  processor singleCPU
+  features
+    db: requires bus access devicebus.basic;
+    pb: requires bus access cpubus;
+  end singleCPU;
+  
+  processor implementation singleCPU.basic
+  end singleCPU.basic;
+  
+  bus cpubus end cpubus;
+  
+  bus implementation cpubus.basic end cpubus.basic;
+
+  bus devicebus end devicebus;
+
+  bus implementation devicebus.basic
+  end devicebus.basic;
+
+  system hardwareplatform
+  features
+    db: provides bus access devicebus.basic;
+  end hardwareplatform;
+  
+  system implementation hardwareplatform.single
+  subcomponents
+    cpu1: processor singleCPU.basic;
+    db1: bus devicebus.basic;
+  connections
+    bus access db1 -> cpu1.db;
+    bus access db1 -> db;
+  end hardwareplatform.single;
+  
+  system implementation hardwareplatform.dual
+  subcomponents
+    cpu1: processor singleCPU.basic;
+    cpu2: processor singleCPU.basic;
+    db1: bus devicebus.basic;
+    cpubus1: bus cpubus.basic;
+  connections
+    bus access db1 -> cpu1.db;
+    bus access db1 -> cpu2.db;
+    bus access db1 -> db;
+  end hardwareplatform.dual;
+
+  -- system configurations: hardware and application
+  
+  system topsystem end topsystem;
+
+  -- first all single processor configurations
+  
+  system implementation topsystem.allperiodicsampled
+  subcomponents
+    app: system application.allperiodicsampled;
+    hw: system hardwareplatform.single;
+  connections
+    dveconn: bus access hw.db -> app.db;
+  properties
+    Actual_Processor_Binding => (reference (hw.cpu1)) applies to app;
+  end topsystem.allperiodicsampled;
+  
+  system implementation topsystem.alldatadriven
+  subcomponents
+    app: system application.alldatadriven;
+    hw: system hardwareplatform.single;
+  connections
+    dveconn: bus access hw.db -> app.db;
+  properties
+    Actual_Processor_Binding => (reference (hw.cpu1)) applies to app;
+  end topsystem.alldatadriven;
+  
+  -- The same application sytems can be configured with a two
+  -- processor system. We are showing one configuration where the
+  -- second step is located on a second processor. In this case the
+  -- end-to-end latency is increased by any communication latency
+  -- between the two processors across the bus
+  
+  system implementation topsystem.distributedalldatadriven
+  subcomponents
+    app: system application.alldatadriven;
+    hw: system hardwareplatform.dual;
+  connections
+    dveconn: bus access hw.db -> app.db;
+  properties
+    Actual_Processor_Binding => (reference (hw.cpu1)) applies to app.compute1;
+    Actual_Processor_Binding => (reference (hw.cpu2)) applies to app.compute2;
+    Actual_Processor_Binding => (reference (hw.cpu1)) applies to app.compute3;
+
+  end topsystem.distributedalldatadriven;
+
+end Flowlatencysampleddata;

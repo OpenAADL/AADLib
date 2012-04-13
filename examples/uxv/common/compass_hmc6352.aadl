@@ -1,0 +1,78 @@
+package compass_hmc6352
+public
+
+with types;
+with buses;
+with Buses::I2C;
+with Electricity_Properties;
+
+-----------------
+--   DEVICE   --
+-----------------
+device COMPASS   
+features
+   Serial_Wire :    requires bus access Buses::I2C::I2C.impl;
+   proc_evt    : out event port;
+end COMPASS;
+
+device implementation COMPASS.impl
+properties
+  Implemented_As 	=> classifier (compass_hmc6352::COMPASS_Driver.impl);
+  Initialize_Entrypoint => classifier (compass_hmc6352::Initialize);
+  Electricity_Properties::Idle_Current => 0.001 mA; 
+  Electricity_Properties::Run_Current =>  1 mA; -- steady state current
+  Electricity_Properties::Peak_Current => 100 mA; -- to measure
+  Electricity_Properties::Core_Voltage => 3.3 V; -- typical voltage (voltage range 2.7 V - 5.2 V)
+  Electricity_Properties::VIH_min => 2.0 V; 
+  Electricity_Properties::VIL_max => 1.0 V; 
+  Electricity_Properties::VOH_min => 3.2 V; 
+  Electricity_Properties::VOL_max => 0.4 V;  
+  Electricity_Properties::Device_Type => Slave;  
+  Electricity_Properties::Acquisition_Time => 6 ms;
+  Electricity_Properties::Peak_Time => 1 ms;
+end COMPASS.impl;
+  
+-----------------------------------
+--  COMPASS DRIVER FOR I2C INTERFACE --
+-----------------------------------
+abstract COMPASS_Driver
+end COMPASS_Driver;
+abstract implementation COMPASS_Driver.impl
+end COMPASS_Driver.impl;
+
+-----------------
+-- SUBPROGRAMS --
+----------------- 
+-- These subprograms model the high-level view of the serial line
+-- protocol stack. They define an API used by the stack to send and
+-- receive data, and perform node's initialisation.
+
+subprogram Initialize
+properties
+  Source_Name => "initialize";
+  Source_Text => ("compass_hmc6352.c");
+  Source_Language => C;
+end Initialize;
+
+subprogram Read_Acquisition
+features
+  device_address      : in parameter types::I2C_address; 
+  COMPASS_meas        : out parameter types::COMPASS_meas_dat;
+properties
+  Source_Name => "read_acquisition";
+  Source_Text => ("compass_hmc6352.c");
+  Source_Language => C;
+end Read_Acquisition;
+
+subprogram Start_Acquisition
+features
+  device_address       : in parameter types::I2C_address; 
+properties
+  Source_Name => "start_acquisition";
+  Source_Text => ("compass_hmc6352.c");
+  Source_Language => C;
+end Start_Acquisition;
+   
+  
+end compass_hmc6352;
+ 

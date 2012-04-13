@@ -1,0 +1,30 @@
+--  This property set lists additional properties for processors
+--
+--  In AADLib, we assume that a processor models only the hardware
+--  processor, the operating system services (scheduler, etc) are
+--  modeled as virtual processor to separate concerns.
+
+property set Processor_Properties is
+
+  Processor_Family : enumeration
+        (ARM, AVR, SPARC, PowerPC, x86, x86_64) applies to (processor);
+
+   Frequency : type aadlinteger 0 Hz .. Max_Aadlinteger units 
+       (Hz, KHz => Hz  * 1000, MHz => KHz * 1000, GHz => MHz * 1000);
+   --  Frequency of a processor
+
+   Processor_Frequency : Processor_Properties::Frequency applies to (processor);
+
+   Endianess: enumeration (Little_Endian, Big_Endian, Bi_Endian) 
+      applies to (processor);
+   --  Endianess of the processor. Note that some processors can either
+   --  be Little- or Big- endian, the OS decides of the actual endianess.
+
+   Word_Length : Size applies to (processor);
+   --  Length of a word for this processor architecture
+
+   FPU_Present : aadlboolean applies to (processor);
+
+   MIPS : aadlinteger 0 .. Max_Aadlinteger applies to (processor);
+
+end Processor_Properties;

@@ -1,0 +1,39 @@
+-- This package defines some processors from the PPC family
+
+package Processors::PPC
+public
+  with Processor_Properties;
+
+  -----------------
+  -- Generic_PPC --
+  -----------------
+
+  processor Generic_PPC
+  properties
+    Processor_Properties::Processor_Family => PowerPC;
+    Processor_Properties::Endianess        => Little_Endian;
+    Processor_Properties::Word_Length      => 32 bits;
+
+    Thread_Limit => 32;
+  end Generic_PPC;
+
+  --------------
+  -- MPC8349E --
+  --------------
+
+  processor MPC8349E extends Generic_PPC
+  end MPC8349E;
+
+  ------------
+  -- PPC750 --
+  ------------
+
+  processor PPC750 extends Generic_PPC
+  end PPC750;
+
+  processor implementation PPC750.impl
+  properties
+    Thread_Limit => 32;
+  end PPC750.impl;
+
+end Processors::PPC;

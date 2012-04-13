@@ -1,0 +1,58 @@
+--  This package models several root systems, each of which defines a
+--  set of architecture-level properties to be verified using REAL
+
+package Systems
+public
+
+  -----------------
+  -- AADL_System --
+  -----------------
+
+  --  This system drags all advanced AADL legality rules not checked
+  --  by Ocarina.
+
+  system AADL_System
+  annex real_specification {**
+    theorem check_all
+       foreach s in local_set do
+         requires (check_aadl);
+         check (1 = 1);
+  end check_all;
+  **};
+  end AADL_System;
+
+ ---------------------
+  -- ARINC653_System --
+  ---------------------
+
+  --  This system models a ARINC653-compliant system, see
+  --  corresponding REAL theorems for more details.
+
+  -- system ARINC653_System extends AADL_System
+  -- annex real_specification {**
+  --   theorem check_arinc653
+  --      foreach s in local_set do
+  --        requires (check_arinc653_restrictions);
+  --        check (1 = 1);
+  -- end check_arinc653;
+  -- **};
+  -- end ARINC653_System;
+
+  ----------------------
+  -- Ravenscar_System --
+  ----------------------
+
+  --  This system models a Ravenscar-compliant system, see
+  --  corresponding REAL theorems for more details.
+
+  system Ravenscar_System extends AADL_System
+  annex real_specification {**
+    theorem check_ravenscar
+       foreach s in local_set do
+         requires (check_ravenscar_profile);
+         check (1 = 1);
+  end check_ravenscar;
+  **};
+  end Ravenscar_System;
+
+end Systems;

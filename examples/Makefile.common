@@ -1,0 +1,59 @@
+OCARINA = ocarina
+OCARINA_FLAGS = -aadlv2 -y -I$(top_srcdir)/src/property_set \
+	      -I$(top_srcdir)/src/aadl -I$(srcdir) $(AADL_LIB)
+
+check-local: $(AVAILABLE_TARGETS)
+
+help:
+	@echo "Available targets: " $(AVAILABLE_TARGETS)
+
+parse-aadl:
+	$(OCARINA) $(OCARINA_FLAGS) $(AADL_SOURCES)
+
+instantiate-aadl:
+	$(OCARINA) $(OCARINA_FLAGS) -i -r $(AADL_ROOT) $(AADL_SOURCES)
+
+c:
+	$(OCARINA) $(OCARINA_FLAGS) -g polyorb_hi_c -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
+build_c: 
+	$(OCARINA) -b $(OCARINA_FLAGS) -g polyorb_hi_c -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
+ada:
+	$(OCARINA) $(OCARINA_FLAGS) -g polyorb_hi_ada -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
+build_ada:
+	$(OCARINA) -b $(OCARINA_FLAGS) -g polyorb_hi_ada -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
+arinc653_conf:
+	$(OCARINA) -b $(OCARINA_FLAGS) -g arinc653_conf -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
+cheddar:
+	$(OCARINA) $(OCARINA_FLAGS) -g cheddar -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+	cheddarlite -request all -file ./*_cheddar.xml
+
+real:
+	$(OCARINA) $(OCARINA_FLAGS) -g real_theorem \
+		-real_lib $(top_srcdir)/src/real/aadl_theorems.real \
+		-real_lib $(top_srcdir)/src/real/arinc653_theorems.real \
+		-real_lib $(top_srcdir)/src/real/bare_board_theorems.real \
+		-real_lib $(top_srcdir)/src/real/data_model_theorems.real \
+		-real_lib $(top_srcdir)/src/real/flow_latency.real \
+		-real_lib $(top_srcdir)/src/real/memory_theorems.real \
+		-real_lib $(top_srcdir)/src/real/ravenscar_theorems.real \
+		-r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
+clean-local:
+	-rm -rf *~ *_cheddar.xml
+	if test ! "$(CLEANDIRS)" = "";  then \
+	   rm -rf $(CLEANDIRS); \
+	fi
+
+EXTRA_DIST= $(AADL_SOURCES) $(OTHER_FILES)

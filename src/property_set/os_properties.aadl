@@ -1,0 +1,13 @@
+--  This property set lists additional properties for virtual processors
+--
+--  In AADLib, we assume that a virtual processor models the operating
+--  system services (scheduler, etc.). The processor component type is
+--  restricted to the hardware processor.
+
+property set OS_Properties is
+
+  Hierarchical_Scheduler : inherit aadlboolean applies to (virtual processor);
+  -- If set to true, then the corresponding OS supports hierarchy,
+  -- e.g. IMA-like Operating system.
+
+end OS_Properties;

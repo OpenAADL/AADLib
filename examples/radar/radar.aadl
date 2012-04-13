@@ -1,0 +1,329 @@
+-- Radar System - (AADL Model - V 1.4)
+-- --
+-- Created on March 23, 2009 by Nader KHAMMASSI (Virtualys - http://www.virtualys.com/)
+-- This AADL model of a portion of a Radar system was created by Virtualys
+--  and incorporated 
+-- as part of Sysim project to test the robustness of the Embeded System Simulator
+--  based on 
+-- AADL model modeling language and the capacities of the syntaxic and semantic
+--  analyser provided
+-- by Sysim.
+-- --
+-- Modified on May 6, 2009 by Pierre Dissaux (Ellidiss)
+-- . adding "decorative" bus and memory components
+-- . adding ports to main process, in port to aerial device and corresponding
+--  connections
+-- . adding a transmitter thread and inter-threads connections
+-- --
+-- Modified on May 7, 2009 by Nader KHAMMASSI (Virtualys - http://www.virtualys.com/)
+-- . Adding screen as a device to display the output data commig from the thread
+--  "Display"
+-- . Adding out data port to the main process and another one to thread Display
+-- . Adding corresponding connections:
+-- 	Thread to process : Display_out->Main_out
+-- 	 Main process to device: Main_out -> Screen_in
+-- --
+-- Modified on May 13, 2009 by Jerome Hugues (Telecom ParisTech)
+-- . changed pentium processor with leon2
+-- . changed Scheduling_Protocol
+-- . added implementations of threads
+-- --
+-- Modified on May 15, 2009 by Nader KHAMMASSI (Virtualys - http://www.virtualys.com/)
+-- . Adding Motor as a device to rotate constantly antenna and return angle
+--  rotation value
+-- . Adding new thread controller and its implementation to the main process
+-- . Adding corresponding connections:
+-- 	Thread Controller to the main process : controller_in -> get_angle;
+-- 	Main process to device: get_angle -> motor_out
+-- --
+-- Modified on May 17, 2009 by Jerome Hugues (Telecom ParisTech)
+-- . Bug fixes
+-- . Minor reformatting
+-- --
+-- Modified on May 22, 2009 by Jerome Hugues (Telecom ParisTech)
+-- . Added data types and subprograms, complete code generation fornative case
+-- . Added Cheddar priority, fake values for now
+-- . Replace EVENT ports with DATA ports whenever required
+
+package radar_system
+public
+  with radar_types;
+  with deployment;
+
+SYSTEM radar
+END radar;
+
+-- System implementation is composed by physical devices (Hardware entity):
+--  antenna + processor + memory + bus
+-- and software entity : running processes and threads + operating system functionalities
+--  (scheduling)
+-- implemented in the processor that represent a part of execution platform
+--  and physical devices in the 
+-- same time.
+SYSTEM IMPLEMENTATION radar.simple
+SUBCOMPONENTS
+  aerial : DEVICE antenna;
+  rotor : DEVICE motor;
+  monitor : DEVICE screen;
+  main : PROCESS processing.others;
+  cpu : PROCESSOR leon2;
+  VME : BUS VME;
+  RAM : MEMORY RAM;
+CONNECTIONS
+  PORT aerial.antenna_out -> main.receive_pulse;
+  PORT rotor.motor_out -> main.get_angle;
+  PORT main.send_pulse -> aerial.antenna_in;
+  PORT main.to_screen -> monitor.screen_in;
+  BUS ACCESS VME -> aerial.VME;
+  BUS ACCESS VME -> rotor.VME;
+  BUS ACCESS VME -> monitor.VME;
+  BUS ACCESS VME -> cpu.VME;
+  BUS ACCESS VME -> RAM.VME;
+PROPERTIES
+  Actual_Memory_Binding => reference (ram) applies to main;
+  Actual_Processor_Binding => reference (cpu) applies to main;
+END radar.simple;
+
+-- The antenna device simulates radar environment.
+-- Direct pulse is triggered by receiving a signal from the transmitter.
+-- Internal logics evaluates echo pulse delay and triggers signal sending to
+--  the receiver.
+
+DEVICE antenna
+FEATURES
+  antenna_in : IN EVENT PORT;
+  -- The port being connected to the main process: signal processing
+  antenna_out : OUT DATA PORT radar_types::Target_Distance;
+  VME : REQUIRES BUS ACCESS VME;
+PROPERTIES
+  Compute_Execution_Time => 1 ms .. 2 ms;
+  Deadline => 1 ms;
+  Period => 1 ms;
+END antenna;
+
+DEVICE motor
+FEATURES
+  motor_out : OUT DATA PORT radar_types::Motor_Position;
+  VME : REQUIRES BUS ACCESS VME;
+PROPERTIES
+  Compute_Execution_Time => 1 ms .. 2 ms;
+  Deadline => 1 ms;
+  Period => 1 ms;
+END motor;
+
+DEVICE screen
+FEATURES
+  screen_in : IN EVENT PORT;
+  VME : REQUIRES BUS ACCESS VME;
+PROPERTIES
+  Compute_Execution_Time => 1 ms .. 2 ms;
+  Deadline => 1 ms;
+  Period => 1 ms;
+END screen;
+
+-- The main process is responsible for signals processing :
+-- General pattern: transmitter -> antenna -> receiver -> analyser -> display
+
+PROCESS processing
+FEATURES
+  to_screen : OUT EVENT PORT;
+  send_pulse : OUT EVENT PORT;
+  receive_pulse : IN DATA PORT radar_types::Target_Distance;
+  get_angle : IN DATA PORT radar_types::Motor_Position;
+END processing;
+
+PROCESS IMPLEMENTATION processing.others
+SUBCOMPONENTS
+  receive : THREAD receiver.impl;
+  analyse : THREAD analyser.impl;
+  display : THREAD display_panel.impl;
+  transmit : THREAD transmitter.impl;
+  control_angle : THREAD controller.impl;
+CONNECTIONS
+ PORT receive_pulse -> receive.receiver_in;
+ PORT display.display_out -> to_screen;
+ PORT transmit.transmitter_out -> send_pulse;
+ PORT get_angle -> control_angle.controller_in;
+ PORT receive.receiver_out -> analyse.from_receiver;
+ PORT analyse.analyser_out -> display.display_in;
+ PORT transmit.transmitter_out -> analyse.from_transmitter;
+ PORT control_angle.controller_out -> analyse.from_controller;
+END processing.others;
+
+-- This thread receives radar echos from the antenna.
+
+THREAD receiver
+FEATURES
+  receiver_out : OUT DATA PORT radar_types::Target_Distance;
+  receiver_in : IN DATA PORT radar_types::Target_Distance;
+END receiver;
+
+THREAD IMPLEMENTATION receiver.impl
+CALLS CS : {
+  RS : SUBPROGRAM Receiver_Spg;
+};
+CONNECTIONS
+  PARAMETER RS.receiver_out -> receiver_out;
+  PARAMETER receiver_in -> RS.receiver_in;
+PROPERTIES
+  Priority => 63;
+  Dispatch_Protocol => Periodic;
+  Compute_Execution_Time => 10 ms .. 20 ms;
+  Deadline => 150 ms;
+  Period => 1500 ms;
+END receiver.impl;
+
+SUBPROGRAM Receiver_Spg
+FEATURES
+  receiver_out : OUT PARAMETER radar_types::Target_Distance;
+  receiver_in : IN PARAMETER radar_types::Target_Distance;
+properties
+  Source_Language => Ada95;
+  Source_Name => "radar.receiver";
+END Receiver_Spg;
+
+-- This thread compares transmitted and received signals to perform detection,
+--  localisation and identification.
+
+THREAD analyser
+FEATURES
+  from_transmitter : IN EVENT PORT;
+  from_receiver : IN DATA PORT radar_types::Target_Distance;
+  analyser_out : OUT DATA PORT radar_types::Target_Position.Impl;
+  from_controller : IN DATA PORT radar_types::Motor_Position;
+END analyser;
+
+THREAD IMPLEMENTATION analyser.impl
+CALLS CS : {
+  AS : SUBPROGRAM Analyser_Spg;
+};
+CONNECTIONS
+  PARAMETER from_receiver -> AS.from_receiver;
+  PARAMETER AS.analyser_out -> analyser_out;
+  PARAMETER from_controller -> AS.from_controller;
+PROPERTIES
+  Priority => 62;
+  Dispatch_Protocol => Periodic;
+  Compute_Execution_Time => 40 ms .. 60 ms;
+  Deadline => 500 ms;
+  Period => 5000 ms;
+END analyser.impl;
+
+SUBPROGRAM Analyser_Spg
+FEATURES
+  from_receiver : IN PARAMETER radar_types::Target_Distance;
+  analyser_out : OUT PARAMETER radar_types::Target_Position.Impl;
+  from_controller : IN PARAMETER radar_types::Motor_Position;
+properties
+  Source_Language => Ada95;
+  Source_Name => "radar.analyser";
+END Analyser_Spg;
+
+-- This thread is responsible for formatting and displaying processed signals
+
+THREAD display_panel
+FEATURES
+  display_in : IN DATA PORT radar_types::Target_Position.Impl;
+  display_out : OUT EVENT PORT;
+END display_panel;
+
+THREAD IMPLEMENTATION display_panel.impl
+CALLS CS : {
+  DS : SUBPROGRAM Display_Spg;
+};
+CONNECTIONS
+  PARAMETER display_in -> DS.display_in;
+PROPERTIES
+  Priority => 60;
+  Dispatch_Protocol => Periodic;
+  Compute_Execution_Time => 10 ms .. 30 ms;
+  Deadline => 200 ms;
+  Period => 2000 ms;
+END display_panel.impl;
+
+SUBPROGRAM Display_Spg
+FEATURES
+  display_in : IN PARAMETER radar_types::Target_Position.Impl;
+properties
+  Source_Language => Ada95;
+  Source_Name => "radar.display_panel";
+END Display_Spg;
+
+-- This thread sends radar signals to the antenna.
+
+THREAD transmitter
+FEATURES
+  transmitter_out : OUT EVENT PORT;
+END transmitter;
+
+THREAD IMPLEMENTATION transmitter.impl
+PROPERTIES
+  Priority => 71;
+  Dispatch_Protocol => Periodic;
+  Compute_Execution_Time => 10 ms .. 10 ms;
+  Compute_Entrypoint_Source_Text => "radar.transmitter";
+  Deadline => 50 ms;
+  Period => 500 ms;
+END transmitter.impl;
+
+THREAD controller
+FEATURES
+  controller_in : IN DATA PORT radar_types::Motor_Position;
+  controller_out : OUT DATA PORT radar_types::Motor_Position;
+END controller;
+
+THREAD IMPLEMENTATION controller.impl
+CALLS CS1 : {
+  CS : SUBPROGRAM Controller_Spg;
+};
+CONNECTIONS
+  PARAMETER controller_in -> CS.controller_in;
+  PARAMETER CS.controller_out -> controller_out;
+PROPERTIES
+  Priority => 70;
+  Dispatch_Protocol => Periodic;
+  Compute_Execution_Time => 10 ms .. 10 ms;
+  Deadline => 150 ms;
+  Period => 1500 ms;
+END controller.impl;
+
+SUBPROGRAM Controller_Spg
+FEATURES
+  controller_in : IN PARAMETER radar_types::Motor_Position;
+  controller_out : OUT PARAMETER radar_types::Motor_Position;
+properties
+  Source_Language => Ada95;
+  Source_Name => "radar.controller";
+END Controller_Spg;
+
+-- The processor represent an abstraction of hardware and software (OS) that
+--  is responsible for 
+-- scheduling and executing the  threads (It may include functionalities provided
+--  by operating systems
+-- such as scheduling protocol in our case).
+
+PROCESSOR leon2
+FEATURES
+  VME : REQUIRES BUS ACCESS VME;
+PROPERTIES
+  Clock_Period => 200 ns;
+  Scheduling_Protocol => Posix_1003_Highest_Priority_First_Protocol;
+  Deployment::Execution_Platform => LEON_ORK;
+  Priority_Range => 0 .. 255;
+END leon2;
+
+-- The bus ensures communications between the antenna and the main process
+--  stored in memory
+
+BUS VME
+END VME;
+
+-- The memory hosts the address space of the main process.
+
+MEMORY RAM
+FEATURES
+  VME : REQUIRES BUS ACCESS VME;
+END RAM;
+
+
+end radar_system;

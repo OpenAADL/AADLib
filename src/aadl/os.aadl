@@ -1,0 +1,66 @@
+-- This package is the root of the library of Operating Systems.
+
+package OS 
+public
+
+  with OS_Properties;
+
+  --------------------
+  -- Root_Scheduler --
+  --------------------
+
+  virtual processor Root_Scheduler
+  annex real_specification {**
+     theorem check_model
+        foreach s in local_set do
+  	   requires (check_bare_board_system);
+  	      check (1 = 1);
+     end check_model;
+  **};
+  end Root_Scheduler;
+
+  --------------------------
+  -- Bare_Board_Scheduler --
+  --------------------------
+
+  virtual processor Bare_Board_Scheduler extends Root_Scheduler
+  properties
+    Scheduling_Protocol => (No_Scheduling_Protocol);
+    Thread_Limit        => 1;
+    OS_Properties::Hierarchical_Scheduler => false;
+  end Bare_Board_Scheduler;
+
+  ---------------------
+  -- POSIX_Scheduler --
+  ---------------------
+
+  virtual processor POSIX_Scheduler extends Root_Scheduler
+  properties
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    OS_Properties::Hierarchical_Scheduler => false;
+    Priority_Range => 0 .. 255;
+  end POSIX_Scheduler;
+
+  -------------------------
+  -- Ravenscar_Scheduler --
+  -------------------------
+
+  virtual processor Ravenscar_Scheduler extends Root_Scheduler
+  -- This OS supports Ravenscar-like scheduler
+  properties
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    OS_Properties::Hierarchical_Scheduler => false;
+  end Ravenscar_Scheduler;
+
+  ------------------------
+  -- ARINC653_Scheduler --
+  ------------------------
+
+  virtual processor ARINC653_Scheduler extends Root_Scheduler
+  -- This OS supports ARINC-like scheduler, i.e. hierarchical scheduling
+  properties
+    Scheduling_Protocol => (HIERARCHICAL_ROUND_ROBIN_PROTOCOL);
+    OS_Properties::Hierarchical_Scheduler => true;
+  end ARINC653_Scheduler;
+
+end OS;

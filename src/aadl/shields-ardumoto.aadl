@@ -1,0 +1,36 @@
+-- This package models the Ardumoto shield for the Arduino. For more
+-- details, see
+-- http://www.sparkfun.com/commerce/product_info.php?products_id=9213
+
+package Shields::Ardumoto
+public
+  with Data_Sheet;
+  with Shields;
+
+  --------------
+  -- Ardumoto --
+  --------------
+
+  device Ardumoto extends Shields::Empty_Shield
+    --  Note: a newer version exists, with different pins, see
+    --  SparkFun site for more details.
+
+  features
+    Digital_10 : in     event port;
+    Digital_11 : in     event port;
+    Digital_12 : in     event port;
+    Digital_13 : in     event port;
+
+    GND        : in out event port;
+    VIN        : in out event port;
+
+  properties
+    Data_Sheet::UUID => 
+      "http://www.sparkfun.com/commerce/product_info.php?products_id=9213";
+    Data_Sheet::Version => "DEV-09213";
+  end Ardumoto;
+
+  device implementation Ardumoto.impl
+  end Ardumoto.impl;
+
+end Shields::Ardumoto;

@@ -1,0 +1,106 @@
+--  This package models a simple producer/consummer software:
+--  One periodic thread is sending data to another periodic thread.
+--  Actual communication is performed directly in the source code
+--  using shared data
+
+package Producer_Consummer_Software
+public
+
+  -----------------
+  -- Subprograms --
+  -----------------
+  
+  subprogram Producer_Spg
+  properties
+    source_language => C;
+    source_name     => "producer";
+    source_text     => ("prodcons.c");
+  end Producer_Spg;
+  
+  subprogram Consumer_Spg
+  properties
+    source_language => C;
+    source_name     => "consumer";
+    source_text     => ("prodcons.c");
+  end Consumer_Spg;
+
+  subprogram Init_Spg
+  properties
+    source_language => C;
+    source_name     => "init";
+    source_text     => ("prodcons.c");
+  end Init_Spg;
+  
+  -------------
+  -- Threads --
+  -------------
+  
+  thread Init
+  end Init;
+  
+  thread Producer
+  end Producer;
+  
+  thread Consumer
+  end Consumer;
+  
+  thread implementation Init.impl
+  calls 
+    Mycalls: {
+    I_Spg : subprogram Init_Spg;
+    };
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 1000 ms;
+    Compute_Execution_Time => 0 ms .. 3 ms;
+    Deadline               => 1000 ms;
+    Priority               => 100;
+    Source_Stack_Size      => 5000 Bytes;
+    Source_Code_Size       => 678 Bytes;
+  end Init.impl;
+  
+  thread implementation Producer.impl
+  calls 
+    Mycalls: {
+    P_Spg : subprogram Producer_Spg;
+    };
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 1000 ms;
+    Compute_Execution_Time => 0 ms .. 3 ms;
+    Deadline               => 1000 ms;
+    Priority               => 101;
+    Source_Stack_Size	   => 5000 Bytes;
+    Source_Code_Size 	   => 678 Bytes;
+  end Producer.impl;
+  
+  thread implementation Consumer.impl
+  calls 
+    Mycalls: {
+    C_Spg : subprogram Consumer_Spg;
+    };
+  properties
+    Dispatch_Protocol      => periodic;
+    Period                 => 1000 ms;
+    Compute_Execution_Time => 0 ms .. 3 ms;
+    Deadline               => 1000 ms;
+    Priority               => 101;
+    Source_Stack_Size      => 5000 Bytes;
+    Source_Code_Size       => 678 Bytes;
+  end Consumer.impl;
+
+  ---------------
+  -- Processes --
+  ---------------
+  
+  process prodcons_soft
+  end prodcons_soft;
+  
+  process implementation prodcons_soft.impl
+  subcomponents
+    Init1     : thread Init.impl;
+    Producer1 : thread Producer.impl;
+    Consumer1 : thread Consumer.impl;
+  end prodcons_soft.impl;
+
+end Producer_Consummer_Software;

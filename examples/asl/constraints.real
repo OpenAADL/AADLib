@@ -1,0 +1,257 @@
+--------------------------------------------------------------------------------
+-- This set of REAL theorems checks for the constraints defined in the document
+-- "AADL Subsets for Schedulability Analysis with Feasability Tests" by UBO.
+
+--==============================================================================
+-- 4.1 Restrictions on the execution environment
+
+--------------------------------------------------------------------------------
+-- Restriction R2:
+--
+-- R2: for all processors, property Scheduling_Protocol must have the
+-- following values only: POSIX_Fixed_Priority_Scheduling,
+-- Rate_Monotonic, Earliest_Deadline_First or Deadline_Monotonic
+
+-- Note, we have to refine this requirement. Scheduling_Protocol being
+-- a list, we refine it as: Scheduling_Protocol is a singleton, whose
+-- value is one of the above.
+
+theorem Check_R2
+   foreach p in Processor_Set do
+
+   var Allowed_Scheduling_Protocol := list (
+        "POSIX_Fixed_Priority_Scheduling",
+	"Rate_Monotonic", 
+	"Earliest_Deadline_First", 
+	"Deadline_Monotonic");
+
+   var Scheduling_Protocol := (property (p, "Scheduling_Protocol"));
+
+   check (Size (Scheduling_Protocol) = 1 and
+          Is_In (Scheduling_Protocol, Allowed_Scheduling_Protocol));
+
+end Check_R2;
+
+--------------------------------------------------------------------------------
+-- Restriction R3:
+--
+-- R3: the property Preemptive_Scheduler must be specified
+
+theorem Check_R3
+   foreach p in Processor_Set do
+
+   check (Property_Exists (p, "Preemptive_Scheduler"));	
+
+end Check_R3;
+
+--------------------------------------------------------------------------------
+-- Restriction R4:
+--
+-- R4: for all processors, property Scheduler_Quantum must be unspecified or set to 0 
+
+theorem Check_R4
+   foreach p in Processor_Set do
+
+   check ((not Property_Exists (p, "Scheduler_Quantum")) or
+   	  property (p, "Scheduler_Quantum") = 0.0);	
+
+end Check_R4;
+
+--==============================================================================
+-- 4.2 Restrictions of the subset "Synchronous Data-Flow"
+
+-- Definition of Synchronous profile
+
+theorem Synchronous_Profile
+   foreach s in system_set do
+
+   requires (Check_R1 and 
+             Check_R_5_2 and 
+             Check_R6);
+
+   check (1=1);
+end Synchronous_Profile;
+
+--------------------------------------------------------------------------------
+-- Restriction R1:
+--
+-- R1: for all threads: Dispatch_Protocol must be set to Periodic 
+
+theorem Check_R1
+
+  foreach t in Thread_Set do
+
+   check ((Get_Property_Value (t, "Dispatch_Protocol") = "periodic"));
+
+end Check_R1;
+
+--------------------------------------------------------------------------------
+-- Restriction R5.2:
+--
+-- R5.1: there isn't any buffer
+
+--  XXX to be refined
+
+--------------------------------------------------------------------------------
+-- Restriction R5.2:
+--
+-- R5.2: there isn't any data component
+
+theorem Check_R5_2
+
+  foreach s in System_Set do
+
+   check (Cardinal (Data_Set) = 0);
+
+end Check_R5_2;
+
+--------------------------------------------------------------------------------
+-- Restriction R6:
+--
+-- R6: for all Data port, property Timing must have the following
+-- values only: sampled, immediate or delayed
+
+-- XXX lack support in REAL for now
+
+--------------------------------------------------------------------------------
+-- Restriction R7:
+--
+-- R7: no hierarchical scheduling, i.e. there isn't any virtual processor 
+
+theorem Check_R7
+
+  foreach s in System_Set do
+
+   check (Cardinal (Virtual_Processor_Set) = 0);
+
+end Check_R7;
+
+--==============================================================================
+-- 4.3 Restrictions of the subset "Ravenscar"
+
+--------------------------------------------------------------------------------
+-- Restriction R8:
+--
+-- R8: for all threads, Dispatch_Protocol must have the following
+-- values only: Periodic or Sporadic
+
+theorem Check_R8
+
+   foreach t in Thread_Set do
+
+   check ((Get_Property_Value (t, "Dispatch_Protocol") = "periodic") or
+          (Get_Property_Value (t, "Dispatch_Protocol") = "sporadic"));
+
+end Check_R8;
+
+--------------------------------------------------------------------------------
+-- Restriction R9:
+--
+-- R9: there is at least one data component and we can only use data
+-- access connections
+
+theorem Check_R9
+   foreach s in System_Set do
+
+   check (Cardinal (Data_Set) > 1);
+
+--  XXX what does the other sentence implies?
+
+end Check_R9;
+
+--------------------------------------------------------------------------------
+-- Restriction R10:
+--
+-- R10: for each data D, there exist at least two connections D -> DP1
+-- and DP2 -> D, with DP1 contained by TH1 and DP2 contained by TH2,
+-- where TH1 and TH2 are two different threads and where DP1 and DP2 are
+-- two different data ports
+
+-- XXX what does it mean? seems conflicting with R9: use only data
+-- access connections, and data access connections not being connection
+-- to data thread.
+
+--------------------------------------------------------------------------------
+-- Restriction R11:
+--
+-- R11: property Concurrency_Control_Protocol must have the following
+-- values only: Priority_Inheritance_Protocol, Priority_Ceiling_Protocol
+-- or Immediate_Priority_Ceiling_Protocol
+
+theorem Check_R11
+
+   foreach d in Data_Set do
+
+   var Allowed_Concurrency_Control_Protocol := list (
+       "Priority_Inheritance_Protocol", 
+       "Priority_Ceiling_Protocol",
+       "Immediate_Priority_Ceiling_Protocol");
+
+   var Concurrency_Control_Protocol := (property (d, "Concurrency_Control_Protocol"));
+
+   check (Is_In (Concurrency_Control_Protocol, Allowed_Concurrency_Control_Protocol));
+
+end Check_R11;
+
+--------------------------------------------------------------------------------
+-- Restriction R12:
+--
+-- R12: if property Concurrency_Control_Protocol has the values
+-- Priority_Ceiling_Protocol or Immediate_Priority_Ceiling_Protocol,
+-- data's Ceiling priority must be higher or equal to the maximum value
+-- of property Priority of all threads connected to the data component
+
+theorem Check_R12
+
+  foreach e in Data_Set do
+
+   var PCP_Protocols := list (
+       "Priority_Ceiling_Protocol",
+       "Immediate_Priority_Ceiling_Protocol");
+
+   var Concurrency_Control_Protocol := (property (d, "Concurrency_Control_Protocol"));
+
+  accessor_threads := {t in Thread_Set | Is_Accessed_By (t, e)};
+
+  check ((not Is_In (Concurrency_Control_Protocol, PCP_Protocols)) or
+  	(Get_Property_Value (e, "Priority") >=
+         Max (Get_Property_Value (accessor_threads, "Priority"))));
+
+end Check_R12;
+
+--------------------------------------------------------------------------------
+-- Restriction R13:
+--
+-- R13: if property Concurrency_Control_Protocol has the value
+-- Priority_Inheritance_Protocol : two threads cannot be connected by
+-- more than one data component
+
+--  XXX ???
+
+--==============================================================================
+-- 4.4 Restrictions of the subset "Unplugged"
+
+--------------------------------------------------------------------------------
+-- Restriction R18:
+--
+-- R18: there isn't any connection, subprogram or data component 
+
+theorem Check_R18
+   foreach s in System_Set do
+
+   check ((Cardinal (Data_Set) = 0) and 
+   	  (Cardinal (Connection_Set) = 0) and 
+   	  (Cardinal (Subprogram_Set) = 0));
+
+end Check_R18;
+
+--==============================================================================
+-- 5. Additionnal environmental constraints for feasibility tests selection
+
+-- R19 to R22 are not shown here, these are simpler variants of Check_R2
+
+-- R23 and R24 are trivial
+
+-- R25 to R29 are simple adaptations
+
+

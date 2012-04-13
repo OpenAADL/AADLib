@@ -1,0 +1,13 @@
+-- This package models CAN bus
+
+package Buses::CAN
+public
+  with Bus_Properties;
+
+  bus CAN
+  properties
+    Bus_Properties::Available_Bandwidth =>
+    (20 KBytesps, 100 KBytesps, 500 KBytesps, 1 MBytesps);
+  end CAN;
+
+end Buses::CAN;

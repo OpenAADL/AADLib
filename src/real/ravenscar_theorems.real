@@ -1,0 +1,92 @@
+--------------------------------------------------------------------------------
+-- This set of REAL theorems defines implicit constraints defined in
+-- the Ravenscar Profile.
+--
+-- For each property, we define the list of constraints attached
+
+--------------------------------------------------------------------------------
+--  Global theorem: this theorem gathers all sub theorem defined in this file.
+
+theorem check_ravenscar_profile
+  foreach s in system_set do
+    requires ( 
+            check_only_one_cpu       -- The system has just one processor
+	and check_scheduling_policy  -- the scheduling policy is FIFO/PRIORITY
+        and all_tasks_cyclic         -- all tasks are cyclic
+	and check_pcp                -- all shared components use PCP
+	and check_pcp_correct        -- PCP mutexes are correctly used
+	);
+
+    check (1 = 1);
+end check_ravenscar_profile;
+
+--------------------------------------------------------------------------------
+--  requires : 1! CPU
+
+theorem check_only_one_cpu
+
+   foreach s in System_Set do
+      check (Cardinal (Processor_Set) = 1);
+
+end check_only_one_cpu;
+
+--------------------------------------------------------------------------------
+--  All tasks are scheduled with the FIFO_Within_Priorities policy.
+--
+-- Note: AADLv2 allows one processor to define a list of scheduling
+-- protocols. We therefore have to check there are at most on scheduling
+-- protocol defined, and that its value is consistent
+
+theorem check_scheduling_policy
+   foreach p in Processor_Set do
+
+   check (Property_Exists (p, "Scheduling_Protocol") and 
+             (Head (Get_Property_Value (p, "Scheduling_Protocol")) =
+              "POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL")
+	      and (Size (Get_Property_Value (p, "Scheduling_Protocol")) = 1));
+
+end check_scheduling_policy;
+
+--------------------------------------------------------------------------------
+--  All *shared* components use the PCP concurency control protocol
+
+theorem check_pcp
+   foreach d in Data_Set do
+
+   accessor_threads := {t in Thread_Set | Is_Accessing_To (t, d)};
+
+   check (Cardinal (accessor_threads) <= 1 or
+          (Property_Exists (d, "Concurrency_Control_Protocol") and 
+             (Get_Property_Value (d, "Concurrency_Control_Protocol") =
+              "Priority_Ceiling")));
+end check_pcp;
+
+--------------------------------------------------------------------------------
+-- All the tasks are either periodic or sporadic
+
+theorem all_tasks_cyclic
+
+   foreach t in Thread_Set do
+
+   check ((Get_Property_Value (t, "Dispatch_Protocol") = "periodic") or
+          (Get_Property_Value (t, "Dispatch_Protocol") = "sporadic"));
+
+end all_tasks_cyclic;
+
+--------------------------------------------------------------------------------
+-- PCP is correctly configured and used, that is all PCP data
+-- components define a priority, and accessors threads default priority
+-- is less than this priority
+
+theorem check_pcp_correct
+  foreach e in Data_Set do
+
+  accessor_threads := {t in Thread_Set | Is_Accessed_By (t, e)};
+
+  check ((not Property_Exists (e, "Priority")) or
+   (Get_Property_Value (e, "Priority") >=
+            Max (Get_Property_Value 
+                  (accessor_threads, "Priority"))));
+
+  check (1 = 1);
+end check_pcp_correct;

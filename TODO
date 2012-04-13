@@ -1,0 +1,6 @@
+* Add better documentation and comment in all models
+* Enhance model reusability by rewriting models
+* Add tests for aadlrev (AADL Inspector) and OSATE2
+* Add Dining Philosophers example from Peter
+* Complete Ardupilot
+* Add models from SEI technical reports

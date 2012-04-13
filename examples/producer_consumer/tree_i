@@ -1,0 +1,863 @@
+ocarina -aadlv2 -y -I../../src/property_set -I../../src/aadl -I.  -i \
+		-d  \
+		-r pc_simple.native \
+		./producer_consumer.aadl
+1 architecture instance 
+Root_System Node_Id 6
+6 component instance producer_consumer.aadl:112:03
+ Identifier Node_Id 8
+ 8 identifier producer_consumer.aadl:112:35
+  Display_Name Name_Id "PC_Simple.Native"
+  Corresponding_Entity Node_Id 6
+  Scope_Entity Node_Id 0
+  Backend_Node Node_Id 0
+ Corresponding_Declaration Node_Id 2352
+ Properties List_Id 0
+ Is_Private Boolean FALSE
+ Features List_Id 0
+ Subcomponents List_Id 9
+ 10 subcomponent instance producer_consumer.aadl:114:05
+  Identifier Node_Id 11
+  11 identifier producer_consumer.aadl:114:05
+   Display_Name Name_Id "pr_A"
+   Corresponding_Entity Node_Id 2363
+   Scope_Entity Node_Id 0
+   Backend_Node Node_Id 0
+  Corresponding_Declaration Node_Id 2363
+  Parent_Component Node_Id 6
+  Corresponding_Instance Node_Id 13
+  13 component instance producer_consumer.aadl:86:03
+   Identifier Node_Id 15
+   15 identifier producer_consumer.aadl:86:28
+    Display_Name Name_Id "A.Impl"
+    Corresponding_Entity Node_Id 13
+    Scope_Entity Node_Id 0
+    Backend_Node Node_Id 0
+   Corresponding_Declaration Node_Id 2257
+   Properties List_Id 179
+   180 property association instance producer_consumer.aadl:124:05
+    Identifier Node_Id 181
+    181 identifier producer_consumer.aadl:124:05
+     Display_Name Name_Id "actual_processor_binding"
+     Corresponding_Entity Node_Id 180
+     Scope_Entity Node_Id 0
+     Backend_Node Node_Id 0
+    Corresponding_Declaration Node_Id 2470
+    Is_Private Boolean FALSE
+    In_Modes Node_Id 0
+    Property_Name Node_Id 2453
+2453 entity reference producer_consumer.aadl:124:05
+Identifier Node_Id 2458
+2458 identifier producer_consumer.aadl:124:05
+ Corresponding_Entity Node_Id 2453
+ Display_Name Name_Id "actual_processor_binding"
+ Scope_Entity Node_Id 0
+ Backend_Node Node_Id 0
+Path List_Id 2454
+2457 node container producer_consumer.aadl:124:05
+ Item Node_Id 2456
+ Extra_Item Node_Id 0
+Namespace_Path List_Id 2455
+Namespace_Identifier Node_Id 0
+Full_Identifier Node_Id 2459
+2459 identifier producer_consumer.aadl:124:05
+ Corresponding_Entity Node_Id 2453
+ Display_Name Name_Id "actual_processor_binding"
+ Scope_Entity Node_Id 0
+ Backend_Node Node_Id 0
+Entity Node_Id 316
+    Is_Additive_Association Boolean FALSE
+    Is_Constant Boolean FALSE
+    Is_Access Boolean FALSE
+    Property_Association_Type Node_Id 0
+    Property_Association_Value Node_Id 3167
+    Applies_To_Prop List_Id 0
+    In_Binding Node_Id 0
+   Is_Private Boolean FALSE
+   Features List_Id 16
+   17 port spec instance producer_consumer.aadl:83:05
+    Identifier Node_Id 18
+    18 identifier producer_consumer.aadl:83:05
+     Display_Name Name_Id "Alpha"
+     Corresponding_Entity Node_Id 2250
+     Scope_Entity Node_Id 0
+     Backend_Node Node_Id 0
+    Corresponding_Declaration Node_Id 2250
+    Properties List_Id 0
+    Parent_Component Node_Id 13
+    Corresponding_Instance Node_Id 21
+    21 component instance producer_consumer.aadl:12:03
+     Identifier Node_Id 23
+     23 identifier producer_consumer.aadl:12:08
+      Display_Name Name_Id "Alpha_Type"
+      Corresponding_Entity Node_Id 21
+      Scope_Entity Node_Id 0
+      Backend_Node Node_Id 0
+     Corresponding_Declaration Node_Id 2076
+     Properties List_Id 0
+     Is_Private Boolean FALSE
+     Features List_Id 0
+     Subcomponents List_Id 0
+     Modes List_Id 0
+     Mode_transitions List_Id 0
+     Connections List_Id 0
+     Calls List_Id 0
+     Flows List_Id 0
+     Annexes List_Id 0
+     Parent_Subcomponent Node_Id 0
+     Namespace Node_Id 3
+    Destinations List_Id 20
+    174 node container producer_consumer.aadl:95:05
+     Item Node_Id 81
+     Extra_Item Node_Id 165
+    Sources List_Id 19
+    73 node container producer_consumer.aadl:35:05
+     Item Node_Id 33
+     Extra_Item Node_Id 64
+    Is_In Boolean FALSE
+    Is_Out Boolean TRUE
+    Is_Event Boolean FALSE
+    Is_Data Boolean TRUE
+   Subcomponents List_Id 25
+   26 subcomponent instance producer_consumer.aadl:88:05
+    Identifier Node_Id 27
+    27 identifier producer_consumer.aadl:88:05
+     Display_Name Name_Id "Producer"
+     Corresponding_Entity Node_Id 2268
+     Scope_Entity Node_Id 0
+     Backend_Node Node_Id 0
+    Corresponding_Declaration Node_Id 2268
+    Parent_Component Node_Id 13
+    Corresponding_Instance Node_Id 29
+    29 component instance producer_consumer.aadl:38:03
+     Identifier Node_Id 31
+     31 identifier producer_consumer.aadl:38:27
+      Display_Name Name_Id "P.Impl"
+      Corresponding_Entity Node_Id 29
+      Scope_Entity Node_Id 0
+      Backend_Node Node_Id 0
+     Corresponding_Declaration Node_Id 2128
+     Properties List_Id 0
+     Is_Private Boolean FALSE
+     Features List_Id 32
+     33 port spec instance producer_consumer.aadl:35:05
+      Identifier Node_Id 34
+      34 identifier producer_consumer.aadl:35:05
+       Display_Name Name_Id "Data_Source"
+       Corresponding_Entity Node_Id 2121
+       Scope_Entity Node_Id 0
+       Backend_Node Node_Id 0
+      Corresponding_Declaration Node_Id 2121
+      Properties List_Id 0
+      Parent_Component Node_Id 29
+      Corresponding_Instance Node_Id 21
+      21 component instance producer_consumer.aadl:12:03
+       Identifier Node_Id 23
+       23 identifier producer_consumer.aadl:12:08
+        Display_Name Name_Id "Alpha_Type"
+        Corresponding_Entity Node_Id 21
+        Scope_Entity Node_Id 0
+        Backend_Node Node_Id 0
+       Corresponding_Declaration Node_Id 2076
+       Properties List_Id 0
+       Is_Private Boolean FALSE
+       Features List_Id 0
+       Subcomponents List_Id 0
+       Modes List_Id 0
+       Mode_transitions List_Id 0
+       Connections List_Id 0
+       Calls List_Id 0
+       Flows List_Id 0
+       Annexes List_Id 0
+       Parent_Subcomponent Node_Id 0
+       Namespace Node_Id 3
+      Destinations List_Id 36
+      72 node container producer_consumer.aadl:83:05
+       Item Node_Id 17
+       Extra_Item Node_Id 64
+      Sources List_Id 35
+      62 node container producer_consumer.aadl:21:05
+       Item Node_Id 47
+       Extra_Item Node_Id 53
+      Is_In Boolean FALSE
+      Is_Out Boolean TRUE
+      Is_Event Boolean FALSE
+      Is_Data Boolean TRUE
+     Subcomponents List_Id 0
+     Modes List_Id 0
+     Mode_transitions List_Id 0
+     Connections List_Id 52
+     53 connection instance producer_consumer.aadl:44:03
+      Identifier Node_Id 0
+      Corresponding_Declaration Node_Id 2160
+      Properties List_Id 0
+      Parent_Component Node_Id 29
+      In_Modes Node_Id 0
+      Source Node_Id 54
+      54 entity reference instance producer_consumer.aadl:44:13
+       Path List_Id 55
+       56 node container producer_consumer.aadl:41:05
+        Item Node_Id 41
+        Extra_Item Node_Id 0
+       57 node container producer_consumer.aadl:21:05
+        Item Node_Id 47
+        Extra_Item Node_Id 0
+      Destination Node_Id 58
+      58 entity reference instance producer_consumer.aadl:44:34
+       Path List_Id 59
+       60 node container producer_consumer.aadl:35:05
+        Item Node_Id 33
+        Extra_Item Node_Id 0
+      Associated_Type Node_Id 0
+     Calls List_Id 37
+     38 call sequence instance producer_consumer.aadl:39:03
+      Identifier Node_Id 39
+      39 identifier producer_consumer.aadl:40:05
+       Display_Name Name_Id "Mycall"
+       Corresponding_Entity Node_Id 2130
+       Scope_Entity Node_Id 0
+       Backend_Node Node_Id 0
+      Corresponding_Declaration Node_Id 2130
+      Parent_Component Node_Id 29
+      In_Modes Node_Id 0
+      Subprogram_Calls List_Id 40
+      41 call instance producer_consumer.aadl:41:05
+       Identifier Node_Id 42
+       42 identifier producer_consumer.aadl:41:05
+        Display_Name Name_Id "P_Spg"
+        Corresponding_Entity Node_Id 2141
+        Scope_Entity Node_Id 0
+        Backend_Node Node_Id 0
+       Corresponding_Declaration Node_Id 2141
+       Path List_Id 0
+       Corresponding_Instance Node_Id 43
+       43 component instance producer_consumer.aadl:19:03
+        Identifier Node_Id 45
+        45 identifier producer_consumer.aadl:19:14
+         Display_Name Name_Id "Produce_Spg"
+         Corresponding_Entity Node_Id 43
+         Scope_Entity Node_Id 0
+         Backend_Node Node_Id 0
+        Corresponding_Declaration Node_Id 2080
+        Properties List_Id 0
+        Is_Private Boolean FALSE
+        Features List_Id 46
+        47 parameter instance producer_consumer.aadl:21:05
+         Identifier Node_Id 48
+         48 identifier producer_consumer.aadl:21:05
+          Display_Name Name_Id "Data_Source"
+          Corresponding_Entity Node_Id 2091
+          Scope_Entity Node_Id 0
+          Backend_Node Node_Id 0
+         Corresponding_Declaration Node_Id 2091
+         Properties List_Id 0
+         Parent_Component Node_Id 43
+         Corresponding_Instance Node_Id 21
+         21 component instance producer_consumer.aadl:12:03
+          Identifier Node_Id 23
+          23 identifier producer_consumer.aadl:12:08
+           Display_Name Name_Id "Alpha_Type"
+           Corresponding_Entity Node_Id 21
+           Scope_Entity Node_Id 0
+           Backend_Node Node_Id 0
+          Corresponding_Declaration Node_Id 2076
+          Properties List_Id 0
+          Is_Private Boolean FALSE
+          Features List_Id 0
+          Subcomponents List_Id 0
+          Modes List_Id 0
+          Mode_transitions List_Id 0
+          Connections List_Id 0
+          Calls List_Id 0
+          Flows List_Id 0
+          Annexes List_Id 0
+          Parent_Subcomponent Node_Id 0
+          Namespace Node_Id 3
+         Destinations List_Id 50
+         61 node container producer_consumer.aadl:35:05
+          Item Node_Id 33
+          Extra_Item Node_Id 53
+         Sources List_Id 49
+         Is_In Boolean FALSE
+         Is_Out Boolean TRUE
+        Subcomponents List_Id 0
+        Modes List_Id 0
+        Mode_transitions List_Id 0
+        Connections List_Id 0
+        Calls List_Id 0
+        Flows List_Id 0
+        Annexes List_Id 0
+        Parent_Subcomponent Node_Id 41
+        Namespace Node_Id 3
+       Parent_Sequence Node_Id 38
+     Flows List_Id 0
+     Annexes List_Id 0
+     Parent_Subcomponent Node_Id 26
+     Namespace Node_Id 3
+    Destinations List_Id 28
+    In_Modes Node_Id 0
+   Modes List_Id 0
+   Mode_transitions List_Id 0
+   Connections List_Id 63
+   64 connection instance producer_consumer.aadl:90:05
+    Identifier Node_Id 0
+    Corresponding_Declaration Node_Id 2287
+    Properties List_Id 0
+    Parent_Component Node_Id 13
+    In_Modes Node_Id 0
+    Source Node_Id 65
+    65 entity reference instance producer_consumer.aadl:90:10
+     Path List_Id 66
+     67 node container producer_consumer.aadl:88:05
+      Item Node_Id 26
+      Extra_Item Node_Id 0
+     68 node container producer_consumer.aadl:35:05
+      Item Node_Id 33
+      Extra_Item Node_Id 0
+    Destination Node_Id 69
+    69 entity reference instance producer_consumer.aadl:90:34
+     Path List_Id 70
+     71 node container producer_consumer.aadl:83:05
+      Item Node_Id 17
+      Extra_Item Node_Id 0
+    Associated_Type Node_Id 0
+   Calls List_Id 0
+   Flows List_Id 0
+   Annexes List_Id 0
+   Parent_Subcomponent Node_Id 10
+   Namespace Node_Id 3
+  Destinations List_Id 12
+  In_Modes Node_Id 0
+ 74 subcomponent instance producer_consumer.aadl:115:05
+  Identifier Node_Id 75
+  75 identifier producer_consumer.aadl:115:05
+   Display_Name Name_Id "pr_B"
+   Corresponding_Entity Node_Id 2376
+   Scope_Entity Node_Id 0
+   Backend_Node Node_Id 0
+  Corresponding_Declaration Node_Id 2376
+  Parent_Component Node_Id 6
+  Corresponding_Instance Node_Id 77
+  77 component instance producer_consumer.aadl:98:03
+   Identifier Node_Id 79
+   79 identifier producer_consumer.aadl:98:28
+    Display_Name Name_Id "B.Impl"
+    Corresponding_Entity Node_Id 77
+    Scope_Entity Node_Id 0
+    Backend_Node Node_Id 0
+   Corresponding_Declaration Node_Id 2310
+   Properties List_Id 182
+   183 property association instance producer_consumer.aadl:125:05
+    Identifier Node_Id 184
+    184 identifier producer_consumer.aadl:125:05
+     Display_Name Name_Id "actual_processor_binding"
+     Corresponding_Entity Node_Id 183
+     Scope_Entity Node_Id 0
+     Backend_Node Node_Id 0
+    Corresponding_Declaration Node_Id 2489
+    Is_Private Boolean FALSE
+    In_Modes Node_Id 0
+    Property_Name Node_Id 2472
+2472 entity reference producer_consumer.aadl:125:05
+Identifier Node_Id 2477
+2477 identifier producer_consumer.aadl:125:05
+ Corresponding_Entity Node_Id 2472
+ Display_Name Name_Id "actual_processor_binding"
+ Scope_Entity Node_Id 0
+ Backend_Node Node_Id 0
+Path List_Id 2473
+2476 node container producer_consumer.aadl:125:05
+ Item Node_Id 2475
+ Extra_Item Node_Id 0
+Namespace_Path List_Id 2474
+Namespace_Identifier Node_Id 0
+Full_Identifier Node_Id 2478
+2478 identifier producer_consumer.aadl:125:05
+ Corresponding_Entity Node_Id 2472
+ Display_Name Name_Id "actual_processor_binding"
+ Scope_Entity Node_Id 0
+ Backend_Node Node_Id 0
+Entity Node_Id 316
+    Is_Additive_Association Boolean FALSE
+    Is_Constant Boolean FALSE
+    Is_Access Boolean FALSE
+    Property_Association_Type Node_Id 0
+    Property_Association_Value Node_Id 3177
+    Applies_To_Prop List_Id 0
+    In_Binding Node_Id 0
+   Is_Private Boolean FALSE
+   Features List_Id 80
+   81 port spec instance producer_consumer.aadl:95:05
+    Identifier Node_Id 82
+    82 identifier producer_consumer.aadl:95:05
+     Display_Name Name_Id "Beta"
+     Corresponding_Entity Node_Id 2303
+     Scope_Entity Node_Id 0
+     Backend_Node Node_Id 0
+    Corresponding_Declaration Node_Id 2303
+    Properties List_Id 0
+    Parent_Component Node_Id 77
+    Corresponding_Instance Node_Id 21
+    21 component instance producer_consumer.aadl:12:03
+     Identifier Node_Id 23
+     23 identifier producer_consumer.aadl:12:08
+      Display_Name Name_Id "Alpha_Type"
+      Corresponding_Entity Node_Id 21
+      Scope_Entity Node_Id 0
+      Backend_Node Node_Id 0
+     Corresponding_Declaration Node_Id 2076
+     Properties List_Id 0
+     Is_Private Boolean FALSE
+     Features List_Id 0
+     Subcomponents List_Id 0
+     Modes List_Id 0
+     Mode_transitions List_Id 0
+     Connections List_Id 0
+     Calls List_Id 0
+     Flows List_Id 0
+     Annexes List_Id 0
+     Parent_Subcomponent Node_Id 0
+     Namespace Node_Id 3
+    Destinations List_Id 84
+    132 node container producer_consumer.aadl:49:05
+     Item Node_Id 93
+     Extra_Item Node_Id 124
+    Sources List_Id 83
+    175 node container producer_consumer.aadl:83:05
+     Item Node_Id 17
+     Extra_Item Node_Id 165
+    Is_In Boolean TRUE
+    Is_Out Boolean FALSE
+    Is_Event Boolean FALSE
+    Is_Data Boolean TRUE
+   Subcomponents List_Id 85
+   86 subcomponent instance producer_consumer.aadl:100:05
+    Identifier Node_Id 87
+    87 identifier producer_consumer.aadl:100:05
+     Display_Name Name_Id "Consumer"
+     Corresponding_Entity Node_Id 2321
+     Scope_Entity Node_Id 0
+     Backend_Node Node_Id 0
+    Corresponding_Declaration Node_Id 2321
+    Parent_Component Node_Id 77
+    Corresponding_Instance Node_Id 89
+    89 component instance producer_consumer.aadl:52:03
+     Identifier Node_Id 91
+     91 identifier producer_consumer.aadl:52:27
+      Display_Name Name_Id "Q.Impl"
+      Corresponding_Entity Node_Id 89
+      Scope_Entity Node_Id 0
+      Backend_Node Node_Id 0
+     Corresponding_Declaration Node_Id 2183
+     Properties List_Id 0
+     Is_Private Boolean FALSE
+     Features List_Id 92
+     93 port spec instance producer_consumer.aadl:49:05
+      Identifier Node_Id 94
+      94 identifier producer_consumer.aadl:49:05
+       Display_Name Name_Id "Data_Sink"
+       Corresponding_Entity Node_Id 2176
+       Scope_Entity Node_Id 0
+       Backend_Node Node_Id 0
+      Corresponding_Declaration Node_Id 2176
+      Properties List_Id 0
+      Parent_Component Node_Id 89
+      Corresponding_Instance Node_Id 21
+      21 component instance producer_consumer.aadl:12:03
+       Identifier Node_Id 23
+       23 identifier producer_consumer.aadl:12:08
+        Display_Name Name_Id "Alpha_Type"
+        Corresponding_Entity Node_Id 21
+        Scope_Entity Node_Id 0
+        Backend_Node Node_Id 0
+       Corresponding_Declaration Node_Id 2076
+       Properties List_Id 0
+       Is_Private Boolean FALSE
+       Features List_Id 0
+       Subcomponents List_Id 0
+       Modes List_Id 0
+       Mode_transitions List_Id 0
+       Connections List_Id 0
+       Calls List_Id 0
+       Flows List_Id 0
+       Annexes List_Id 0
+       Parent_Subcomponent Node_Id 0
+       Namespace Node_Id 3
+      Destinations List_Id 96
+      121 node container producer_consumer.aadl:26:05
+       Item Node_Id 107
+       Extra_Item Node_Id 113
+      Sources List_Id 95
+      133 node container producer_consumer.aadl:95:05
+       Item Node_Id 81
+       Extra_Item Node_Id 124
+      Is_In Boolean TRUE
+      Is_Out Boolean FALSE
+      Is_Event Boolean FALSE
+      Is_Data Boolean TRUE
+     Subcomponents List_Id 0
+     Modes List_Id 0
+     Mode_transitions List_Id 0
+     Connections List_Id 112
+     113 connection instance producer_consumer.aadl:58:05
+      Identifier Node_Id 0
+      Corresponding_Declaration Node_Id 2215
+      Properties List_Id 0
+      Parent_Component Node_Id 89
+      In_Modes Node_Id 0
+      Source Node_Id 114
+      114 entity reference instance producer_consumer.aadl:58:15
+       Path List_Id 115
+       116 node container producer_consumer.aadl:49:05
+        Item Node_Id 93
+        Extra_Item Node_Id 0
+      Destination Node_Id 117
+      117 entity reference instance producer_consumer.aadl:58:28
+       Path List_Id 118
+       119 node container producer_consumer.aadl:55:05
+        Item Node_Id 101
+        Extra_Item Node_Id 0
+       120 node container producer_consumer.aadl:26:05
+        Item Node_Id 107
+        Extra_Item Node_Id 0
+      Associated_Type Node_Id 0
+     Calls List_Id 97
+     98 call sequence instance producer_consumer.aadl:53:03
+      Identifier Node_Id 99
+      99 identifier producer_consumer.aadl:54:05
+       Display_Name Name_Id "Mycall"
+       Corresponding_Entity Node_Id 2185
+       Scope_Entity Node_Id 0
+       Backend_Node Node_Id 0
+      Corresponding_Declaration Node_Id 2185
+      Parent_Component Node_Id 89
+      In_Modes Node_Id 0
+      Subprogram_Calls List_Id 100
+      101 call instance producer_consumer.aadl:55:05
+       Identifier Node_Id 102
+       102 identifier producer_consumer.aadl:55:05
+        Display_Name Name_Id "Q_Spg"
+        Corresponding_Entity Node_Id 2196
+        Scope_Entity Node_Id 0
+        Backend_Node Node_Id 0
+       Corresponding_Declaration Node_Id 2196
+       Path List_Id 0
+       Corresponding_Instance Node_Id 103
+       103 component instance producer_consumer.aadl:24:03
+        Identifier Node_Id 105
+        105 identifier producer_consumer.aadl:24:14
+         Display_Name Name_Id "Consume_Spg"
+         Corresponding_Entity Node_Id 103
+         Scope_Entity Node_Id 0
+         Backend_Node Node_Id 0
+        Corresponding_Declaration Node_Id 2095
+        Properties List_Id 0
+        Is_Private Boolean FALSE
+        Features List_Id 106
+        107 parameter instance producer_consumer.aadl:26:05
+         Identifier Node_Id 108
+         108 identifier producer_consumer.aadl:26:05
+          Display_Name Name_Id "Data_Sink"
+          Corresponding_Entity Node_Id 2106
+          Scope_Entity Node_Id 0
+          Backend_Node Node_Id 0
+         Corresponding_Declaration Node_Id 2106
+         Properties List_Id 0
+         Parent_Component Node_Id 103
+         Corresponding_Instance Node_Id 21
+         21 component instance producer_consumer.aadl:12:03
+          Identifier Node_Id 23
+          23 identifier producer_consumer.aadl:12:08
+           Display_Name Name_Id "Alpha_Type"
+           Corresponding_Entity Node_Id 21
+           Scope_Entity Node_Id 0
+           Backend_Node Node_Id 0
+          Corresponding_Declaration Node_Id 2076
+          Properties List_Id 0
+          Is_Private Boolean FALSE
+          Features List_Id 0
+          Subcomponents List_Id 0
+          Modes List_Id 0
+          Mode_transitions List_Id 0
+          Connections List_Id 0
+          Calls List_Id 0
+          Flows List_Id 0
+          Annexes List_Id 0
+          Parent_Subcomponent Node_Id 0
+          Namespace Node_Id 3
+         Destinations List_Id 110
+         Sources List_Id 109
+         122 node container producer_consumer.aadl:49:05
+          Item Node_Id 93
+          Extra_Item Node_Id 113
+         Is_In Boolean TRUE
+         Is_Out Boolean FALSE
+        Subcomponents List_Id 0
+        Modes List_Id 0
+        Mode_transitions List_Id 0
+        Connections List_Id 0
+        Calls List_Id 0
+        Flows List_Id 0
+        Annexes List_Id 0
+        Parent_Subcomponent Node_Id 101
+        Namespace Node_Id 3
+       Parent_Sequence Node_Id 98
+     Flows List_Id 0
+     Annexes List_Id 0
+     Parent_Subcomponent Node_Id 86
+     Namespace Node_Id 3
+    Destinations List_Id 88
+    In_Modes Node_Id 0
+   Modes List_Id 0
+   Mode_transitions List_Id 0
+   Connections List_Id 123
+   124 connection instance producer_consumer.aadl:102:05
+    Identifier Node_Id 0
+    Corresponding_Declaration Node_Id 2340
+    Properties List_Id 0
+    Parent_Component Node_Id 77
+    In_Modes Node_Id 0
+    Source Node_Id 125
+    125 entity reference instance producer_consumer.aadl:102:10
+     Path List_Id 126
+     127 node container producer_consumer.aadl:95:05
+      Item Node_Id 81
+      Extra_Item Node_Id 0
+    Destination Node_Id 128
+    128 entity reference instance producer_consumer.aadl:102:18
+     Path List_Id 129
+     130 node container producer_consumer.aadl:100:05
+      Item Node_Id 86
+      Extra_Item Node_Id 0
+     131 node container producer_consumer.aadl:49:05
+      Item Node_Id 93
+      Extra_Item Node_Id 0
+    Associated_Type Node_Id 0
+   Calls List_Id 0
+   Flows List_Id 0
+   Annexes List_Id 0
+   Parent_Subcomponent Node_Id 74
+   Namespace Node_Id 3
+  Destinations List_Id 76
+  In_Modes Node_Id 0
+ 134 subcomponent instance producer_consumer.aadl:117:05
+  Identifier Node_Id 135
+  135 identifier producer_consumer.aadl:117:05
+   Display_Name Name_Id "CPU"
+   Corresponding_Entity Node_Id 2386
+   Scope_Entity Node_Id 0
+   Backend_Node Node_Id 0
+  Corresponding_Declaration Node_Id 2386
+  Parent_Component Node_Id 6
+  Corresponding_Instance Node_Id 137
+  137 component instance producer_consumer.aadl:72:03
+   Identifier Node_Id 139
+   139 identifier producer_consumer.aadl:72:13
+    Display_Name Name_Id "the_processor"
+    Corresponding_Entity Node_Id 137
+    Scope_Entity Node_Id 0
+    Backend_Node Node_Id 0
+   Corresponding_Declaration Node_Id 2224
+   Properties List_Id 0
+   Is_Private Boolean FALSE
+   Features List_Id 140
+   141 subcomponent access instance producer_consumer.aadl:74:05
+    Identifier Node_Id 142
+    142 identifier producer_consumer.aadl:74:05
+     Display_Name Name_Id "ETH"
+     Corresponding_Entity Node_Id 2235
+     Scope_Entity Node_Id 0
+     Backend_Node Node_Id 0
+    Corresponding_Declaration Node_Id 2235
+    Properties List_Id 0
+    Parent_Component Node_Id 137
+    Corresponding_Instance Node_Id 145
+    145 component instance producer_consumer.aadl:65:03
+     Identifier Node_Id 147
+     147 identifier producer_consumer.aadl:65:07
+      Display_Name Name_Id "Ethernet_Bus"
+      Corresponding_Entity Node_Id 145
+      Scope_Entity Node_Id 0
+      Backend_Node Node_Id 0
+     Corresponding_Declaration Node_Id 2220
+     Properties List_Id 0
+     Is_Private Boolean FALSE
+     Features List_Id 0
+     Subcomponents List_Id 0
+     Modes List_Id 0
+     Mode_transitions List_Id 0
+     Connections List_Id 0
+     Calls List_Id 0
+     Flows List_Id 0
+     Annexes List_Id 0
+     Parent_Subcomponent Node_Id 0
+     Namespace Node_Id 3
+    Destinations List_Id 144
+    Sources List_Id 143
+    164 node container producer_consumer.aadl:118:05
+     Item Node_Id 149
+     Extra_Item Node_Id 155
+    Is_Data Boolean FALSE
+    Is_Provided Boolean FALSE
+   Subcomponents List_Id 0
+   Modes List_Id 0
+   Mode_transitions List_Id 0
+   Connections List_Id 0
+   Calls List_Id 0
+   Flows List_Id 0
+   Annexes List_Id 0
+   Parent_Subcomponent Node_Id 134
+   Namespace Node_Id 3
+  Destinations List_Id 136
+  In_Modes Node_Id 0
+ 149 subcomponent instance producer_consumer.aadl:118:05
+  Identifier Node_Id 150
+  150 identifier producer_consumer.aadl:118:05
+   Display_Name Name_Id "the_bus"
+   Corresponding_Entity Node_Id 2396
+   Scope_Entity Node_Id 0
+   Backend_Node Node_Id 0
+  Corresponding_Declaration Node_Id 2396
+  Parent_Component Node_Id 6
+  Corresponding_Instance Node_Id 152
+  152 component instance producer_consumer.aadl:65:03
+   Identifier Node_Id 153
+   153 identifier producer_consumer.aadl:65:07
+    Display_Name Name_Id "Ethernet_Bus"
+    Corresponding_Entity Node_Id 152
+    Scope_Entity Node_Id 0
+    Backend_Node Node_Id 0
+   Corresponding_Declaration Node_Id 2220
+   Properties List_Id 0
+   Is_Private Boolean FALSE
+   Features List_Id 0
+   Subcomponents List_Id 0
+   Modes List_Id 0
+   Mode_transitions List_Id 0
+   Connections List_Id 0
+   Calls List_Id 0
+   Flows List_Id 0
+   Annexes List_Id 0
+   Parent_Subcomponent Node_Id 149
+   Namespace Node_Id 3
+  Destinations List_Id 151
+  163 node container producer_consumer.aadl:74:05
+   Item Node_Id 141
+   Extra_Item Node_Id 155
+  In_Modes Node_Id 0
+ Modes List_Id 0
+ Mode_transitions List_Id 0
+ Connections List_Id 154
+ 155 connection instance producer_consumer.aadl:120:05
+  Identifier Node_Id 0
+  Corresponding_Declaration Node_Id 2414
+  Properties List_Id 0
+  Parent_Component Node_Id 6
+  In_Modes Node_Id 0
+  Source Node_Id 156
+  156 entity reference instance producer_consumer.aadl:120:16
+   Path List_Id 157
+   158 node container producer_consumer.aadl:118:05
+    Item Node_Id 149
+    Extra_Item Node_Id 0
+  Destination Node_Id 159
+  159 entity reference instance producer_consumer.aadl:120:27
+   Path List_Id 160
+   161 node container producer_consumer.aadl:117:05
+    Item Node_Id 134
+    Extra_Item Node_Id 0
+   162 node container producer_consumer.aadl:74:05
+    Item Node_Id 141
+    Extra_Item Node_Id 0
+  Associated_Type Node_Id 0
+ 165 connection instance producer_consumer.aadl:121:05
+  Identifier Node_Id 0
+  Corresponding_Declaration Node_Id 2435
+  Properties List_Id 176
+  177 property association instance producer_consumer.aadl:122:06
+   Identifier Node_Id 178
+   178 identifier producer_consumer.aadl:122:06
+    Display_Name Name_Id "Actual_Connection_Binding"
+    Corresponding_Entity Node_Id 177
+    Scope_Entity Node_Id 0
+    Backend_Node Node_Id 0
+   Corresponding_Declaration Node_Id 2451
+   Is_Private Boolean FALSE
+   In_Modes Node_Id 0
+   Property_Name Node_Id 2437
+2437 entity reference producer_consumer.aadl:122:06
+Identifier Node_Id 2442
+2442 identifier producer_consumer.aadl:122:06
+ Corresponding_Entity Node_Id 2437
+ Display_Name Name_Id "Actual_Connection_Binding"
+ Scope_Entity Node_Id 0
+ Backend_Node Node_Id 0
+Path List_Id 2438
+2441 node container producer_consumer.aadl:122:06
+ Item Node_Id 2440
+ Extra_Item Node_Id 0
+Namespace_Path List_Id 2439
+Namespace_Identifier Node_Id 0
+Full_Identifier Node_Id 2443
+2443 identifier producer_consumer.aadl:122:06
+ Corresponding_Entity Node_Id 2437
+ Display_Name Name_Id "Actual_Connection_Binding"
+ Scope_Entity Node_Id 0
+ Backend_Node Node_Id 0
+Entity Node_Id 442
+   Is_Additive_Association Boolean FALSE
+   Is_Constant Boolean FALSE
+   Is_Access Boolean FALSE
+   Property_Association_Type Node_Id 0
+   Property_Association_Value Node_Id 3161
+   Applies_To_Prop List_Id 0
+   In_Binding Node_Id 0
+  Parent_Component Node_Id 6
+  In_Modes Node_Id 0
+  Source Node_Id 166
+  166 entity reference instance producer_consumer.aadl:121:10
+   Path List_Id 167
+   168 node container producer_consumer.aadl:114:05
+    Item Node_Id 10
+    Extra_Item Node_Id 0
+   169 node container producer_consumer.aadl:83:05
+    Item Node_Id 17
+    Extra_Item Node_Id 0
+  Destination Node_Id 170
+  170 entity reference instance producer_consumer.aadl:121:24
+   Path List_Id 171
+   172 node container producer_consumer.aadl:115:05
+    Item Node_Id 74
+    Extra_Item Node_Id 0
+   173 node container producer_consumer.aadl:95:05
+    Item Node_Id 81
+    Extra_Item Node_Id 0
+  Associated_Type Node_Id 0
+ Calls List_Id 0
+ Flows List_Id 0
+ Annexes List_Id 0
+ Parent_Subcomponent Node_Id 0
+ Namespace Node_Id 3
+Namespaces List_Id 2
+3 namespace instance 
+ Identifier Node_Id 5
+ 5 identifier producer_consumer.aadl:3:19
+  Display_Name Name_Id "Producer::Consumer"
+  Corresponding_Entity Node_Id 2062
+  Scope_Entity Node_Id 0
+  Backend_Node Node_Id 0
+ Corresponding_Declaration Node_Id 2062
+ Declarations List_Id 4
+ 24 node container producer_consumer.aadl:12:03
+  Item Node_Id 21
+  Extra_Item Node_Id 0
+ 51 node container producer_consumer.aadl:19:03
+  Item Node_Id 43
+  Extra_Item Node_Id 0
+ 111 node container producer_consumer.aadl:24:03
+  Item Node_Id 103
+  Extra_Item Node_Id 0
+ 148 node container producer_consumer.aadl:65:03
+  Item Node_Id 145
+  Extra_Item Node_Id 0
+Unnamed_Namespace Node_Id 0

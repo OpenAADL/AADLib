@@ -1,0 +1,19 @@
+package Buses::I2C
+public
+  with Bus_Properties;
+
+  feature group I2C_Pins
+  features
+    SCL : in out event port; -- Clock line
+    SDA : in out event port; -- Data line
+  end I2C_Pins;
+
+  bus I2C
+  end I2C;
+
+  bus implementation I2C.impl
+  properties
+    Bus_Properties::Bandwidth => 400_000 bitsps;
+  end I2C.impl;
+
+end Buses::I2C;

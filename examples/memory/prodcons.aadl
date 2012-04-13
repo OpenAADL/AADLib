@@ -1,0 +1,75 @@
+--  This package models the high-level system, made of a generic
+--  producer/consummer software running on top of a VxWorks platform.
+--  Additional REAL theorems are attached to check the model is
+--  consistent.
+
+package Prodcons
+public
+  with Producer_Consummer_Software;	
+  with VxWorks_Platform;
+  
+  ------------
+  -- System --
+  ------------
+  
+  system vxworks end vxworks;
+ 
+  system implementation vxworks.impl
+  --  The actual system implementation combines a process (software
+  --  part), a processor (RTOS kernel) and two memory components
+  --  representing both the software and the hardware view of the
+  --  memory.
+
+  subcomponents
+    process1    : process Producer_Consummer_Software::prodcons_soft.impl;
+    processor1  : processor VxWorks_Platform::MC68040.impl;
+
+    --  logical_as denotes the software view of the memory
+    logical_as  : memory VxWorks_Platform::address_space.vxworks;
+
+    -- physical_as denotes the hardware view of the memory
+    physical_as : memory VxWorks_Platform::address_space.mv162;
+
+  properties
+    --  We bind the logical view of the memory to the process, and the
+    --  physical view of the memory to the processor
+
+    Actual_Memory_Binding    => (reference(logical_as))  applies to process1;
+    Actual_Memory_Binding    => (reference(physical_as)) applies to  processor1;
+
+    Actual_Processor_Binding => (reference(processor1)) applies to process1;
+
+  annex real_specification {**
+     	theorem check_memory
+       	   foreach a in memory_set do
+ 	      requires (check_memory_segment
+ 		    and check_segment_mapping
+ 		    and check_word_align);
+
+ 	      check ( 1=1 );
+     	end check_memory;
+
+ 	theorem check_logical_to_physical
+ 	   foreach p in Process_Set do
+ 	      requires (check_memory_binding
+ 		    and check_page_align
+ 		    and check_no_vm_mapping);
+ 	     check(1=1);
+ 	end check_logical_to_physical;
+
+ 	theorem check_soft_binding
+ 	   foreach p in Process_Set do
+              requires (check_text_size);
+ 	   check (1=1);
+ 	end check_soft_binding;
+
+ 	theorem check_access
+ 	   foreach p in Memory_Set do
+ 	      requires(check_allowed_access
+ 	 	    and check_text_access);
+	   check(1=1);
+ 	end check_access;
+ 	**};
+  end vxworks.impl;
+
+ end Prodcons;

@@ -1,0 +1,126 @@
+--  This package models the Arduino platform, an AVR-based single
+--  board computer. For more details, see http://www.arduino.cc/
+
+package Boards::Arduino
+public
+  with Processors::ATMEGA, Data_Sheet;
+  with Electricity_Properties;
+  with Buses::I2C;
+
+  -----------------
+  -- Duemilanove --
+  -----------------
+
+  -- This system models the Arduino Duemilanove (2009), see
+  -- http://www.arduino.cc/en/Main/ArduinoBoardDuemilanove for more
+  -- details.
+
+  system Duemilanove
+  features
+    Digital_0  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_1  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_2  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_3  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_4  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_5  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_6  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_7  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_8  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_9  : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_10 : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_11 : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_12 : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Digital_13 : in out event port
+    {Electricity_Properties::Run_Current => 40mA;};
+
+    Analog_0   : in out event port;
+    Analog_1   : in out event port;
+    Analog_2   : in out event port;
+    Analog_3   : in out event port;
+    Analog_4   : in out event port;
+    Analog_5   : in out event port;
+
+    VCC        : in     event port;
+    GND        : in     event port;
+    AREF       : in     event port;
+    AVCC       : in     event port;
+
+    Reset      : in     event port;
+
+    VIN        : in out event port;
+    Power_5V   : in out event port
+    {Electricity_Properties::Output_Voltage => 5V;};
+
+    Power_3V3  : in out event port
+    {Electricity_Properties::Output_Voltage => 3.3V;};
+
+    I2C_Link : provides bus access Buses::I2C::I2C;
+
+  properties
+    Data_Sheet::UUID => "http://www.arduino.cc/en/Main/ArduinoBoardDuemilanove";
+  end Duemilanove;
+
+  system implementation Duemilanove.impl
+  subcomponents
+    ATMEGA328p : processor Processors::ATMEGA::ATMEGA328p.impl;
+    I2C : bus Buses::I2C::I2C.impl;
+
+  connections
+    -- See http://arduino.cc/en/Hacking/Atmega168Hardware for a detail
+    -- of this mapping.
+
+    port Reset      -> ATMEGA328p.PC6;
+    port Digital_0  -> ATMEGA328p.PD0;
+    port Digital_1  -> ATMEGA328p.PD1;
+    port Digital_2  -> ATMEGA328p.PD2;
+    port Digital_3  -> ATMEGA328p.PD3;
+    port Digital_4  -> ATMEGA328p.PD4;
+    port VCC        -> ATMEGA328p.VCC;
+    port GND        -> ATMEGA328p.GND;
+    port Digital_5  -> ATMEGA328p.PD5;
+    port Digital_6  -> ATMEGA328p.PD6;
+    port Digital_7  -> ATMEGA328p.PD7;
+    port Digital_9  -> ATMEGA328p.PB0;
+
+    port Analog_5   -> ATMEGA328p.PC5;
+    port Analog_4   -> ATMEGA328p.PC4;
+    port Analog_3   -> ATMEGA328p.PC3;
+    port Analog_2   -> ATMEGA328p.PC2;
+    port Analog_1   -> ATMEGA328p.PC0;
+    port Analog_0   -> ATMEGA328p.PC0;
+    port AREF       -> ATMEGA328p.AREF;
+    port AVCC       -> ATMEGA328p.AVCC;
+    port Digital_13 -> ATMEGA328p.PB5;
+    port Digital_12 -> ATMEGA328p.PB4;
+    port Digital_11 -> ATMEGA328p.PB3;
+    port Digital_10 -> ATMEGA328p.PB2;
+    port Digital_9  -> ATMEGA328p.PB1;
+   end Duemilanove.impl;
+
+end Boards::Arduino;

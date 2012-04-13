@@ -1,0 +1,197 @@
+package Ardupilot_Software
+public
+  with Base_Types;
+  with Data_model;
+
+  data GPS_Position
+  end GPS_Position;
+
+  data implementation GPS_Position.i
+  subcomponents
+    latitude : data Base_Types::Float;
+    longitude : data Base_Types::Float;
+    altitude : data Base_Types::Integer;
+  properties
+    Data_Model::Data_Representation => Struct;
+
+  end GPS_Position.i;
+
+  ---------
+  -- GPS --
+  ---------
+  
+  subprogram spg_gps_simulation
+  features
+    gps_pos : out parameter GPS_Position.i;
+
+  properties
+    Source_Language  => C;
+    Source_Name => "gps_simulation";
+    Source_Text => ("gps.c");
+  end spg_gps_simulation;
+  
+  thread thr_gps_simulation
+  features
+    gps_pos : out data port GPS_Position.i;
+
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 1000ms;
+    Deadline               => 1000ms;
+    Compute_Execution_Time => 5ms .. 10ms;
+  end thr_gps_simulation;
+  
+  thread implementation thr_gps_simulation.i
+  calls 
+    call1 : { pspg : subprogram spg_gps_simulation;};
+
+  connections
+    parameter pspg.gps_pos -> gps_pos;
+
+  end thr_gps_simulation.i;
+    
+  -----------------------
+  -- Flight Management --
+  -----------------------
+  
+  subprogram spg_flt_mgmt_simulation 
+  features
+    -- altitude  : in parameter Base_Types::Integer;
+    -- latitude  : in parameter Base_Types::Float;
+    -- longitude : in parameter Base_Types::Float;
+    gps_pos : in parameter GPS_Position.i;
+
+    speed     : out parameter Base_Types::Integer;
+    angle     : out parameter Base_Types::Integer;
+
+  properties
+    Source_Language => C;
+    Source_Name => "flt_mgmt_simulation";
+    Source_Text => ("flt-mgmt.c");
+  end spg_flt_mgmt_simulation;
+  
+  subprogram spg_flt_mgmt_init
+  properties
+    Source_Language => C;
+    Source_Name => "flt_mgmt_init";
+    Source_Text => ("flt-mgmt.c");
+  end spg_flt_mgmt_init;
+  
+  thread thr_mgmt
+  features
+    gps_pos : in data port GPS_Position.i;
+
+    speed       : out data port Base_Types::Integer;
+    angle       : out data port Base_Types::Integer;
+
+  properties
+    Dispatch_Protocol       => Periodic;
+    Period                  => 1000ms;
+    Deadline                => 1000ms;
+    Compute_Execution_Time  => 5ms .. 10ms;
+    
+    Initialize_Entrypoint => classifier (Ardupilot_Software::spg_flt_mgmt_init);
+  end thr_mgmt;
+  
+  thread implementation thr_mgmt.i
+  calls 
+    call1 : { pspg : subprogram spg_flt_mgmt_simulation;};
+
+  connections
+    parameter gps_pos -> pspg.gps_pos;
+
+    parameter pspg.speed -> speed;
+    parameter pspg.angle -> angle;
+  end thr_mgmt.i;
+
+  --------------
+  -- Throttle --
+  --------------
+  
+  subprogram spg_throttle_simulation
+  features
+    speed : in parameter Base_Types::Integer;
+
+  properties
+    Source_Language => C;
+    Source_Name => "throttle_simulation";
+    Source_Text => ("throttle.c");
+  end spg_throttle_simulation;
+  
+  thread thr_throttle_simulation
+  features
+    speed : in data port Base_Types::Integer;
+
+  properties
+    Dispatch_Protocol       => Periodic;
+    Period                  => 1000ms;
+    Deadline                => 1000ms;
+    Compute_Execution_Time  => 5ms .. 10ms;
+
+  end thr_throttle_simulation;
+  
+  thread implementation thr_throttle_simulation.i
+  calls 
+    call1 : { pspg : subprogram spg_throttle_simulation;};
+
+  connections
+    parameter speed -> pspg.speed;
+  end thr_throttle_simulation.i;
+  
+  ---------
+  -- YAW --
+  ---------
+  
+  subprogram spg_yaw_simulation
+  features
+    angle : in parameter Base_Types::Integer;
+
+  properties
+    Source_Language => C;
+    Source_Name => "yaw_simulation";
+    Source_Text => ("yaw.c");
+  end spg_yaw_simulation;
+  
+  thread thr_yaw_simulation
+  features
+    angle : in data port Base_Types::Integer;
+
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 1000ms;
+    Deadline               => 1000ms;
+    Compute_Execution_Time => 5ms .. 10ms;
+
+  end thr_yaw_simulation;
+  
+  thread implementation thr_yaw_simulation.i
+  calls 
+    call1 : { pspg : subprogram spg_yaw_simulation;};
+
+  connections
+    parameter angle -> pspg.angle;
+  end thr_yaw_simulation.i;
+
+  --------------------
+  -- Ardupilot_Code --
+  --------------------
+
+  process Ardupilot_Code
+  end Ardupilot_Code;
+
+  process implementation Ardupilot_Code.impl
+  subcomponents
+    prs_gps      : thread Ardupilot_Software::thr_gps_simulation.i;
+    prs_mgmt     : thread Ardupilot_Software::thr_mgmt.i;
+    prs_throttle : thread Ardupilot_Software::thr_throttle_simulation.i;
+    prs_yaw      : thread Ardupilot_Software::thr_yaw_simulation.i;
+
+  connections
+    port prs_gps.gps_pos -> prs_mgmt.gps_pos;
+
+    port prs_mgmt.speed    -> prs_throttle.speed;
+    port prs_mgmt.angle    -> prs_yaw.angle;
+
+  end Ardupilot_Code.impl;
+
+end Ardupilot_Software;

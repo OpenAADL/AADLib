@@ -1,0 +1,89 @@
+package minirocket_system
+public 
+  with Deployment;
+  with buses;
+  with pressure_hca0811;
+  with gps_lea4h;
+  with inertial_chr6d;
+  with camera_usb;
+  with minirocket_sw;
+  with Buses::I2C;
+  with Buses::UART;
+  with Buses::USB;
+  with Processors::ARM;
+
+  ------------
+  -- System --
+  ------------
+
+  system minirocket 
+  end minirocket;
+
+  system implementation minirocket.impl
+  subcomponents
+    ------------------------------------------------------------------
+    -- Node: hardware components : CCDS (ARM9 card)
+    ------------------------------------------------------------------
+    -- CCDS Interconnect bus. This component are shared by ARM9 peripherals and
+    -- sensors/actautors to support communication through various protocols
+    ------------------------------------------------------------------
+    I2C_bus    : bus Buses::I2C::I2C.impl;
+    USB1_bus   : bus buses::USB::USB.impl;
+    UART1_bus  : bus buses::UART::UART.impl;
+    UART2_bus  : bus buses::UART::UART.impl;
+    ------------------------------------------------------------------
+    --  Hardware components for CCDS configuration
+    ------------------------------------------------------------------
+    proc_2    : process    minirocket_sw::proc_2.impl;
+    CPU_ARM9  : processor  Processors::ARM::AT91SAM9G20.impl;
+    ------------------------------------------------------------------
+    --  Processor peripherals for CCDS communication with sensors
+    ------------------------------------------------------------------
+    TWI_ARM9   :      device     Processors::ARM::TWI_Peripheral;  
+    UART1_ARM9 :      device     Processors::ARM::USART1_Peripheral; 
+    UART2_ARM9 :      device     Processors::ARM::USART2_Peripheral; 
+    USB1_ARM9  :       device     Processors::ARM::USB1_Peripheral; 
+    ------------------------------------------------------------------
+    -- End Node
+    ------------------------------------------------------------------
+
+   ------------------------------------------------------------------
+   --  List of sensors/actuators
+   ------------------------------------------------------------------
+    --------------------- ARM7 ----------------------
+    PRESSURE   :      device     pressure_hca0811::PRESSURE.impl
+    { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    INERTIAL      :   device     inertial_chr6d::INERTIAL.impl;
+    GPS           :   device     gps_lea4h::GPS.impl;
+    CAMERA        :   device     camera_usb::CAMERA.impl;
+    
+  connections
+    ------------------------------------------------------------------
+    -- Node  bus connections 
+    ------------------------------------------------------------------
+    bus access I2C_bus -> TWI_ARM9.Serial_Wire;
+    bus access I2C_bus -> PRESSURE.Serial_Wire;
+  
+    bus access UART1_bus -> UART1_ARM9.Serial_Wire;
+    bus access UART1_bus -> GPS.Serial_Wire;
+    
+    bus access UART2_bus -> UART2_ARM9.Serial_Wire;
+    bus access UART2_bus -> INERTIAL.Serial_Wire;
+    --
+    bus access USB1_bus -> USB1_ARM9.Serial_Wire;
+    bus access USB1_bus -> CAMERA.Serial_Wire;
+    
+    
+  properties
+    Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
+    --Actual_Processor_Binding => (reference (CPU_ARM7)) applies to I2C_Cnx;
+    annex real_specification {**
+    theorem check_model
+    foreach s in system_set do
+    requires (th);
+    check (1 = 1);
+  end check_model;
+  **};
+  end minirocket.impl;
+
+end  minirocket_system;

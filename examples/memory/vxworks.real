@@ -1,0 +1,34 @@
+--  These theorems model constraints specific to the VxWorks kernel
+
+-------------------------------------------------------------------------------
+-- A kernel shall have:
+-- 1) exactly one text, one data and one bss segment,
+-- 2) there base address shall verify: 
+--    base_addr (text) < base_addr (data) < base_addr (segment)
+
+theorem check_system_image_order
+   foreach m in Local_Set do
+     text := { x in memory_set | 
+   	       is_subcomponent_of(x, m) 
+	  and (property(x, "arinc653_extended::Memory_Kind")="text") 
+	  };
+	    
+      data := { x in memory_set | 
+		is_subcomponent_of(x, m) 
+            and (property(x, "arinc653_extended::Memory_Kind")="data_seg")
+	    and (max(property(text, "Base_Address"))
+	         < property(x, "Base_Address"))
+	   };	
+      
+      bss := { x in memory_set | 
+	       is_subcomponent_of(x, m) 
+	    and (property(x, "arinc653_extended::Memory_Kind")="bss")
+	    and (max(property(data, "Base_Address"))
+	         < property(x, "Base_Address"))
+	     };
+
+check ((cardinal(text)=1)
+    and	(cardinal(data)=1)
+    and	(cardinal(bss)=1));
+
+end check_system_image_order;

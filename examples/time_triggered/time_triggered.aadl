@@ -1,0 +1,174 @@
+--  This AADL model illustrates how to model a time-triggered
+--  architecture using AADLv2
+
+package Time_Triggered
+public
+  with Data_Model;  -- Data modeling annex, AS5506/2
+  with Deployment;  -- Deployment properties, Ocarina
+  
+  ----------
+  -- Data -- 
+  ----------
+
+  data Simple_Type
+    -- Represent an integer being exchanged among threads
+  properties
+    Data_Model::Data_Representation => integer;
+  end Simple_Type;
+
+  -----------------
+  -- Subprograms --
+  -----------------
+  
+  subprogram B0_Send
+  features
+    Out_Value : out parameter Simple_Type;
+  end B0_Send;
+
+  subprogram implementation B0_Send.impl
+  properties
+    Source_Language => Ada95;
+    Source_Name => "TT.B0_Send";
+  end B0_Send.impl;
+
+  subprogram B1_Receive_Send
+  features
+    Out_Value : out parameter Simple_Type;
+    In_Value : in parameter Simple_Type;
+  end B1_Receive_Send;
+
+  subprogram implementation B1_Receive_Send.impl
+  properties
+    Source_Language => Ada95;
+    Source_Name => "TT.B1_Receive_Send";
+  end B1_Receive_Send.impl;
+
+  subprogram B2_Receive
+  features
+    In_Value : in parameter Simple_Type;
+  end B2_Receive;
+
+  subprogram implementation B2_Receive.impl
+  properties
+    Source_Language => Ada95;
+    Source_Name => "TT.B2_Receive";
+  end B2_Receive.impl;
+  
+  -------------
+  -- Threads --
+  -------------
+  
+  -- B0, 10 Hz, send data to B1
+
+  thread B0
+  features
+    Out_Value : out data port Simple_Type;
+  end B0;
+
+  thread implementation B0.impl
+  calls 
+    Mycalls: { B0_Job : subprogram B0_Send.impl; };
+  connections
+    parameter B0_Job.Out_Value -> Out_Value;
+  properties
+    Dispatch_Protocol      => Periodic;
+    Priority               => 103;            -- <Computed by Cheddar>
+    Period                 => 100 ms;         -- Period BP_0
+    Dispatch_Offset        => 0 ms;           -- Activation condition BA_0
+    Deadline               => 100 ms;         -- Deadline BD_0
+    Compute_Execution_time => 0 ms .. 50 ms;  -- WCET_0
+  end B0.impl;
+  
+  -- B1, 1 Hz, receive from B0, send to B2
+
+  thread B1
+  features
+    In_Value : in data port Simple_Type { Timing => Delayed; };
+    Out_value : out data port Simple_Type;
+  end B1;
+
+  thread implementation B1.impl
+  calls 
+    Mycalls: { B1_Job : subprogram B1_Receive_Send.impl; };
+  connections
+    parameter In_Value -> B1_Job.In_Value;
+    parameter B1_Job.Out_Value -> Out_Value;
+  properties
+    Dispatch_Protocol      => Periodic;
+    Priority               => 102;            -- <Computed by Cheddar>
+    Period                 => 1 sec;          -- Period BP_1
+    Dispatch_Offset        => 300 ms;         -- Activation condition BA_1
+    Deadline               => 200 ms;         -- Deadline BD_1
+    Compute_Execution_time => 0 ms .. 25 ms;  -- WCET
+  end B1.impl;
+
+  -- B2, 0.1 hz, receive from B1
+
+  thread B2
+  features
+    In_Value : in data port Simple_Type { Timing => Delayed; };
+  end B2;
+
+  thread implementation B2.impl
+  calls 
+    Mycalls: { B2_Job : subprogram B2_Receive.impl; };
+  connections
+    parameter In_Value -> B2_Job.In_Value;
+  properties
+    Dispatch_Protocol      => Periodic;
+    Priority               => 101;            -- <Computed by Cheddar>
+    Period                 => 10 sec;         -- Period BP_2
+    Dispatch_Offset        => 200 ms;         -- Activation condition BA_2
+    Deadline               => 600 ms;         -- Deadline BD_2
+    Compute_Execution_time => 0 ms .. 250 ms; -- WCET
+  end B2.impl;
+  
+  ---------------
+  -- Processor --
+  ---------------
+  
+  processor cpurm
+  properties
+    Preemptive_Scheduler => true;
+  end cpurm;
+  
+  processor implementation cpurm.impl
+  properties
+    Deployment::Execution_Platform => LEON_ORK; -- Generate code for ORK+, LEON2
+    Scheduling_Protocol => (POSIX_1003_Highest_Priority_First_Protocol);
+    Priority_Range      => 0 .. 255;
+  end cpurm.impl;
+
+  ---------------
+  -- Processes --
+  ---------------
+  
+  process node_a
+  end node_a;
+  
+  process implementation node_a.impl
+  subcomponents
+    B0 : thread B0.impl;
+    B1 : thread B1.impl;
+    B2 : thread B2.impl;
+  connections
+    B0_to_B1 : port B0.Out_Value -> B1.In_Value;
+    B1_to_B2 : port B1.Out_Value -> B2.In_Value;
+  end node_a.impl;
+  
+  ------------
+  -- System --
+  ------------
+  
+  system tt 
+  end tt;
+  
+  system implementation tt.impl
+  subcomponents
+    node_a : process node_a.impl;
+    cpu_rm : processor cpurm.impl;
+  properties
+    Actual_Processor_Binding => (reference (cpu_rm)) applies to node_a;
+  end tt.impl;
+
+end Time_Triggered;

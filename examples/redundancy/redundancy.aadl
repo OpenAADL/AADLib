@@ -1,0 +1,65 @@
+--  This AADL model illustrates how to define redundant systems
+
+package Redundancy
+public
+  
+  --------------------------
+  -- Replicable_Component --
+  --------------------------
+
+  abstract Replicable_Component
+  -- Basic unit of a replica
+
+  features
+    -- These features denote the interface each replicable component
+    -- should support to:
+
+    Activate : in  event port; -- Activate the component
+    Error    : out event port; -- Report component failure
+
+--    IO : feature group Interface;
+
+  end Replicable_Component;
+  
+  ----------------------------
+  -- Cold redundancy policy --
+  ----------------------------
+
+  abstract Cold
+  prototypes
+    Component : abstract Replicable_Component;
+  end Cold;
+
+  abstract implementation Cold.i
+  subcomponents
+    Component_1 : abstract Replicable_Component; -- Replica #1
+    Component_2 : abstract Replicable_Component; -- Replica #2
+
+  annex behavior_specification {**
+  -- Should define here semantics for this policy
+  -- e.g. on error from #1, activate #2
+  **};
+  end Cold.i;
+
+  -----------------------------------------------------------------------------
+  -- Example of use
+
+  abstract The_Function extends Replicable_Component
+
+  -- How to denote the functional interface for this component, and how
+  -- to connect it to the redundancy policy?
+
+  -- Check with feature group, i.e. define an abstract feature group,
+  -- and refines it to the actual feature group of the replicated
+  -- component in the instance below
+
+  end The_Function;
+
+  abstract Replicated_Function
+  end Replicated_Function;
+
+  abstract implementation Replicated_Function.i 
+     extends Cold.i (Component => abstract The_Function)
+  end Replicated_Function.i;
+
+end Redundancy;

@@ -1,0 +1,215 @@
+package AOCS
+public
+  with hardware;
+  with software;
+  with dataaocs;
+  
+  process AOCSprocessing
+  features
+    -- Mode changes --
+    Forcing_Safe_Mode : in event port;
+    Getting_Back_To_Normal_Mode : in event port;
+    
+    -- Ports for external communication with sensors/actuators and
+    -- telecommand/telemetry
+
+    -- Attitude control --
+    sensored_attitude : in data port dataaocs::GYR_data;
+    sun_direction : in data port dataaocs::FSS_data;
+    reference_torque : out data port dataaocs::RW_data;
+    
+    -- Orbit Control --
+    reference_force : out data port dataaocs::THU_data;
+    
+    -- Telecommand Processing --
+    telecommand : in data port dataaocs::telecommand;
+    power_status_FSS : out data port dataaocs::power_status; 
+    power_status_CSS : out data port dataaocs::power_status; 
+    power_status_SPS : out data port dataaocs::power_status; 
+    power_status_ES : out data port dataaocs::power_status; 
+    power_status_MGM : out data port dataaocs::power_status; 
+    power_status_GYR : out data port dataaocs::power_status; 
+    power_status_STR : out data port dataaocs::power_status;  
+    power_status_GPS : out data port dataaocs::power_status;
+    power_status_THU : out data port dataaocs::power_status; 
+    power_status_RW : out data port dataaocs::power_status;  
+    power_status_MGT : out data port dataaocs::power_status;
+    Force_mode_to_SM : out event port;
+    Force_mode_to_NM : out event port;
+    
+    -- Telemetry Processing --
+    telemetry : out data port dataaocs::telemetry;
+    -- TO DO : add inputs for sensor data
+    
+    -- Failure Detection and Isolation --
+    watchdog_event : out event port;
+    anomaly_detected : in event port;
+    
+    -- Failure Recovery --
+    Changing_mode_to_SM : out event port;
+    Changing_mode_to_NM : out event port;
+    
+    -- Reconfiguration --
+    FSS_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    CSS_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    SPS_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    ES_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    MGM_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    GYR_reconfiguration : out data port dataaocs::reconfigure_sensor; 
+    STR_reconfiguration : out data port dataaocs::reconfigure_sensor;  
+    GPS_reconfiguration : out data port dataaocs::reconfigure_sensor;
+    THU_reconfiguration : out data port dataaocs::reconfigure_actuator;
+    RW_reconfiguration : out data port dataaocs::reconfigure_actuator;
+    MGT_reconfiguration : out data port dataaocs::reconfigure_actuator;
+    
+    -- Manoeuvre Execution --
+    torque_command : out data port dataaocs::RW_data;
+    force_command : out data port dataaocs::THU_data;
+    
+  end AOCSprocessing;
+  
+  process implementation AOCSprocessing.others
+  subcomponents
+    ACF : thread Software::Attitude_Control_Function;
+    OCF : thread Software::Orbit_Control_Function  in modes (mode_NM);
+    TCP : thread Software::Telecommand_Processing;
+    TMP : thread Software::Telemetry_Processing;
+    FDR : thread Software::Failure_Detection_Isolation in modes (mode_NM);
+    FR  : thread Software::Failure_Recovery in modes (mode_NM);
+    Reconfig  : thread Software::Reconfigurations;
+    ME  : thread Software::Manoeuvre_Execution in modes (mode_NM);
+  connections
+    Cnx1 : port TCP.nominal_attitude -> ACF.nominal_attitude;
+    Cnx2 : port TCP.nominal_orbit -> OCF.nominal_orbit;
+    Cnx3 : port FR.reconfiguration_command -> Reconfig.command;
+    Cnx4 : port TCP.manoeuvre_command -> ME.command; 
+    Cnx5 : port TCP.attitude_window -> FDR.attitude_window;
+    Cnx6 : port TCP.check_thresholds -> FDR.check_thresholds; 
+  modes
+    mode_NM : initial mode;
+    mode_SM : mode;
+    mode_NM -[Forcing_Safe_Mode]-> mode_SM;
+    mode_SM -[Getting_Back_To_Normal_Mode]-> mode_NM;
+  end AOCSprocessing.others;
+  
+  processor Leon_Processor
+  end Leon_Processor;
+  
+  processor implementation Leon_Processor.impl
+  properties
+    Scheduling_Protocol => (Round_Robin_Protocol); -- Non preemptive
+  end Leon_Processor.impl;
+  
+  system AOCS_Subsystem
+  end AOCS_Subsystem;
+  
+  system implementation AOCS_Subsystem.impl
+  subcomponents
+    main : process AOCSprocessing.others;
+    cpu : processor Leon_Processor.impl;
+    FSS : device Hardware::FSS;
+    CSS : device Hardware::CSS;
+    SPS : device Hardware::SPS;
+    ES  : device Hardware::ES;
+    MGM : device Hardware::MGM;
+    GYR : device Hardware::GYR;
+    STR : device Hardware::STR;
+    GPS : device Hardware::GPS;
+    THU : device Hardware::THU;
+    RW  : device Hardware::RW;
+    MGT : device Hardware::MGT;
+    central_computer : device Hardware::Satellite_Central_Computer;
+    watchdog : device Hardware::watchdog;
+    DMA : bus Hardware::DMA;
+    obdh: bus Hardware::OBDH;
+  connections
+    -- Attitude Control Function Connections --
+    DMA_Cnx1 : port GYR.GYR_data -> main.sun_direction;
+    DMA_Cnx2 : port FSS.FSS_data -> main.sensored_attitude;
+    DMA_Cnx3 : port main.reference_torque -> RW.RW_data;
+    
+    -- Orbit Control Function Connections --
+    DMA_Cnx4 : port main.reference_force -> THU.THU_data;
+    
+    -- Telecommand Processing Connections --
+    OBDH_Cnx1 : port central_computer.telecommand -> main.telecommand;
+    DMA_Cnx5 : port main.power_status_FSS -> FSS.power_status_FSS;
+    DMA_Cnx6 : port main.power_status_CSS -> CSS.power_status_CSS;
+    DMA_Cnx7 : port main.power_status_SPS -> SPS.power_status_SPS;
+    DMA_Cnx8 : port main.power_status_ES -> ES.power_status_ES;
+    DMA_Cnx9 : port main.power_status_MGM -> MGM.power_status_MGM;
+    DMA_Cnx10 : port main.power_status_GYR -> GYR.power_status_GYR;
+    DMA_Cnx11 : port main.power_status_STR -> STR.power_status_STR;
+    DMA_Cnx12 : port main.power_status_GPS -> GPS.power_status_GPS;
+    DMA_Cnx13 : port main.power_status_THU -> THU.power_status_THU;
+    DMA_Cnx14 : port main.power_status_RW -> RW.power_status_RW;
+    DMA_Cnx15 : port main.power_status_MGT -> MGT.power_status_MGT;
+    -- Manual mode change --
+    Cnx_Mode3 : port main.Force_mode_to_SM -> main.Forcing_Safe_Mode;
+    Cnx_Mode4 : port main.Force_mode_to_NM -> main.Getting_Back_To_Normal_Mode;
+    
+    -- Telemetry Processing Connections --
+    OBDH_Cnx2 : port main.telemetry-> central_computer.telemetry ;
+    
+    -- Failure Detection and Isolation --
+    Watchdog_Cnx1 : port main.watchdog_event -> watchdog.watchdog_event;
+    Watchdog_Cnx2 : port watchdog.anomaly_detected -> main.anomaly_detected;
+    
+    -- Failure Recovery --
+  
+    -- Connect failure recovering mode events to input switching mode
+    -- events, AUTONOMOUS
+    Cnx_Mode1 : port main.Changing_mode_to_SM -> main.Forcing_Safe_Mode;
+    Cnx_Mode2 : port main.Changing_mode_to_NM -> main.Getting_Back_To_Normal_Mode;
+    
+    -- Reconfiguration --
+    DMA_Cnx16 : port main.FSS_reconfiguration -> FSS.reconfiguration;
+    DMA_Cnx17 : port main.CSS_reconfiguration -> CSS.reconfiguration;
+    DMA_Cnx18 : port main.SPS_reconfiguration -> SPS.reconfiguration;
+    DMA_Cnx19 : port main.ES_reconfiguration -> ES.reconfiguration;
+    DMA_Cnx20 : port main.MGM_reconfiguration -> MGM.reconfiguration;
+    DMA_Cnx21 : port main.GYR_reconfiguration -> GYR.reconfiguration;
+    DMA_Cnx22 : port main.STR_reconfiguration -> STR.reconfiguration;
+    DMA_Cnx23 : port main.GPS_reconfiguration -> GPS.reconfiguration;
+    DMA_Cnx24 : port main.THU_reconfiguration-> THU.reconfiguration;
+    DMA_Cnx25 : port main.RW_reconfiguration -> RW.reconfiguration;
+    DMA_Cnx26 : port main.MGT_reconfiguration -> MGT.reconfiguration;
+    
+    -- Manoeuvre Execution --
+    DMA_Cnx27 : port main.torque_command -> RW.RW_data;
+    DMA_Cnx28 : port main.force_command -> THU.THU_data;
+  properties
+    Actual_Processor_Binding => (reference (cpu)) applies to main;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx1;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx2;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx3;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx4;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx5;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx6;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx7;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx8;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx9;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx10;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx11;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx12;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx13;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx14;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx15;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx16;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx17;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx18;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx19;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx20;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx21;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx22;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx23;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx24;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx25;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx26;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx27;
+    Actual_Connection_Binding => (reference (DMA)) applies to DMA_Cnx28;
+    Actual_Connection_Binding => (reference (obdh)) applies to OBDH_Cnx1;
+    Actual_Connection_Binding => (reference (obdh)) applies to OBDH_Cnx2;
+  end AOCS_Subsystem.impl;
+  
+end AOCS;

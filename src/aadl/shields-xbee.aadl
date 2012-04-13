@@ -1,0 +1,31 @@
+-- This package models the X-Bee shield for the Arduino. For more
+-- details, see
+-- http://www.sparkfun.com/commerce/product_info.php?products_id=9841
+
+package Shields::XBee
+public
+  with Data_Sheet;
+  with Shields;
+
+  --------------
+  -- XBee --
+  --------------
+
+  device XBee extends Shields::Empty_Shield
+  features
+    RX : in     event port;
+    TX : in     event port;
+
+    GND        : in out event port;
+    VIN        : in out event port;
+
+  properties
+    Data_Sheet::UUID => 
+      "http://www.sparkfun.com/commerce/product_info.php?products_id=9841";
+    Data_Sheet::Version => "WRL-09841";
+  end XBee;
+
+  device implementation XBee.impl
+  end XBee.impl;
+
+end Shields::XBee;

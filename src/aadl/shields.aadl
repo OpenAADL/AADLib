@@ -1,0 +1,11 @@
+-- This package is the root device of all Arduino shields, "plug-in"
+-- on top of the Arduino platforms.
+
+package Shields
+public
+
+  device Empty_Shield
+
+  end Empty_Shield;
+
+end Shields;

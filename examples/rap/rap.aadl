@@ -1,0 +1,2347 @@
+package Software
+public
+  with Data_Model;
+  with Deployment;
+  with Transformations;
+
+  ----------
+  -- Data --
+  ----------
+  
+  --  All primitive data type names, such as Integer, Float, Character
+  --  names will be called RAP_<type>_<width>. Except for a string
+  --  which will be modeled as a character array with a maximum length
+  --  of 16.
+
+  data RAP_Int_32
+  properties
+    Data_Model::Data_Representation => Integer;
+  end RAP_Int_32;
+  
+  data RAP_Float_32
+  properties
+    --  Floating point types are discarded in high integrity systems. We
+    --  use fixed point types instead.
+    
+    Data_Model::Data_Representation   => Fixed;
+    Data_Model::Data_Digits => 18;
+    Data_Model::Data_Scale  => 8;
+  end RAP_Float_32;
+  
+  data RAP_Char
+  properties
+    Data_Model::Data_Representation => Character;
+  end RAP_Char;
+  
+  data RAP_String
+  end RAP_String;
+  
+  data implementation RAP_String.I
+  properties
+    Data_Model::Dimension => ( 16 );
+    Data_Model::Data_Representation => string;
+  end RAP_String.I;
+  
+  --  All compound data type names will have the form *_T to distinguish
+  --  from variable names that may take the same general form.
+  
+  --  A data type that gives the spherical orientation of an aircraft
+  --  (theta, phi, rho)
+  
+  data Orientation_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Orientation_T;
+  
+  data implementation Orientation_T.Impl
+  subcomponents
+    Roll  : data RAP_Int_32;
+    Pitch : data RAP_Int_32;
+    Yaw   : data RAP_Int_32;
+  end Orientation_T.Impl;
+  
+  data Acceleration_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Acceleration_T;
+  
+  data implementation Acceleration_T.Impl
+  subcomponents
+    Lateral      : data RAP_Int_32;
+    Longitudinal : data RAP_Int_32;
+    Normal       : data RAP_Int_32;
+  end Acceleration_T.Impl;
+  
+  data Position_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Position_T;
+  
+  data implementation Position_T.Impl
+  subcomponents
+    Latitude  : data RAP_Int_32;
+    Longitude : data RAP_Int_32;
+  end Position_T.Impl;
+  
+  --  Same as Position_T, but with an additional field: 'Altitude'
+  data Aircraft_Position_T extends Position_T
+  end Aircraft_Position_T;
+  
+  data implementation Aircraft_Position_T.Impl extends Position_T.Impl
+  subcomponents
+    Altitude : data RAP_Int_32;
+  end Aircraft_Position_T.Impl;
+  
+  data Velocity_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Velocity_T;
+  
+  data implementation Velocity_T.Impl
+  subcomponents
+    North    : data RAP_Int_32;
+    East     : data RAP_Int_32;
+    Vertical : data RAP_Int_32;
+  end Velocity_T.Impl;
+  
+  data Wind_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Wind_T;
+  
+  data implementation Wind_T.Impl
+  subcomponents
+    Direction : data RAP_Int_32;
+    Magnitude : data RAP_Int_32;
+  end Wind_T.Impl;
+  
+  --  Used to give location of an object relative to current aircraft
+  --  position Range_D gives distance, Azimuth gives the angle in the
+  --  horizontal plane and Elevation gives the angle in the vertical
+  --  plane.
+
+  data Location_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Location_T;
+  
+  data implementation Location_T.Impl
+  subcomponents
+    Range_D   : data RAP_Int_32;
+    Azimuth   : data RAP_Int_32;
+    Elevation : data RAP_Int_32;
+  end Location_T.Impl;
+  
+  --  Similar to Location_T, but we ignore the vertical angle
+  data Offset_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Offset_T;
+  
+  data implementation Offset_T.Impl
+  subcomponents
+    Range_D : data RAP_Int_32;
+    Bearing : data RAP_Int_32;
+  end Offset_T.Impl;
+  
+  --  Used by the autopilot to determine how long to fly in which
+  --  direction.
+  data Steer_to_Point_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Steer_to_Point_T;
+  
+  data implementation Steer_to_Point_T.Impl
+  subcomponents
+    Range_D    : data RAP_Int_32;
+    Bearing    : data RAP_Int_32;
+    Time_to_Go : data RAP_Int_32;
+  end Steer_to_Point_T.Impl;
+  
+  --  Reticle is the targetting designator on the HUD (Heads-Up Display)
+  --  This type gives the line-of-sight to which it points.
+  data Reticle_Position_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Reticle_Position_T;
+  
+  data implementation Reticle_Position_T.Impl
+  subcomponents
+    Azimuth   : data RAP_Int_32;
+    Elevation : data RAP_Int_32;
+  end Reticle_Position_T.Impl;
+  
+  --  Data received from the RWR (Radar Warning Receiver) Indicates the
+  --  radar energy incidence direction and frequency.
+  data Threat_T
+  properties
+    Data_Model::Data_Representation => struct;
+  end Threat_T;
+  
+  data implementation Threat_T.Impl
+  subcomponents
+    Bearing   : data RAP_Int_32;
+    Frequency : data RAP_Float_32;
+  end Threat_T.Impl;
+  
+  --  Waypoint_Table_T is a table of 15 Aircraft_Position_T.Impl entries
+  data Waypoint_Table_T
+  properties
+    Data_Model::Data_Representation => Array;
+  end Waypoint_Table_T;
+  
+  data implementation Waypoint_Table_T.Impl
+  properties
+    Data_Model::Dimension => ( 16 );
+    Data_Model::Base_Type => (classifier (Software::Aircraft_Position_T.Impl));
+  end Waypoint_Table_T.Impl;
+  
+  --  Sent by the radar, it is capable of tracking 15 targets
+  --  simultaneously. Thus, the size of this vector should be 15
+  data Contact_Table_T
+  properties
+    Data_Model::Data_Representation => Array;
+  end Contact_Table_T;
+  
+  data implementation Contact_Table_T.Impl
+  properties
+    Data_Model::Dimension => ( 15 );
+    Data_Model::Base_Type => (classifier (Software::Offset_T.Impl));
+  end Contact_Table_T.Impl;
+  
+  -----------------
+  -- Subprograms --
+  -----------------
+
+  subprogram Flight_Data_Job
+  features
+    Angle_of_Attack  : in out parameter RAP_Int_32;
+    True_Airspeed    : in out parameter RAP_Int_32;
+    True_Heading     : in parameter RAP_Int_32;
+    Body_Rates       : in out parameter Orientation_T.Impl;
+    Acceleration     : in out parameter Acceleration_T.Impl;
+    Present_Position : in parameter Position_T.Impl;
+    Radar_Altitude   : in parameter RAP_Int_32;
+    Barometric_Altitude : in parameter RAP_Int_32;
+    Velocity         : in out parameter Velocity_T.Impl;
+    Position         : out parameter Aircraft_Position_T.Impl;
+    Reference_Velocity : out parameter Velocity_T.Impl;
+    Ground_Speed       : out parameter RAP_Int_32;
+    Ground_Track_Angle : out parameter RAP_Int_32;
+    Altitude         : out parameter RAP_Int_32;
+  properties
+    source_language => Ada95;
+    source_name => "AC_Flight_Data.Job";
+  end Flight_Data_Job;
+  
+  subprogram Steering_Job
+  features
+    Position : in parameter Aircraft_Position_T.Impl;
+    Velocity : in parameter Velocity_T.Impl;
+    Waypoint_Counter : in parameter RAP_Int_32;
+    Waypoint_Table             : in parameter Waypoint_Table_T.Impl;
+    Offset                     : in parameter Offset_T.Impl;
+    Waypoint_Steering_Selected : in parameter RAP_Int_32;
+    Target_Location            : in parameter Location_T.Impl;
+    Steer_To_Point             : out parameter Steer_To_Point_T.Impl;
+  properties
+    source_language => Ada95;
+    source_name => "Steering.Job";
+  end Steering_Job;
+  
+  subprogram Radar_Controler_Job
+  features
+    Radar_Mode      : in out parameter RAP_Int_32;
+    Contact_Table   : in parameter Contact_Table_T.Impl;
+    Target_Position : in parameter Location_T.Impl;
+    Contact_Number_to_Track : in out parameter RAP_Int_32;
+  properties
+    source_language => Ada95;
+    source_name => "Radar_Controler.Job";
+  end Radar_Controler_Job;
+  
+  subprogram Target_Tracking_Job
+  features
+    Aircraft_Position : in parameter Aircraft_Position_T.Impl;
+    HUD_Target_Designation_Selected   : in parameter RAP_Int_32;
+    Radar_Target_Designation_Selected : in parameter RAP_Int_32;
+    TDC_HUD_Reticle_Delta : in parameter Reticle_Position_T.Impl;
+    Target_Position : in parameter Location_T.Impl;
+    Target_Velocity : in out parameter Velocity_T.Impl; --  OUT to AG
+    Target_Location : out parameter Location_T.Impl;
+    Target_Reticle  : out parameter RAP_Int_32;
+  properties
+    source_language => Ada95;
+    source_name => "Target_Tracking.Job";
+  end Target_Tracking_Job;
+  
+  subprogram WS_On_Weapon_Select_Request
+  features
+    Quantity_Select_Request : in out parameter RAP_Int_32;
+    Interval_Select_Request : in out parameter RAP_Int_32;
+    Weapon_Selected         : out parameter RAP_Int_32;
+    Weapon_Select_Request   : in parameter RAP_Int_32;
+  properties
+    source_language => Ada95;
+    source_name => "Weapon_Selection.On_Weapon_Select_Request";
+  end WS_On_Weapon_Select_Request;
+  
+  subprogram WS_On_Auto_CCIP_Toggle
+  features
+    Delivery_Mode_Selected : out parameter RAP_Int_32;
+  properties
+    source_language => Ada95;
+    source_name => "Weapon_Selection.On_Auto_CCIP_Toggle";
+  end WS_On_Auto_CCIP_Toggle;
+  
+  subprogram WT_On_Relaunch
+  features
+    Aircraft_Position   : in parameter Aircraft_Position_T.Impl;
+    Barometric_Altitude : in parameter RAP_Int_32;
+    Aircraft_Velocity   : in parameter Velocity_T.Impl;
+    Mach_Number         : in parameter RAP_Int_32;
+    Wind                : in parameter Wind_T.Impl;
+    Attitude            : in parameter Orientation_T.Impl;
+    Angle_of_Attack     : in parameter RAP_Int_32;
+    Weapon_Selected     : in parameter RAP_Int_32;
+    Target_Location     : in parameter Location_T.Impl;
+    Delivery_Mode_Selected : in parameter RAP_Int_32;
+    Ballistic_Coefficients : in parameter RAP_Int_32;
+    Time_to_go_to_Release  : out parameter RAP_Int_32;
+    Weapon_Down_Range_Travel  : out parameter RAP_Int_32;
+    Weapon_Cross_Range_Travel : out parameter RAP_Int_32;
+    do_relaunch         : out event port;
+  properties
+    source_language => Ada95;
+    source_name => "Weapon_Trajectory.On_Relaunch";
+  end WT_On_Relaunch;
+  
+  subprogram WR_On_Manual_Weapon_Release
+  features
+    Time_to_go_to_Release   : in parameter RAP_Int_32;
+    Weapon_Release_Interval : in parameter RAP_Int_32;
+    Delivery_Mode_Selected  : in parameter RAP_Int_32;
+    Bomb_Button_Depressed   : in parameter RAP_Int_32;
+    do_relaunch             : out event port;
+    Release_Signal          : out event port;
+  properties
+    source_language => Ada95;
+    source_name => "Weapon_Release.On_Manual_Weapon_Release";
+  end WR_On_Manual_Weapon_Release;
+  
+  subprogram WR_On_Relaunch
+  features
+    Time_to_go_to_Release   : in parameter RAP_Int_32;
+    Weapon_Release_Interval : in parameter RAP_Int_32;
+    Delivery_Mode_Selected  : in parameter RAP_Int_32;
+    Bomb_Button_Depressed   : in parameter RAP_Int_32;
+    do_relaunch             : out event port;
+    Release_Signal          : out event port;
+  properties
+    source_language => Ada95;
+    source_name => "Weapon_Release.On_Relaunch";
+  end WR_On_Relaunch;
+  
+  subprogram HUD_Display_Job
+  features
+    Airspeed            : in parameter RAP_Int_32;
+    Position            : in parameter Aircraft_Position_T.Impl;
+    Angle_of_Attack     : in parameter RAP_Int_32;
+    Target_Reticle      : in parameter RAP_Int_32;
+    Reticle_Position    : in parameter Reticle_Position_T.Impl;
+    Time_to_go_to_Release : in parameter RAP_Int_32;
+  properties
+    source_language => Ada95;
+    source_name => "HUD_Display.Job";
+  end HUD_Display_Job;
+  
+  subprogram MPD_Tactical_Display_Job
+  features
+    Contact_Table   : in parameter Contact_Table_T.Impl;
+    Target_Position : in parameter Location_T.Impl;
+    Threat_Table    : in parameter Contact_Table_T.Impl;
+    Position        : in parameter Aircraft_Position_T.Impl;
+    Weapon_Select_request : out parameter RAP_Int_32;
+  properties
+    source_language => Ada95;
+    source_name => "MPD_Tactical_Display.Job";
+  end MPD_Tactical_Display_Job;
+  
+  subprogram MPD_Stores_Display_Job
+  properties
+    source_language => Ada95;
+    source_name => "MPD_Stores_Display.Job";
+  end MPD_Stores_Display_Job;
+  
+  subprogram MPD_Status_Display_Job
+  properties
+    source_language => Ada95;
+    source_name => "MPD_Status_Display.Job";
+  end MPD_Status_Display_Job;
+  
+  subprogram Keyset_Job
+  features
+    Keyset_RWR_Program_Message    : in parameter RAP_Int_32;
+    Keyset_Weapon_Program_Message : in parameter RAP_Int_32;
+    Keymap_Image                  : in parameter RAP_Int_32;
+    Waypoint_Steering_Selected    : out parameter RAP_Int_32;	
+    Quantity_Select_Request       : out parameter RAP_Int_32;
+    Auto_CCIP_Toggle              : out event port;
+  properties
+    source_language => Ada95;
+    source_name => "Keyset.Job";
+  end Keyset_Job;
+  
+  subprogram RWR_Threat_Response_Job
+  features
+    Threat_Table: in parameter RAP_Int_32;
+    Threat_Warning: out parameter RAP_Int_32;
+  properties
+    source_language => Ada95;
+    source_name => "RWR_Threat_Response.Job";
+  end RWR_Threat_Response_Job;
+  
+  subprogram RWR_Control_Job
+  features
+    RWR_Frequency_Table        : in parameter RAP_Float_32;
+    RWR_Search_Sector_Table    : in parameter RAP_Float_32;
+    Threat_Radar_Frequency_Message : out parameter RAP_Float_32;
+    Threat_Search_Sector_Message   : out parameter RAP_Float_32;
+  properties
+    source_language => Ada95;
+    source_name => "RWR_Control.Job";
+  end RWR_Control_Job;
+  
+  subprogram Builtin_Test_Job
+  properties
+    source_language => Ada95;
+    source_name => "Builtin_Test.Job";
+  end Builtin_Test_Job;
+  
+  subprogram HOTAS_Job
+  features
+    Bomb_Button            : out parameter RAP_Int_32;
+    Manual_Weapon_Release  : out event port;
+  properties
+    source_language => Ada95;
+    source_name => "HOTAS.Job";
+  end HOTAS_Job;
+  
+  -------------
+  -- Threads --
+  -------------
+  
+  --  This thread gathers data from the ADC, the INS and the RALT to
+  --  determine the best available estimates of aircraft position,
+  --  orientation, velocity and motion through airmass.
+
+  --  In effect, this is a major HIL (Hardware-In-the-Loop) thread
+  --  through which we will simulate sensors.
+
+  thread AC_Flight_Data_T
+  features
+    --  Inputs from ADC
+    
+    Angle_of_Attack_Request : in data port RAP_Int_32;
+    --  Mach_Number         : in data port RAP_Int_32;
+    Barometric_Altitude     : in data port RAP_Int_32;
+    --  Magnetic_Heading    : in data port RAP_Int_32;
+    True_Airspeed           : in data port RAP_Int_32;
+    
+    --  Inputs from INS
+    
+    Body_Rates_In    : in data port Orientation_T.Impl;
+    Acceleration_In  : in data port Acceleration_T.Impl;
+    Present_Position : in data port Position_T.Impl;
+    True_Heading     : in data port RAP_Int_32;
+    Velocity_In      : in data port Velocity_T.Impl;
+    
+    --  Inputs from RALT
+    
+    Radar_Altitude : in data port RAP_Int_32;
+    
+    --  Outputs to INS
+    
+    Reference_Velocity : out data port Velocity_T.Impl;
+    
+    --  Outputs to NAV
+    
+    Airspeed                  : out data port RAP_Int_32;
+    Rate_of_Change_Airspeed   : out data port RAP_Int_32;
+    Position                  : out data port Aircraft_Position_T.Impl;
+    Angle_Of_Attack           : out data port RAP_Int_32;
+    Attitude                  : out data port Orientation_T.Impl;
+    Body_Rates                : out data port Orientation_T.Impl;
+    Flight_Path_Angle         : out data port RAP_Int_32;
+    Ground_Speed              : out data port RAP_Int_32;
+    Ground_Track_Angle        : out data port RAP_Int_32;
+    Magnetic_Variation        : out data port RAP_Int_32;
+    Altitude                  : out data port RAP_Int_32;
+    Velocity                  : out data port Velocity_T.Impl;
+    Acceleration              : out data port Acceleration_T.Impl;
+    Wind                      : out data port Wind_T.Impl;
+    Body_to_Earth_Transform   : out data port RAP_Int_32;
+    Body_to_Horizon_Transform : out data port RAP_Int_32;
+    Radar_to_Body_Transform   : out data port RAP_Int_32;
+    Radar_to_Earth_Transform  : out data port RAP_Int_32;
+    
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 59 ms;
+    Deadline               => Period;
+    Compute_Execution_Time => 0 ms .. 8 ms;
+    Priority => 1;
+  end AC_Flight_Data_T;
+  
+  thread implementation AC_Flight_Data_T.i
+  calls cs : {
+    job : subprogram Flight_Data_Job;
+    };
+  connections
+    c1 : parameter Angle_of_Attack_Request -> job.angle_of_attack;
+    c2 : parameter Job.Angle_of_Attack -> Angle_of_attack;
+    c3 : parameter True_Airspeed -> job.True_Airspeed;
+    c4 : parameter Body_Rates_In -> job.Body_Rates;
+    c5 : parameter job.Body_Rates -> Body_Rates;
+    c6 : parameter Acceleration_In -> job.Acceleration;
+    c7 : parameter job.Acceleration -> Acceleration;
+    c8 : parameter Present_Position -> job.Present_Position;
+    c9 : parameter True_Heading -> job.True_Heading;
+    c10 : parameter Velocity_In -> job.Velocity;
+    c11 : parameter job.Velocity -> Velocity;
+    c12 : parameter job.Ground_Speed -> Ground_Speed;
+    c13 : parameter job.Ground_Track_Angle -> Ground_Track_Angle;
+    c14 : parameter job.True_Airspeed -> Airspeed;
+    c15 : parameter job.Position -> Position;
+    c16 : parameter job.Reference_Velocity -> Reference_Velocity;
+    c17 : parameter Radar_Altitude -> job.Radar_Altitude;
+    c18 : parameter Barometric_Altitude -> job.Barometric_Altitude;
+    c19 : parameter job.Altitude -> Altitude;
+    
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (cs);
+  end AC_Flight_Data_T.i;
+  
+  --  Compute the steering cues for display on the HUD and MPD.
+
+  thread Steering_T
+  features
+    --  Inputs from NAV
+    
+    Position : in data port Aircraft_Position_T.Impl;
+    Velocity : in data port Velocity_T.Impl;
+    
+    --  Inputs from MPD
+    
+    Waypoint_Counter : in data port RAP_Int_32;
+    
+    --  Inputs from Keyset
+    
+    Waypoint_Table             : in data port Waypoint_Table_T.Impl;
+    Offset                     : in data port Offset_T.Impl;
+    Waypoint_Steering_Selected : in data port RAP_Int_32;
+    
+    --  Inputs from AG
+    
+    Target_Location : in data port Location_T.Impl;
+    
+    --  Output to NAV
+    
+    Steer_to_Point : out data port Steer_to_Point_T.Impl;
+    
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 80 ms;
+    Deadline               => Period;
+    Compute_Execution_Time => 0 ms .. 6 ms;
+    Priority => 2;
+  end Steering_T;
+  
+  thread implementation Steering_T.i
+  calls cs : {
+    job : subprogram Steering_Job;
+    };
+    
+  connections
+    c1 : parameter Position -> job.Position;
+    c2 : parameter Velocity -> job.Velocity;
+    c3 : parameter job.Steer_To_Point -> Steer_To_Point;
+    c4 : parameter Waypoint_Counter -> job.Waypoint_Counter;
+    c5 : parameter Waypoint_Table -> job.Waypoint_Table;
+    c6 : parameter Offset -> job.Offset;
+    c7 : parameter Waypoint_Steering_Selected 
+    -> job.Waypoint_Steering_Selected;
+    c8 : parameter Target_Location -> job.Target_Location;
+    
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (cs);
+  end Steering_T.i;
+  
+  --  The radar controller thread.
+  
+  thread Radar_Control_T
+  features
+    --  Inputs from Radar
+    
+    Radar_Mode_Request : in data port RAP_Int_32;
+    Radar_Mode         : out data port RAP_Int_32;
+    Contact_Table      : in data port Contact_Table_T.Impl;
+    Target_Position    : in data port Location_T.Impl;
+    
+    --  Inputs from MPD
+    
+  Contact_Number_to_Track_Request : in data port RAP_Int_32;
+
+  --  Outputs to Radar
+
+  Contact_Number_to_Track : out data port RAP_Int_32;
+  --  Radar_Mode              : in out data port RAP_Int_32;
+  Status                      : out data port RAP_Int_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 40 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 2 ms;
+  Priority => 3;
+end Radar_Control_T;
+
+thread implementation Radar_Control_T.i
+calls cs : {
+    job : subprogram Radar_Controler_Job;
+  };
+
+connections
+  c1 : parameter Radar_Mode_Request -> job.Radar_Mode; 
+  c2 : parameter Contact_Table -> job.Contact_Table;
+  c3 : parameter Target_Position -> job.Target_Position;
+  c4 : parameter job.Radar_Mode -> Radar_Mode; 
+  c5 : parameter Contact_Number_to_Track_Request -> 
+       job.Contact_Number_to_Track;
+  c6 : parameter job.Contact_Number_to_Track -> Contact_Number_to_Track;
+
+properties
+  Compute_Entrypoint_Call_Sequence => reference (cs);
+end Radar_Control_T.i;
+
+thread Target_Tracking_T
+features
+  --  Inputs from NAV
+
+  Aircraft_Position : in data port Aircraft_Position_T.Impl;
+
+  --  Inputs from AG
+
+  Target_Velocity_In  : in data port Velocity_T.Impl;
+  HUD_Target_Designation_Selected   : in data port RAP_Int_32;
+  Radar_Target_Designation_Selected : in data port RAP_Int_32;
+
+  --  Inputs from HOTAS
+
+  TDC_HUD_Reticle_Delta : in data port Reticle_Position_T.Impl;
+
+  --  Inputs from Radar
+
+  Target_Position : in data port Location_T.Impl;
+
+  --  Outputs to AG
+
+  Target_Location         : out data port Location_T.Impl;
+  Target_Velocity_Out     : out data port Velocity_T.Impl;
+
+  --  Outputs to HUD
+
+  Target_Reticle   : out data port RAP_Int_32;
+  Reticle_Position : out data port Reticle_Position_T.Impl;
+
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 40 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 6 ms;  
+  --  computation code = 4 ms
+  --  sweetening cost = 2 ms
+  Priority => 4;
+end Target_Tracking_T;
+
+thread implementation Target_Tracking_T.i
+calls cs : {
+    job : subprogram Target_Tracking_Job;
+  };
+
+connections
+  c1 : parameter Aircraft_Position -> job.Aircraft_Position;
+  c2 : parameter Target_Velocity_In -> job.Target_Velocity;
+  c3 : parameter HUD_Target_Designation_Selected -> 
+                 job.HUD_Target_Designation_Selected;
+  c4 : parameter Radar_Target_Designation_Selected -> 
+                 job.Radar_Target_Designation_Selected;
+  c5 : parameter TDC_HUD_Reticle_Delta -> job.TDC_HUD_Reticle_Delta;
+  c6 : parameter Target_Position -> job.Target_Position;
+  c7 : parameter job.Target_Location -> Target_Location;
+  c8 : parameter job.Target_Velocity -> Target_Velocity_Out;
+  c9 : parameter job.Target_Reticle -> Target_Reticle;
+
+properties
+  Compute_Entrypoint_Call_Sequence => reference (cs);
+end Target_Tracking_T.i;
+
+thread Weapon_Selection_T
+features
+  --  Inputs from MPD
+
+  Weapon_Select_Request   : in event data port RAP_Int_32;
+
+  --  Inputs from Keyset
+
+  Quantity_Select_Request : in data port RAP_Int_32;
+  Interval_Select_Request : in data port RAP_Int_32;
+  Auto_CCIP_Toggle        : in event port;
+
+  --  Outputs to MPD
+
+  Weapon_Selected        : out data port RAP_Int_32; -- OUT to SMS
+  Quantity_Selected      : out data port RAP_Int_32; -- OUT to SMS
+  Interval_Selected      : out data port RAP_Int_32; -- OUT to SMS
+  Delivery_Mode_Selected : out data port RAP_Int_32; -- OUT to HUD and AG
+properties
+  Dispatch_Protocol      => Sporadic;
+  Period                 => 200 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 1 ms;
+  Priority => 5;
+end Weapon_Selection_T;
+
+thread implementation Weapon_Selection_T.i
+calls 
+   cs1 : {
+     job1 : subprogram WS_On_Weapon_Select_Request;
+   };
+   cs2 : {
+     job2 : subprogram WS_On_Auto_CCIP_Toggle;
+   };
+connections
+   c1 : parameter Weapon_Select_Request -> job1.Weapon_Select_Request;
+   c2 : parameter Quantity_Select_Request -> job1.Quantity_Select_Request;
+   c3 : parameter Interval_Select_Request -> job1.Interval_Select_Request;
+   c4 : parameter job1.Interval_Select_Request -> Interval_Selected;
+   c6 : parameter job1.Quantity_Select_Request -> Quantity_Selected;
+   c7 : parameter job1.Weapon_Selected -> Weapon_Selected;
+   c9 : parameter job2.Delivery_Mode_Selected -> Delivery_Mode_Selected;
+
+properties
+   compute_entrypoint_call_sequence   => reference (cs1)
+      applies to Weapon_Select_Request;
+   compute_entrypoint_call_sequence   => reference (cs2)
+      applies to Auto_CCIP_Toggle;
+
+end Weapon_Selection_T.i;
+
+thread Weapon_Trajectory_T
+features
+  --  Inputs from NAV
+
+  Aircraft_Position   : in data port Aircraft_Position_T.Impl;
+  Barometric_Altitude : in data port RAP_Int_32;
+  Aircraft_Velocity   : in data port Velocity_T.Impl;
+  Mach_Number         : in data port RAP_Int_32;
+  Wind                : in data port Wind_T.Impl;
+  Angle_of_Attack     : in data port RAP_Int_32;
+  Attitude            : in data port Orientation_T.Impl;
+  Body_Rates          : in data port Orientation_T.Impl;
+
+  --  Inputs from AG
+
+  Target_Location        : in data port Location_T.Impl;
+  Delivery_Mode_Selected : in data port RAP_Int_32;
+
+  --  Inputs from MPD
+
+  Weapon_Selected : in data port RAP_Int_32;
+
+  --  Inputs from SMS
+
+  Ballistic_Coefficients : in data port RAP_Int_32;
+
+  --  Outputs to AG
+
+  Time_to_go_to_Release     : out data port RAP_Int_32;
+  --  Weapon_Time_of_Fall       : out data port RAP_Int_32;
+  Weapon_Down_Range_Travel  : out data port RAP_Int_32;
+  Weapon_Cross_Range_Travel : out data port RAP_Int_32;
+  --  Weapon_Down_Range_Error   : out data port RAP_Int_32;
+  --  Weapon_Cross_Range_Error  : out data port RAP_Int_32;
+
+  --  Workaround: This thread is sporadic, but once, it is triggered,
+  --  it becomes periodic until it is deactivated. Requires some
+  --  engeneering in the implemntation code.
+  Do_Relaunch : out event port;
+  Relaunch    : in event port;
+properties
+  Dispatch_Protocol      => Sporadic;
+  Period                 => 100 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 7 ms;
+  Priority => 6;
+end Weapon_Trajectory_T;
+
+thread implementation Weapon_Trajectory_T.i
+calls 
+   cs : {
+     job : subprogram WT_On_Relaunch;
+   };
+connections
+   c1 : port job.do_relaunch -> do_relaunch;
+   c2 : parameter Aircraft_Position  -> job.Aircraft_Position;
+   c3 : parameter Barometric_Altitude -> job.Barometric_Altitude;
+   c4 : parameter Aircraft_Velocity -> job.Aircraft_Velocity;
+   c5 : parameter Mach_Number  -> job.Mach_Number;
+   c6 : parameter Wind -> job.Wind;
+   c7 : parameter Angle_of_Attack -> job.Angle_of_Attack;
+   c8 : parameter Weapon_Selected -> job.Weapon_Selected;
+   c9 : parameter Target_Location -> job.Target_Location;
+   c10 : parameter Delivery_Mode_Selected -> job.Delivery_Mode_Selected;
+   c11 : parameter job.Time_to_go_to_Release -> Time_to_go_to_Release;
+   c12 : parameter Ballistic_Coefficients -> job.Ballistic_Coefficients;
+   c13 : parameter job.Weapon_Cross_Range_Travel -> Weapon_Cross_Range_Travel;
+   c14 : parameter job.Weapon_Down_Range_Travel -> Weapon_Down_Range_Travel;
+   c15 : parameter Attitude -> job.Attitude;
+
+properties
+   compute_entrypoint_call_sequence => reference (cs)
+      applies to Relaunch;
+end Weapon_Trajectory_T.i;
+
+--  Complicated thread. Specification says that there are two weapon
+--  release modes, CCIP (manual) and automatic.
+
+--  CCIP: Weapon release must occur within 5ms of the button
+--  depression by the pilot in order to have a correct
+--  trajectory. This implies that this needs to be a high-priority
+--  thread when it is active (in the sense of a self-starting sporadic
+--  thread)
+
+thread Weapon_Release_T
+features
+  --  Inputs from AG
+
+  Time_to_go_to_Release   : in data port RAP_Int_32;
+  Weapon_Release_Interval : in data port RAP_Int_32;
+  Delivery_Mode_Selected  : in data port RAP_Int_32; --  0 for CCIP, 1 for auto
+
+  --  Inputs from SMS
+
+  Bomb_Button_Depressed : in data port RAP_Int_32;
+
+  --  Inputs from HOTAS
+
+  Manual_Weapon_Release : in event port;
+  --  XXX This has been added to the AADL model and did not exist in
+  --  the original GAP specification.
+
+  --  Ouputs to SMS
+
+  Release_Signal : out event port;
+
+  --  Workaround: This thread is sporadic, but once, it is triggered,
+  --  it becomes periodic until it is deactivated. Requires some
+  --  engeneering in the implementation code.
+  Relaunch    : in event port;
+  Do_Relaunch : out event port;
+properties
+  Dispatch_Protocol      => Sporadic;
+  Period                 => 200 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 3 ms;
+  Priority => 7;
+end Weapon_Release_T;
+
+thread implementation Weapon_Release_T.i
+calls 
+   cs1 : {
+     job1 : subprogram WR_On_Manual_Weapon_Release;
+   };
+   cs2 : {
+     job2 : subprogram WR_On_Relaunch;
+   };
+connections
+   c1 : port job1.do_relaunch -> do_relaunch;
+   c2 : port job2.do_relaunch -> do_relaunch;
+   c3 : parameter Time_to_go_to_Release -> job1.Time_to_go_to_Release;
+   c4 : parameter Time_to_go_to_Release -> job2.Time_to_go_to_Release;
+   c5 : parameter Delivery_Mode_Selected -> job1.Delivery_Mode_Selected;
+   c6 : parameter Delivery_Mode_Selected -> job2.Delivery_Mode_Selected;
+   c7 : parameter Bomb_Button_Depressed -> job1.Bomb_Button_Depressed;
+   c8 : parameter Bomb_Button_Depressed -> job2.Bomb_Button_Depressed;
+   c9 : parameter Weapon_Release_Interval -> job1.Weapon_Release_Interval;
+   c10 : parameter Weapon_Release_Interval -> job2.Weapon_Release_Interval;
+   c11 : port job1.Release_Signal -> Release_Signal;
+   c12 : port job2.Release_Signal -> Release_Signal;
+properties
+   compute_entrypoint_call_sequence   => reference (cs1)
+      applies to Manual_Weapon_Release;
+   compute_entrypoint_call_sequence   => reference (cs2)
+      applies to Relaunch;
+end Weapon_Release_T.i;
+
+thread HUD_Display_T
+features
+  --  Inputs from RWR_Threat_Response
+ 
+  Threat_Warning      : in data port RAP_Int_32;
+
+  --  Inputs from NAV
+
+  Airspeed            : in data port RAP_Int_32;
+  Position            : in data port Aircraft_Position_T.Impl;
+  Angle_of_Attack     : in data port RAP_Int_32;
+  Attitude            : in data port Orientation_T.Impl;
+  Body_Rates          : in data port Orientation_T.Impl;
+  Barometric_Altitude : in data port RAP_Int_32;
+  Velocity            : in data port Velocity_T.Impl;
+  Steer_to_Point      : in data port Steer_to_Point_T.Impl;
+
+  --  Inputs from HUD
+
+  Target_Reticle   : in data port RAP_Int_32;
+  Reticle_Position : in data port Reticle_Position_T.Impl;
+
+  --  Inputs from AG
+
+  Time_to_go_to_Release     : in data port RAP_Int_32;
+  Delivery_Mode_Selected    : in data port RAP_Int_32;
+  Weapon_Down_Range_Travel  : in data port RAP_Int_32;
+  Weapon_Cross_Range_Travel : in data port RAP_Int_32;
+
+  --  Outputs to DP
+
+  --  HUD_NAV_Data_Message        : out data port RAP_String.I;
+  --  HUD_Pitch_Ladder_Message    : out data port RAP_Int_32;
+  --  HUD_Velocity_Vector_Message : out data port RAP_Int_32;
+  --  HUD_Steering_Cue_Message    : out data port Steer_to_Point_T.Impl;
+  --  HUD_Reticle_Message         : out data port RAP_String.I;
+  --  HUD_Weapon_Release_Message  : out data port RAP_String.I;
+  --  HUD_CCIP_Display_Message    : out data port RAP_String.I;
+
+  --  Outputs to Buildt-in test
+
+  Error_Advisory_Message : in data port RAP_String.I;
+  --  XXX: Added for consitency
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 52 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 6 ms;
+  Priority => 8;
+end HUD_Display_T;
+
+thread implementation HUD_Display_T.i
+calls 
+   cs : {
+     job : subprogram HUD_Display_Job;
+   };
+connections
+   c1 : parameter angle_of_attack -> job.angle_of_attack;
+   c2 : parameter Airspeed -> job.Airspeed;
+   c3 : parameter Position -> job.Position;
+   c4 : parameter Target_Reticle -> job.Target_Reticle;
+   c5 : parameter Reticle_Position -> job.Reticle_Position;
+   c6 : parameter Time_to_go_to_Release -> job.Time_to_go_to_Release;
+   
+properties
+   compute_entrypoint_call_sequence   => reference (cs);
+end HUD_Display_T.i;
+
+thread MPD_Tactical_Display_T
+features
+  --  Output to Weapons
+  Weapon_Select_Request : out data port RAP_Int_32;
+
+  --  Inputs from MPD
+
+  Tactical_Display_Scale_Selected : in data port RAP_Int_32;
+
+  --  Inputs from Radar
+
+  Contact_Table   : in data port Contact_Table_T.Impl;
+  Target_Position : in data port Location_T.Impl;
+
+  --  Inputs from RWR
+
+  Threat_Table   : in data port Contact_Table_T.Impl;
+  Threat_Warning : in data port RAP_Int_32;
+
+  --  Inputs from NAV
+
+  Position           : in data port Aircraft_Position_T.Impl;
+  Magnetic_Variation : in data port RAP_Int_32;
+  Steer_to_Point     : in data port Steer_to_Point_T.Impl;
+
+  --  Input frm AG
+
+  Target_Location : in data port Location_T.Impl;
+
+  --  Input from Built-in test
+
+  Error_Advisory_Message : in data port RAP_String.I;
+  --  XXX Added for consistency
+
+  --  Outputs to DP
+
+  --  MPD_Tactical_Radar_Contacts_Message  : out data port RAP_Int_32;
+  --  MPD_Tactical_Radar_Target_Message    : out data port RAP_Int_32;
+  --  MPD_Tactical_Threats_Display_Message : out data port RAP_Int_32;
+  --  MPD_Tactical_Compass_Rose_Message    : out data port RAP_Int_32;
+  --  MPD_AG_Target_Message                : out data port RAP_Int_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 52 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 9 ms;
+  Priority => 9;
+end MPD_Tactical_Display_T;
+
+thread implementation MPD_Tactical_Display_T.i
+calls 
+   cs : {
+     job : subprogram MPD_Tactical_Display_Job;
+   };
+
+connections
+  c1 : parameter Contact_Table -> job.Contact_Table;
+  c2 : parameter Target_Position -> job.Target_Position;
+  c3 : parameter Threat_Table -> job.Threat_Table;
+  c4 : parameter Position -> job.Position;
+  c5 : parameter job.Weapon_Select_Request -> Weapon_Select_Request;
+
+properties
+   compute_entrypoint_call_sequence   => reference (cs);  
+end MPD_Tactical_Display_T.i;
+
+thread MPD_Stores_Display_T
+features
+
+  --  Inputs (Deduces from topology)
+
+  Weapon_Selected        : in data port RAP_Int_32;
+  Quantity_Selected      : in data port RAP_Int_32;
+  Interval_Selected      : in data port RAP_Int_32;
+  Delivery_Mode_Selected : in data port RAP_Int_32;
+  Error_Advisory_Message : in data port RAP_String.I;
+
+  --  Outputs to DP
+
+  --  MPD_Stores_Remaining_Message: out data port RAP_Int_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 200 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 1 ms;
+  Priority => 10;
+end MPD_Stores_Display_T;
+
+thread implementation MPD_Stores_Display_T.i
+calls 
+   cs : {
+     job : subprogram MPD_Stores_Display_Job;
+   };
+properties
+   compute_entrypoint_call_sequence   => reference (cs);    
+end MPD_Stores_Display_T.i;
+
+thread MPD_Status_Display_T
+features
+  --  Inputs from MCC
+
+  MCC_Status: in data port RAP_Int_32;
+
+  --  Inputs from ADC
+
+  ADC_Status: in data port RAP_Int_32;
+
+  --  Inputs from INS
+
+  INS_Status: in data port RAP_Int_32;
+
+  --  Inputs from SMS
+
+  SMS_Status: in data port RAP_Int_32;
+
+  --  Inputs from Radar
+
+  Radar_Status: in data port RAP_Int_32;
+
+  --  Inputs from RWR
+
+  RWR_Status: in data port RAP_Int_32;
+
+  --  Inputs from RALT
+
+  RALT_Status: in data port RAP_Int_32;
+
+  --  Outputs to DP
+
+  --  MPD_Periodic_BIT_Message: out data port RAP_Int_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 200 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 3 ms;
+  Priority => 11;
+end MPD_Status_Display_T;
+
+thread implementation MPD_Status_Display_T.i
+calls 
+   cs : {
+     job : subprogram MPD_Status_Display_Job;
+   };
+properties
+   compute_entrypoint_call_sequence   => reference (cs);    
+end MPD_Status_Display_T.i;
+
+--  We fuse the Keypad and HOTAS functionality into one thread
+
+thread Keyset_T
+features
+  --  Inputs from DP
+
+  Keyset_RWR_Program_Message: in data port RAP_Int_32;
+  Keyset_Weapon_Program_Message: in data port RAP_Int_32;
+  Keyset_Target_Designation_Message: in data port RAP_Int_32;
+  Keyset_Delivery_Mode_Toggle_Message: in data port RAP_Int_32;
+
+  --  Input from Keyset hardware
+
+  Keymap_Image               : in data port RAP_Int_32;
+
+  --  Outputs to Keyset hardware
+
+  Waypoint_Table             : out data port Waypoint_Table_T.Impl;
+  Waypoint_Offset            : out data port Offset_T.Impl;
+  Waypoint_Steering_Selected : out data port RAP_Int_32;
+
+  -- This will go to the SMS (Stores Management Subsystem) as well as
+  -- to the MPD_Stores_Display_T instance in the system.
+
+  Quantity_Select_Request    : out data port RAP_Int_32;
+
+  -- This will go to the SMS (Stores Management Subsystem) as well as
+  -- to the MPD_Stores_Display_T instance in the system.
+
+  Interval_Select_Request    : out data port RAP_Int_32;
+  Auto_CCIP_Toggle           : out event port;
+
+  --  To the RWR_Control
+
+  RWR_Frequency_Table        : out data port RAP_Float_32;
+  RWR_Search_Sector_Table    : out data port RAP_Float_32;
+  RWR_Control_Commited       : out event port;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 200 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 1 ms;
+  Priority => 12;
+end Keyset_T;
+
+thread implementation Keyset_T.i
+calls 
+   cs : {
+     job : subprogram Keyset_Job;
+   };
+connections
+  c1 : parameter Keyset_RWR_Program_Message -> job.Keyset_RWR_Program_Message;
+  c4 : parameter Keyset_Weapon_Program_Message -> 
+       job.Keyset_Weapon_Program_Message;
+  c3 : parameter job.Quantity_Select_Request -> Quantity_Select_Request;
+  c5 : port job.Auto_CCIP_Toggle -> Auto_CCIP_Toggle;
+  c6 : port Keymap_Image -> job.Keymap_Image;
+  c7 : port job.Waypoint_Steering_Selected -> Waypoint_Steering_Selected;
+properties
+   compute_entrypoint_call_sequence   => reference (cs);    
+end Keyset_T.i;
+
+thread RWR_Control_T
+features
+  RWR_Input_Commited         : in event port;
+  RWR_Frequency_Table        : in data port RAP_Float_32;
+  RWR_Search_Sector_Table    : in data port RAP_Float_32;
+
+  --  To RWR_H
+
+  Threat_Radar_Frequency_Message : out data port RAP_Float_32;
+  Threat_Search_Sector_Message   : out data port RAP_Float_32;
+properties
+  Dispatch_Protocol      => Sporadic;
+  Period                 => 400 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 22 ms;  
+  Priority => 13;
+end RWR_Control_T;
+
+thread implementation RWR_Control_T.i
+calls 
+   cs : {
+     job : subprogram rwr_control_job;
+   };
+connections
+  c1 : parameter RWR_Frequency_Table -> job.RWR_Frequency_Table;
+  c2 : parameter RWR_Search_Sector_Table -> job.RWR_Search_Sector_Table;
+  c3 : parameter job.Threat_Radar_Frequency_Message
+                 -> Threat_Radar_Frequency_Message;
+  c4 : parameter job.Threat_Search_Sector_Message
+                 -> Threat_Search_Sector_Message;
+
+properties
+   compute_entrypoint_call_sequence   => reference (cs)
+      applies to RWR_Input_Commited;
+end RWR_Control_T.i;
+
+
+thread RWR_Threat_Response_T
+features
+  -- Inputs from keyset hardware
+
+  Threat_Table: in data port RAP_Int_32;
+
+  --  Outputs to SMS
+
+  --  Stores_Select: out event data port RAP_Int_32;
+  --  Stores_Release: out event port;
+
+  --  Outputs to MPD and HUD
+
+  Threat_Warning: out data port RAP_Int_32;
+
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 100 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 5 ms;
+  Priority => 14;
+end RWR_Threat_Response_T;
+
+thread implementation RWR_Threat_Response_T.i
+calls 
+   cs : {
+     job : subprogram RWR_Threat_Response_Job;
+   };
+connections 
+   c1 : parameter Threat_Table -> job.Threat_Table;
+   c2 : parameter job.Threat_Warning -> Threat_Warning;
+end RWR_Threat_Response_T.i;
+
+thread Builtin_Test_T
+features
+  --  Output to MCC
+
+  MCC_Status : out data port RAP_Int_32;
+
+  --  Output to ADC
+
+  ADC_Status : out data port RAP_Int_32;
+  --  Output to INS
+  INS_Status : out data port RAP_Int_32;
+
+  --  Output to SMS
+
+  SMS_Status : out data port RAP_Int_32;
+
+  --  Output to Radar
+
+  Radar_Status : out data port RAP_Int_32;
+
+  --  Output to RWR
+
+  RWR_Status: out data port RAP_Int_32;
+
+  --  Outputs to DP
+
+  MPD_Error_Advisory_Message: out data port RAP_String.I;
+  HUD_Error_Advisory_Message: out data port RAP_String.I;
+
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 1000 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 1 ms;
+  Priority => 15;
+end Builtin_Test_T;
+
+thread implementation Builtin_Test_T.i
+calls 
+   cs : {
+     job : subprogram Builtin_Test_Job;
+   };
+properties
+   compute_entrypoint_call_sequence   => reference (cs);
+end Builtin_Test_T.i;
+
+--  HOTAS hardware emulator
+
+thread HOTAS_T
+features
+  Bomb_Button                : out data port RAP_Int_32;
+--  Target_Designation_Control : out data port RAP_Int_32;
+--  Undesignate                : out data port RAP_Int_32;
+
+  Manual_Weapon_Release      : out event port;
+
+  --  Emulate a event sending
+--  Designate_Target           : out data port RAP_Int_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 40 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 1 ms;
+  Priority => 16;
+end HOTAS_T;
+
+thread implementation HOTAS_T.i
+calls 
+   cs : {
+     job : subprogram HOTAS_Job;
+   };
+connections
+   c1 : port job.Manual_Weapon_Release -> Manual_Weapon_Release;
+   c2 : parameter job.Bomb_Button -> Bomb_Button;
+properties
+   compute_entrypoint_call_sequence   => reference (cs);  
+end HOTAS_T.i;
+
+----------------
+--  Processes
+
+process Weapons
+features
+  --  From keyset and HOTAS
+
+  Weapon_Select_Request     : in data port RAP_Int_32;
+  Interval_Select_Request   : in data port RAP_Int_32;
+  Quantity_Select_Request   : in data port RAP_Int_32;
+  Auto_CCIP_Toggle          : in event port;
+  Bomb_Button_Depressed     : in data port RAP_Int_32;
+  Manual_Weapon_Release     : in event port;
+  
+  --  From navigation
+
+  Body_Rates                : in data port Orientation_T.Impl;
+  Aircraft_Position         : in data port Aircraft_Position_T.Impl;
+  Attitude                  : in data port Orientation_T.Impl;
+  Wind                      : in data port Wind_T.Impl;
+  Barometric_Altitude       : in data port RAP_Int_32;
+  Aircraft_Velocity         : in data port Velocity_T.Impl;
+  Mach_Number               : in data port RAP_Int_32;
+
+  --  from Displays
+
+  Target_Location     : in data port Location_T.Impl;
+
+  --  From SMS
+
+  Ballistic_Coefficients    : in data port RAP_Int_32;
+
+  --  To SMS
+
+  Delivery_Mode_Selected    : out data port RAP_Int_32;
+  Weapon_Selected           : out data port RAP_Int_32;
+  Interval_Selected         : out data port RAP_Int_32;
+  Quantity_Selected         : out data port RAP_Int_32;
+  Release_Signal            : out event port;
+
+  --  To AG
+
+  Weapon_Down_Range_Travel  : out data port RAP_Int_32;
+  Weapon_Cross_Range_Travel : out data port RAP_Int_32;
+  Time_to_go_to_Release     : out data port RAP_Int_32;
+
+  --  From ADC
+
+  Angle_Of_Attack           : in data port RAP_Int_32;
+
+end Weapons;
+
+process implementation Weapons.impl
+subcomponents
+  WS  : thread Weapon_Selection_T.i;
+  WT  : thread Weapon_Trajectory_T.i;
+  WR  : thread Weapon_Release_T.i;
+connections
+  c0 : port Auto_CCIP_Toggle -> WS.Auto_CCIP_Toggle;
+  c1 : port Weapon_Select_Request -> WS.Weapon_Select_Request;
+  c2 : port Interval_Select_Request -> WS.Interval_Select_Request;
+  c3 : port Quantity_Select_Request -> WS.Quantity_Select_Request;
+
+  c4 : port WS.Interval_Selected -> Interval_Selected;
+  c5 : port WS.Quantity_Selected -> Quantity_Selected;
+  c6 : port WS.Weapon_Selected -> Weapon_Selected;
+  c7 : port WS.Delivery_Mode_Selected -> Delivery_Mode_Selected;
+
+  c8 : port WT.Do_Relaunch -> WT.Relaunch;
+  c9 : port WS.Delivery_Mode_Selected -> WR.Delivery_Mode_Selected;
+
+  c10 : port WS.Delivery_Mode_Selected -> WT.Delivery_Mode_Selected;
+  c11 : port Ballistic_Coefficients -> WT.Ballistic_Coefficients;
+  c12 : port Body_Rates -> WT.Body_Rates;
+  c13 : port Aircraft_Position -> WT.Aircraft_Position;
+  c14 : port Attitude -> WT.Attitude;
+  c15 : port Wind -> WT.Wind;
+  c16 : port Target_Location -> WT.Target_Location;
+  c18 : port Angle_Of_Attack -> WT.Angle_Of_Attack;
+  c19 : port Barometric_Altitude -> WT.Barometric_Altitude;
+  c20 : port Aircraft_Velocity -> WT.Aircraft_Velocity;
+  c21 : port Mach_Number -> WT.Mach_Number;
+
+  c22 : port WT.Weapon_Down_Range_Travel -> Weapon_Down_Range_Travel;
+  c23 : port WT.Weapon_Cross_Range_Travel -> Weapon_Cross_Range_Travel;
+  c24 : port WT.Time_to_go_to_Release -> WR.Time_to_go_to_Release;
+  c25 : port WT.Time_to_go_to_Release -> Time_to_go_to_Release;
+
+  c26 : port Bomb_Button_Depressed -> WR.Bomb_Button_Depressed;
+  c27 : port WR.Do_Relaunch -> WR.Relaunch;
+  c28 : port WR.Release_Signal -> Release_Signal;
+  c29 : port Manual_Weapon_Release -> WR.Manual_Weapon_Release;
+end Weapons.impl;
+
+process Navigation
+features
+  --  from RATL
+  Radar_Altitude       : in data port RAP_Int_32;
+
+  --  from INS
+
+  Acceleration_In      : in data port Acceleration_T.Impl;  
+  Present_Position     : in data port Position_T.Impl;
+  Velocity_in          : in data port Velocity_T.Impl;
+  True_Airspeed_In     : in data port RAP_Int_32;
+  Body_Rates_In        : in data port Orientation_T.Impl;
+
+  --  From ADC
+
+  Barometric_Altitude  : in data port RAP_Int_32;
+  Angle_Of_Attack_In   : in data port RAP_Int_32;
+  Mach_Number          : in data port RAP_Int_32;
+
+  --  from keyset
+
+  Waypoint_Counter     : in data port RAP_Int_32;
+  Waypoint_Table       : in data port Waypoint_Table_T.Impl;
+  Offset               : in data port Offset_T.Impl;
+  Waypoint_Steering_Selected : in data port RAP_Int_32;
+
+  --  from Displays
+
+  Target_Location     : in data port Location_T.Impl;
+
+  --  to Weapons
+
+  Body_Rates          : out data port Orientation_T.Impl;
+  Aircraft_Position   : out data port Aircraft_Position_T.Impl;
+  Attitude            : out data port Orientation_T.Impl;
+  Wind                : out data port Wind_T.Impl;
+  Angle_Of_Attack     : out data port RAP_Int_32;
+  Velocity            : out data port Velocity_T.Impl;
+  True_Airspeed       : out data port RAP_Int_32;
+  Magnetic_Variation  : out data port RAP_Int_32;
+  Altitude            : out data port RAP_Int_32;
+  Acceleration        : out data port Acceleration_T.Impl;
+  Steer_to_Point      : out data port Steer_to_Point_T.Impl;
+
+  --  to hardware
+
+  Body_to_Earth_Transform        : out data port RAP_Int_32;
+  Body_to_Horizon_Transform      : out data port RAP_Int_32;
+  Radar_to_Body_Transform        : out data port RAP_Int_32;
+  Radar_to_Earth_Transform       : out data port RAP_Int_32;
+  Rate_of_Change_Airspeed        : out data port RAP_Int_32;
+  Flight_Path_Angle              : out data port RAP_Int_32;
+  Ground_Speed                   : out data port RAP_Int_32;
+  Ground_Track_Angle             : out data port RAP_Int_32;
+  Reference_Velocity             : out data port Velocity_T.Impl;
+
+end Navigation;
+
+process implementation Navigation.impl
+subcomponents
+  Flight_Data      : thread AC_Flight_Data_T.i;
+  Steering         : thread Steering_T.i;
+connections
+  
+  port Mach_Number -> Flight_Data.Radar_Altitude;
+  port Radar_Altitude -> Flight_Data.Radar_Altitude;
+  port Barometric_Altitude -> Flight_Data.Barometric_Altitude;
+  port Angle_Of_Attack_In -> Flight_Data.Angle_Of_Attack_Request;
+  port Body_Rates_In -> Flight_Data.Body_Rates_In;
+  port Velocity_In -> Flight_Data.Velocity_In;
+  port True_Airspeed_In -> Flight_Data.True_Airspeed;
+  port Acceleration_In -> Flight_Data.Acceleration_In;
+  port Present_Position -> Flight_Data.Present_Position;
+
+  port Waypoint_Counter -> Steering.Waypoint_Counter;
+  port Waypoint_Table -> Steering.Waypoint_Table;
+  port Offset -> Steering.Offset;
+  port Waypoint_Steering_Selected -> Steering.Waypoint_Steering_Selected;
+  port Target_Location -> Steering.Target_Location;
+
+  port Flight_Data.Position -> Steering.Position;
+  port Flight_Data.Velocity -> Steering.Velocity;
+
+  port Flight_Data.Angle_Of_Attack -> Angle_Of_Attack;
+  port Flight_Data.Body_Rates -> Body_Rates;
+  port Flight_Data.Velocity -> Velocity;
+  port Flight_Data.Airspeed -> True_Airspeed;
+  port Flight_Data.Position -> Aircraft_Position;
+  port Flight_Data.Attitude -> Attitude;
+  port Flight_Data.Magnetic_Variation -> Magnetic_Variation;
+  port Flight_Data.Wind -> Wind;
+  port Flight_Data.Altitude -> Altitude;
+  port Steering.Steer_to_Point -> Steer_to_Point;
+
+  port Flight_Data.Acceleration       -> Acceleration;
+  port Flight_Data.Reference_Velocity -> Reference_Velocity;
+  port Flight_Data.Rate_of_Change_Airspeed -> Rate_of_Change_Airspeed;
+  port Flight_Data.Flight_Path_Angle       -> Flight_Path_Angle;
+  port Flight_Data.Ground_Speed            -> Ground_Speed;
+  port Flight_Data.Ground_Track_Angle -> Ground_Track_Angle;
+  port Flight_Data.Body_to_Earth_Transform -> Body_to_Earth_Transform;
+  port Flight_Data.Body_to_Horizon_Transform -> Body_to_Horizon_Transform;
+  port Flight_Data.Radar_to_Body_Transform -> Radar_to_Body_Transform;
+  port Flight_Data.Radar_to_Earth_Transform  -> Radar_to_Earth_Transform;
+end Navigation.impl;
+
+process Monolithic_RAP
+features
+  --  To the hardware emulator
+
+  Radar_Mode                     : in out data port RAP_Int_32;
+  Contact_Number_to_Track        : in out data port RAP_Int_32;
+  Contact_Table                  : in data port Contact_Table_T.Impl;
+  Target_Position                : in data port Location_T.Impl;
+  Status                         : out data port RAP_Int_32;
+  Threat_Radar_Frequency_Message : out data port RAP_Float_32;
+  Threat_Search_Sector_Message   : out data port RAP_Float_32;
+  Waypoint_Offset                : out data port Offset_T.Impl;
+  Target_Velocity_Out            : out data port Velocity_T.Impl;
+
+  --  From navigation
+
+  Body_Rates           : in data port Orientation_T.Impl;
+  Aircraft_Position    : in data port Aircraft_Position_T.Impl;
+  Attitude             : in data port Orientation_T.Impl;
+  Angle_Of_Attack      : in data port RAP_Int_32;
+  Velocity             : in data port Velocity_T.Impl;
+  Airspeed             : in data port RAP_Int_32;
+  Magnetic_Variation   : in data port RAP_Int_32;
+  Steer_to_Point       : in data port Steer_to_Point_T.Impl;
+
+  --  from keyset_H
+
+  Keymap_Image         : in data port RAP_Int_32;
+
+  --  From weapons
+
+  Delivery_Mode_Selected         : in data port RAP_Int_32;
+  Interval_Selected              : in data port RAP_Int_32;
+  Quantity_Selected              : in data port RAP_Int_32;
+  Weapon_Selected                : in data port RAP_Int_32;
+  Time_to_go_to_Release          : in data port RAP_Int_32;
+
+  --  To Weapons
+
+  Weapon_Select_Request          : out data port RAP_Int_32;
+  Interval_Select_Request        : out data port RAP_Int_32;
+  Quantity_Select_Request        : out data port RAP_Int_32;
+  Auto_CCIP_Toggle               : out event port;
+  Manual_Weapon_Release          : out event port;
+  Bomb_Button                    : out data port RAP_Int_32;
+
+  --  To Navigation
+
+  Target_Location      : out data port Location_T.Impl;  -- OUT to Weapons
+  Waypoint_Counter     : out data port RAP_Int_32;
+  Waypoint_Table       : out data port Waypoint_Table_T.Impl;
+  Offset               : out data port Offset_T.Impl;
+  Waypoint_Steering_Selected : out data port RAP_Int_32;
+
+end Monolithic_RAP;
+
+process implementation Monolithic_RAP.impl
+subcomponents
+  --  The output features on this thread would be used only in case we
+  --  model also the MPD_HUD_Backup system. For the moment lets ignore
+  --  this in the interest of completion on time.
+  HUD_Display         : thread HUD_Display_T.i;
+
+  Radar_Control       : thread Radar_Control_T.i;
+  Target_Tracking     : thread Target_Tracking_T.i;
+  MPD_Status_Display  : thread MPD_Status_Display_T.i;
+  MPD_Tactical        : thread MPD_Tactical_Display_T.i;
+  MPD_Stores_Display  : thread MPD_Stores_Display_T.i;
+  RWR_Threat_Response : thread RWR_Threat_Response_T.i;
+  RWR_Control         : thread RWR_Control_T.i;
+  Builtin_Test        : thread Builtin_Test_T.i;
+  Keyset              : thread Keyset_T.i;
+  HOTAS               : thread HOTAS_T.i;
+connections
+  --  to weapons
+
+  c1 : port MPD_Tactical.Weapon_Select_Request -> Weapon_Select_Request;
+  c2 : port Keyset.Quantity_Select_Request    -> Quantity_Select_Request;
+  c3 : port Keyset.Interval_Select_Request    -> Interval_Select_Request;
+  c4 : port Keyset.Auto_CCIP_Toggle           -> Auto_CCIP_Toggle;
+  c5 : port HOTAS.Manual_Weapon_Release       -> Manual_Weapon_Release;
+  c6 : port HOTAS.Bomb_Button                 -> Bomb_Button;
+
+  --  from navigation
+
+  c7 : port Angle_Of_Attack -> HUD_Display.Angle_Of_Attack;
+  c8 : port Body_Rates -> HUD_Display.Body_Rates;
+  c9 : port Velocity -> HUD_Display.Velocity;
+  c10 : port Airspeed -> HUD_Display.Airspeed;
+  c11 : port Aircraft_Position -> HUD_Display.Position;
+  c12 : port Aircraft_Position -> MPD_Tactical.Position;
+  c13 : port Aircraft_Position -> Target_Tracking.Aircraft_Position;
+  c14 : port Attitude -> HUD_Display.Attitude;
+  c15 : port Magnetic_Variation -> MPD_Tactical.Magnetic_Variation;
+  c16 : port Steer_to_Point -> HUD_Display.Steer_to_Point;
+  c17 : port Steer_to_Point -> MPD_Tactical.Steer_to_Point;
+
+  c18 : port Radar_Control.Status -> MPD_Status_Display.Radar_Status;
+
+  c19 : port Target_Tracking.Reticle_Position   -> HUD_Display.Reticle_Position;
+  c20 : port Target_Tracking.Target_Reticle     -> HUD_Display.Target_Reticle;
+  c21 : port Target_Tracking.Target_Location    -> Target_Location;
+  c22 : port Target_Tracking.Target_Location    -> MPD_Tactical.Target_Location;
+  c23 : port Target_Tracking.Target_Velocity_Out -> Target_Velocity_Out;
+
+  c24 : port RWR_Threat_Response.Threat_Warning 
+                                 -> MPD_Tactical.Threat_Warning;
+  c25 : port RWR_Threat_Response.Threat_Warning 
+                                 -> HUD_Display.Threat_Warning;
+
+  c26 : port Delivery_Mode_Selected -> HUD_Display.Delivery_Mode_Selected;
+  c27 : port Delivery_Mode_Selected -> MPD_Stores_Display.Delivery_Mode_Selected;
+
+  c28 : port Interval_Selected -> MPD_Stores_Display.Interval_Selected;
+  c29 : port Quantity_Selected -> MPD_Stores_Display.Quantity_Selected;
+  c30 : port Weapon_Selected -> MPD_Stores_Display.Weapon_Selected;
+
+  c31 : port Time_to_go_to_Release -> HUD_Display.Time_to_go_to_Release;
+
+  c32 : port Builtin_Test.MCC_Status   -> MPD_Status_Display.MCC_Status;
+  c33 : port Builtin_Test.ADC_Status   -> MPD_Status_Display.ADC_Status;
+  c34 : port Builtin_Test.INS_Status   -> MPD_Status_Display.INS_Status;
+  c35 : port Builtin_Test.SMS_Status   -> MPD_Status_Display.SMS_Status;
+  c36 : port Builtin_Test.Radar_Status -> MPD_Status_Display.Radar_Status;
+  c37 : port Builtin_Test.RWR_Status   -> MPD_Status_Display.RWR_Status;
+  c38 : port Builtin_Test.HUD_Error_Advisory_Message
+                                 -> HUD_Display.Error_Advisory_Message;
+  c39 : port Builtin_Test.MPD_Error_Advisory_Message
+                                 -> MPD_Tactical.Error_Advisory_Message;
+  c40 : port Builtin_Test.MPD_Error_Advisory_Message
+                                 -> MPD_Stores_Display.Error_Advisory_Message;
+
+  c41 : port Keyset.Waypoint_Table             -> Waypoint_Table;
+  c42 : port Keyset.Waypoint_Offset            -> Waypoint_Offset;
+  c43 : port Keyset.Waypoint_Steering_Selected -> Waypoint_Steering_Selected;
+
+  c44 : port Keyset.RWR_Frequency_Table        
+                -> RWR_Control.RWR_Frequency_Table;
+  c45 : port Keyset.RWR_Search_Sector_Table    
+                -> RWR_Control.RWR_Search_Sector_Table;
+
+  --  To Radar Warning Receiver hardware
+
+  c46 : port RWR_Control.Threat_Radar_Frequency_Message 
+         -> Threat_Radar_Frequency_Message;
+  c47 : port RWR_Control.Threat_Search_Sector_Message
+         -> Threat_Search_Sector_Message;
+
+  --  Connections with hardware
+
+  c48 : port Radar_Control.Radar_Mode    -> Radar_Mode;
+  c49 : port Radar_Control.Contact_Number_to_Track -> Contact_Number_to_Track;
+  c50 : port Contact_Table     -> Radar_Control.Contact_Table;
+  c51 : port Contact_Table     -> MPD_Tactical.Contact_Table;
+  c52 : port Target_Position   -> MPD_Tactical.Target_Position;
+  c53 : port Target_Position   -> Target_Tracking.Target_Position;
+
+  c54 : port Keymap_Image      -> Keyset.Keymap_Image;
+  c55 : port Keyset.RWR_Control_Commited -> RWR_Control.RWR_Input_Commited;
+
+end Monolithic_RAP.impl;
+
+------------------------
+-- Hardware Emulation --
+------------------------
+
+thread Radar_H
+features
+  Radar_Mode              : in data port RAP_Int_32;
+  Contact_Number_to_Track : in data port RAP_Int_32;
+  Contact_Table           : out data port Contact_Table_T.Impl;
+  Target_Position         : out data port Location_T.Impl;
+  Status                  : in data port RAP_Int_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 40 ms;
+  Deadline               => Period;
+  Compute_execution_Time => 0 ms .. 2 ms;
+  Compute_Entrypoint_source_text => "HW.Radar_Job";
+  Priority => 17;
+end Radar_H;
+
+--  RWR hardware
+
+thread RWR_H
+features
+  --  Inputs from RWR
+
+  Threat_Radar_Frequency_Message : in data port RAP_Float_32;
+  Threat_Search_Sector_Message   : in data port RAP_Float_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 200 ms;
+  Deadline               => Period;
+  Compute_execution_Time => 0 ms .. 20 ms;
+  Compute_Entrypoint_source_text => "HW.RWR_Job";
+  Priority => 18;
+end RWR_H;
+
+--  Keyset hardware
+--  OG Modified
+--  Send an image of the buttons pressed
+--  Button values are knwon by Keyset_T that will 
+--  translate the mask into actual information
+
+thread Keyset_H
+features
+  --  Output to Keyset_T
+
+  Keymap_Image               : out data port RAP_Int_32;
+
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 40 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 2 ms;
+  Compute_Entrypoint_source_text => "HW.Keyset_Job";
+  Priority => 19;
+end Keyset_H;
+
+-- Inertial Navigation System (INS)
+
+thread INS_H
+features
+  Acceleration       : out data port Acceleration_T.Impl;
+  Velocity           : out data port Velocity_T.Impl;
+  Present_Position   : out data port Position_T.Impl;
+  True_Airspeed      : out data port RAP_Int_32;
+  Body_Rates         : out data port Orientation_T.Impl;
+
+  Reference_Velocity : in data port Velocity_T.Impl;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 20 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 2 ms;
+  Compute_Entrypoint_source_text => "HW.INS_Job";
+  Priority => 20;
+end INS_H;
+
+--  The navigation system
+
+thread NAV_H
+features
+  Acceleration              : in data port Acceleration_T.Impl;
+  Rate_of_Change_Airspeed   : in data port RAP_Int_32;
+  Flight_Path_Angle         : in data port RAP_Int_32;
+  Ground_Speed              : in data port RAP_Int_32;
+  Ground_Track_Angle        : in data port RAP_Int_32;
+  Altitude                  : in data port RAP_Int_32;
+  Body_to_Earth_Transform   : in data port RAP_Int_32;
+  Body_to_Horizon_Transform : in data port RAP_Int_32;
+  Radar_to_Body_Transform   : in data port RAP_Int_32;
+  Radar_to_Earth_Transform  : in data port RAP_Int_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 40 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 2 ms;
+  Compute_Entrypoint_source_text => "HW.NAV_Job";
+  Priority => 21;
+end NAV_H;
+
+
+--  Store Management System
+--  Handle then release of sensrs, fuels tanks and missiles
+--  OG Added
+
+thread SMS_H
+features
+  Weapon_Selected        : in data port RAP_Int_32;
+  Quantity_Selected      : in data port RAP_Int_32;
+  Interval_Selected      : in data port RAP_Int_32;
+  Ballistic_Coefficients : out data port RAP_Int_32;
+  Release_Signal         : in event port; 
+
+properties
+  Dispatch_Protocol      => Sporadic;
+  Period                 => 200 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 2 ms;
+   --  OG : Pure hypothesis
+
+  Compute_Entrypoint_source_text => "HW.SMS_Job";
+  Priority => 22;
+end SMS_H;
+
+--  Radar Altimeter
+--  OG FIXME
+
+thread RATL_H
+features
+  Radar_Altitude         : out data port RAP_Int_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 200 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 1 ms;
+   --  OG : Pure hypothesis
+
+  Compute_Entrypoint_source_text => "HW.RATL_Job";
+  Priority => 23;
+end RATL_H;
+
+--  Air Data Computer
+--  A set of sensor
+--  OG : FIXME
+
+thread ADC_H
+features
+  Barometric_Altitude : out data port RAP_Int_32;
+  Mach_Number         : out data port RAP_Int_32;
+  Angle_Of_Attack     : out data port RAP_Int_32;
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 100 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 1 ms;
+   --  OG : Pure hypothesis
+
+  Compute_Entrypoint_source_text => "HW.ADC_Job";
+  Priority => 24;
+end ADC_H;
+
+
+--  Air to Ground
+--  Scheddule the missile lanchings ?
+--  Ask to recompute trajectory ?
+--  OG : FIXME
+
+thread AG_H
+features
+  Weapon_Down_Range_Travel  : in data port RAP_Int_32;
+  Weapon_Cross_Range_Travel : in data port RAP_Int_32;
+  Time_to_go_to_Release     : in data port RAP_Int_32;
+  Target_Velocity           : in data port Velocity_T.Impl;
+
+properties
+  Dispatch_Protocol      => Periodic;
+  Period                 => 200 ms;
+  Deadline               => Period;
+  Compute_Execution_Time => 0 ms .. 2 ms;
+   --  OG : Pure hypothesis
+ 
+  Compute_Entrypoint_source_text => "HW.AG_Job";
+  Priority => 25;
+end AG_H;
+
+process Hardware_Emulator
+features
+  --  Inputs from Radar_Control_Control_T to Radar_H
+
+  Radar_Mode              : in out data port RAP_Int_32;
+  Contact_Number_to_Track : in out data port RAP_Int_32;
+  Contact_Table           : out data port Contact_Table_T.Impl;
+  Target_Position         : out data port Location_T.Impl;
+  Status                  : in data port RAP_Int_32;
+
+  --  Inputs from RWR or RWR_H
+
+  Threat_Radar_Frequency_Message : in data port RAP_Float_32;
+  Threat_Search_Sector_Message   : in data port RAP_Float_32;
+
+  --  Output from Keyset_H
+
+  Keymap_Image       : out data port RAP_Int_32;  
+
+  --  From INS_H
+
+  Acceleration       : in out data port Acceleration_T.Impl;
+  Velocity           : out data port Velocity_T.Impl;
+  Present_Position   : out data port Position_T.Impl;
+  Reference_Velocity : in data port Velocity_T.Impl;
+  True_Airspeed      : out data port RAP_Int_32;
+  Body_Rates         : out data port Orientation_T.Impl;
+
+  Rate_of_Change_Airspeed   : in data port RAP_Int_32;
+  Ground_Speed              : in data port RAP_Int_32;
+  Flight_Path_Angle         : in data port RAP_Int_32;
+  Ground_Track_Angle        : in data port RAP_Int_32;
+  Altitude                  : in data port RAP_Int_32;
+  Body_to_Earth_Transform   : in data port RAP_Int_32;
+  Body_to_Horizon_Transform : in data port RAP_Int_32;
+  Radar_to_Body_Transform   : in data port RAP_Int_32;
+  Radar_to_Earth_Transform  : in data port RAP_Int_32;
+
+  --  Input and Output to SMS_H
+
+  Weapon_Selected   : in data port RAP_Int_32;
+  Quantity_Selected : in data port RAP_Int_32;
+  Interval_Selected : in data port RAP_Int_32;  
+  Ballistic_Coefficients : out data port RAP_Int_32;
+  Release_Signal         : in event port; 
+
+  --  Input from AG
+
+  Weapon_Down_Range_Travel  : in data port RAP_Int_32;
+  Weapon_Cross_Range_Travel : in data port RAP_Int_32;
+  Time_to_go_to_Release     : in data port RAP_Int_32;
+  Target_Velocity           : in data port Velocity_T.Impl;
+
+  --  Output from RATL_H
+
+  Radar_Altitude    : out data port RAP_Int_32;
+
+  --  Output from ADC_H
+
+  Barometric_Altitude : out data port RAP_Int_32;
+  Mach_Number         : out data port RAP_Int_32;
+  Angle_Of_Attack     : out data port RAP_Int_32;
+
+properties
+  Transformations::No_Optimization => true;
+end Hardware_Emulator;
+
+process implementation Hardware_Emulator.Impl
+subcomponents
+  Radar_H  : thread Radar_H;
+  RWR_H    : thread RWR_H;
+  Keyset_H : thread Keyset_H;
+  INS      : thread INS_H;
+  NAV      : thread NAV_H;
+  
+  --  OG : added
+
+  AG       : thread AG_H;
+  SMS      : thread SMS_H;
+  RATL     : thread RATL_H;
+  ADC      : thread ADC_H;
+connections
+  port Radar_Mode              -> Radar_H.Radar_Mode;
+  port Contact_Number_to_Track -> Radar_H.Contact_Number_to_Track;
+  port Radar_H.Contact_Table   -> Contact_Table;
+  port Radar_H.Target_Position -> Target_Position;
+  port Status                  -> Radar_H.Status;
+
+  port Threat_Radar_Frequency_Message -> RWR_H.Threat_Radar_Frequency_Message;
+  port Threat_Search_Sector_Message   -> RWR_H.Threat_Search_Sector_Message;
+
+  port Acceleration -> NAV.Acceleration;
+  port Rate_of_Change_Airspeed -> NAV.Rate_of_Change_Airspeed;
+  port Ground_Speed -> NAV.Ground_Speed;
+  port Flight_Path_Angle -> NAV.Flight_Path_Angle;
+  port Ground_Track_Angle -> NAV.Ground_Track_Angle;
+  port Altitude -> NAV.Altitude;
+  port Body_to_Earth_Transform -> NAV.Body_to_Earth_Transform;
+  port Body_to_Horizon_Transform -> NAV.Body_to_Horizon_Transform;
+  port Radar_to_Body_Transform -> NAV.Radar_to_Body_Transform;
+  port Radar_to_Earth_Transform -> NAV.Radar_to_Earth_Transform;
+
+  port INS.Acceleration -> Acceleration;
+  port INS.Velocity -> Velocity;
+  port INS.Present_Position -> Present_Position;
+  port INS.True_Airspeed -> True_Airspeed;
+  port INS.Body_Rates -> Body_Rates;
+  port Reference_Velocity -> INS.Reference_Velocity;
+  
+  port Weapon_Selected -> SMS.Weapon_Selected;
+  port Quantity_Selected -> SMS.Quantity_Selected;
+  port Interval_Selected -> SMS.Interval_Selected;
+  port SMS.Ballistic_Coefficients -> Ballistic_Coefficients;
+  port Release_Signal -> SMS.Release_Signal;
+
+  port Weapon_Down_Range_Travel -> AG.Weapon_Down_Range_Travel;
+  port Weapon_Cross_Range_Travel -> AG.Weapon_Cross_Range_Travel;
+  port Time_to_go_to_Release -> AG.Time_to_go_to_Release;
+  port Target_Velocity -> AG.Target_Velocity;
+
+  port RATL.Radar_Altitude -> Radar_Altitude;
+
+  port ADC.Barometric_Altitude -> Barometric_Altitude;
+  port ADC.Mach_Number -> Mach_Number;
+  port ADC.Angle_Of_Attack -> Angle_Of_Attack;
+
+  port Keyset_H.Keymap_Image -> Keymap_Image;
+end Hardware_Emulator.Impl;
+
+---------------
+-- Processor --
+---------------
+
+processor cpu
+features
+  B : requires bus access C_Bus.Impl;
+end cpu;
+
+processor implementation cpu.impl
+end cpu.impl;
+
+---------
+-- Bus --
+---------
+
+bus C_Bus
+end C_Bus;
+
+bus implementation C_Bus.Impl
+
+  --  Note: we do not define any implementation details for this
+  --  bus. These will be provided as part of the complete system, to
+  --  allow for per-target refinement.
+
+end C_Bus.Impl;
+
+--------------
+--  Memory  --
+--------------
+
+memory ram
+end ram;
+
+------------
+-- Device --
+------------
+
+device Transport_Device
+features
+  A_Bus : requires bus access C_Bus.Impl;
+end Transport_Device;
+
+device implementation Transport_Device.Impl
+properties
+  Initialize_Entrypoint_Source_Text => "fake_device.initialize";
+end Transport_Device.Impl;
+
+------------
+-- System --
+------------
+
+system RAP
+end RAP;
+
+-- We first define a generic implementation of the RAP platform,
+-- without mentionning the actual deployment platform. We later refine
+-- it in an extenstion of the RAP.GENERIC_IMPL system implementation.
+
+system implementation RAP.GENERIC_IMPL
+subcomponents
+  soft_main : process Monolithic_RAP.impl;
+  soft_weapons : process Weapons.impl;
+  soft_navi : process Navigation.impl;
+  hardware : process Hardware_Emulator.Impl;
+
+  s_cpu : processor cpu.impl;
+  h_cpu : processor cpu.impl;
+
+  mem_1 : memory ram;
+  mem_2 : memory ram;
+  mem_3 : memory ram;
+
+  the_bus : bus C_Bus.Impl;
+
+connections
+  bus access the_bus -> s_cpu.B;
+  bus access the_bus -> h_cpu.B;
+
+  --  Weapons to displays
+
+  c0 : port soft_weapons.Delivery_Mode_Selected -> 
+       soft_main.Delivery_Mode_Selected
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c1 : port soft_weapons.Interval_Selected ->
+       soft_main.Interval_Selected
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c2 : port soft_weapons.Quantity_Selected ->
+       soft_main.Quantity_Selected
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c3 : port soft_weapons.Weapon_Selected ->
+       soft_main.Weapon_Selected
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c4 : port soft_weapons.Time_To_Go_To_Release ->
+       soft_main.Time_To_Go_To_Release
+      {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  Displays to weapons
+
+  c5 : port soft_main.Interval_Select_Request ->
+       soft_weapons.Interval_Select_Request
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c6 : port soft_main.Quantity_Select_Request ->
+       soft_weapons.Quantity_Select_Request
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c7 : port soft_main.Auto_CCIP_Toggle -> soft_weapons.Auto_CCIP_Toggle
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c8 : port soft_main.Manual_Weapon_Release ->
+       soft_weapons.Manual_Weapon_Release
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c9 : port soft_main.Bomb_Button -> soft_weapons.Bomb_Button_Depressed
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c10 : port soft_main.Target_Location   -> soft_weapons.Target_Location
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c11 : port soft_main.Weapon_Select_Request 
+       -> soft_weapons.Weapon_Select_Request
+      {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  Navigation to weapons
+
+  c12 : port soft_navi.Body_Rates -> soft_weapons.Body_Rates
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c13 : port soft_navi.Aircraft_Position -> soft_weapons.Aircraft_Position
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c14 : port soft_navi.Attitude -> soft_weapons.Attitude
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c15 : port soft_navi.Wind -> soft_weapons.Wind
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c16 : port soft_navi.Velocity -> soft_weapons.Aircraft_Velocity
+      {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  hardware to weapons
+
+  c17 : port hardware.Ballistic_Coefficients -> 
+       soft_weapons.Ballistic_Coefficients
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c18 : port hardware.Angle_Of_Attack ->  soft_weapons.Angle_Of_Attack
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c19 : port hardware.Mach_Number -> soft_weapons.Mach_Number
+      {Actual_Connection_Binding => (reference (the_bus));};
+  c20 : port hardware.Barometric_Altitude -> soft_weapons.Barometric_Altitude
+      {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  weapons to hardware
+
+  C21 : port soft_weapons.Interval_Selected -> hardware.Interval_Selected
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C22 : port soft_weapons.Quantity_Selected -> hardware.Quantity_Selected
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C23 : port soft_weapons.Weapon_Selected -> hardware.Weapon_Selected
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C24 : port soft_weapons.Release_Signal -> hardware.Release_Signal
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C25 : port soft_weapons.Weapon_Down_Range_Travel 
+       -> hardware.Weapon_Down_Range_Travel
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C26 : port soft_weapons.Weapon_Cross_Range_Travel 
+       -> hardware.Weapon_Cross_Range_Travel
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C27 : port soft_weapons.Time_to_go_to_Release
+       -> hardware.Time_to_go_to_Release
+      {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  hardware to navigation
+
+  C28 : port hardware.Radar_Altitude -> soft_navi.Radar_Altitude
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C29 : port hardware.Acceleration -> soft_navi.Acceleration_in
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C30 : port hardware.Velocity -> soft_navi.Velocity_in
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C31 : port hardware.Body_Rates -> soft_navi.Body_Rates_In
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C32 : port hardware.True_Airspeed -> soft_navi.True_Airspeed_In
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C33 : port hardware.Present_Position -> soft_navi.Present_Position
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C34 : port hardware.Barometric_Altitude -> soft_navi.Barometric_Altitude
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C35 : port hardware.Angle_Of_Attack -> soft_navi.Angle_Of_Attack_In
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C36 : port hardware.Mach_Number -> soft_navi.Mach_Number
+      {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  Navigation to hardware
+
+  C37 : port soft_navi.Acceleration -> hardware.Acceleration
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C38 : port soft_navi.Reference_Velocity -> hardware.Reference_Velocity
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C39 : port soft_navi.Rate_of_Change_Airspeed -> hardware.Rate_of_Change_Airspeed
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C40 : port soft_navi.Altitude -> hardware.Altitude
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C41 : port soft_navi.Ground_Speed -> hardware.Ground_Speed
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C42 : port soft_navi.Flight_Path_Angle -> hardware.Flight_Path_Angle
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C43 : port soft_navi.Ground_Track_Angle -> hardware.Ground_Track_Angle
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C44 : port soft_navi.Body_to_Earth_Transform -> hardware.Body_to_Earth_Transform
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C45 : port soft_navi.Body_to_Horizon_Transform -> hardware.Body_to_Horizon_Transform
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C46 : port soft_navi.Radar_to_Body_Transform -> hardware.Radar_to_Body_Transform
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C47 : port soft_navi.Radar_to_Earth_Transform -> hardware.Radar_to_Earth_Transform
+    {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  Navigation to displays
+
+  C48 : port soft_navi.Attitude -> soft_main.Attitude
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C49 : port soft_navi.Angle_Of_Attack -> soft_main.Angle_Of_Attack
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C50 : port soft_navi.Body_Rates -> soft_main.Body_Rates
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C51 : port soft_navi.Velocity -> soft_main.Velocity
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C52 : port soft_navi.True_Airspeed -> soft_main.Airspeed
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C53 : port soft_navi.Aircraft_Position -> soft_main.Aircraft_Position
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C54 : port soft_navi.Magnetic_Variation -> soft_main.Magnetic_Variation
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C55 : port soft_navi.Steer_to_Point -> soft_main.Steer_to_Point
+      {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  Displays to navigation
+
+  C56 : port soft_main.Target_Location   -> soft_navi.Target_Location
+      {Actual_Connection_Binding => (reference (the_bus));};
+  C57 : port soft_main.Waypoint_Table -> soft_navi.Waypoint_Table
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C58 : port soft_main.Waypoint_Offset -> soft_navi.Offset
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C59 : port soft_main.Waypoint_Steering_Selected 
+       -> soft_navi.Waypoint_Steering_Selected
+    {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  hardware to displays
+
+  C60 : port hardware.Keymap_Image -> soft_main.Keymap_Image
+    {Actual_Connection_Binding => (reference (the_bus));};
+
+  --  Others (displays to hardware)
+
+  C61 : port soft_main.Contact_Number_to_Track -> hardware.Contact_Number_to_Track
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C62 : port soft_main.Radar_Mode              -> hardware.Radar_Mode
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C63 : port hardware.Contact_Table           -> soft_main.Contact_Table
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C64 : port hardware.Target_Position         -> soft_main.Target_Position
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C65 : port soft_main.Status                  -> hardware.Status
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C66 : port soft_main.Threat_Radar_Frequency_Message 
+        -> hardware.Threat_Radar_Frequency_Message
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C67 : port soft_main.Threat_Search_Sector_Message 
+        -> hardware.Threat_Search_Sector_Message
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C68 : port soft_main.Target_Velocity_Out -> hardware.Target_Velocity
+    {Actual_Connection_Binding => (reference (the_bus));};
+
+properties
+  Actual_Processor_Binding => (reference (s_cpu)) applies to soft_weapons;
+  Actual_Processor_Binding => (reference (s_cpu)) applies to soft_navi;
+  Actual_Processor_Binding => (reference (s_cpu)) applies to soft_main;
+  Actual_Processor_Binding => (reference (h_cpu)) applies to hardware;
+
+  Actual_Memory_Binding => (reference (mem_1)) applies to soft_navi;
+  Actual_Memory_Binding => (reference (mem_2)) applies to soft_main;
+  Actual_Memory_Binding => (reference (mem_3)) applies to soft_weapons;
+
+annex real_specification {**
+  
+  theorem one_process_by_memory
+    foreach mem in memory_set do
+      
+      set := {p in process_set | is_bound_to (p, mem)};
+
+    check (cardinal (set) <= 1);
+ 
+  end one_process_by_memory;
+
+  **};
+
+end RAP.GENERIC_IMPL;
+
+-------------------------------------------------------------------------------
+-- Extension of the RAP.GENERIC_IMPL system for supporting the
+-- LEON_RTEMS platform.
+
+system implementation RAP.LEON_RTEMS extends RAP.GENERIC_IMPL
+properties
+  Deployment::Execution_Platform => LEON_RTEMS applies to s_cpu;
+  Deployment::Execution_Platform => LEON_RTEMS applies to h_cpu;
+end RAP.LEON_RTEMS;
+
+-- Extension of the RAP.GENERIC_IMPL system for supporting the
+-- LEON_ORK platform.
+
+system implementation RAP.LEON_ORK extends RAP.GENERIC_IMPL
+subcomponents
+  s_device : device Transport_Device.Impl;
+  h_device : device Transport_Device.Impl;
+
+connections
+  bus access the_bus -> s_device.A_Bus;
+  bus access the_bus -> h_device.A_Bus;
+
+properties
+  Deployment::Execution_Platform => LEON_ORK applies to s_cpu;
+  Deployment::Execution_Platform => LEON_ORK applies to h_cpu;
+
+  -- For ORK systems, we use the device as a support to 
+
+  Actual_Processor_Binding => (reference (s_cpu)) applies to s_device;
+  Actual_Processor_Binding => (reference (h_cpu)) applies to h_device;
+
+end RAP.LEON_ORK;
+
+system implementation RAP.ERC32_ORK extends RAP.GENERIC_IMPL
+subcomponents
+  s_device : device Transport_Device.Impl;
+  h_device : device Transport_Device.Impl;
+
+connections
+  bus access the_bus -> s_device.A_Bus;
+  bus access the_bus -> h_device.A_Bus;
+
+properties
+  Deployment::Execution_Platform => ERC32_ORK applies to s_cpu;
+  Deployment::Execution_Platform => ERC32_ORK applies to h_cpu;
+
+  -- For ORK systems, we use the device as a support to 
+
+  Actual_Processor_Binding => (reference (s_cpu)) applies to s_device;
+  Actual_Processor_Binding => (reference (h_cpu)) applies to h_device;
+
+end RAP.ERC32_ORK;
+
+-- Extension of the RAP.GENERIC_IMPL system for supporting the
+-- Native platform.
+
+system implementation RAP.Native extends RAP.GENERIC_IMPL
+properties
+  Deployment::Execution_Platform => Native applies to s_cpu;
+  Deployment::Execution_Platform => Native applies to h_cpu;
+
+  --  For native systems, we use directly the BSD socket transport
+  --  layer defined by Ocarina.
+
+  Deployment::Transport_API => BSD_Sockets applies to the_bus;
+
+end RAP.Native;
+
+end Software;

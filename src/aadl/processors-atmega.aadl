@@ -1,0 +1,134 @@
+--  This package defines some processors from the ATMEGA family of
+--  processor by AVR. For more details, see
+--  http://www.atmel.com/products/avr/
+
+package Processors::ATMEGA
+public
+  with Data_Sheet, Memories, Deployment, Processor_Properties;
+  with Processors, ARINC653;
+
+  -------------
+  -- ATMEGA8 --
+  -------------
+
+  processor ATMEGA8 extends Processors::Generic_CPU
+    --  Here is the view of the pins of a typical ATMEGA chip:
+    --  see http://www.atmel.com/dyn/resources/prod_documents/8271S.pdf
+    --
+    --                             +-\/-+
+    --      (PCIN1T14/RESET) PC6  1|    |28  PC5  (ADC5/SCL/PCINT13)
+    --         (PCINT16/RXD) PD0  2|    |27  PC4  (ADC4/SDA/PCINT12)
+    --         (PCINT17/TXD) PD1  3|    |26  PC3  (ADC3/PCINT11)
+    --        (PCINT18/INT0) PD2  4|    |25  PC2  (ADC2/PCINT10)
+    --   (PCINT19/OC2B/INT1) PD3  5|    |24  PC1  (ADC1/PCINT9)
+    --      (PCINT20/XCK/T0) PD4  6|    |23  PC0  (ADC0/PCINT8)
+    --                       VCC  7|    |22  GND
+    --                       GND  8|    |21  AREF
+    --  (PCINT6/XTAL1/TOSC1) PB6  9|    |20  AVCC
+    --  (PCINT7/XTAL2/TOSC2) PB7 10|    |19  PB5  (SCK/PCINT5)
+    --     (PCINT21/OC0B/T1) PD5 11|    |18  PB4  (MISO/PCINT4)
+    --   (PCINT22/OC0A/AIN0) PD6 12|    |17  PB3  (MOSI/OC2A/PCINT3)
+    --        (PCINT23/AIN1) PD7 13|    |16  PB2  (SS/OC1B/PCINT2)
+    --    (PCINT0/CLKO/ICP1) PB0 14|    |15  PB1  (OC1A/PCINT1)
+    --                             +----+
+    --
+  features
+    PB0 : in out event port;
+    PB1 : in out event port;
+    PB2 : in out event port;
+    PB3 : in out event port;
+    PB4 : in out event port;
+    PB5 : in out event port;
+    PB6 : in out event port;
+    PB7 : in out event port;
+
+    PC0 : in out event port;
+    PC1 : in out event port;
+    PC2 : in out event port;
+    PC3 : in out event port;
+    PC4 : in out event port;
+    PC5 : in out event port;
+    PC6 : in out event port;
+
+    PD0 : in out event port;
+    PD1 : in out event port;
+    PD2 : in out event port;
+    PD3 : in out event port;
+    PD4 : in out event port;
+    PD5 : in out event port;
+    PD6 : in out event port;
+    PD7 : in out event port;
+
+    GND : in event port;
+    VCC : in event port;
+    AREF : in event port;
+    AVCC : in event port;
+  properties
+    Deployment::Execution_Platform    => Native;
+
+    Processor_Properties::Processor_Family => AVR;
+    Processor_Properties::Endianess        => Little_Endian;
+    Processor_Properties::Word_Length      => 8 bits;
+    Processor_Properties::FPU_Present      => False;
+
+    Thread_Limit => 1;
+
+  annex real_specification {**
+     theorem check_model2
+        foreach s in local_set do
+	   requires (check_bare_board_system);
+	      check (1 = 1);
+     end check_model2;
+  **};
+  end ATMEGA8;
+
+  processor implementation ATMEGA8.impl
+  subcomponents 
+    -- ATMEGA have three memory areas, one for code, two for data.
+
+    Flash_Memory : memory Memories::Flash_Memory.impl
+    {ARINC653::Memory_Kind => Memory_Code;};
+
+    SRAM         : memory Memories::SRAM.impl
+    {ARINC653::Memory_Kind => Memory_Data;};
+
+    EEPROM       : memory Memories::EEPROM.impl
+    {ARINC653::Memory_Kind => Memory_Data;};
+  end ATMEGA8.impl;
+
+  ---------------
+  -- ATMEGA168 --
+  ---------------
+
+  processor ATMEGA168 extends ATMEGA8
+  properties
+    Processor_Properties::Processor_Frequency => 16 Mhz;
+  end ATMEGA168;
+
+  processor implementation ATMEGA168.impl extends ATMEGA8.impl
+  properties
+    Byte_Count => 16_384 applies to Flash_Memory;
+    Byte_Count =>  1_024 applies to SRAM;
+    Byte_Count =>    512 applies to EEPROM;
+  end ATMEGA168.impl;
+
+  ----------------
+  -- ATMEGA328p --
+  ----------------
+
+  processor ATMEGA328p extends ATMEGA8
+  properties
+    Data_Sheet::UUID 
+       => "http://atmel.com:80/dyn/products/product_card.asp?PN=ATmega328P";
+    Processor_Properties::Processor_Frequency => 16 Mhz;
+  end ATMEGA328p;
+
+  processor implementation ATMEGA328p.impl extends ATMEGA8.impl
+  properties
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Byte_Count => 32_768 applies to Flash_Memory;
+    Byte_Count =>  2_048 applies to SRAM;
+    Byte_Count =>  1_024 applies to EEPROM;
+  end ATMEGA328p.impl;
+
+end Processors::ATMEGA;

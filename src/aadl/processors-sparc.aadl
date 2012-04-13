@@ -1,0 +1,62 @@
+-- This package defines some processors from the SPARC family
+
+package Processors::SPARC
+public
+  with Processors, Processor_Properties, Data_Sheet;
+
+  ------------------
+  -- Generic_SPARC --
+  ------------------
+
+  processor Generic_SPARC
+  properties
+    Processor_Properties::Processor_Family => SPARC;
+    Processor_Properties::Endianess        => Big_Endian;
+    Processor_Properties::Word_Length      => 32 bits;
+  end Generic_SPARC;
+
+  -----------
+  -- ERC32 --
+  -----------
+
+  processor ERC32 extends Generic_SPARC
+  end ERC32;
+
+  -------------
+  -- TSC695F --
+  -------------
+
+  --  This is Rad Hard 32-bit SPARC V7 embedded processor. The
+  --  implementation is based on the European Space Agency (ESA) ERC32
+  --  fault tolerant model.
+
+  processor TSC695F extends ERC32
+  properties
+    Data_Sheet::UUID => 
+       "http://www.atmel.com:80/dyn/products/product_card.asp?part_id=2332";
+  end TSC695F;
+
+
+  -----------
+  -- LEON2 --
+  -----------
+
+  processor LEON2 extends Generic_SPARC
+  end LEON2;
+
+  ------------
+  -- AT697F --
+  ------------
+
+  --  This is Rad Hard 32-bit SPARC V8 embedded processor. The
+  --  implementation is based on the European Space Agency (ESA) LEON2
+  --  fault tolerant model.
+
+  processor AT697F extends LEON2
+  properties
+    Data_Sheet::UUID => 
+       "http://www.atmel.com:80/dyn/products/product_card.asp?part_id=4599";
+  end AT697F;
+
+end Processors::SPARC;
+

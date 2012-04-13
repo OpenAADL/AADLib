@@ -1,0 +1,16 @@
+property set Bus_Properties is
+
+   Bandwidth : Data_Volume applies to (bus);
+
+   Bandwidth_Range : type range of Data_Volume;
+
+   Bandwidth_Scale : Bus_Properties::Bandwidth_Range applies to (bus);
+
+   Available_Bandwidth : list of Data_Volume applies to (bus);
+
+   Channel_Type : enumeration (Simplex, Half_Duplex, Full_Duplex) 
+      applies to (bus);
+
+end Bus_Properties;
+
+

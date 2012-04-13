@@ -1,0 +1,41 @@
+-- This package models the GR-Rasta GR-XC3S-1500 LEON development
+-- board by AEROFlex Gaisler.
+
+package Boards::GR_XC3S_1500
+public
+  with Processors::SPARC, Memories, Data_Sheet;
+  with Buses::Ethernet, Buses::UART;
+  with Deployment;
+
+  ------------------
+  -- GR_XC3S_1500 --
+  ------------------
+
+  -- The GR-XC3S-1500 by Gaisler is a low-cost LEON board, with two
+  -- UARTs, one ethernet.
+
+  system GR_XC3S_1500
+  features
+    uart_core_1 : requires bus access Buses::UART::UART.impl;
+    uart_core_2 : requires bus access Buses::UART::UART.impl;
+
+    eth_1       : requires bus access Buses::Ethernet::Ethernet.impl;
+
+  properties
+    Data_Sheet::UUID => "http://www.gaisler.com/cms/index.php?option=com_content&task=view&id=187&Itemid=118";
+
+  end GR_XC3S_1500;
+
+  system implementation GR_XC3S_1500.impl
+  subcomponents
+    LEON_Core : processor Processors::SPARC::LEON2;
+    SRAM      : memory    Memories::SRAM {Byte_Count => 64_000_000;};
+  end GR_XC3S_1500.impl;
+
+  system implementation GR_XC3S_1500.rtems extends GR_XC3S_1500.impl
+  subcomponents
+    LEON_Core : refined to processor 
+    { Deployment::Execution_Platform => LEON_RTEMS;};
+  end GR_XC3S_1500.rtems;
+
+end Boards::GR_XC3S_1500;

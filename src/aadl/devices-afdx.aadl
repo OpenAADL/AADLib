@@ -1,0 +1,17 @@
+--  This package models a generic AFDX device, to be later refined 
+
+package Devices::AFDX
+public
+  with Buses::AFDX;
+
+  ------------------
+  -- Generic_AFDX --
+  ------------------
+
+  device Generic_AFDX
+  features
+    AFDX_Phy : requires bus access Buses::AFDX::AFDX;
+  end Generic_AFDX;
+
+end Devices::AFDX;
+

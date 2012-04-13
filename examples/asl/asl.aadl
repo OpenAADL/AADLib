@@ -1,0 +1,10 @@
+package ASL
+public
+
+  system a_system
+  end a_system;
+
+  system implementation a_system.impl
+  end a_system.impl;
+
+end ASL;

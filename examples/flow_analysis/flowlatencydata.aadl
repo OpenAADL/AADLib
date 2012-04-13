@@ -1,0 +1,357 @@
+--  $Id$
+
+package Flowlatencydata
+public
+  with Data_Model, Deployment;
+
+data timedata
+properties
+  Data_Model::Data_Representation => integer;
+end timedata;
+
+subprogram sensorspg
+features
+	outed : out parameter timedata;
+end sensorspg;
+
+subprogram actuatorspg
+features
+	ined : in parameter timedata;
+end actuatorspg;
+
+subprogram step1spg
+features
+	ined : in parameter timedata;
+	outed : out parameter timedata;
+end step1spg;
+
+subprogram step2spg
+features
+	ined : in parameter timedata;
+	outed : out parameter timedata;
+end step2spg;
+
+subprogram step3spg
+features
+	ined : in parameter timedata;
+	outed : out parameter timedata;
+end step3spg;
+
+
+thread step1
+features
+  ined: in data port timedata;
+  outed: out data port timedata;
+properties
+  Dispatch_Protocol => Periodic;
+  period => 50 ms;
+  deadline => 45 ms;
+  Compute_Execution_Time => 6 ms .. 10 ms;
+end step1;
+
+thread implementation step1.periodic
+calls
+Mycall : {
+	myspg : subprogram step1spg;
+};
+connections
+	parameter ined -> myspg.ined;
+	parameter myspg.outed -> outed;
+end step1.periodic;
+
+
+thread step2
+features
+  ined: in data port timedata;
+  outed: out data port timedata;
+properties
+  Dispatch_Protocol => Periodic;
+  period => 100 ms;
+  deadline => 70 ms;
+  Compute_Execution_Time => 15 ms .. 23 ms;
+End step2;
+
+thread implementation step2.periodic
+calls
+Mycall : {
+	myspg : subprogram step2spg;
+};
+connections
+	parameter ined -> myspg.ined;
+	parameter myspg.outed -> outed;
+end step2.periodic;
+
+
+thread step3
+features
+  ined: in data port timedata;
+  outed: out data port timedata;
+properties
+  Dispatch_Protocol => Periodic;
+  period => 50 ms;
+  deadline => 45 ms;
+  Compute_Execution_Time => 6 ms .. 10 ms;
+End step3;
+
+thread implementation step3.periodic
+calls
+Mycall : {
+	myspg : subprogram step3spg;
+};
+connections
+	parameter ined -> myspg.ined;
+	parameter myspg.outed -> outed;
+end step3.periodic;
+
+-- at the beginning of each dispatch the sensor device reads the clock
+-- and passes it as the value of its output
+
+thread sensor_thread
+features
+  outed: out data port timedata;
+end sensor_thread;
+
+thread implementation sensor_thread.periodic
+calls
+Mycall : {
+	myspg : subprogram sensorspg;
+};
+connections
+	cn1 : parameter myspg.outed -> outed;
+properties
+	Dispatch_Protocol => Periodic;
+	period => 50 ms;
+	deadline => 2 ms;
+	Compute_Execution_Time => 1 ms .. 2 ms;
+end sensor_thread.periodic;
+
+-- sensor detects an in the physical environment
+-- the occurs randomly with a maximum rate of the period
+thread implementation sensor_thread.aperiodic
+calls
+Mycall : {
+	myspg : subprogram sensorspg;
+};
+connections
+	parameter myspg.outed -> outed;
+properties
+  Dispatch_Protocol => Sporadic;
+end sensor_thread.aperiodic;
+
+
+-- at the beginning of each dispatch the sensor device reads the clock
+-- and passes it as the value of its output
+process sensor
+features
+  outed: out data port timedata;
+end sensor;
+
+-- sensor periodically senses the physical environment
+process implementation sensor.periodic
+subcomponents
+	th : thread sensor_thread.periodic;
+connections
+	out1: port th.outed -> outed;
+end sensor.periodic;
+
+-- sensor detects an in the physical environment
+-- the occurs randomly with a maximum rate of the period
+process implementation sensor.aperiodic
+subcomponents
+	th : thread sensor_thread.aperiodic;
+end sensor.aperiodic;
+
+
+
+-- The actuator will read the clock 
+-- and log the difference to the received data (sensor clock time) as its last action
+process actuator
+features
+  ined: in data port timedata {Timing => Delayed;};
+end actuator;
+
+-- output is sampled. This reducees the latency jitter.
+process implementation actuator.periodic
+subcomponents
+	th : thread actuator_thread.periodic;
+connections
+	in1 : port ined -> th.ined;
+end actuator.periodic;
+
+-- arrival of data causes actuator to become active. 
+-- This reduces end-to-end lantecy at the expense of increased litter.
+process implementation actuator.aperiodic
+subcomponents
+	th : thread actuator_thread.aperiodic;
+end actuator.aperiodic;
+
+-- The actuator will read the clock 
+-- and log the difference to the received data (sensor clock time) as its last action
+thread actuator_thread
+features
+  ined: in data port timedata;
+properties
+  period => 50 ms;
+  deadline => 3 ms;
+  Compute_Execution_Time => 1 ms .. 3 ms;
+end actuator_thread;
+
+-- output is sampled. This reducees the latency jitter.
+thread implementation actuator_thread.periodic
+calls
+Mycall : {
+	myspg : subprogram actuatorspg;
+};
+connections
+	parameter ined -> myspg.ined;
+properties
+  Dispatch_Protocol => Periodic;
+end actuator_thread.periodic;
+
+-- arrival of data causes actuator to become active. 
+-- This reduces end-to-end lantecy at the expense of increased litter.
+thread implementation actuator_thread.aperiodic
+properties
+  Dispatch_Protocol => Sporadic;
+end actuator_thread.aperiodic;
+
+process Pstep1
+features
+  ined: in data port timedata {Timing => Delayed;};
+  outed: out data port timedata;
+end Pstep1;
+
+process implementation Pstep1.periodic
+subcomponents
+  Tstep1: thread Step1.periodic;
+connections
+  cin: port ined -> Tstep1.ined;
+  cout: port Tstep1.outed -> outed;
+end Pstep1.periodic;
+
+
+process Pstep2
+features
+  ined: in data port timedata {Timing => Delayed;};
+  outed: out data port timedata;
+end Pstep2;
+
+process implementation Pstep2.periodic
+subcomponents
+  Tstep2: thread Step2.periodic;
+connections
+  cin: port ined -> Tstep2.ined;
+  cout: port Tstep2.outed -> outed;
+end Pstep2.periodic;
+
+
+process Pstep3
+features
+  ined: in data port timedata {Timing => Delayed;};
+  outed: out data port timedata;
+end Pstep3;
+
+process implementation Pstep3.periodic
+subcomponents
+  Tstep3: thread Step3.periodic;
+connections
+  cin: port ined -> Tstep3.ined;
+  cout: port Tstep3.outed -> outed;
+end Pstep3.periodic;
+
+
+system application
+features
+  db: requires bus access devicebus;
+end application;
+
+-- this application configuration has all processing steps as well as the sensor and actuator as periodic tasks.
+-- The connections are delayed connections to allow for deterministic sampling at each step.
+-- The worst-case end-to-end latency for this system on a synchronous execution platform is the
+-- sum of computational latency (deadline of predecessor) rounded up to the next multiple of 
+-- the periods of the three processing steps plus the actuator period (sampling latencies)
+-- plus the deadline of the actuator (303ms).
+-- The worst-case end-to-end latency for this sytem on an asynchronous execution platform is the
+-- sum of computational latency (deadline of predecessor) rounded up to the next multiple of 
+-- the periods of the three processing steps plus the actuator period (sampling latencies)
+-- plus the deadline of the predecessor of the sampler (sensor, three steps)
+-- plus the deadline of the actuator (415 ms).
+system implementation application.allperiodicdelayed
+subcomponents
+  sense: process sensor.periodic;
+  actuate: process actuator.periodic;
+  compute1: process Pstep1.periodic;
+  compute2: process Pstep2.periodic;
+  compute3: process Pstep3.periodic;
+connections
+  senseconn: port sense.outed -> compute1.ined;
+  compute12: port compute1.outed -> compute2.ined;
+  compute23: port compute2.outed -> compute3.ined;
+  actuateconn: port compute3.outed -> actuate.ined;
+
+  --  for delayed connections in aadlv2, see the ined port in 
+  --  Pstep1, Pstep2, Pstep3 and actuator which have the Timing
+  --  property set to delayed.
+end application.allperiodicdelayed;
+
+-- hardware platforms: single processor, dual processor
+processor singleCPU
+features
+  db: requires bus access devicebus.basic;
+  pb: requires bus access cpubus.basic;
+properties
+  Deployment::location           => "127.0.0.1";
+  Deployment::Execution_Platform => Native;
+end singleCPU;
+
+processor implementation singleCPU.basic
+end singleCPU.basic;
+
+bus cpubus
+end cpubus;
+
+bus implementation cpubus.basic
+end cpubus.basic;
+
+bus devicebus
+properties
+  Deployment::Transport_API => BSD_Sockets;
+end devicebus;
+
+bus implementation devicebus.basic
+end devicebus.basic;
+
+system topsystem
+end topsystem;
+
+
+system implementation topsystem.distributedallperiodicdelayed
+subcomponents
+  cpu: processor singleCPU.basic;
+  db: bus devicebus.basic;
+  pb: bus cpubus.basic;
+  sense: process sensor.periodic 		{Deployment::port_number => 12002;};
+  actuate: process actuator.periodic 	{Deployment::port_number => 12003;};
+  compute1: process Pstep1.periodic 	{Deployment::port_number => 12004;};
+  compute2: process Pstep2.periodic 	{Deployment::port_number => 12005;};
+  compute3: process Pstep3.periodic 	{Deployment::port_number => 12006;};
+connections
+  senseconn: port sense.outed -> compute1.ined 		{Actual_Connection_Binding => (reference (db));};
+  compute12: port compute1.outed -> compute2.ined 	{Actual_Connection_Binding => (reference (db));};
+  compute23: port compute2.outed -> compute3.ined 	{Actual_Connection_Binding => (reference (db));};
+  actuateconn: port compute3.outed -> actuate.ined {Actual_Connection_Binding => (reference (db));};
+  --  for delayed connections in aadlv2, see the ined port in 
+  --  Pstep1, Pstep2, Pstep3 and actuator which have the Timing
+  --   property set to delayed.
+
+  bus access db -> cpu.db;
+  bus access pb -> cpu.pb;
+properties
+  Actual_Processor_Binding => reference (cpu) applies to sense;
+  Actual_Processor_Binding => reference (cpu) applies to actuate;
+  Actual_Processor_Binding => reference (cpu) applies to compute1;
+  Actual_Processor_Binding => reference (cpu) applies to compute2;
+  Actual_Processor_Binding => reference (cpu) applies to compute3;
+end topsystem.distributedallperiodicdelayed;
+
+end Flowlatencydata;

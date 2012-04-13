@@ -1,0 +1,130 @@
+V "GNAT Lib v4.4"
+P SS ZX
+R nnnnnnvvnnnnnnnnnnnnvnvnnnvnnnnnnnnnvnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+
+U wall%b		wall.adb		1fc336cc NE OO PK
+W ada.calendar.delays%s	a-caldel.adb		a-caldel.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W interfaces%s		interfac.ads		interfac.ali
+W screen%s		screen.adb		screen.ali
+W text_io%s		text_io.ads		text_io.ali
+
+U wall%s		wall.ads		7385cfd6 EE NE OO PK
+
+D ada.ads		20070406091342 9c7dd3ea
+D a-calend.ads		20090409232307 19486c30
+D a-caldel.ads		20090409232307 c565f6eb
+D a-except.ads		20090409232307 b54b55de
+D a-finali.ads		20090409232307 9eaacebd
+D a-filico.ads		20090409232307 9299732a
+D a-ioexce.ads		20070406091342 be0900a0
+D a-stream.ads		20090409232307 34aca5be
+D a-tags.ads		20090409232307 bfa07446
+D a-textio.ads		20090409232307 fe8af46e
+D a-unccon.ads		20070406091342 51e09df2
+D interfac.ads		20090409232307 a69cad5c
+D i-cstrea.ads		20090409232307 e1e064a9
+D screen.ads		20101021131224 1cbde2ed
+D system.ads		20090409232307 df55302f
+D s-crtl.ads		20090409232307 997234a1
+D s-exctab.ads		20090409232307 5c1c61ae
+D s-ficobl.ads		20090409232307 8bb681e5
+D s-finimp.ads		20090409232307 9449f4cb
+D s-finroo.ads		20090409232307 1408f9d1
+D s-parame.ads		20090409232307 f32e56e9
+D s-secsta.ads		20090409232307 7bae3621
+D s-soflin.ads		20090409232307 0c6fd39d
+D s-stache.ads		20090409232307 257b3be8
+D s-stalib.ads		20090409232307 52b793d5
+D s-stoele.ads		20090409232307 ed966df3
+D s-stoele.adb		20090409232307 e9998c78
+D s-stratt.ads		20090409232307 fef7c1da
+D s-traent.ads		20090409232307 bd5f2753
+D s-unstyp.ads		20090409232307 c0f9fae5
+D s-wchcon.ads		20090409232307 ab028799
+D text_io.ads		20070406091342 7c37c8ff
+D wall.ads		20101021131436 7385cfd6
+D wall.adb		20101021131634 0cccd308
+X 10 a-textio.ads
+263U14*Put_Line 34|45r27 47r27 50r24 84r18 94r18 96r18 113r18
+X 14 screen.ads
+1K9*Screen 24e11 34|1w6 41r13 83r10 92r7 112r10
+10I11*Height{integer}
+11I11*Width{integer}
+14i5*Row{10I11} 34|41r52 83r50 92r46 112r50
+15i5*Column{11I11} 34|41r32 83r29 92r26 112r29
+22U13*MoveCursor 34|41r20 83r17 92r14 112r17
+X 32 text_io.ads
+24K9*Text_IO=24:29 34|1w14 45r19 47r19 50r16 84r10 94r10 96r10 113r10
+X 33 wall.ads
+1K9*Wall 37l5 37e9 34|2b14 190l5 190t9
+3I12*Styles{integer} 12r31 34|9r23 26r31
+5R9*Brick_Section 8e17 10r40
+7i10*Y{integer} 34|82r29 111r29 128r29 144r29
+7i13*X{integer} 34|81r29 110r29 127r29 143r29
+10A9*Brick_Type(5R9)<integer> 12r47 19r29 23r31 27r31 31r32 34|9r34 26r47
+. 75r29 104r31 121r31 137r32
+12V13*Pick{10A9} 12>20 34|26b13 29l8 29t12
+12i20 Style{3I12} 34|26b20 28r27
+14I12*Width{integer} 20r29 24r31 28r31 32r32 34|4r27 5r7 5r18 5r34 5r45 18r23
+. 39r19 39r34 64r13 64r27 65r13 65r24 65r40 65r51 76r29 88r29 105r31 122r31
+. 138r32
+15I12*Height{integer} 21r29 25r31 29r31 33r32 34|6r28 7r7 7r23 7r35 19r28
+. 38r16 38r32 62r16 62r32 67r19 77r29 89r29 106r31 123r31 139r32
+17U14*Initialize 34|60b14 69l8 69t18
+19U14*Put 19>18 20>18 21>18 34|75b14 86l8 86t11
+19a18 Brick{10A9} 34|75b18 80r16 81r20 82r20
+20i18 X{14I12} 34|76b18 81r16
+21i18 Y{15I12} 34|77b18 82r16
+23U14*Erase 23>20 24>20 25>20 34|104b14 115l8 115t13
+23a20 Brick{10A9} 34|104b20 109r16 110r20 111r20
+24i20 X{14I12} 34|105b20 110r16
+25i20 Y{15I12} 34|106b20 111r16
+27U14*Place 27>20 28>20 29>20 34|121b14 131l8 131t13
+27a20 Brick{10A9} 34|121b20 126r16 127r20 128r20
+28i20 X{14I12} 34|122b20 127r16
+29i20 Y{15I12} 34|123b20 128r16
+31V13*Examine{boolean} 31>21 32>21 33>21 34|137b13 152l8 152t15
+31a21 Brick{10A9} 34|137b21 142r16 143r20 144r20
+32i21 X{14I12} 34|138b21 143r16
+33i21 Y{15I12} 34|139b21 144r16
+35U14*Erase_Lines 34|158b14 188l8 188t19
+X 34 wall.adb
+4I12 Width_Inner{33|14I12} 43r21 43r42 145r24 164r19 166r20 176r25
+6I12 Height_Inner{33|15I12} 42r21 42r43 145r56 159r27 159r44 160r32 163r16
+. 172r10 175r22 182r19 183r25 184r28
+9a4 Pick_Array(33|10A9) 28r14
+18A9 Line(boolean)<integer> 19r39
+19A9 Wall_Type(18A9)<integer> 20r18
+20a4 Tetris_Wall{19A9} 40r29 63m10 67m7 129m10 147r16 165r27 183m13 184r16
+35U14 Put_Wall 35b14 54l8 54t16 68r7 186r10
+36b7 Tetris_Piece{boolean} 40m13 44r19
+38i11 Y{integer} 40r41 41r63 42r16
+39i14 X{integer} 40r44 41r47 43r16
+62i11 I{integer} 63r22
+78i7 Bx{natural} 81m10 83r44
+78i11 By{natural} 82m10 83r61
+80i11 I{integer} 81r26 82r26
+88U14 Put 88b14 88>18 89>18 90>18 98l8 98t11 177r19
+88i18 X{33|14I12} 92r41
+89i18 Y{33|15I12} 92r57
+90b18 Attr{boolean} 93r10
+107i7 Bx{natural} 110m10 112r44
+107i11 By{natural} 111m10 112r61
+109i11 I{integer} 110r26 111r26
+124i7 Bx{natural} 127m10 129r26
+124i11 By{natural} 128m10 129r22
+126i11 I{integer} 127r26 128r26
+140i7 Bx{natural} 143m10 145r18 147r32
+140i11 By{natural} 144m10 145r50 147r28
+142i11 I{integer} 143r26 144r26
+159a7 Line_No(6I12) 168m16 177r26 183r51 184r50
+160i7 No_Of_Lines{natural} 167m16 167r31 168r24 172r32 175r44 182r41
+161b7 Attribute{boolean} 174m13 174r30 177r38
+163i11 Y{6I12} 165r39 168r40
+164i14 X{4I12} 165r42 166r16
+173i14 I{integer}
+175i17 I{integer} 177r34
+176i20 X{4I12} 177r23
+182i14 I{integer} 183r59 184r58
+

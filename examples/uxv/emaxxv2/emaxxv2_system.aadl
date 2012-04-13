@@ -1,0 +1,171 @@
+package emaxxv2_system
+public 
+  with Deployment;
+  with buses;
+  with Buses::I2C;
+  with Buses::USB;
+  with Buses::UART; 
+  with Buses::Ethernet;
+  with Processors::ARM;
+
+  with ultrasound_sfr08;
+  with odometer_refx;
+  with receiver_smc16;
+  with motor_tm550;
+  with variator_evx;
+  
+  with inertial_gps_ig500n;
+  with telemeter_utm30lx;
+  with camera_nc353l;
+  with router_wifi_wndr3300;
+  
+  with emaxxv2_sw;
+  
+  with battery_14v_4ah;
+  with regulator_tsi10n;
+  with regulator_ten40_4812;
+  with regulator_reg113_33;
+  
+  ------------
+  -- System --
+  ------------
+  
+  system emaxxv2 
+  end emaxxv2;
+  
+  system implementation emaxxv2.impl
+  subcomponents
+    ------------------------------------------------------------------
+    -- IPC bus between CICAS & CCDS
+    ------------------------------------------------------------------
+    UART_IPC_bus      :  bus      buses::UART::UART.impl;
+    
+    ------------------------------------------------------------------
+    -- Node #1 hardware components : CICAS (ARM7 card)
+    ------------------------------------------------------------------
+    -- CICAS Interconnect bus. These components are shared by ARM7 peripherals and
+    -- sensors/actautors to support communication through various protocols
+    ------------------------------------------------------------------
+    I2C_bus           :   bus        Buses::I2C::I2C.impl;
+    TIMER_bus_ARM7    :   bus        buses::TIMER_bus.impl;
+    ------------------------------------------------------------------
+    --  Hardware components for CICAS configuration
+    ------------------------------------------------------------------
+    proc_1         :      process    emaxxv2_sw::proc_1.impl;
+    CPU_ARM7       :      processor  Processors::ARM::AT91SAM7A3.impl;
+    ------------------------------------------------------------------
+    --  Processor peripherals for CICAS communication with sensors
+    ------------------------------------------------------------------
+    TWI_ARM7       :      device     Processors::ARM::TWI_Peripheral.impl;	   
+    UART0_ARM7     :      device     Processors::ARM::USART0_Peripheral.impl;	
+    TIMER_ARM7     :      device     Processors::ARM::TIMER_Peripheral.impl;
+    PWM_ARM7       :      device     Processors::ARM::PWM_Peripheral.impl;	 
+    ------------------------------------------------------------------
+    -- End Node #1
+    ------------------------------------------------------------------
+    
+    ------------------------------------------------------------------
+    -- Node #2 hardware components : CCDS (ARM9 card)
+    ------------------------------------------------------------------
+    -- CCDS Interconnect bus. This component are shared by ARM9
+    -- peripherals and sensors/actautors to support communication
+    -- through various protocols
+    
+    ------------------------------------------------------------------
+    USB1_bus      :  bus      buses::USB::USB.impl;
+    UART2_bus     :  bus      buses::UART::UART.impl;
+    ETHERNET1_bus :  bus      buses::ETHERNET::Ethernet.impl;
+    ETHERNET2_bus :  bus      buses::ETHERNET::Ethernet.impl;
+    ------------------------------------------------------------------
+    --  Hardware components for CCDS configuration
+    ------------------------------------------------------------------
+    proc_2     :       process    emaxxv2_sw::proc_2.impl;
+    CPU_ARM9   :       processor  Processors::ARM::AT91SAM9G20.impl;
+    ------------------------------------------------------------------
+    --  Processor peripherals for CCDS communication with sensors
+    ------------------------------------------------------------------
+    UART0_ARM9      : device     Processors::ARM::USART0_Peripheral.impl;   
+    UART2_ARM9      : device     Processors::ARM::USART2_Peripheral.impl; 
+    USB1_ARM9       : device     Processors::ARM::USB1_Peripheral.impl; 
+    ETHERNET_ARM9   : device     Processors::ARM::ETHERNET_Peripheral.impl; 
+    ------------------------------------------------------------------
+    -- End Node #2
+    ------------------------------------------------------------------
+    
+    ------------------------------------------------------------------
+    --  List of sensors/actuators
+    ------------------------------------------------------------------
+    --------------------- ARM7 ----------------------
+    US1       :      device     ultrasound_sfr08::US.impl
+    { Deployment::Location => "0xE0";}; -- define here the address of US1
+    US2       :      device     ultrasound_sfr08::US.impl
+    { Deployment::Location => "0xE4";}; -- define here the address of US2
+    ODOMETER1  :      device     odometer_refx::ODOMETER.impl;
+    ODOMETER2  :      device     odometer_refx::ODOMETER.impl;
+    RECEIVER   :      device     receiver_smc16::RECEIVER.impl;
+    
+    ---------------------- ARM9 ----------------------
+    INERTIAL_GPS  :   device     inertial_gps_ig500n::INERTIAL_GPS.impl;
+    TELEMETER     :   device     telemeter_utm30lx::TELEMETER.impl;
+    CAMERA_IP     :   device     camera_nc353l::CAMERA_IP.impl;
+    ROUTER_WIFI   :   device     router_wifi_wndr3300::ROUTER_WIFI.impl;
+    
+  connections
+    ------------------------------------------------------------------
+    -- System bus connections : between CCDS & CICAS 
+    -- USART serial line, it is shared by CICAS and CCDS to support
+    -- communication through the serial line.
+    ------------------------------------------------------------------
+    bus access UART_IPC_bus -> UART0_ARM9.Serial_Wire;
+    bus access UART_IPC_bus -> UART0_ARM7.Serial_Wire;
+    
+    ------------------------------------------------------------------
+    -- Node #1 bus connections : CICAS (ARM7 card)
+    ------------------------------------------------------------------
+    bus access I2C_bus -> TWI_ARM7.Serial_Wire;
+    bus access I2C_bus -> US1.Serial_Wire;
+    bus access I2C_bus -> US2.Serial_Wire;
+    --
+    bus access TIMER_bus_ARM7 -> TIMER_ARM7.Serial_Wire;
+    bus access TIMER_bus_ARM7 -> ODOMETER1.Serial_Wire;
+    bus access TIMER_bus_ARM7 -> ODOMETER2.Serial_Wire;
+    bus access TIMER_bus_ARM7 -> RECEIVER.Serial_Wire;
+    -- 
+    ------------------------------------------------------------------
+    -- Node #2 bus connections : CCDS (ARM9 card)
+    ------------------------------------------------------------------
+    bus access UART2_bus -> UART2_ARM9.Serial_Wire;
+    bus access UART2_bus -> INERTIAL_GPS.Serial_Wire;
+    --
+    bus access USB1_bus -> USB1_ARM9.Serial_Wire;
+    bus access USB1_bus -> TELEMETER.Serial_Wire;
+    --
+    bus access ETHERNET1_bus -> ETHERNET_ARM9.Serial_Wire;
+    bus access ETHERNET2_bus -> CAMERA_IP.PortCom;
+    bus access ETHERNET1_bus -> ROUTER_WIFI.Port1;
+    bus access ETHERNET2_bus -> ROUTER_WIFI.Port2;
+    
+    EventCnx1 : port proc_1.US1_evt -> US1.proc_evt ; 
+    EventCnx2 : port proc_1.US2_evt -> US2.proc_evt ; 
+    EventCnx3 : port proc_1.Odometer1_evt -> ODOMETER1.proc_evt ; 
+    EventCnx4 : port proc_1.Odometer2_evt -> ODOMETER2.proc_evt ; 
+    EventCnx5 : port proc_1.Receiver_evt -> RECEIVER.proc_evt ; 
+    
+  properties
+    -- The processor CPU runs the process and the TWI driver for I2C connexion
+    Actual_Processor_Binding => (reference (CPU_ARM7)) applies to proc_1;
+    --Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
+    
+  annex real_specification {**
+    theorem check_model
+    foreach s in system_set do
+    --requires(Electricity_Prop_Defined);
+    --var crt_drain := compute Current_Drain;
+    --check(crt_drain > 0.0);
+    requires(Electrical_Compatibility);
+    check(1 = 1);
+    end check_model;
+    **};
+    end emaxxv2.impl;
+
+end  emaxxv2_system;

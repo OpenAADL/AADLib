@@ -1,0 +1,5 @@
+theorem check_aadl
+  foreach s in system_set do
+     requires (check_data_model_annex);
+  check (1=1);
+end check_aadl;

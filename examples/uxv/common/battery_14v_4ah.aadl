@@ -1,0 +1,23 @@
+package battery_14v_4ah
+public
+
+with types;
+with buses;
+with Electricity_Properties;
+
+-----------------
+--   DEVICE   --
+-----------------
+device BAT_14V_4AH  
+features
+   Power_out :   requires bus access  buses:: VBat_bus.impl;
+end  BAT_14V_4AH;
+device implementation BAT_14V_4AH.impl
+properties
+  Electricity_Properties::Max_Current => 40000 mA; -- 10C max 
+  Electricity_Properties::Run_Current =>  0.0 A;
+  Electricity_Properties::Core_Voltage => 14.0 V;
+end BAT_14V_4AH.impl;
+   
+end battery_14v_4ah;
+ 

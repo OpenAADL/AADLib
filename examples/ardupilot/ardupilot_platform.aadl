@@ -1,0 +1,11 @@
+package ardupilot_platform
+public
+
+  processor cpu end cpu;
+  
+  memory mem end mem;
+  
+  memory implementation mem.i
+  end mem.i;
+  
+end ardupilot_platform;

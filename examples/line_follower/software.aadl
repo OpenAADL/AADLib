@@ -1,0 +1,43 @@
+package Software
+public
+
+  -----------------
+  -- Subprograms --
+  -----------------
+  
+  subprogram Main_Loop
+  properties
+    source_language => C;
+    source_name     => "robot_main";
+    source_text     => ("robot.c");
+  end Main_Loop;
+
+  -------------
+  -- Threads --
+  -------------
+  
+  thread Task
+  end Task;
+  
+  thread implementation Task.impl_1
+  calls 
+    Mycalls: {
+    P_Spg : subprogram Main_Loop;
+    };
+  properties
+    Dispatch_Protocol => Background;
+  end Task.impl_1;
+
+  ---------------
+  -- Processes --
+  ---------------
+  
+  process node_a
+  end node_a;
+  
+  process implementation node_a.impl
+  subcomponents
+    Task1 : thread Task.impl_1;
+  end node_a.impl;
+
+end Software;

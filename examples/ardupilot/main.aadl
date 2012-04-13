@@ -1,0 +1,30 @@
+package Main
+public
+  with Processors::Atmega;
+  with Ardupilot_Software;
+  with Deployment;  
+
+  ---------------
+  -- Ardupilot --
+  ---------------
+
+  system Ardupilot
+  end Ardupilot;
+  
+  system implementation Ardupilot.i
+  subcomponents
+    CPU         : processor Processors::Atmega::ATMEGA328p.impl
+    {Deployment::Execution_Platform => Native;
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+--    Thread_Limit        => 42;
+    Thread_Limit        => 4;
+    };
+
+    process_Ardupilot : process Ardupilot_software::Ardupilot_code.impl;
+    
+  properties
+    Actual_Processor_Binding => (reference (CPU)) applies to process_Ardupilot;
+
+  end Ardupilot.i;
+
+end Main;

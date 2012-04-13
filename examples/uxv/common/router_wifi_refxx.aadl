@@ -1,0 +1,34 @@
+package router_wifi_refxx
+public
+
+with types;
+with buses;
+with Electricity;
+
+-----------------
+--   DEVICE   --
+-----------------
+device ROUTER_WIFI   
+features
+   Serial_Wire1 :    requires bus access buses::ETHERNET_bus.impl;
+   Serial_Wire2 :    requires bus access buses::ETHERNET_bus.impl;     
+   proc_evt : out event port;
+end  ROUTER_WIFI;
+device implementation ROUTER_WIFI.impl
+properties
+  Electricity::Idle_Current => 10 mA;  -- no data  
+  Electricity::Run_Current =>  1000 mA; --  no data 
+  Electricity::Peak_Current => 100 mA; -- to measure
+  Electricity::Core_Voltage => 12 V; 
+ Electricity::VIH_min => 2.0 V; 
+  Electricity::VIL_max => 1.0 V; 
+  Electricity::VOH_min => 3.2 V; 
+  Electricity::VOL_max => 0.4 V;
+  Electricity::Acquisition_Time => 0 sec;  
+  Electricity::Peak_Time => 0 sec;
+  Electricity::Device_Type => Master;  
+end ROUTER_WIFI.impl;
+  
+  
+end router_wifi_refxx;
+ 

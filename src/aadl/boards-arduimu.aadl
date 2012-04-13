@@ -1,0 +1,48 @@
+--  This package models the ArduIMU platform, an AVR-based derivative
+--  of the Arduino.  For more details, see
+--  http://code.google.com/p/ardu-imu/
+
+package Boards::ArduImu
+public
+  with Data_Sheet;
+  with Electricity_Properties;
+  with Processor_Properties;
+
+  with Buses::I2C;
+  with Buses::SPI;
+  with Buses::UART;
+
+  with Devices::ADXL335;
+  with Devices::LPR530AL;
+  with Devices::LY530ALH;
+
+  with Processors::ATMEGA;
+
+  -------------
+  -- ArduIMU --
+  -------------
+
+  --  The ArduIMU is an Arduino-based AHRS (Attitude Heading Reference
+  --  System) made of an ATMEGA328p, one three-axis analog
+  --  accelerometer (ADXL335), one one-axis gyrometer (LY530ALH) and
+  --  one two-axis gyrometer (LPR530AL).
+
+  system ArduIMU
+  properties
+    Data_Sheet::UUID => "http://code.google.com/p/ardu-imu/";
+  end ArduIMU;
+
+  system implementation ArduImu.impl
+  subcomponents
+    ATMEGA328p : processor Processors::ATMEGA::ATMEGA328p.impl
+    { Processor_Properties::Processor_Frequency => 16 Mhz; };
+
+    ADXL335  : device Devices::ADXL335::ADXL335.impl;
+    LPR530AL : device Devices::LPR530AL::LPR530AL.impl;
+    LY530ALH : device Devices::LY530ALH::LY530ALH.impl;
+
+    I2C  : bus Buses::I2C::I2C.impl;
+    UART : bus Buses::UART::UART.impl;
+  end ArduImu.impl;
+
+end Boards::ArduImu;

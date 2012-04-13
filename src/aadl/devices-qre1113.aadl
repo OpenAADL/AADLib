@@ -1,0 +1,29 @@
+-- This package models a QRE1113 device, a reflectance sensor from
+-- Pollulu, and packaged by Sparkfun as a breakout-board wih all
+-- required connection pins.
+
+package Devices::QRE1113
+public
+  with Data_Sheet, Electricity_Properties;
+
+  --------------------
+  -- QRE1113_Analog --
+  --------------------
+
+  device QRE1113_Analog
+  features
+    GND  : in out event port;
+    VCC  : in out event port
+    {Electricity_Properties::Input_Voltage => 5V;};
+
+    OUTp : in out event port; -- should be connected to an Analog pin
+  properties
+    Data_Sheet::UUID => 
+      "http://www.sparkfun.com/commerce/product_info.php?products_id=9453";
+    Data_Sheet::Version => "ROB-09453";
+  end QRE1113_Analog;
+
+  device implementation QRE1113_Analog.impl
+  end QRE1113_Analog.impl;
+
+end Devices::QRE1113;

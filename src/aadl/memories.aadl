@@ -1,0 +1,69 @@
+--  This package models hierarchy of memories
+
+package Memories
+public
+  with ARINC653;
+
+  ------------
+  -- EEPROM --
+  ------------
+
+  memory EEPROM
+  properties
+    ARINC653::Access_Type => Read_Write;
+  end EEPROM;
+
+  memory implementation EEPROM.impl
+  end EEPROM.impl;
+
+  ------------------
+  -- Flash_Memory --
+  ------------------
+
+  memory Flash_Memory
+  properties
+    ARINC653::Access_Type => Read_Write;
+  end Flash_Memory;
+
+  memory implementation Flash_Memory.impl
+  end Flash_Memory.impl;
+
+  ---------
+  -- RAM --
+  ---------
+
+  memory RAM
+  properties
+    ARINC653::Access_Type => Read_Write;
+  end RAM;
+
+  ---------
+  -- ROM --
+  ---------
+
+  memory ROM
+  properties
+    ARINC653::Access_Type => Read;
+  end ROM;
+
+  ----------
+  -- SRAM --
+  ----------
+
+  memory SRAM extends RAM
+  end SRAM;
+
+  memory implementation SRAM.impl
+  end SRAM.impl;
+
+  -----------
+  -- NVRAM --
+  -----------
+
+  memory NVRAM extends RAM
+  end NVRAM;
+
+  memory implementation NVRAM.impl
+  end NVRAM.impl;
+
+end Memories;

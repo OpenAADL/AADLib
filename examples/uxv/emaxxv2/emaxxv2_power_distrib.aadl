@@ -1,0 +1,128 @@
+package emaxxv2_power_distrib
+public 
+    with Deployment;
+    with AT91SAM7A3;
+    with AT91SAM9G20;
+    with buses;
+	
+    with ultrasound_sfr08;
+    with odometer_refx;
+    with receiver_smc16;
+    with motor_tm550;
+    with variator_evx;
+	
+    with inertial_gps_ig500n;
+    with telemeter_utm30lx;
+    with camera_nc353l;
+    with router_wifi_wndr3300;
+
+    with emaxxv2_sw;
+	
+    with battery_14v_4ah;
+    with regulator_tsi10n;
+    with regulator_ten40_4812;
+    with regulator_reg113_33;
+
+    ------------
+    -- System --
+    ------------
+
+    system emaxxv2 
+    end emaxxv2;
+
+    system implementation emaxxv2.power
+    subcomponents
+      --------------------- POWER NETS ----------------
+      VBat_bus       :  bus      buses::VBat_bus.impl;
+      V5_1_bus       :  bus      buses::V5_bus.impl;
+      V5_2_bus       :  bus      buses::V5_bus.impl;
+      --V3v3_bus       :  bus      buses::V3v3_bus.impl;
+      V12_bus        :  bus      buses::V12_bus.impl;
+      VBatmotors_bus :  bus      buses::VBat_bus.impl;
+      --------------------- ARM7 ----------------------
+      US1        :      device     ultrasound_sfr08::US.impl
+      { Deployment::Power_Level => 2;};
+      US2        :      device     ultrasound_sfr08::US.impl
+      { Deployment::Power_Level => 2;};
+      ODOMETER1  :      device     odometer_refx::ODOMETER.impl
+      { Deployment::Power_Level => 2;};
+      ODOMETER2  :      device     odometer_refx::ODOMETER.impl
+      { Deployment::Power_Level => 2;};
+      RECEIVER   :      device     receiver_smc16::RECEIVER.impl
+      { Deployment::Power_Level => 2;};
+      --CPU_ARM7   :      processor  AT91SAM7A3::ARM7.impl
+      --		{ Deployment::Power_Level => 3;};
+      ---------------------- ARM9 ----------------------
+      INERTIAL_GPS  :   device     inertial_gps_ig500n::INERTIAL_GPS.impl
+      { Deployment::Power_Level => 2;};
+      TELEMETER     :   device     telemeter_utm30lx::TELEMETER.impl
+      { Deployment::Power_Level => 2;};
+      CAMERA_IP     :   device     camera_nc353l::CAMERA_IP.impl
+      { Deployment::Power_Level => 2;};
+      ROUTER_WIFI   :   device     router_wifi_wndr3300::ROUTER_WIFI.impl
+      { Deployment::Power_Level => 2;};
+      VARIATOR      :   device     variator_evx::VARIATOR.impl
+      { Deployment::Power_Level => 2;};
+      MOTORS        :   device     motor_tm550::MOTOR_TM550.impl
+      { Deployment::Power_Level => 2;};
+      --CPU_ARM9      :   processor  AT91SAM9G20::ARM9.impl 
+      --		{ Deployment::Power_Level => 2;};  
+      --------------------- REGULATORS ----------------- 
+      REG_5V_1      :   device      regulator_TSI10N::REG_5V.impl -- reg embedded into ARM7 board
+      { Deployment::Power_Level => 1;};
+      REG_5V_2      :   device      regulator_TSI10N::REG_5V.impl 
+      { Deployment::Power_Level => 1;};
+      REG_12V       :   device      regulator_ten40_4812::REG_12V.impl 
+      { Deployment::Power_Level => 1;};
+      REG_3V3      :   device      regulator_reg113_33::REG_3V3.impl
+      { Deployment::Power_Level => 2;};
+      --------------------- BATERIES ----------------- 
+      BAT_14V_CALC    :   device      battery_14v_4ah::BAT_14V_4AH.impl  
+      { Deployment::Power_Level => 0;};
+      BAT_14V_MOTORS  :   device      battery_14v_4ah::BAT_14V_4AH.impl 
+      { Deployment::Power_Level => 0;};
+    connections
+      
+      ------------------------------------------------------------------
+      -- BATTERIES
+      bus access VBat_bus       -> BAT_14V_CALC.Power_out;  
+      bus access VBatmotors_bus -> BAT_14V_MOTORS.Power_out;  
+      ------------------------------------------------------------------
+      -- CICAS  
+      bus access VBat_bus -> REG_5V_1.Power_in;  
+      bus access V5_1_bus -> REG_5V_1.Power_out;
+      bus access V5_1_bus -> US1.Supply;
+      bus access V5_1_bus -> US2.Supply;
+      bus access V5_1_bus -> ODOMETER1.Supply;
+      bus access V5_1_bus -> ODOMETER2.Supply;
+      bus access V5_1_bus -> RECEIVER.Supply;
+      --bus access V5_1_bus -> REG_3V3.Power_in;  
+      --bus access V3v3_bus -> REG_3V3.Power_out;  
+      --bus access V3v3_bus -> CPU_ARM7.Supply; 
+      ------------------------------------------------------------------ 
+      -- CCDS  
+      bus access VBat_bus -> REG_12V.Power_in;
+      bus access V12_bus ->  REG_12V.Power_out;
+      bus access V12_bus ->  TELEMETER.Supply;
+      bus access V12_bus ->  ROUTER_WIFI.Supply;
+      bus access V12_bus ->  CAMERA_IP.Supply; -- THIS CONNECTION DO NOT EXIST LIKE THIS TODAY AS UNDEFINED
+      --
+      bus access VBat_bus -> REG_5V_2.Power_in;  
+      bus access V5_2_bus -> REG_5V_2.Power_out;
+      bus access V5_2_bus -> INERTIAL_GPS.Supply; 
+      --bus access V5_2_bus -> CPU_ARM9.Supply; 
+      ------------------------------------------------------------------
+      -- MOTORS 
+      bus access VBatmotors_bus -> MOTORS.Supply;  
+      bus access VBatmotors_bus -> VARIATOR.Supply;  
+      
+      annex real_specification {**
+      theorem check_power_tree
+      foreach s in system_set do
+      requires(Battery_Sizing);
+      --requires(Power_Consumption);
+      check(1.0 > 0.0);
+    end check_power_tree;
+    **};
+    end emaxxv2.power;
+end emaxxv2_power_distrib;

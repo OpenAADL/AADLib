@@ -1,0 +1,42 @@
+-- This package models the hardware part of the CPIOM
+-- cf http://www.embedded-systems-portal.com/CTB/CPIOM_Hardware,10004.html
+
+package Boards::CPIOM
+public
+
+  with ARINC653;
+  with Buses::ARINC_429;
+  with Buses::AFDX;
+  with Devices::AFDX;
+  with Memories;
+  with Processors::PPC;
+
+  -----------
+  -- CPIOM --
+  -----------
+
+  system CPIOM
+  features
+    ARINC429 : requires bus access Buses::ARINC_429::ARINC_429;
+    AFDX     : requires bus access Buses::AFDX::AFDX;
+    --  XXX discret?
+  end CPIOM;
+
+  system implementation CPIOM.impl
+  subcomponents
+    --  Memory elements
+    NVRAM  : memory    Memories::NVRAM {Byte_Count => 64_000_000;};
+    RAM    : memory    Memories::RAM {Byte_Count => 64_000_000;}; 
+    Flash  : memory    Memories::Flash_Memory;
+
+    -- Processor
+
+    PPC750 : processor Processors::PPC::PPC750.impl;
+
+    --  Communication devices
+
+    AFDX_1 : device    Devices::AFDX::Generic_AFDX;
+
+  end CPIOM.impl;
+
+end Boards::CPIOM;

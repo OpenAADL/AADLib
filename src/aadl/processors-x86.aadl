@@ -1,0 +1,30 @@
+-- This package defines some processors from the x86 family
+
+package Processors::x86
+public
+  with Processor_Properties;
+
+  -----------------
+  -- Generic_x86 --
+  -----------------
+
+  processor Generic_x86
+  properties
+    Processor_Properties::Processor_Family => x86;
+    Processor_Properties::Endianess        => Little_Endian;
+    Processor_Properties::Word_Length      => 32 bits;
+  end Generic_x86;
+
+  ---------
+  -- SMP --
+  ---------
+
+  system SMP
+  end SMP;
+
+  system implementation SMP.i
+  subcomponents
+    procs : processor Generic_x86[2];
+  end SMP.i;
+
+end Processors::x86;

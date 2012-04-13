@@ -1,0 +1,105 @@
+package quadrirotorv1_system
+public 
+  with Deployment;
+
+  with buses;
+  with Buses::I2C;
+  with Buses::UART;
+  with Buses::USB;
+  with ultrasound_sfr08;
+  with pressure_hca0811;
+  with motor_bl2824;
+  with variator_blctlv12;
+  with gps_lea4h;
+  with inertial_chr6d;
+  with telemeter_urg04lx;
+  with camera_usb;
+  with quadrirotorv1_sw;
+  with Processors::ARM;
+
+  ------------
+  -- System --
+  ------------
+
+  system quadrirotorv1 
+  end quadrirotorv1;
+  
+  system implementation quadrirotorv1.impl
+  subcomponents
+    I2C_bus              : bus   Buses::I2C::I2C.impl;
+    three_phases_1_bus   : bus   buses::three_phases_bus.impl;
+    three_phases_2_bus   : bus   buses::three_phases_bus.impl;
+    three_phases_3_bus   : bus   buses::three_phases_bus.impl;
+    three_phases_4_bus   : bus   buses::three_phases_bus.impl;
+    USB1_bus             : bus   buses::USB::USB.impl;
+    USB2_bus             : bus   buses::USB::USB.impl;
+    UART1_bus            : bus   buses::UART::UART.impl;
+    UART2_bus            : bus   buses::UART::UART.impl;
+    
+    proc_2               : process    quadrirotorv1_sw::proc_2.impl;
+    CPU_ARM9             : processor  Processors::ARM::AT91SAM9G20.impl;
+    
+    TWI_ARM9             : device     Processors::ARM::TWI_Peripheral;  
+    UART1_ARM9           : device     Processors::ARM::USART1_Peripheral; 
+    UART2_ARM9           : device     Processors::ARM::USART2_Peripheral; 
+    USB1_ARM9            : device     Processors::ARM::USB1_Peripheral; 
+    USB2_ARM9            : device     Processors::ARM::USB2_Peripheral; 
+
+    US1                  : device     ultrasound_sfr08::US.impl { Deployment::Location => "0xE0";}; -- define here the address of US1
+    US2                  : device     ultrasound_sfr08::US.impl { Deployment::Location => "0xE4";}; -- define here the address of US2
+    PRESSURE             : device     pressure_hca0811::PRESSURE.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    MOTOR_1              : device     motor_bl2824::MOTOR.impl;
+    MOTOR_2              : device     motor_bl2824::MOTOR.impl;
+    MOTOR_3              : device     motor_bl2824::MOTOR.impl;
+    MOTOR_4              : device     motor_bl2824::MOTOR.impl;
+    VARIATOR_1           : device     variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    VARIATOR_2           : device     variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    VARIATOR_3           : device     variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    VARIATOR_4           : device     variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    INERTIAL             : device     inertial_chr6d::INERTIAL.impl;
+    GPS                  : device     gps_lea4h::GPS.impl;
+    TELEMETER            : device     telemeter_urg04lx::TELEMETER.impl;
+    CAMERA               : device     camera_usb::CAMERA.impl;
+
+  connections
+    bus access I2C_bus -> TWI_ARM9.Serial_Wire;
+    
+    bus access I2C_bus -> US1.Serial_Wire;
+    bus access I2C_bus -> US2.Serial_Wire;
+    bus access I2C_bus -> PRESSURE.Serial_Wire;
+    bus access I2C_bus -> VARIATOR_1.Serial_Wire;
+    bus access I2C_bus -> VARIATOR_2.Serial_Wire;
+    bus access I2C_bus -> VARIATOR_3.Serial_Wire;
+    bus access I2C_bus -> VARIATOR_4.Serial_Wire;
+    
+    bus access three_phases_1_bus -> VARIATOR_1.three_phases_Wire;
+    bus access three_phases_2_bus -> VARIATOR_2.three_phases_Wire;
+    bus access three_phases_3_bus -> VARIATOR_3.three_phases_Wire;
+    bus access three_phases_4_bus -> VARIATOR_4.three_phases_Wire;
+    
+    bus access three_phases_1_bus -> MOTOR_1.three_phases_Wire;
+    bus access three_phases_2_bus -> MOTOR_2.three_phases_Wire;
+    bus access three_phases_3_bus -> MOTOR_3.three_phases_Wire;
+    bus access three_phases_4_bus -> MOTOR_4.three_phases_Wire;
+    
+    bus access UART1_bus -> UART1_ARM9.Serial_Wire;
+    bus access UART1_bus -> GPS.Serial_Wire;
+    
+    bus access UART2_bus -> UART2_ARM9.Serial_Wire;
+    bus access UART2_bus -> INERTIAL.Serial_Wire;
+    
+    bus access USB1_bus -> USB1_ARM9.Serial_Wire;
+    bus access USB1_bus -> CAMERA.Serial_Wire;
+    bus access USB2_bus -> USB2_ARM9.Serial_Wire;
+    bus access USB2_bus -> TELEMETER.Serial_Wire;
+    
+  properties
+    Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
+    Actual_Processor_Binding => (reference (CPU_ARM9)) applies to TWI_ARM9;
+    Actual_Processor_Binding => (reference (CPU_ARM9)) applies to USB1_ARM9;
+    Actual_Processor_Binding => (reference (CPU_ARM9)) applies to USB2_ARM9;
+    Actual_Processor_Binding => (reference (CPU_ARM9)) applies to UART1_ARM9;
+    Actual_Processor_Binding => (reference (CPU_ARM9)) applies to UART2_ARM9;
+  end quadrirotorv1.impl;
+  
+end  quadrirotorv1_system;

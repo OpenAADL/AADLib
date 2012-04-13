@@ -1,0 +1,152 @@
+package Ravenscar_Example
+public
+  with Data_Model;
+  with Deployment;
+  with Systems;
+
+  data Workload
+  properties
+    Data_Model::Data_Representation => Integer;
+  end Workload;
+  
+  data Interrupt_Counter
+  properties
+    Data_Model::Data_Representation => Integer;
+  end Interrupt_Counter;
+  
+  thread Regular_Producer
+  features
+    Additional_Workload : out event data port Workload;
+    
+    Handle_External_Interrupt  : out event port;
+
+  properties
+    Compute_Entrypoint_Source_Text     => "Work.Regular_Producer_Operation";
+    Dispatch_Protocol                  => Periodic;
+    Period                             => 1000 ms;
+    Deadline                           => 500 ms;
+    Compute_Execution_Time             => 0 ms .. 498 ms;
+    Priority                           => 7;
+  end Regular_Producer;
+  
+  thread On_Call_Producer
+  features
+    Additional_Workload_Depository : in event data port Workload
+    {Queue_Size                     => 5;
+    Compute_Entrypoint_Source_Text => "Work.On_Call_Producer_Operation";};
+  
+  properties
+    Dispatch_Protocol                  => Sporadic;
+    Period                             => 1000 ms;
+    Deadline                           => 800 ms;
+    Compute_Execution_Time             => 0 ms .. 250 ms;
+    Priority                           => 5;
+  end On_Call_Producer;
+  
+  thread External_Event_Server
+  features
+    External_Interrupt_Depository : in event data port Interrupt_Counter
+    {Queue_Size                     => 1;
+    Compute_Entrypoint_Source_Text => "Events.Delegate_External_Event";};
+    
+    External_Interrupt : out data port Interrupt_Counter;
+
+  properties
+    Dispatch_Protocol                  => Sporadic;
+    Period                             => 5000 ms;
+    Deadline                           => 100 ms;
+    Compute_Execution_Time             => 0 ms .. 2 ms;
+    Priority                           => 11;
+  end External_Event_Server;
+  
+  thread Activation_Log_Reader
+  features
+    External_Interrupt_Depository : in data port Interrupt_Counter;
+
+    Signal : in event port
+    {Queue_Size                     => 1;
+    Compute_Entrypoint_Source_Text => "Logs.On_Signal";};
+
+  properties
+    Dispatch_Protocol                  => Sporadic;
+    Period                             => 1000 ms;
+    Deadline                           => 1000 ms;
+    Compute_Execution_Time             => 0 ms .. 125 ms;
+    Priority                           => 3;
+  end Activation_Log_Reader;
+  
+  thread External_Event_Source
+  features
+    External_Interrupt : out event data port Interrupt_Counter;
+
+  properties
+    Initialize_Entrypoint_Source_Text  => "Event_Source.Init";
+    Compute_Entrypoint_Source_Text     => "Event_Source.New_External_Event";
+    Dispatch_Protocol                  => Periodic;
+    Period                             => 5000 ms;
+    Deadline                           => 100 ms;
+    Compute_Execution_Time             => 0 ms .. 10 ms;
+    Priority                           => 11;
+  end External_Event_Source;
+  
+  process Workload_Manager
+  features
+    External_Interrupt_Depository : in event data port Interrupt_Counter;
+  end Workload_Manager;
+  
+  process implementation Workload_Manager.Impl
+  subcomponents
+    Regular_Producer      : thread Regular_Producer;
+    On_Call_Producer      : thread On_Call_Producer;
+    External_Event_Server : thread External_Event_Server;
+    Activation_Log_Reader : thread Activation_Log_Reader;
+
+  connections
+    port External_Interrupt_Depository 
+    -> External_Event_Server.External_Interrupt_Depository;
+    port Regular_Producer.Additional_Workload
+    -> On_Call_Producer.Additional_Workload_Depository;
+    port Regular_Producer.Handle_External_Interrupt
+    -> Activation_Log_Reader.Signal;
+    port External_Event_Server.External_Interrupt
+    -> Activation_Log_Reader.External_Interrupt_Depository;
+  end Workload_Manager.Impl;
+  
+  process Interrupt_Simulator
+  features
+    External_Interrupt : out event data port Interrupt_Counter;
+  end Interrupt_Simulator;
+  
+  process implementation Interrupt_Simulator.Impl
+  subcomponents
+    External_Event_Source : thread External_Event_Source;
+
+  connections
+    port External_Event_Source.External_Interrupt 
+    -> External_Interrupt;
+  end Interrupt_Simulator.Impl;
+  
+  processor The_Processor
+  properties
+    Deployment::Execution_Platform           => LEON_ORK;
+    Preemptive_Scheduler => true;
+    Scheduling_Protocol                      => 
+    (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Priority_Range                           => 0 .. 255;
+  end The_Processor;
+  
+  system Case_Study extends Systems::Ravenscar_System
+  end Case_Study;
+  
+  system implementation Case_Study.LEON_Local
+  subcomponents
+    WoM : process Ravenscar_Example::Workload_Manager.Impl
+    {Deployment::Channel_Address => 2;
+    Deployment::Process_Id      => 1200;};
+    CPU_1 : processor The_Processor;
+
+  properties
+    Actual_Processor_Binding => (reference (CPU_1)) applies to WoM;
+  end Case_Study.LEON_Local;
+
+end Ravenscar_Example;

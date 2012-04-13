@@ -1,0 +1,36 @@
+package motor_bl2824
+public
+
+with types;
+with buses;
+with Electricity_Properties;
+
+-----------------
+--   DEVICE   --
+-----------------
+device MOTOR  
+features
+  three_phases_Wire :    requires bus access buses::three_phases_bus.impl;
+end  MOTOR;
+
+device implementation MOTOR.impl
+properties
+  Electricity_Properties::Idle_Current => 0 mA; -- no data
+  Electricity_Properties::Run_Current => 15 mA;  -- 90W motor
+  Electricity_Properties::Core_Voltage => 14.8 V; 
+
+
+-- BEGIN : Added by Julien
+  Electricity_Properties::Device_Type => Master;
+  Electricity_Properties::VOH_min => 3.0 V; 
+  Electricity_Properties::VOL_max => 0.4 V;  
+  Electricity_Properties::VIH_min => 1.0 V; 
+  Electricity_Properties::VIL_max => 2.0 V; 
+-- END : Added by Julien
+
+
+end MOTOR.impl;
+
+
+end motor_bl2824;
+ 

@@ -1,0 +1,16 @@
+--  This package models protocols layers
+
+package Protocols
+public
+  
+  --  Application protocols are modeled as AADLv2 virtual bus
+  --  components, and then stacked. Each protocol 
+
+  ----------------------
+  -- Generic_Protocol --
+  ----------------------
+
+  virtual bus Generic_Protocol
+  end Generic_Protocol;
+
+end Protocols;

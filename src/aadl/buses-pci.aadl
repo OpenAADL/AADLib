@@ -1,0 +1,19 @@
+-- This package models PCI bus
+
+package Buses::PCI
+public
+  with Bus_Properties;
+
+  bus PCI
+  properties
+    Bus_Properties::Available_Bandwidth =>
+    (133 MBytesps,   -- PCI 2.2
+     1066 MBytesps,  -- PCI-X
+     2133 MBytesps   -- PCI-X 2.0
+    );
+  end PCI;
+
+  bus implementation PCI.impl
+  end PCI.impl;
+
+end Buses::PCI;

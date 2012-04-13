@@ -1,0 +1,34 @@
+-- This package models the GR-Rasta GR-CPCI-XC4V LEON Compact-PCI
+-- development board by AEROFlex Gaisler.
+
+package Boards::GR_CPCI_X4CV
+public
+  with Processors::SPARC, Memories, Data_Sheet;
+  with Buses::SpaceWire, Buses::UART;
+
+  ------------------
+  -- GR_CPCI_X4CV --
+  ------------------
+
+  system GR_CPCI_X4CV
+  features
+    spw_core_1 : requires bus access Buses::SpaceWire::SpaceWire.impl;
+    spw_core_2 : requires bus access Buses::SpaceWire::SpaceWire.impl;
+    spw_core_3 : requires bus access Buses::SpaceWire::SpaceWire.impl;
+
+    uart_core_1 : requires bus access Buses::UART::UART.impl;
+    uart_core_2 : requires bus access Buses::UART::UART.impl;
+    uart_core_3 : requires bus access Buses::UART::UART.impl;
+
+  properties
+    Data_Sheet::UUID => "http://www.gaisler.com/cms/index.php?option=com_content&task=view&id=253&Itemid=156";
+
+  end GR_CPCI_X4CV;
+
+  system implementation GR_CPCI_X4CV.impl
+  subcomponents
+    LEON_Core : processor Processors::SPARC::LEON2;
+    SRAM      : memory    Memories::SRAM {Byte_Count => 64_000_000;};
+  end GR_CPCI_X4CV.impl;
+
+end Boards::GR_CPCI_X4CV;

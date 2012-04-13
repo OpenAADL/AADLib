@@ -1,0 +1,12 @@
+-- This package models MIL1553 bus
+
+package Buses::MIL1553
+public
+  with Bus_Properties;
+
+  bus MIL1553
+  properties
+    Bus_Properties::Available_Bandwidth => (125 KBytesps);
+  end MIL1553;
+
+end Buses::MIL1553;

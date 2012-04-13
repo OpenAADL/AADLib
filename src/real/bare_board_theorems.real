@@ -1,0 +1,28 @@
+--------------------------------------------------------------------------------
+-- This set of REAL theorems defines implicit constraints defined for 
+-- bare board systems
+--
+-- For each property, we define the list of constraints attached
+
+--------------------------------------------------------------------------------
+--  Global theorem: this theorem gathers all sub theorem defined in this file.
+
+theorem check_bare_board_system
+   foreach s in system_set do
+      requires (check_threads);
+      check (1 = 1);
+end check_bare_board_system;
+
+--------------------------------------------------------------------------------
+--  On a bare board system, there can be only one thread
+
+theorem check_threads
+
+foreach e in Processor_Set do
+
+  Proc_Set(e) := {x in Process_Set | Is_Bound_To (x, e)};
+  Threads := {x in Thread_Set | Is_Subcomponent_Of (x, Proc_Set)};
+
+  check (Cardinal (Threads) <= Get_Property_Value (e, "Thread_Limit"));
+
+end check_threads;

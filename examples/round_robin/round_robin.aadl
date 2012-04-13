@@ -1,0 +1,75 @@
+--  This package demonstrates how to model a system based on a
+--  Round-Robin scheduler, with two variants: preemptive and
+--  non-preemptive.
+
+package Round_Robin
+public
+
+  thread T
+  properties
+    Dispatch_Protocol => Periodic;
+    Priority => 1;
+  end T;
+
+  process P
+  end P;
+
+  process implementation P.impl
+  subcomponents
+    T1 : thread T
+      {Time_Slot => (1,3);
+      Compute_Execution_Time => 0 ms .. 10 ms;
+      Period => 20 ms;
+      };
+    T2 : thread T
+      {Time_Slot => (2);
+      Compute_Execution_Time => 0 ms .. 10 ms;
+      Period => 20 ms;
+      };
+  end P.impl;
+
+  processor Proc
+  end Proc;
+
+  processor implementation Proc.RR_NoPreemption
+  properties
+    Scheduling_Protocol => (ROUND_ROBIN_PROTOCOL);
+    Scheduler_Quantum    => 20 ms;
+    Preemptive_Scheduler => true;
+    --  T = 0 -> T1 runs
+    --  T = 20 ms -> T2 runs
+    --  T = 40 ms -> T1 runs
+    --  T = 60ms (hyperperiod) -> T1 runs
+    --  ...
+
+  end Proc.RR_NoPreemption;
+
+  processor implementation Proc.RR_Preemption
+  properties
+    Preemptive_Scheduler => false;
+    --  T = 0 -> T1 runs
+    --  T = xx -> T2 runs
+    --  T = yy -> T1 runs
+    --  T = zz -> T1 runs
+  end Proc.RR_Preemption;
+
+  system RR
+  end RR;
+
+  system implementation RR.impl_nopreempt
+  subcomponents
+    P : process P.impl;
+    Proc : processor Proc.RR_NoPreemption;
+  properties
+    Actual_Processor_Binding => (reference (Proc)) applies to P;
+  end RR.impl_nopreempt;
+
+  system implementation RR.impl_preempt
+  subcomponents
+    P : process P.impl;
+    Proc : processor Proc.RR_Preemption;
+  properties
+    Actual_Processor_Binding => (reference (Proc)) applies to P;
+  end RR.impl_preempt;
+
+end Round_Robin;

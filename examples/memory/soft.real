@@ -1,0 +1,71 @@
+-- These theorems model constraints specific to software elements
+-- using AADL memory components
+
+--------------------------------------------------------------------------------
+--  A system shall define:
+--  a) at least one software text memory segment
+--  b) the size of the text memory segments should be more than the sum
+--     Source_Code_Size of all threads bound to this memory.
+
+theorem check_text_size
+   foreach p in Process_Set do
+     threads := {t in Thread_Set | Is_Subcomponent_Of(t,p) };
+     logical_as := 
+        { m in Memory_Set |
+ 	     Is_Bound_To (m,p)
+         and (property (m, "memory_segment_properties::Segment_Kind")
+	      = "address_space") 
+         and (property (m, "memory_segment_properties::Address_Kind")
+              = "logical_as") 
+         }; 
+
+     sub_segments := 
+        { m in Memory_Set |
+             Is_Subcomponent_Of (m, logical_as)
+	  and ((not (property_exists (m, "arinc653_extended::Memory_Kind")))
+	       or (
+		   -- exclure pour la recherche des sous-sous-segment text 
+		   -- ceux qui appartiennent a un sous-segment text
+		       (property_exists(m, "arinc653_extended::Memory_Kind"))
+		   and (property (m, "arinc653_extended::Memory_Kind") <> "text")
+		   )
+		)
+	};
+	
+      text_sub_segments := 
+         { m in Memory_Set |
+	      Is_Subcomponent_Of (m, logical_as)
+	  and (property_exists (m, "arinc653_extended::Memory_Kind")) 
+          and (property (m, "arinc653_extended::Memory_Kind") = "text")
+	 };
+
+      -- should be reccursive, two levels only here
+      text_sub_sub_segments := 
+         { m in Memory_Set |
+	      Is_Subcomponent_Of (m, sub_segments)
+	  and (property_exists (m, "arinc653_extended::Memory_Kind")) 
+          and (property (m, "arinc653_extended::Memory_Kind") = "text")
+	  };
+			
+      check (((cardinal (text_sub_segments) 
+      	       + cardinal (text_sub_sub_segments)) >= 1)
+
+          and (sum (property (threads, "Source_Code_Size")) <= 
+	        (sum (property (text_sub_segments, "Byte_Count")) + 
+		 sum (property (text_sub_sub_segments, "Byte_Count")))));
+end check_text_size;
+
+--------------------------------------------------------------------------------
+--  Text memory segments shall be either read or execute
+
+theorem check_text_access
+   foreach m in Memory_Set do
+      var access := list("execute", "read");
+
+      check ((not property_exists (m, "arinc653_extended::Access_Type"))
+	  or (not property_exists (m, "arinc653::Memory_Kind"))
+	      or ((property (m, "arinc653::Memory_Kind") = "text")
+		  and (is_in (access, property (m, "arinc653_extended::Access_Type")))));
+end check_text_access;
+
+--------------------------------------------------------------------------------

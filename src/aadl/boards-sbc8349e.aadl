@@ -1,0 +1,41 @@
+-- This package models the SBC8349 Edevelopment board. This
+-- board is compatible with VxWorks RTOS kernels.
+
+package Boards::SBC8349E
+public
+  with Processors::PPC;
+  with Buses::UART, Buses::Ethernet, Buses::PCI;
+  with Processor_Properties;
+  with Memories;
+
+  --------------
+  -- SBC8349E --
+  --------------
+
+  system SBC8349E
+  features
+    uart_core_1 : requires bus access Buses::UART::UART.impl;
+    uart_core_2 : requires bus access Buses::UART::UART.impl;
+
+    eth_1       : requires bus access Buses::Ethernet::Ethernet.impl;
+    eth_2       : requires bus access Buses::Ethernet::Ethernet.impl;
+
+    pci : requires bus access Buses::PCI::PCI.impl;
+  end SBC8349E;
+
+  system implementation SBC8349E.impl
+  subcomponents
+    PPC_Core : processor Processors::PPC::MPC8349E
+    { Processor_Properties::Processor_Frequency => 400 Mhz; };
+    SDRAM    : memory    Memories::SRAM {Byte_Count => 256_000_000; };
+
+    --  XXX check wether it is part of the micro or not
+    Flash_Memory : memory Memories::Flash_Memory.impl
+    {Byte_Count => 8_000_000;};
+
+    EEPROM       : memory Memories::EEPROM.impl
+    {Byte_Count => 8_000;};
+
+  end SBC8349E.impl;
+
+end Boards::SBC8349E;

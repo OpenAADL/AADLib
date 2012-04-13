@@ -1,0 +1,23 @@
+-- The LY530ALH device is a one-axis analogue gyrometer
+
+package Devices::LY530ALH
+public
+  with Data_Sheet;
+  with Unit;
+
+  --------------
+  -- LY530ALH --
+  --------------
+
+  device LY530ALH
+  features
+    Theta_X : out data port Unit::Rotation;
+
+  properties
+    Data_Sheet::UUID => "XXX";
+  end LY530ALH;
+
+  device implementation LY530ALH.impl
+  end LY530ALH.impl;
+
+end Devices::LY530ALH;

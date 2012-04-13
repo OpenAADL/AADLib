@@ -1,0 +1,90 @@
+package motor_hg37d
+public
+
+with types;
+with buses;
+with Electricity;
+
+-----------------
+--   DEVICE   --
+-----------------
+device MOTOR  
+features
+   Serial_Wire :    requires bus access Buses::I2C::I2C.impl;
+end  MOTOR;
+
+device implementation MOTOR.impl
+properties
+  Implemented_As 	    => classifier (motor_hg37d::MOTOR_Driver.impl);
+  Initialize_Entrypoint => classifier (motor_hg37d::Initialize);
+  Electricity::Idle_Current => 3 mA; -- no data
+  Electricity::Run_Current => 15 mA;  -- no data
+  Electricity::Core_Voltage => 12.0 V; 
+  Electricity::Acquisition_Time => 65 ms; -- no data
+ Electricity::VIH_min => 3.1 V; 
+  Electricity::VIL_max => 1.5 V; 
+  Electricity::VOH_min => 4.7 V; 
+  Electricity::VOL_max => 0.4 V;  
+  Electricity::Device_Type => Slave;  
+end MOTOR.impl;
+  
+-----------------------------------
+--  MOTOR DRIVER FOR I2C INTERFACE --
+-----------------------------------
+
+abstract MOTOR_Driver
+--properties
+	-- device_address => "0xE0";
+end MOTOR_Driver;
+
+---------------------------------------------------------
+-- /!\ The threads implementing the driver functions
+-- should respect this naming convention :
+-- (Driver_Name)_Thread_(Function_name)
+---------------------------------------------------------
+abstract implementation MOTOR_Driver.impl
+end MOTOR_Driver.impl;
+
+
+
+-----------------
+-- SUBPROGRAMS --
+----------------- 
+-- These subprograms model the high-level view of the serial line
+-- protocol stack. They define an API used by the stack to send and
+-- receive data, and perform node's initialisation.
+
+subprogram Initialize
+properties
+  Source_Name => "initialize";
+  Source_Text => ("motor_hg37d.c");
+  Source_Language => C;
+end Initialize;
+
+
+subprogram Read_Acquisition
+features
+  device_address       : in parameter types::MOTOR_meas_dat; -- device address type
+  MOTOR_meas         : out parameter types::MOTOR_meas_dat;
+end Read_Acquisition;
+subprogram implementation Read_Acquisition.impl
+properties
+  Source_Name => "read_acquisition";
+  Source_Text => ("motor_hg37d.c");
+  Source_Language => C;
+end Read_Acquisition.impl;
+
+subprogram Send
+features
+  device_address       : in parameter types::MOTOR_meas_dat; -- device address type
+end Send;
+subprogram implementation Send.impl
+properties
+  Source_Name => "start_acquisition";
+  Source_Text => ("motor_hg37d.c");
+  Source_Language => C;
+end Send.impl;
+  
+  
+end motor_hg37d;
+ 

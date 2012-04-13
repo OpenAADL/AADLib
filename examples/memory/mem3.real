@@ -1,0 +1,419 @@
+-- These theorems define generic constraints attached to memory layout
+-- organization
+
+--------------------------------------------------------------------------------
+--  Root theorem: all memory segments shall verify
+--  1) Check_Memory_Segment_Structure;
+--  2) Check_Memory_Segment_Size;
+--  3) Check_Contiguous_Segment
+
+theorem check_memory_segment
+   foreach seg in Memory_Set do
+      requires (check_memory_segment_structure
+            and check_memory_segment_size
+	    and check_contiguous_segment);
+
+      check ( 1=1 );
+end check_memory_segment;
+
+--------------------------------------------------------------------------------
+-- In a memory_segment memory, all memory subcomponents are also
+-- memory_segment
+
+theorem check_memory_segment_structure
+   foreach seg in Memory_Set do
+      sub_segments := 
+         { x in Memory_Set |
+	      property_exists(seg, "Memory_Segment_Properties::Segment_Kind")
+	  and (property(seg, "Memory_Segment_Properties::Segment_Kind")
+	       = "memory_segment") 
+	  and Is_Subcomponent_Of (x,  seg)
+	 };
+
+      sub_memories := 
+         { x in sub_segments |
+	      property_exists (x, "Memory_Segment_Properties::Segment_Kind")
+	  and (property (x, "Memory_Segment_Properties::Segment_Kind")
+	       = "memory_segment")  
+	 };
+		
+      check (cardinal (sub_segments) = cardinal (sub_memories));
+end check_memory_segment_structure;
+
+--------------------------------------------------------------------------------
+-- The sum of the size of all sub-segments is less than the size of the
+-- containing segment
+
+theorem check_memory_segment_size 
+   foreach seg in Memory_Set do 
+      sub_segments := 
+         { x in Memory_Set | 
+ 	       property_exists (seg, "Memory_Segment_Properties::Segment_Kind") 
+           and (property (seg, "Memory_Segment_Properties::Segment_Kind")
+	        ="memory_segment") 
+           and Is_Subcomponent_Of (x,  seg) 
+	  };
+
+      sized_sub_segments := {x in sub_segments | 
+                                property_exists (x, "Byte_Count") };
+
+      var seg_size := if (property_exists (seg, "Byte_Count")) then  
+      	                 property(seg, "Byte_Count")
+                      else   
+		         0.0; 
+
+      check ((cardinal(sub_segments) = 0)
+	    or ( not property_exists (seg, "Byte_Count")) 
+	    or ((cardinal (sized_sub_segments) = cardinal (sub_segments))
+		and (sum (property (sub_segments, "Byte_Count") ) = seg_size))
+            or ((cardinal (sized_sub_segments) < cardinal (sub_segments))
+		and (sum (property (sub_segments, "Byte_Count")) <= seg_size)));
+end  check_memory_segment_size;
+
+--------------------------------------------------------------------------------
+--  In a memory_segment memory, all segments are contiguous
+
+theorem check_contiguous_segment
+   foreach seg in memory_set do
+      sub_segments := 
+         { x in Memory_Set |
+               property_exists (seg, "memory_segment_properties::Segment_Kind")
+           and (property (seg, "memory_segment_properties::Segment_Kind")
+	        = "memory_seg")
+           and Is_Subcomponent_Of (x, seg)
+	 };
+
+      var all_defined := compute check_located_segment (sub_segments);
+
+      seg_start := {x in sub_segments |
+                       property_exists (x, "Base_Address")
+                   and property_exists (seg, "Base_Address")
+                   and property (seg, "Base_Address") 
+		       = property (x, "Base_Address")
+                };
+
+      var nb_contiguous :=  compute has_succ (sub_segments) ;
+      var nb_non_contiguous := nb_contiguous 
+		   + cardinal (seg_start) - cardinal (sub_segments);
+
+      requires (check_memory_segment_size);
+
+      check ((cardinal (sub_segments) = 0)  
+	    or (all_defined = 0.0)
+	    or (nb_non_contiguous = 0.0));
+end check_contiguous_segment;
+
+--------------------------------------------------------------------------------
+-- XXX not used
+-- 
+theorem check_address_space_size
+   foreach seg in Memory_Set do
+      sub_segments := { x in Memory_Set | Is_Subcomponent_Of (x,  seg) };
+
+      var seg_size := if (property_exists (seg, "Byte_Count") ) then
+                          property(seg, "Byte_Count")
+                      else   
+		          0.0;
+
+      check ((cardinal (sub_segments) = 0)
+            or (not property_exists (seg, "Byte_Count"))
+            or (sum(property (sub_segments, "Byte_Count")) <= seg_size));
+end  check_address_space_size;
+
+--------------------------------------------------------------------------------
+--  Check sub-segments
+--  1) do not overlap
+--  2) are within the bounds of the enclosing segment
+
+theorem check_segment_mapping
+   foreach seg in Memory_set do
+      sub_segments := {x in Memory_Set |
+                          property_exists(x, "Base_Address")
+                      and Is_Subcomponent_Of (x, seg)
+		      };
+
+      var end_as := (if (property_exists (seg,  "Base_Address") ) then
+			property (seg,  "Base_Address") 
+                      else
+		        0.0 )
+		    + 
+		     (if (property_exists (seg, "Byte_Count") ) then
+                          property(seg, "Byte_Count")
+                      else
+                          0.0 );
+
+      var over := compute overlap(sub_segments);
+      var end_sub_segments := compute max_end_address(sub_segments);
+		
+      check (cardinal (sub_segments)=0
+	     or (over=0.0
+		 and ((not (property_exists (seg, "Base_Address")))
+		      or (((min(property (sub_segments,  "Base_Address"))) >= 
+				property (seg, "Base_Address"))
+		           and ((not (property_exists(seg, "Byte_Count")))
+				   or (end_sub_segments <= end_as))))));
+end check_segment_mapping;
+
+--------------------------------------------------------------------------------
+-- Check that each processor as at most one hardware and one software
+-- memory component
+	       	
+
+theorem check_memory_binding
+   foreach p in Process_Set do
+      logical_as := 
+      	 { m in Memory_Set | 
+      	       Is_Bound_To(m,p)
+           and (property (m, "memory_segment_properties::Segment_Kind")
+	        = "address_space")
+           and (property (m, "memory_segment_properties::Address_Kind")
+	        = "logical_as")
+         };
+         
+      processors := {x in Processor_Set |  Is_Bound_To(p, x)  };
+      physical_as := 
+        { m in Memory_Set | 
+	      Is_Bound_To(m, processors)
+          and (property (m, "memory_segment_properties::Segment_Kind")
+	       = "address_space")
+          and (property (m, "memory_segment_properties::Address_Kind")
+	       ="physical_as")
+        };
+
+        check ((cardinal (logical_as)=1)
+            and (cardinal (processors)=1)
+            and (cardinal (physical_as)=1));
+
+end check_memory_binding;
+
+--------------------------------------------------------------------------------
+--  All logical segment is bound to a physical segment
+
+theorem check_no_vm_mapping
+   foreach seg in Memory_set do
+      logical_segments := 
+         { x in Memory_Set |
+              property_exists (seg, "memory_segment_properties::address_kind")
+          and (property (seg, "memory_segment_properties::address_kind")
+               = "logical")
+	  and Is_Subcomponent_Of (x, seg)
+	  and property_exists (x, "memory_segment_properties::segment_kind")
+          and (property(x, "memory_segment_properties::segment_kind")
+	       ="memory")
+         };
+			
+      var nb := compute nb_bound_segment (logical_segments);
+		
+      requires (check_memory_binding);
+
+      check ((cardinal (logical_segments) = 0) 
+	     or (not (property_exists(seg, "Base_Address")))
+	     or (nb=1.0));
+end check_no_vm_mapping;
+
+--------------------------------------------------------------------------------
+--  Check all memory segment are properly aligned
+
+theorem check_word_align
+   foreach m in Memory_Set do
+      check((not property_exists(m, "Word_Space"))
+           or (not property_exists(m, "Base_Address"))
+           or (((property(m, "Base_Address") mod property(m, "Word_Space")) = 0)
+	       and ((not property_exists(m, "Byte_Count"))
+		    or ((property(m, "Byte_Count") 
+		        mod property(m, "Word_Space")) = 0))));
+end check_word_align;
+
+--------------------------------------------------------------------------------
+--  Check all page are aligned on a word boundary
+
+theorem check_page_align
+   foreach m in Memory_Set do
+      sub_segments := 
+         { x in Memory_Set | 
+	     (property(m, "memory_segment_properties::Segment_Kind")
+	      = "Address_Space")
+	  and (property(m, "memory_segment_properties::Address_Kind")
+	      ="logical")
+	  and Is_Subcomponent_Of (x, m)
+         };
+
+      var page_size := if (property_exists (m, "Page_Size") ) then
+			   property(m, "Page_Size") 
+		       else
+			   1;
+
+      var ok := compute check_sub_segment_align(sub_segments, page_size);
+                
+      check(((cardinal (sub_segments) =0) or (ok=1.0))
+	  and ((not property_exists(m, "Base_Address"))
+                or ((property(m, "Base_Address") mod page_size) =0)));
+end check_page_align;
+
+--------------------------------------------------------------------------------
+-- Check that all subcomponents have access rights compatible with the
+-- enclosing memory component
+
+theorem check_allowed_access
+   foreach m in Memory_Set do
+      good_segments := {x in Memory_Set |
+                        Is_Subcomponent_Of (x, m)
+		   and ((not property_exists(x,"arinc653_extended::Access_Type")) 
+			 or Is_In (property(m,"arinc653_extended::Access_Type"), 
+				   property(x,"arinc653_extended::Access_Type")))
+				   };
+
+      segments := {x in Memory_Set | Is_Subcomponent_Of (x, m)};
+		
+      check (cardinal (good_segments) = cardinal (segments));
+end check_allowed_access;
+
+--------------------------------------------------------------------------------
+-- Helper theorems: the following define intermediate functions used
+-- in the above theorems
+--------------------------------------------------------------------------------
+-- Helper theorem: return the number of successors of a segment
+
+theorem has_succ
+   foreach m in local_set do
+      var end_address :=  
+         (if (property_exists (m, "Base_Address")) 
+	  then
+             property (m, "Base_Address") 
+	  else
+	     0.0 )  
+        + 
+	 (if (property_exists (m, "Byte_Count")) 
+	  then
+	     property(m, "Byte_Count") 
+	  else
+	     0.0 ) ;	
+		
+      s := {x in local_set |
+	        property_exists(x, "Base_Address")
+	    and property(x, "Base_Address") = end_address 
+	   };
+      
+      var nb := if (cardinal(s)=1) then 1.0 else 0.0 ;
+
+   return (Msum (nb));
+end has_succ;
+
+-------------------------------------------------------------------------------
+-- Helper theorem: return 1 if the segment defines both Base_Address
+-- and Byte_Count
+
+theorem check_located_segment 
+   foreach seg in Local_Set do
+      var exist:= if (property_exists (seg, "Base_Address") 
+      		      and property_exists (seg, "Byte_Count")) 
+		  then 
+		     1.0 
+		  else 
+		     0.0;
+
+   return (mmin(exist));
+end check_located_segment;
+
+-------------------------------------------------------------------------------
+-- Helper theorem: check there is no overlap of segments
+
+theorem overlap 
+   foreach m in local_set do
+      var end_address :=  property(m,  "Base_Address") + 
+			( if ( property_exists (m, "Byte_Count") ) then
+				property (m, "Byte_Count") else 
+				(0.0) 
+			);
+	
+      s := { x in (local_set) |
+		x<>m 
+	    and (property (m, "Base_Address") <= property (x, "Base_Address"))
+	    and (property (x,  "Base_Address") < end_address)
+	   };
+		
+      var nb := if cardinal (s) > 0 then 1.0 else 0.0;
+
+   return (mmax (nb));
+end overlap;
+
+-------------------------------------------------------------------------------
+-- Helper theorem: return the maximum address of all segments passed
+-- as parameters
+
+theorem max_end_address
+   foreach seg in Local_set do
+      var end_address :=  property (seg,  "Base_Address") + 
+                        (if (property_exists (seg, "Byte_Count")) then
+                              property (seg, "Byte_Count") 
+			 else
+                              0.0);
+                        
+    return (MMax(end_address));		
+end max_end_address;
+
+--------------------------------------------------------------------------------
+--  Helper theorem: check all theorem are aligned on a word boundary
+
+theorem check_sub_segment_align
+   foreach m in Local_Set do
+      var well_align := if ((not property_exists (m, "Base_Address"))
+			  or ((property (m, "Base_Address") mod argv_0) = 0)) 
+			then 
+                          1.0 
+			else 
+			  0.0;
+		
+   return (mmin (well_align)); 	
+end check_sub_segment_align;
+
+--------------------------------------------------------------------------------
+--  Helper theorem: XXX
+
+theorem nb_bound_segment
+   foreach logical in Local_set do
+
+      logical_as := {m in Memory_Set|Is_Subcomponent_Of (logical,m)};
+      proc:= {p in Process_Set | Is_Bound_To( logical_as,p) };
+      cpu:= {p in Processor_Set | Is_Bound_To (proc,p) };
+
+      phys_as:=  
+         { x in Memory_Set |
+	      property_exists (x, "memory_segment_properties::address_kind")
+          and (property (x, "memory_segment_properties::Address_Kind")
+	       = "physical_as")
+	  and Is_Bound_to (x, cpu)
+         };
+		
+      var end_address := (if (property_exists (logical, "Base_Address")) then
+			     property(logical,  "Base_Address") 
+			  else
+			     (0.0))
+			+
+                        (if (property_exists (logical, "Byte_Count")) then
+                            property(logical, "Byte_Count") 
+			 else
+                            (0.0));
+
+      matching_seg :=  
+         { x in Memory_Set |
+	    (is_subcomponent_of (x, phys_as))
+	  and property_exists(logical, "Base_Address")
+	  and property_exists(x, "Base_Address")
+	  and (property(logical,  "Base_Address") >= 
+	       property(x,  "Base_Address"))
+          and property_exists(x, "Byte_Count")
+	  and ((property(x,  "Base_Address")+property(x, "Byte_Count" )) 
+	       >= end_address )
+	 };
+
+      var undefined_seg := if (not (property_exists (logical, "Base_Address")))
+                           then 
+			      1.0 
+			   else 
+			      0.0;
+		
+      var nb := (cardinal(matching_seg)) + undefined_seg;
+      
+   return (mmin (nb));
+end nb_bound_segment;

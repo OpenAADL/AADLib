@@ -1,0 +1,12 @@
+-- This package models ARINC 429 bus
+
+package Buses::ARINC_429
+public
+  with Bus_Properties;
+
+  bus ARINC_429
+  properties
+    Bus_Properties::Available_Bandwidth => (12 KBytesps, 1562 KBytesps);
+  end ARINC_429;
+
+end Buses::ARINC_429;

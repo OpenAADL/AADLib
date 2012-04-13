@@ -1,0 +1,13 @@
+-- This package models AFDX bus
+
+package Buses::AFDX
+public
+  with Bus_Properties;
+  with Buses::Ethernet;
+
+  bus AFDX extends Buses::Ethernet::Ethernet
+  properties
+    Transmission_Time => (Fixed => 0 ms .. 10ms; PerByte => 0 ms .. 10 ms;);
+  end AFDX;
+
+end Buses::AFDX;

@@ -1,0 +1,16 @@
+-- This package models USB bus
+
+package Buses::USB
+public
+  with Bus_Properties;
+
+  bus USB
+  properties
+    Bus_Properties::Available_Bandwidth =>
+    (1_500 KBytesps);
+  end USB;
+
+  bus implementation USB.impl
+  end USB.impl;
+
+end Buses::USB;

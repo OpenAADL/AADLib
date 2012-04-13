@@ -1,0 +1,38 @@
+-- This package models the Gumstix Verdex XM4 board, by Gumstix inc.
+
+package Boards::Verdex_XM4
+public
+  with Processor_Properties;
+  with Processors::ARM, Memories, Data_Sheet;
+  with Buses::Ethernet, Buses::UART;
+  with Deployment;
+
+  ----------------
+  -- Verdex_XM4 --
+  ----------------
+
+  -- The Verdex XM4 is a "Computer-On-Module" with a Marvell PXA270
+  -- processor, plus connectors to various interfaces: USB, microSD,
+  -- UART, Wifi, ethernet, ...
+
+  system Verdex_XM4
+  features
+    uart_core_1 : requires bus access Buses::UART::UART.impl;
+
+    eth_1       : requires bus access Buses::Ethernet::Ethernet.impl;
+    wifi_1      : requires bus access Buses::Ethernet::Ethernet.impl;
+
+  properties
+    Data_Sheet::UUID => "http://www.gumstix.com/store/catalog/product_info.php?products_id=209";
+
+  end Verdex_XM4;
+
+  system implementation Verdex_XM4.i
+  subcomponents
+    ARM_Core : processor Processors::ARM::Xscale_PXA270
+    {Processor_Properties::Processor_Frequency => 400 MHz;};
+    SRAM     : memory    Memories::SRAM {Byte_Count => 64_000_000;};
+    Flash    : memory    Memories::Flash_Memory {Byte_Count => 16_000_000;};
+  end Verdex_XM4.i;
+
+end Boards::Verdex_XM4;

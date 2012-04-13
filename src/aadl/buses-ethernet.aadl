@@ -1,0 +1,16 @@
+-- This package models Ethernet bus
+
+package Buses::Ethernet
+public
+  with Bus_Properties;
+
+  bus Ethernet
+  properties
+    Bus_Properties::Available_Bandwidth =>
+       (10 MBytesps, 100 MBytesps, 1 GBytesps);
+  end Ethernet;
+
+  bus implementation Ethernet.impl
+  end Ethernet.impl;
+
+end Buses::Ethernet;
