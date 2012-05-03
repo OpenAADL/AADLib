@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------
 -- This set of REAL theorems defines implicit constraints defined in
--- the ARINC653 APEX.
+-- the ARINC653 APEX, based on concepts defined in the SAE-AADL
+-- ARINC653 annex document.
 --
 -- For each property, we define the list of constraints attached
 
@@ -10,8 +11,8 @@
 theorem check_arinc653_restrictions
 foreach s in system_set do
    requires (check_partitions_criticality -- All partitions define a DAL
-     	 and scheduling_major_frame       -- respect slot allocation
-	 and partitions_execution
+         and scheduling_major_frame       -- respect slot allocation
+         and partitions_execution
 	);
    check (1=1);	 
 end check_arinc653_restrictions;
