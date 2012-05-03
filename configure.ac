@@ -80,6 +80,7 @@ AC_OUTPUT([
 	examples/arinc653_annex/example_2/Makefile
 	examples/asl/Makefile
 	examples/behavior_annex/Makefile
+	examples/car/Makefile
 	examples/data_modeling_annex/Makefile
 	examples/fcs/Makefile
 	examples/flow_analysis/Makefile

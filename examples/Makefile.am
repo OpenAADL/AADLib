@@ -4,6 +4,7 @@ SUBDIRS=						\
 	arinc653_annex				\
 	asl					\
 	behavior_annex				\
+	car \
 	data_modeling_annex			\
 	fcs					\
 	flow_analysis				\
