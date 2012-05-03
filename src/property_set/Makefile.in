@@ -139,6 +139,7 @@ AADL_SOURCES = \
 	$(srcdir)/bus_properties.aadl		\
 	$(srcdir)/cheddar_properties.aadl	\
 	$(srcdir)/data_sheet.aadl		\
+	$(srcdir)/deployment_properties.aadl    \
 	$(srcdir)/electricity_properties.aadl	\
 	$(srcdir)/os_properties.aadl		\
 	$(srcdir)/physical_properties.aadl	\
