@@ -318,6 +318,10 @@ help:
 parse-aadl:
 	$(OCARINA) $(OCARINA_FLAGS) $(AADL_SOURCES)
 
+aadl_xml:
+	$(OCARINA) $(OCARINA_FLAGS) -g aadl_xml -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
 instantiate-aadl:
 	$(OCARINA) $(OCARINA_FLAGS) -i -r $(AADL_ROOT) $(AADL_SOURCES)
 
@@ -325,16 +329,16 @@ c:
 	$(OCARINA) $(OCARINA_FLAGS) -g polyorb_hi_c -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
-build_c: 
-	$(OCARINA) -b $(OCARINA_FLAGS) -g polyorb_hi_c -r $(AADL_ROOT) \
+build_c: c
+	-$(OCARINA) -b $(OCARINA_FLAGS) -g polyorb_hi_c -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
 ada:
 	$(OCARINA) $(OCARINA_FLAGS) -g polyorb_hi_ada -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
-build_ada:
-	$(OCARINA) -b $(OCARINA_FLAGS) -g polyorb_hi_ada -r $(AADL_ROOT) \
+build_ada: ada
+	-$(OCARINA) -b $(OCARINA_FLAGS) -g polyorb_hi_ada -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
 arinc653_conf:
@@ -344,7 +348,11 @@ arinc653_conf:
 cheddar:
 	$(OCARINA) $(OCARINA_FLAGS) -g cheddar -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
-	cheddarlite -request all -file ./*_cheddar.xml
+	-cheddarlite -request all -file ./*_cheddar.xml
+
+mast:
+	$(OCARINA) $(OCARINA_FLAGS) -g mast -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
 
 real:
 	$(OCARINA) $(OCARINA_FLAGS) -g real_theorem \
@@ -359,7 +367,8 @@ real:
 		$(AADL_SOURCES)
 
 clean-local:
-	-rm -rf *~ *_cheddar.xml
+	-rm -rf *~ *aadl_xml.xml *_cheddar.xml mast-model.txt $(CLEANFILES) \
+	    cheddar_bug.xml
 	if test ! "$(CLEANDIRS)" = "";  then \
 	   rm -rf $(CLEANDIRS); \
 	fi
