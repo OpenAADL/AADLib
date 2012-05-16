@@ -15,7 +15,7 @@ property set Cheddar_Properties is
 		applies to (thread, thread group);
 	Dispatch_Jitter :  inherit Time 
 		applies to (thread, thread group);
-	Fixed_Priority : aadlinteger 0..255
+	Fixed_Priority : aadlinteger 0 .. 255
 		applies to (thread, thread group);
 	POSIX_Scheduling_Policy : enumeration (SCHED_FIFO, SCHED_RR, SCHED_OTHERS)
 		applies to (thread, thread group);

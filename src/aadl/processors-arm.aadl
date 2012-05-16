@@ -64,11 +64,11 @@ public
     "http://www.atmel.com:80/dyn/products/product_card.asp?part_id=3578";
 
     Deployment::Execution_Platform => Native;
-    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Scheduling_Protocol => (RMS);
 
-    Electricity_Properties::Idle_Current => 40 mA; -- estimation
-    Electricity_Properties::Run_Current => 40 mA; -- estimation -> should be 70 mA (datasheet)
-    Electricity_Properties::Core_Voltage => 5 V; -- range 3 .. 3.6 V;
+    Electricity_Properties::Idle_Current => 40.0 mA; -- estimation
+    Electricity_Properties::Run_Current => 40.0 mA; -- estimation -> should be 70 mA (datasheet)
+    Electricity_Properties::Core_Voltage => 5.0 V; -- range 3 .. 3.6 V;
   end AT91SAM7A3.impl;
 
   --  XXX Note, the following devices should be subcomponents of AT91SAM7A3
@@ -263,8 +263,8 @@ public
     Data_Sheet::UUID => 
     "http://www.atmel.com:80/dyn/products/product_card.asp?part_id=4337";
 
-    Electricity_Properties::Idle_Current => 17 mA; 
-    Electricity_Properties::Run_Current => 130 mA; 
+    Electricity_Properties::Idle_Current => 17.0 mA; 
+    Electricity_Properties::Run_Current => 130.0 mA; 
     Electricity_Properties::Core_Voltage => 1.8 V; 
   end AT91SAM9G20.impl;
 

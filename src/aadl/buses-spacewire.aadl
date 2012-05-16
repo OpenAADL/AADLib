@@ -3,8 +3,8 @@ public
   with Bus_Properties;
 
   feature group LVDS
-  features
-    none;
+  --features
+   -- none;
   end LVDS;
 
   bus SpaceWire

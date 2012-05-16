@@ -14,7 +14,7 @@ public
   features
     GND  : in out event port;
     VCC  : in out event port
-    {Electricity_Properties::Input_Voltage => 5V;};
+    {Electricity_Properties::Input_Voltage => 5.0 V;};
 
     OUTp : in out event port; -- should be connected to an Analog pin
   properties

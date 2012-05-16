@@ -9,7 +9,7 @@ property set Processor_Properties is
   Processor_Family : enumeration
         (ARM, AVR, SPARC, PowerPC, x86, x86_64) applies to (processor);
 
-   Frequency : type aadlinteger 0 Hz .. Max_Aadlinteger units 
+   Frequency : type aadlinteger 0 Hz .. 2#1#e32 Hz units 
        (Hz, KHz => Hz  * 1000, MHz => KHz * 1000, GHz => MHz * 1000);
    --  Frequency of a processor
 

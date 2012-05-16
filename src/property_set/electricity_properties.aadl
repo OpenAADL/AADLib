@@ -42,8 +42,8 @@ property set Electricity_Properties is
   mV => uV * 1000,
   V  => mV *1000);
 
-  Current: type aadlreal 0 A .. 350 A units Electricity_Properties::Current_Units;
-  Voltage: type aadlreal -5 V .. 24 V units Electricity_Properties::Voltage_Units;
+  Current: type aadlreal 0.0 A .. 350.0 A units Electricity_Properties::Current_Units;
+  Voltage: type aadlreal -5.0 V .. 24.0 V units Electricity_Properties::Voltage_Units;
 
   Voltage_Range: type range of Electricity_Properties::Voltage;
 

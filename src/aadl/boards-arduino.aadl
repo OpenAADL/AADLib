@@ -18,46 +18,46 @@ public
   system Duemilanove
   features
     Digital_0  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_1  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_2  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_3  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_4  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_5  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_6  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_7  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_8  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_9  : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_10 : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_11 : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_12 : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Digital_13 : in out event port
-    {Electricity_Properties::Run_Current => 40mA;};
+    {Electricity_Properties::Run_Current => 40.0 mA;};
 
     Analog_0   : in out event port;
     Analog_1   : in out event port;
@@ -75,7 +75,7 @@ public
 
     VIN        : in out event port;
     Power_5V   : in out event port
-    {Electricity_Properties::Output_Voltage => 5V;};
+    {Electricity_Properties::Output_Voltage => 5.0 V;};
 
     Power_3V3  : in out event port
     {Electricity_Properties::Output_Voltage => 3.3V;};
@@ -95,32 +95,32 @@ public
     -- See http://arduino.cc/en/Hacking/Atmega168Hardware for a detail
     -- of this mapping.
 
-    port Reset      -> ATMEGA328p.PC6;
-    port Digital_0  -> ATMEGA328p.PD0;
-    port Digital_1  -> ATMEGA328p.PD1;
-    port Digital_2  -> ATMEGA328p.PD2;
-    port Digital_3  -> ATMEGA328p.PD3;
-    port Digital_4  -> ATMEGA328p.PD4;
-    port VCC        -> ATMEGA328p.VCC;
-    port GND        -> ATMEGA328p.GND;
-    port Digital_5  -> ATMEGA328p.PD5;
-    port Digital_6  -> ATMEGA328p.PD6;
-    port Digital_7  -> ATMEGA328p.PD7;
-    port Digital_9  -> ATMEGA328p.PB0;
+    P1:port Reset      -> ATMEGA328p.PC6;
+    P2:port Digital_0  -> ATMEGA328p.PD0;
+    P3:port Digital_1  -> ATMEGA328p.PD1;
+    P4:port Digital_2  -> ATMEGA328p.PD2;
+    P5:port Digital_3  -> ATMEGA328p.PD3;
+    P6:port Digital_4  -> ATMEGA328p.PD4;
+    P7:port VCC        -> ATMEGA328p.VCC;
+    P8:port GND        -> ATMEGA328p.GND;
+    P9:port Digital_5  -> ATMEGA328p.PD5;
+    P10:port Digital_6  -> ATMEGA328p.PD6;
+    P11:port Digital_7  -> ATMEGA328p.PD7;
+    P12:port Digital_9  -> ATMEGA328p.PB0;
 
-    port Analog_5   -> ATMEGA328p.PC5;
-    port Analog_4   -> ATMEGA328p.PC4;
-    port Analog_3   -> ATMEGA328p.PC3;
-    port Analog_2   -> ATMEGA328p.PC2;
-    port Analog_1   -> ATMEGA328p.PC0;
-    port Analog_0   -> ATMEGA328p.PC0;
-    port AREF       -> ATMEGA328p.AREF;
-    port AVCC       -> ATMEGA328p.AVCC;
-    port Digital_13 -> ATMEGA328p.PB5;
-    port Digital_12 -> ATMEGA328p.PB4;
-    port Digital_11 -> ATMEGA328p.PB3;
-    port Digital_10 -> ATMEGA328p.PB2;
-    port Digital_9  -> ATMEGA328p.PB1;
+    P13:port Analog_5   -> ATMEGA328p.PC5;
+    P14:port Analog_4   -> ATMEGA328p.PC4;
+    P15:port Analog_3   -> ATMEGA328p.PC3;
+    P16:port Analog_2   -> ATMEGA328p.PC2;
+    P17:port Analog_1   -> ATMEGA328p.PC0;
+    P18:port Analog_0   -> ATMEGA328p.PC0;
+    P19:port AREF       -> ATMEGA328p.AREF;
+    P20:port AVCC       -> ATMEGA328p.AVCC;
+    P21:port Digital_13 -> ATMEGA328p.PB5;
+    P22:port Digital_12 -> ATMEGA328p.PB4;
+    P23:port Digital_11 -> ATMEGA328p.PB3;
+    P24:port Digital_10 -> ATMEGA328p.PB2;
+    P25:port Digital_9  -> ATMEGA328p.PB1;
    end Duemilanove.impl;
 
 end Boards::Arduino;

@@ -125,7 +125,7 @@ public
 
   processor implementation ATMEGA328p.impl extends ATMEGA8.impl
   properties
-    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Scheduling_Protocol => (RMS);
     Byte_Count => 32_768 applies to Flash_Memory;
     Byte_Count =>  2_048 applies to SRAM;
     Byte_Count =>  1_024 applies to EEPROM;

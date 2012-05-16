@@ -25,7 +25,7 @@ public
 
   virtual processor Bare_Board_Scheduler extends Root_Scheduler
   properties
-    Scheduling_Protocol => (No_Scheduling_Protocol);
+    Scheduling_Protocol => (SporadicServer);
     Thread_Limit        => 1;
     OS_Properties::Hierarchical_Scheduler => false;
   end Bare_Board_Scheduler;
@@ -36,9 +36,9 @@ public
 
   virtual processor POSIX_Scheduler extends Root_Scheduler
   properties
-    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Scheduling_Protocol => (RMS);
     OS_Properties::Hierarchical_Scheduler => false;
-    Priority_Range => 0 .. 255;
+    --  Priority_Range => 0 .. 255;
   end POSIX_Scheduler;
 
   -------------------------
@@ -48,7 +48,7 @@ public
   virtual processor Ravenscar_Scheduler extends Root_Scheduler
   -- This OS supports Ravenscar-like scheduler
   properties
-    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Scheduling_Protocol => (RMS);
     OS_Properties::Hierarchical_Scheduler => false;
   end Ravenscar_Scheduler;
 
@@ -59,7 +59,7 @@ public
   virtual processor ARINC653_Scheduler extends Root_Scheduler
   -- This OS supports ARINC-like scheduler, i.e. hierarchical scheduling
   properties
-    Scheduling_Protocol => (HIERARCHICAL_ROUND_ROBIN_PROTOCOL);
+    Scheduling_Protocol => (FixedTimeline);
     OS_Properties::Hierarchical_Scheduler => true;
   end ARINC653_Scheduler;
 

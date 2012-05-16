@@ -11,8 +11,8 @@ property set Physical_Properties is
    GW  => MW * 1000,
    TW  => GW * 1000);
   
-  Max_Power: constant Physical_Properties::Power_Units => 2#1#e32 W;
-  Power : type aadlreal 0 W .. Physical_Properties::Max_Power units Physical_Properties::Power_Units;
+  Max_Power: constant aadlinteger units Physical_Properties::Power_Units => 2#1#e32 W;
+  Power : type aadlreal 0.0 W .. Physical_Properties::Max_Power units Physical_Properties::Power_Units;
   Power_Consume : Physical_Properties::Power 
      applies to (processor, device, memory);
   Power_Provide : Physical_Properties::Power applies to (device);
@@ -28,7 +28,7 @@ property set Physical_Properties is
   Grad  => Mrad * 1000,
   Trad  => Grad * 1000);
   
-  Max_Ionizing_Dose: constant Physical_Properties::Ionizing_Dose_Units => 2#1#e32 rad;
+  Max_Ionizing_Dose: constant aadlinteger units Physical_Properties::Ionizing_Dose_Units => 2#1#e32 rad;
   
   Ionizing_Type : type aadlinteger 
      0 rad .. Physical_Properties::Max_Ionizing_Dose units Physical_Properties::Ionizing_Dose_Units;
@@ -41,8 +41,8 @@ property set Physical_Properties is
   ----------------
 
   Mass_Units: type units (g, Kg  => g  * 1000, T   => Kg * 1000);
-  Max_Mass: constant Physical_Properties::Mass_Units => 2#1#e32 g;
-  Mass_Type : type aadlreal 0 g .. Physical_Properties::Max_Mass units Physical_Properties::Mass_Units;
+  Max_Mass: constant aadlinteger units Physical_Properties::Mass_Units => 2#1#e32 g;
+  Mass_Type : type aadlreal 0.0 g .. Physical_Properties::Max_Mass units Physical_Properties::Mass_Units;
   Mass : Physical_Properties::Mass_Type applies to (processor, device, memory);
 
 end Physical_Properties;
