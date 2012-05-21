@@ -102,13 +102,13 @@ public
     Activation_Log_Reader : thread Activation_Log_Reader;
 
   connections
-    port External_Interrupt_Depository 
+    C1:port External_Interrupt_Depository 
     -> External_Event_Server.External_Interrupt_Depository;
-    port Regular_Producer.Additional_Workload
+    C2:port Regular_Producer.Additional_Workload
     -> On_Call_Producer.Additional_Workload_Depository;
-    port Regular_Producer.Handle_External_Interrupt
+    C3:port Regular_Producer.Handle_External_Interrupt
     -> Activation_Log_Reader.Signal;
-    port External_Event_Server.External_Interrupt
+    C4:port External_Event_Server.External_Interrupt
     -> Activation_Log_Reader.External_Interrupt_Depository;
   end Workload_Manager.Impl;
   
@@ -122,7 +122,7 @@ public
     External_Event_Source : thread External_Event_Source;
 
   connections
-    port External_Event_Source.External_Interrupt 
+    C5:port External_Event_Source.External_Interrupt 
     -> External_Interrupt;
   end Interrupt_Simulator.Impl;
   
@@ -131,7 +131,7 @@ public
     Deployment::Execution_Platform           => LEON_ORK;
     Preemptive_Scheduler => true;
     Scheduling_Protocol                      => 
-    (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    (RMS);
     Priority_Range                           => 0 .. 255;
   end The_Processor;
   

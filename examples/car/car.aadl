@@ -63,7 +63,7 @@ public
 
   processor implementation CPU.A
   properties
-    Scheduling_Protocol => (RATE_MONOTONIC_PROTOCOL);
+    Scheduling_Protocol => (RMS);
   end CPU.A;
  
  ------------
@@ -118,7 +118,7 @@ public
 
   processor implementation CPU.B
   properties
-    Scheduling_Protocol => (EARLIEST_DEADLINE_FIRST_PROTOCOL);
+    Scheduling_Protocol => (EDF);
   end CPU.B;
 
   ------------
@@ -165,7 +165,7 @@ public
 
   processor implementation CPU.C
   properties
-    Scheduling_Protocol => (RATE_MONOTONIC_PROTOCOL);
+    Scheduling_Protocol => (RMS);
   end CPU.C;
 
   ----------------

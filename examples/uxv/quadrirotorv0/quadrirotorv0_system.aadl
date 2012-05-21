@@ -55,27 +55,27 @@ public
     VARIATOR_4           : device     variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
 
   connections 
-    bus access I2C_bus -> TWI_ARM7.Serial_Wire;
+   	J1:bus access I2C_bus -> TWI_ARM7.Serial_Wire;
     
-    bus access I2C_bus -> US1.Serial_Wire;
-    bus access I2C_bus -> US2.Serial_Wire;
-    bus access I2C_bus -> PRESSURE.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_1.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_2.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_3.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_4.Serial_Wire;
+    J2:bus access I2C_bus -> US1.Serial_Wire;
+    J3:bus access I2C_bus -> US2.Serial_Wire;
+    J4:bus access I2C_bus -> PRESSURE.Serial_Wire;
+    J5:bus access I2C_bus -> VARIATOR_1.Serial_Wire;
+    J6:bus access I2C_bus -> VARIATOR_2.Serial_Wire;
+    J7:bus access I2C_bus -> VARIATOR_3.Serial_Wire;
+    J8:bus access I2C_bus -> VARIATOR_4.Serial_Wire;
     
-    bus access three_phases_1_bus -> VARIATOR_1.three_phases_Wire;
-    bus access three_phases_2_bus -> VARIATOR_2.three_phases_Wire;
-    bus access three_phases_3_bus -> VARIATOR_3.three_phases_Wire;
-    bus access three_phases_4_bus -> VARIATOR_4.three_phases_Wire;
+    J9:bus access three_phases_1_bus -> VARIATOR_1.three_phases_Wire;
+    J10:bus access three_phases_2_bus -> VARIATOR_2.three_phases_Wire;
+    J11:bus access three_phases_3_bus -> VARIATOR_3.three_phases_Wire;
+    J12:bus access three_phases_4_bus -> VARIATOR_4.three_phases_Wire;
     
-    bus access three_phases_1_bus -> MOTOR_1.three_phases_Wire;
-    bus access three_phases_2_bus -> MOTOR_2.three_phases_Wire;
-    bus access three_phases_3_bus -> MOTOR_3.three_phases_Wire;
-    bus access three_phases_4_bus -> MOTOR_4.three_phases_Wire;
+    J13:bus access three_phases_1_bus -> MOTOR_1.three_phases_Wire;
+    J14:bus access three_phases_2_bus -> MOTOR_2.three_phases_Wire;
+    J15:bus access three_phases_3_bus -> MOTOR_3.three_phases_Wire;
+    J16:bus access three_phases_4_bus -> MOTOR_4.three_phases_Wire;
     
-    bus access Serial_Wire -> UART0_ARM7.Serial_Wire;
+    J17:bus access Serial_Wire -> UART0_ARM7.Serial_Wire;
   properties 
     Actual_Processor_Binding => (reference (CPU_ARM7)) applies to proc_1;
     Actual_Processor_Binding => (reference (CPU_ARM7)) applies to TWI_ARM7;
@@ -106,16 +106,16 @@ public
     TELEMETER      : device     telemeter_urg04lx::TELEMETER.impl;
     CAMERA         : device     camera_usb::CAMERA.impl;
   connections
-    bus access UART2_bus     -> UART2_ARM9.Serial_Wire;
-    bus access UART2_bus     -> INERTIAL_GPS.Serial_Wire;
+    J18:bus access UART2_bus     -> UART2_ARM9.Serial_Wire;
+    J19:bus access UART2_bus     -> INERTIAL_GPS.Serial_Wire;
     
-    bus access USB1_bus      -> USB1_ARM9.Serial_Wire;
-    bus access USB1_bus      -> CAMERA.Serial_Wire;
+    J20:bus access USB1_bus      -> USB1_ARM9.Serial_Wire;
+    J21:bus access USB1_bus      -> CAMERA.Serial_Wire;
     
-    bus access USB2_bus      -> USB2_ARM9.Serial_Wire;
-    bus access USB2_bus      -> TELEMETER.Serial_Wire;
+    J22:bus access USB2_bus      -> USB2_ARM9.Serial_Wire;
+    J23:bus access USB2_bus      -> TELEMETER.Serial_Wire;
     
-    bus access Serial_Wire   -> UART0_ARM9.Serial_Wire;
+    J24:bus access Serial_Wire   -> UART0_ARM9.Serial_Wire;
   properties
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to USB1_ARM9;
@@ -132,8 +132,8 @@ public
     
     UART_IPC_bus   :  bus      buses::UART::UART.impl;
   connections
-    bus access UART_IPC_bus -> arm9_board.Serial_Wire;
-    bus access UART_IPC_bus -> arm7_board.Serial_Wire;
+    J25:bus access UART_IPC_bus -> arm9_board.Serial_Wire;
+    J26:bus access UART_IPC_bus -> arm7_board.Serial_Wire;
     annex real_specification {**
     theorem check_model
     foreach s in system_set do

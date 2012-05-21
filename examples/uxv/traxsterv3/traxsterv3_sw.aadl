@@ -2,8 +2,17 @@ package traxsterv3_sw
 public
 
 with types;
-
-
+with types;
+with ultrasound_sfr08;
+with pressure_hca0811;
+with variator_blctlv12;
+with camera_usb;
+with telemeter_urg04lx;
+with gps_lea4h;
+with inertial_chr6d;
+with ultrasound_sfr08;
+with inertial_gps_ig500n;
+with compass_hmc6352;
 
 ------------------------------------------------------------------
 --------------------------    ARM7    ----------------------------
@@ -26,7 +35,7 @@ subprogram implementation Telemetry_Management.impl
 properties
   Source_Name 			    => "manage_telemetry";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    =>(C);
 end Telemetry_Management.impl;
 
  -- Receive Telecommand message from ARM9
@@ -39,7 +48,7 @@ subprogram implementation Telecommand_Management.impl
 properties
   Source_Name 			    => "manage_telecommand";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    => (C);
 end Telecommand_Management.impl;
 
 
@@ -57,8 +66,8 @@ calls
   };
 connections
   --parameter US_acquisition.device_address -> ; *** get the device address from device property
-  parameter US1_acquisition.US_meas -> US1_meas;
-  parameter US2_acquisition.US_meas -> US2_meas;
+  M1:parameter US1_acquisition.US_meas -> US1_meas;
+  M2:parameter US2_acquisition.US_meas -> US2_meas;
 end UltraSound_Data_Processing.impl;
 
 -- Perform Compass sensor measurement
@@ -72,7 +81,7 @@ calls
   	COMPASS_acquisition : subprogram compass_hmc6352::Read_Acquisition;
   };
 connections
-  parameter COMPASS_acquisition.COMPASS_meas -> COMPASS_meas;
+  M3:parameter COMPASS_acquisition.COMPASS_meas -> COMPASS_meas;
 end Compass_Data_Processing.impl;
 
 -- Perform motor control
@@ -86,7 +95,7 @@ calls
   	ACTUATORS_command : subprogram variator_blctlv12::Apply_speed;
   };
 connections
-	parameter ACTUATORS_cmd -> ACTUATORS_command.ACTUATORS_cmd;
+	M4:parameter ACTUATORS_cmd -> ACTUATORS_command.ACTUATORS_cmd;
 end ACTUATORS_control.impl;
 
 ----------------------
@@ -108,13 +117,13 @@ end TM_Manager;
 thread implementation TM_Manager.impl
 calls 
   call1 : {
-    TM_Spg : subprogram Telemetry_Management.impl;
+    TM_Spg : subprogram Telemetry_Management;
   };
 connections
-  parameter US1_meas -> TM_Spg.US1_meas;
-  parameter US2_meas -> TM_Spg.US2_meas;
-  parameter COMPASS_meas -> TM_Spg.COMPASS_meas;
-  parameter TM_Spg.TM_frame -> TM_frame;
+  M5:parameter US1_meas -> TM_Spg.US1_meas;
+  M6:parameter US2_meas -> TM_Spg.US2_meas;
+  M7:parameter COMPASS_meas -> TM_Spg.COMPASS_meas;
+  M8:parameter TM_Spg.TM_frame -> TM_frame;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period			        => 10 ms;
@@ -132,11 +141,11 @@ end TC_Manager;
 thread implementation TC_Manager.impl
 calls 
   call1 : {
-    TC_Spg : subprogram Telecommand_Management.impl;
+    TC_Spg : subprogram Telecommand_Management;
   };
 connections
-  parameter TC_Spg.actuators_cmd -> actuators_cmd;
-  parameter TC_frame -> TC_Spg.TC_frame;
+  M9:parameter TC_Spg.actuators_cmd -> actuators_cmd;
+  M10:parameter TC_frame -> TC_Spg.TC_frame;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period		        	=> 10 ms;
@@ -152,11 +161,11 @@ end US_Manager;
 thread implementation US_manager.impl
 calls 
   Mycall : {
-    UDP_Spg : subprogram UltraSound_Data_Processing.impl;
+    UDP_Spg : subprogram UltraSound_Data_Processing;
   };
 connections
-  parameter UDP_Spg.US1_meas -> US1_meas;
-  parameter UDP_Spg.US2_meas -> US2_meas;
+  M11:parameter UDP_Spg.US1_meas -> US1_meas;
+  M12:parameter UDP_Spg.US2_meas -> US2_meas;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;
@@ -171,10 +180,10 @@ end COMPASS_Manager;
 thread implementation COMPASS_manager.impl
 calls 
   Mycall : {
-    PDP_Spg : subprogram Compass_Data_Processing.impl;
+    PDP_Spg : subprogram Compass_Data_Processing;
   };
 connections
-  parameter PDP_Spg.COMPASS_meas -> COMPASS_meas;
+  M13:parameter PDP_Spg.COMPASS_meas -> COMPASS_meas;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;
@@ -189,10 +198,10 @@ end ACTUATORS_Manager;
 thread implementation ACTUATORS_Manager.impl
 calls 
   Mycall : {
-    ACD_Spg : subprogram ACTUATORS_control.impl;
+    ACD_Spg : subprogram ACTUATORS_control;
   };
 connections
-  parameter  ACTUATORS_cmd -> ACD_Spg.ACTUATORS_cmd;
+  M14:parameter  ACTUATORS_cmd -> ACD_Spg.ACTUATORS_cmd;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;
@@ -248,7 +257,7 @@ subprogram implementation Command_Law_Management.impl
 properties
   Source_Name 			    => "manage_command_law";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    => (C);
 end Command_Law_Management.impl;
 
 subprogram State_Estimation_management
@@ -263,7 +272,7 @@ subprogram implementation State_Estimation_management.impl
 properties
   Source_Name 			    => "manage_command_law";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    => (C);
 end State_Estimation_management.impl;
 
 
@@ -276,7 +285,7 @@ subprogram implementation Decision_management.impl
 properties
   Source_Name 			    => "manage_decision";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    => (C);
 end Decision_management.impl;
 
 subprogram Camera_Data_Processing
@@ -289,7 +298,7 @@ calls
   	Image_acquisition : subprogram camera_usb::Read_Acquisition;
   };
 connections
-  parameter Image_acquisition.CAMERA_meas -> CAMERA_meas;
+  M15:parameter Image_acquisition.CAMERA_meas -> CAMERA_meas;
 end Camera_Data_Processing.impl;
 
 subprogram Telemeter_Data_Processing
@@ -302,7 +311,7 @@ calls
   	Telemeter_acquisition : subprogram telemeter_urg04lx::Read_Acquisition;
   };
 connections
-  parameter Telemeter_acquisition.TELEMETER_meas -> TELEMETER_meas;
+  M16:parameter Telemeter_acquisition.TELEMETER_meas -> TELEMETER_meas;
 end Telemeter_Data_Processing.impl;
 
 subprogram Inertial_Gps_Data_Processing
@@ -315,7 +324,7 @@ calls
   	Inertial_Gps_acquisition : subprogram inertial_gps_ig500n::Read_Acquisition;
   };
 connections
-  parameter Inertial_Gps_acquisition.INERTIAL_GPS_meas -> INERTIAL_GPS_meas;
+  M16:parameter Inertial_Gps_acquisition.INERTIAL_GPS_meas -> INERTIAL_GPS_meas;
 end Inertial_Gps_Data_Processing.impl;
 
 
@@ -337,11 +346,11 @@ end CL_Manager;
 thread implementation CL_Manager.impl
 calls 
   call1 : {
-    CL_Spg : subprogram Command_Law_Management.impl;
+    CL_Spg : subprogram Command_Law_Management;
   };
 connections
-  parameter State_estimation -> CL_Spg.State_estimation;
-  parameter CL_Spg.TC_frame -> TC_frame;
+  M17:parameter State_estimation -> CL_Spg.State_estimation;
+  M18:parameter CL_Spg.TC_frame -> TC_frame;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period			        => 10 ms;
@@ -361,14 +370,14 @@ end SE_Manager;
 thread implementation SE_Manager.impl
 calls 
   call1 : {
-    SE_Spg : subprogram State_Estimation_management.impl;
+    SE_Spg : subprogram State_Estimation_management;
   };
 connections
-  parameter SE_Spg.State_estimation -> State_estimation;
-  parameter TM_frame -> SE_Spg.TM_frame;
-  parameter INERTIAL_GPS_meas -> SE_Spg.INERTIAL_GPS_meas;
-  parameter TELEMETER_meas -> SE_Spg.TELEMETER_meas;
-  parameter Decision -> SE_Spg.Decision;
+  M19:parameter SE_Spg.State_estimation -> State_estimation;
+  M20:parameter TM_frame -> SE_Spg.TM_frame;
+  M21:parameter INERTIAL_GPS_meas -> SE_Spg.INERTIAL_GPS_meas;
+  M22:parameter TELEMETER_meas -> SE_Spg.TELEMETER_meas;
+  M23:parameter Decision -> SE_Spg.Decision;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period			        => 10 ms;
@@ -384,11 +393,11 @@ end D_Manager;
 thread implementation D_Manager.impl
 calls 
   call1 : {
-    D_Spg : subprogram Decision_management.impl;
+    D_Spg : subprogram Decision_management;
   };
 connections
-  parameter D_Spg.Decision -> Decision;
-  parameter CAMERA_meas -> D_Spg.CAMERA_meas;
+  M24:parameter D_Spg.Decision -> Decision;
+  M25:parameter CAMERA_meas -> D_Spg.CAMERA_meas;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period			        => 10 ms;
@@ -405,10 +414,10 @@ end CAMERA_Manager;
 thread implementation CAMERA_manager.impl
 calls 
   Mycall : {
-    CAMERA_Spg : subprogram Camera_Data_Processing.impl;
+    CAMERA_Spg : subprogram Camera_Data_Processing;
   };
 connections
-  parameter CAMERA_Spg.CAMERA_meas -> CAMERA_meas;
+  M26:parameter CAMERA_Spg.CAMERA_meas -> CAMERA_meas;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;
@@ -424,10 +433,10 @@ end TELEMETER_Manager;
 thread implementation TELEMETER_Manager.impl
 calls 
   Mycall : {
-    TDP_Spg : subprogram Telemeter_Data_Processing.impl;
+    TDP_Spg : subprogram Telemeter_Data_Processing;
   };
 connections
-  parameter TDP_Spg.TELEMETER_meas -> TELEMETER_meas;
+  M27:parameter TDP_Spg.TELEMETER_meas -> TELEMETER_meas;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;
@@ -445,10 +454,10 @@ end INERTIAL_GPS_Manager;
 thread implementation INERTIAL_GPS_Manager.impl
 calls 
   Mycall : {
-    IGDP_Spg : subprogram Inertial_Gps_Data_Processing.impl;
+    IGDP_Spg : subprogram Inertial_Gps_Data_Processing;
   };
 connections
-  parameter IGDP_Spg.INERTIAL_GPS_meas -> INERTIAL_GPS_meas;
+  M27:parameter IGDP_Spg.INERTIAL_GPS_meas -> INERTIAL_GPS_meas;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;

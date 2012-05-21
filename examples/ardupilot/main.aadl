@@ -15,7 +15,7 @@ public
   subcomponents
     CPU         : processor Processors::Atmega::ATMEGA328p.impl
     {Deployment::Execution_Platform => Native;
-    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Scheduling_Protocol => (RMS);
 --    Thread_Limit        => 42;
     Thread_Limit        => 4;
     };

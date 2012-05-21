@@ -78,7 +78,7 @@ public
 
   virtual processor partition_runtime
   properties
-    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Scheduling_Protocol => (RMS);
   end partition_runtime;
 
   processor arinckernel 
@@ -133,7 +133,7 @@ public
     mythread : thread module1_thread_part1; 
 
   connections
-    port mythread.sensorout -> sensorout; 
+    Q1:port mythread.sensorout -> sensorout; 
   end module1_process_part1.impl;
 
   -- Process for the first partition
@@ -160,8 +160,8 @@ public
     process_part2 : process module1_process_part2;
 
   connections
-    port process_part1.sensorout -> sensorout; 
-    bus access thebus -> netif.thebus;
+    Q2:port process_part1.sensorout -> sensorout; 
+    Q3:bus access thebus -> netif.thebus;
 
   properties 
     Actual_Processor_Binding => (reference (cpu.part1)) applies to process_part1;
@@ -207,7 +207,7 @@ public
     thread_part1 : thread module2_thread_part1; 
 
   connections
-    port sensorin -> thread_part1.sensorin; 
+    Q4:port sensorin -> thread_part1.sensorin; 
   end module2_process_part1.impl;
 
   memory implementation mainmemory.module2 
@@ -230,8 +230,8 @@ public
     netif	: device network_interface.i;
 
   connections 
-    port sensorin -> process_part1.sensorin; 
-    bus access thebus -> netif.thebus;
+    Q5:port sensorin -> process_part1.sensorin; 
+    Q6:bus access thebus -> netif.thebus;
   
   properties 
     Actual_Processor_Binding	=> (reference (cpu.part1)) applies to process_part1; 

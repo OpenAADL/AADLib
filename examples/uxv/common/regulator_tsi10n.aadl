@@ -10,8 +10,8 @@ with Electricity_Properties;
 -----------------
 device REG_5V  
 features
-   Power_in :    requires bus access  buses:: VBat_bus.impl;
-   Power_out :    requires bus access  buses:: V5_bus.impl;
+   Power_in :    requires bus access  buses::VBat_bus.impl;
+   Power_out :    requires bus access  buses::V5_bus.impl;
 end  REG_5V;
 device implementation REG_5V.impl
 properties

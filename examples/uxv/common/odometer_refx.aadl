@@ -19,9 +19,9 @@ device implementation ODOMETER.impl
 properties
   Implemented_As 	    => classifier (odometer_refx::ODOMETER_Driver.impl);
   Initialize_Entrypoint => classifier (odometer_refx::Initialize);
-  Electricity_Properties::Idle_Current => 0 mA; -- N/A
+  Electricity_Properties::Idle_Current => 0.0 mA; -- N/A
   Electricity_Properties::Run_Current =>  0.1 mA; -- no data estimated value
-  Electricity_Properties::Peak_Current => 100 mA; -- to measure
+  Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
   Electricity_Properties::Core_Voltage => 3.3 V;
   Electricity_Properties::Acquisition_Time => 2 ms;
   Electricity_Properties::Peak_Time => 1 ms;
@@ -59,7 +59,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("odometer_refx.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 subprogram Receive
 end Receive;
@@ -71,7 +71,7 @@ features
 properties
   Source_Name => "read_acquisition";
   Source_Text => ("odometer_refx.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Acquisition;
 
 subprogram Start_Acquisition
@@ -80,7 +80,7 @@ features
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("odometer_refx.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Start_Acquisition;
 
    

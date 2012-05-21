@@ -62,36 +62,36 @@ public
     CAMERA               : device     camera_usb::CAMERA.impl;
 
   connections
-    bus access I2C_bus -> TWI_ARM9.Serial_Wire;
+    L1:bus access I2C_bus -> TWI_ARM9.Serial_Wire;
     
-    bus access I2C_bus -> US1.Serial_Wire;
-    bus access I2C_bus -> US2.Serial_Wire;
-    bus access I2C_bus -> PRESSURE.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_1.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_2.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_3.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_4.Serial_Wire;
+    L2:bus access I2C_bus -> US1.Serial_Wire;
+    L3:bus access I2C_bus -> US2.Serial_Wire;
+    L4:bus access I2C_bus -> PRESSURE.Serial_Wire;
+    L5:bus access I2C_bus -> VARIATOR_1.Serial_Wire;
+    L6:bus access I2C_bus -> VARIATOR_2.Serial_Wire;
+    L7:bus access I2C_bus -> VARIATOR_3.Serial_Wire;
+    L8:bus access I2C_bus -> VARIATOR_4.Serial_Wire;
     
-    bus access three_phases_1_bus -> VARIATOR_1.three_phases_Wire;
-    bus access three_phases_2_bus -> VARIATOR_2.three_phases_Wire;
-    bus access three_phases_3_bus -> VARIATOR_3.three_phases_Wire;
-    bus access three_phases_4_bus -> VARIATOR_4.three_phases_Wire;
+    L9:bus access three_phases_1_bus -> VARIATOR_1.three_phases_Wire;
+    L10:bus access three_phases_2_bus -> VARIATOR_2.three_phases_Wire;
+    L11:bus access three_phases_3_bus -> VARIATOR_3.three_phases_Wire;
+    L12:bus access three_phases_4_bus -> VARIATOR_4.three_phases_Wire;
     
-    bus access three_phases_1_bus -> MOTOR_1.three_phases_Wire;
-    bus access three_phases_2_bus -> MOTOR_2.three_phases_Wire;
-    bus access three_phases_3_bus -> MOTOR_3.three_phases_Wire;
-    bus access three_phases_4_bus -> MOTOR_4.three_phases_Wire;
+    L13:bus access three_phases_1_bus -> MOTOR_1.three_phases_Wire;
+    L14:bus access three_phases_2_bus -> MOTOR_2.three_phases_Wire;
+    L15:bus access three_phases_3_bus -> MOTOR_3.three_phases_Wire;
+    L16:bus access three_phases_4_bus -> MOTOR_4.three_phases_Wire;
     
-    bus access UART1_bus -> UART1_ARM9.Serial_Wire;
-    bus access UART1_bus -> GPS.Serial_Wire;
+    L17:bus access UART1_bus -> UART1_ARM9.Serial_Wire;
+    L18:bus access UART1_bus -> GPS.Serial_Wire;
     
-    bus access UART2_bus -> UART2_ARM9.Serial_Wire;
-    bus access UART2_bus -> INERTIAL.Serial_Wire;
+    L19:bus access UART2_bus -> UART2_ARM9.Serial_Wire;
+    L20:bus access UART2_bus -> INERTIAL.Serial_Wire;
     
-    bus access USB1_bus -> USB1_ARM9.Serial_Wire;
-    bus access USB1_bus -> CAMERA.Serial_Wire;
-    bus access USB2_bus -> USB2_ARM9.Serial_Wire;
-    bus access USB2_bus -> TELEMETER.Serial_Wire;
+    L21:bus access USB1_bus -> USB1_ARM9.Serial_Wire;
+    L22:bus access USB1_bus -> CAMERA.Serial_Wire;
+    L23:bus access USB2_bus -> USB2_ARM9.Serial_Wire;
+    L24:bus access USB2_bus -> TELEMETER.Serial_Wire;
     
   properties
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;

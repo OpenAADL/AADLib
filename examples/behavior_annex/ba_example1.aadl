@@ -39,11 +39,11 @@ public
     mul2 : subprogram mul;
     };
   connections
-    parameter x -> mul1.x;
-    parameter x -> mul1.y;
-    parameter mul1.z -> mul2.x;
-    parameter x -> mul2.y;
-    parameter mul2.z -> y;
+    S1:parameter x -> mul1.x;
+    S2:parameter x -> mul1.y;
+    S3:parameter mul1.z -> mul2.x;
+    S4:parameter x -> mul2.y;
+    S5:parameter mul2.z -> y;
   end cube.no_ba;
   
 end BA_example1;

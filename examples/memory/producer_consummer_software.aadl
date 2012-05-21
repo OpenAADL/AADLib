@@ -12,21 +12,21 @@ public
   
   subprogram Producer_Spg
   properties
-    source_language => C;
+    source_language =>(C);
     source_name     => "producer";
     source_text     => ("prodcons.c");
   end Producer_Spg;
   
   subprogram Consumer_Spg
   properties
-    source_language => C;
+    source_language => (C);
     source_name     => "consumer";
     source_text     => ("prodcons.c");
   end Consumer_Spg;
 
   subprogram Init_Spg
   properties
-    source_language => C;
+    source_language => (C);
     source_name     => "init";
     source_text     => ("prodcons.c");
   end Init_Spg;

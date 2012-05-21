@@ -19,8 +19,8 @@ device implementation MOTOR_TM550.impl
 properties
   Implemented_As 	    => classifier (motor_tm550::MOTOR_TM550_Driver.impl);
   Initialize_Entrypoint => classifier (motor_tm550::Initialize);
-  Electricity_Properties::Idle_Current => 5000 mA; -- Run current
-  Electricity_Properties::Run_Current => 13000 mA; -- Peak current
+  Electricity_Properties::Idle_Current => 5000.0 mA; -- Run current
+  Electricity_Properties::Run_Current => 13000.0 mA; -- Peak current
   Electricity_Properties::Acquisition_Time => 1 ms;
   Electricity_Properties::Core_Voltage => 14.4 V; 
 end MOTOR_TM550.impl;
@@ -55,7 +55,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("motor_tm550.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 subprogram Apply_speed
@@ -65,7 +65,7 @@ features
 properties
   Source_Name => "apply_speed";
   Source_Text => ("motor_tm550.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Apply_speed;
   
   

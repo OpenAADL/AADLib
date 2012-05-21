@@ -70,18 +70,18 @@ SUBCOMPONENTS
   VME : BUS VME;
   RAM : MEMORY RAM;
 CONNECTIONS
-  PORT aerial.antenna_out -> main.receive_pulse;
-  PORT rotor.motor_out -> main.get_angle;
-  PORT main.send_pulse -> aerial.antenna_in;
-  PORT main.to_screen -> monitor.screen_in;
-  BUS ACCESS VME -> aerial.VME;
-  BUS ACCESS VME -> rotor.VME;
-  BUS ACCESS VME -> monitor.VME;
-  BUS ACCESS VME -> cpu.VME;
-  BUS ACCESS VME -> RAM.VME;
+  A1:PORT aerial.antenna_out -> main.receive_pulse;
+  A2:PORT rotor.motor_out -> main.get_angle;
+  A3:PORT main.send_pulse -> aerial.antenna_in;
+  A4:PORT main.to_screen -> monitor.screen_in;
+  A5:BUS ACCESS VME -> aerial.VME;
+  A6:BUS ACCESS VME -> rotor.VME;
+  A7:BUS ACCESS VME -> monitor.VME;
+  A8:BUS ACCESS VME -> cpu.VME;
+  A9:BUS ACCESS VME -> RAM.VME;
 PROPERTIES
-  Actual_Memory_Binding => reference (ram) applies to main;
-  Actual_Processor_Binding => reference (cpu) applies to main;
+  Actual_Memory_Binding => (reference (ram)) applies to main;
+  Actual_Processor_Binding => (reference (cpu)) applies to main;
 END radar.simple;
 
 -- The antenna device simulates radar environment.
@@ -140,14 +140,14 @@ SUBCOMPONENTS
   transmit : THREAD transmitter.impl;
   control_angle : THREAD controller.impl;
 CONNECTIONS
- PORT receive_pulse -> receive.receiver_in;
- PORT display.display_out -> to_screen;
- PORT transmit.transmitter_out -> send_pulse;
- PORT get_angle -> control_angle.controller_in;
- PORT receive.receiver_out -> analyse.from_receiver;
- PORT analyse.analyser_out -> display.display_in;
- PORT transmit.transmitter_out -> analyse.from_transmitter;
- PORT control_angle.controller_out -> analyse.from_controller;
+ A10:PORT receive_pulse -> receive.receiver_in;
+ A11:PORT display.display_out -> to_screen;
+ A12:PORT transmit.transmitter_out -> send_pulse;
+ A13:PORT get_angle -> control_angle.controller_in;
+ A14:PORT receive.receiver_out -> analyse.from_receiver;
+ A15:PORT analyse.analyser_out -> display.display_in;
+ A16:PORT transmit.transmitter_out -> analyse.from_transmitter;
+ A17:PORT control_angle.controller_out -> analyse.from_controller;
 END processing.others;
 
 -- This thread receives radar echos from the antenna.
@@ -163,8 +163,8 @@ CALLS CS : {
   RS : SUBPROGRAM Receiver_Spg;
 };
 CONNECTIONS
-  PARAMETER RS.receiver_out -> receiver_out;
-  PARAMETER receiver_in -> RS.receiver_in;
+  A18:PARAMETER RS.receiver_out -> receiver_out;
+  A19:PARAMETER receiver_in -> RS.receiver_in;
 PROPERTIES
   Priority => 63;
   Dispatch_Protocol => Periodic;
@@ -178,7 +178,7 @@ FEATURES
   receiver_out : OUT PARAMETER radar_types::Target_Distance;
   receiver_in : IN PARAMETER radar_types::Target_Distance;
 properties
-  Source_Language => Ada95;
+  Source_Language => (Ada95);
   Source_Name => "radar.receiver";
 END Receiver_Spg;
 
@@ -198,9 +198,9 @@ CALLS CS : {
   AS : SUBPROGRAM Analyser_Spg;
 };
 CONNECTIONS
-  PARAMETER from_receiver -> AS.from_receiver;
-  PARAMETER AS.analyser_out -> analyser_out;
-  PARAMETER from_controller -> AS.from_controller;
+  A20:PARAMETER from_receiver -> AS.from_receiver;
+  A21:PARAMETER AS.analyser_out -> analyser_out;
+  A22:PARAMETER from_controller -> AS.from_controller;
 PROPERTIES
   Priority => 62;
   Dispatch_Protocol => Periodic;
@@ -215,7 +215,7 @@ FEATURES
   analyser_out : OUT PARAMETER radar_types::Target_Position.Impl;
   from_controller : IN PARAMETER radar_types::Motor_Position;
 properties
-  Source_Language => Ada95;
+  Source_Language => (Ada95);
   Source_Name => "radar.analyser";
 END Analyser_Spg;
 
@@ -232,7 +232,7 @@ CALLS CS : {
   DS : SUBPROGRAM Display_Spg;
 };
 CONNECTIONS
-  PARAMETER display_in -> DS.display_in;
+  A23:PARAMETER display_in -> DS.display_in;
 PROPERTIES
   Priority => 60;
   Dispatch_Protocol => Periodic;
@@ -245,7 +245,7 @@ SUBPROGRAM Display_Spg
 FEATURES
   display_in : IN PARAMETER radar_types::Target_Position.Impl;
 properties
-  Source_Language => Ada95;
+  Source_Language => (Ada95);
   Source_Name => "radar.display_panel";
 END Display_Spg;
 
@@ -277,8 +277,8 @@ CALLS CS1 : {
   CS : SUBPROGRAM Controller_Spg;
 };
 CONNECTIONS
-  PARAMETER controller_in -> CS.controller_in;
-  PARAMETER CS.controller_out -> controller_out;
+  A24:PARAMETER controller_in -> CS.controller_in;
+  A25:PARAMETER CS.controller_out -> controller_out;
 PROPERTIES
   Priority => 70;
   Dispatch_Protocol => Periodic;
@@ -292,7 +292,7 @@ FEATURES
   controller_in : IN PARAMETER radar_types::Motor_Position;
   controller_out : OUT PARAMETER radar_types::Motor_Position;
 properties
-  Source_Language => Ada95;
+  Source_Language => (Ada95);
   Source_Name => "radar.controller";
 END Controller_Spg;
 
@@ -307,7 +307,7 @@ FEATURES
   VME : REQUIRES BUS ACCESS VME;
 PROPERTIES
   Clock_Period => 200 ns;
-  Scheduling_Protocol => Posix_1003_Highest_Priority_First_Protocol;
+  Scheduling_Protocol => (RMS);
   Deployment::Execution_Platform => LEON_ORK;
   Priority_Range => 0 .. 255;
 END leon2;

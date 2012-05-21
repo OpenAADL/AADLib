@@ -55,7 +55,7 @@ public
 
   end The_Function;
 
-  abstract Replicated_Function
+  abstract Replicated_Function extends cold
   end Replicated_Function;
 
   abstract implementation Replicated_Function.i 

@@ -230,7 +230,7 @@ public
     Ground_Track_Angle : out parameter RAP_Int_32;
     Altitude         : out parameter RAP_Int_32;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "AC_Flight_Data.Job";
   end Flight_Data_Job;
   
@@ -245,7 +245,7 @@ public
     Target_Location            : in parameter Location_T.Impl;
     Steer_To_Point             : out parameter Steer_To_Point_T.Impl;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Steering.Job";
   end Steering_Job;
   
@@ -256,7 +256,7 @@ public
     Target_Position : in parameter Location_T.Impl;
     Contact_Number_to_Track : in out parameter RAP_Int_32;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Radar_Controler.Job";
   end Radar_Controler_Job;
   
@@ -271,7 +271,7 @@ public
     Target_Location : out parameter Location_T.Impl;
     Target_Reticle  : out parameter RAP_Int_32;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Target_Tracking.Job";
   end Target_Tracking_Job;
   
@@ -282,7 +282,7 @@ public
     Weapon_Selected         : out parameter RAP_Int_32;
     Weapon_Select_Request   : in parameter RAP_Int_32;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Weapon_Selection.On_Weapon_Select_Request";
   end WS_On_Weapon_Select_Request;
   
@@ -290,7 +290,7 @@ public
   features
     Delivery_Mode_Selected : out parameter RAP_Int_32;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Weapon_Selection.On_Auto_CCIP_Toggle";
   end WS_On_Auto_CCIP_Toggle;
   
@@ -312,7 +312,7 @@ public
     Weapon_Cross_Range_Travel : out parameter RAP_Int_32;
     do_relaunch         : out event port;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Weapon_Trajectory.On_Relaunch";
   end WT_On_Relaunch;
   
@@ -325,7 +325,7 @@ public
     do_relaunch             : out event port;
     Release_Signal          : out event port;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Weapon_Release.On_Manual_Weapon_Release";
   end WR_On_Manual_Weapon_Release;
   
@@ -338,7 +338,7 @@ public
     do_relaunch             : out event port;
     Release_Signal          : out event port;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Weapon_Release.On_Relaunch";
   end WR_On_Relaunch;
   
@@ -351,7 +351,7 @@ public
     Reticle_Position    : in parameter Reticle_Position_T.Impl;
     Time_to_go_to_Release : in parameter RAP_Int_32;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "HUD_Display.Job";
   end HUD_Display_Job;
   
@@ -363,19 +363,19 @@ public
     Position        : in parameter Aircraft_Position_T.Impl;
     Weapon_Select_request : out parameter RAP_Int_32;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "MPD_Tactical_Display.Job";
   end MPD_Tactical_Display_Job;
   
   subprogram MPD_Stores_Display_Job
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "MPD_Stores_Display.Job";
   end MPD_Stores_Display_Job;
   
   subprogram MPD_Status_Display_Job
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "MPD_Status_Display.Job";
   end MPD_Status_Display_Job;
   
@@ -388,7 +388,7 @@ public
     Quantity_Select_Request       : out parameter RAP_Int_32;
     Auto_CCIP_Toggle              : out event port;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Keyset.Job";
   end Keyset_Job;
   
@@ -397,7 +397,7 @@ public
     Threat_Table: in parameter RAP_Int_32;
     Threat_Warning: out parameter RAP_Int_32;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "RWR_Threat_Response.Job";
   end RWR_Threat_Response_Job;
   
@@ -408,13 +408,13 @@ public
     Threat_Radar_Frequency_Message : out parameter RAP_Float_32;
     Threat_Search_Sector_Message   : out parameter RAP_Float_32;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "RWR_Control.Job";
   end RWR_Control_Job;
   
   subprogram Builtin_Test_Job
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "Builtin_Test.Job";
   end Builtin_Test_Job;
   
@@ -423,7 +423,7 @@ public
     Bomb_Button            : out parameter RAP_Int_32;
     Manual_Weapon_Release  : out event port;
   properties
-    source_language => Ada95;
+    source_language => (Ada95);
     source_name => "HOTAS.Job";
   end HOTAS_Job;
   
@@ -1154,8 +1154,8 @@ connections
        job.Keyset_Weapon_Program_Message;
   c3 : parameter job.Quantity_Select_Request -> Quantity_Select_Request;
   c5 : port job.Auto_CCIP_Toggle -> Auto_CCIP_Toggle;
-  c6 : port Keymap_Image -> job.Keymap_Image;
-  c7 : port job.Waypoint_Steering_Selected -> Waypoint_Steering_Selected;
+  c6 : parameter Keymap_Image -> job.Keymap_Image;
+  c7 : parameter job.Waypoint_Steering_Selected -> Waypoint_Steering_Selected;
 properties
    compute_entrypoint_call_sequence   => reference (cs);    
 end Keyset_T.i;
@@ -1466,46 +1466,46 @@ subcomponents
   Steering         : thread Steering_T.i;
 connections
   
-  port Mach_Number -> Flight_Data.Radar_Altitude;
-  port Radar_Altitude -> Flight_Data.Radar_Altitude;
-  port Barometric_Altitude -> Flight_Data.Barometric_Altitude;
-  port Angle_Of_Attack_In -> Flight_Data.Angle_Of_Attack_Request;
-  port Body_Rates_In -> Flight_Data.Body_Rates_In;
-  port Velocity_In -> Flight_Data.Velocity_In;
-  port True_Airspeed_In -> Flight_Data.True_Airspeed;
-  port Acceleration_In -> Flight_Data.Acceleration_In;
-  port Present_Position -> Flight_Data.Present_Position;
+  B1:port Mach_Number -> Flight_Data.Radar_Altitude;
+  B2:port Radar_Altitude -> Flight_Data.Radar_Altitude;
+  B3:port Barometric_Altitude -> Flight_Data.Barometric_Altitude;
+  B4:port Angle_Of_Attack_In -> Flight_Data.Angle_Of_Attack_Request;
+  B5:port Body_Rates_In -> Flight_Data.Body_Rates_In;
+  B6:port Velocity_In -> Flight_Data.Velocity_In;
+  B7:port True_Airspeed_In -> Flight_Data.True_Airspeed;
+  B8:port Acceleration_In -> Flight_Data.Acceleration_In;
+  B9:port Present_Position -> Flight_Data.Present_Position;
 
-  port Waypoint_Counter -> Steering.Waypoint_Counter;
-  port Waypoint_Table -> Steering.Waypoint_Table;
-  port Offset -> Steering.Offset;
-  port Waypoint_Steering_Selected -> Steering.Waypoint_Steering_Selected;
-  port Target_Location -> Steering.Target_Location;
+  B10:port Waypoint_Counter -> Steering.Waypoint_Counter;
+  B11:port Waypoint_Table -> Steering.Waypoint_Table;
+  B12:port Offset -> Steering.Offset;
+  B13:port Waypoint_Steering_Selected -> Steering.Waypoint_Steering_Selected;
+  B14:port Target_Location -> Steering.Target_Location;
 
-  port Flight_Data.Position -> Steering.Position;
-  port Flight_Data.Velocity -> Steering.Velocity;
+  B15:port Flight_Data.Position -> Steering.Position;
+  B16:port Flight_Data.Velocity -> Steering.Velocity;
 
-  port Flight_Data.Angle_Of_Attack -> Angle_Of_Attack;
-  port Flight_Data.Body_Rates -> Body_Rates;
-  port Flight_Data.Velocity -> Velocity;
-  port Flight_Data.Airspeed -> True_Airspeed;
-  port Flight_Data.Position -> Aircraft_Position;
-  port Flight_Data.Attitude -> Attitude;
-  port Flight_Data.Magnetic_Variation -> Magnetic_Variation;
-  port Flight_Data.Wind -> Wind;
-  port Flight_Data.Altitude -> Altitude;
-  port Steering.Steer_to_Point -> Steer_to_Point;
+  B17:port Flight_Data.Angle_Of_Attack -> Angle_Of_Attack;
+  B18:port Flight_Data.Body_Rates -> Body_Rates;
+  B19:port Flight_Data.Velocity -> Velocity;
+  B20:port Flight_Data.Airspeed -> True_Airspeed;
+  B21:port Flight_Data.Position -> Aircraft_Position;
+  B22:port Flight_Data.Attitude -> Attitude;
+  B23:port Flight_Data.Magnetic_Variation -> Magnetic_Variation;
+  B24:port Flight_Data.Wind -> Wind;
+  B25:port Flight_Data.Altitude -> Altitude;
+  B26:port Steering.Steer_to_Point -> Steer_to_Point;
 
-  port Flight_Data.Acceleration       -> Acceleration;
-  port Flight_Data.Reference_Velocity -> Reference_Velocity;
-  port Flight_Data.Rate_of_Change_Airspeed -> Rate_of_Change_Airspeed;
-  port Flight_Data.Flight_Path_Angle       -> Flight_Path_Angle;
-  port Flight_Data.Ground_Speed            -> Ground_Speed;
-  port Flight_Data.Ground_Track_Angle -> Ground_Track_Angle;
-  port Flight_Data.Body_to_Earth_Transform -> Body_to_Earth_Transform;
-  port Flight_Data.Body_to_Horizon_Transform -> Body_to_Horizon_Transform;
-  port Flight_Data.Radar_to_Body_Transform -> Radar_to_Body_Transform;
-  port Flight_Data.Radar_to_Earth_Transform  -> Radar_to_Earth_Transform;
+  B27:port Flight_Data.Acceleration       -> Acceleration;
+  B28:port Flight_Data.Reference_Velocity -> Reference_Velocity;
+  B29:port Flight_Data.Rate_of_Change_Airspeed -> Rate_of_Change_Airspeed;
+  B30:port Flight_Data.Flight_Path_Angle       -> Flight_Path_Angle;
+  B31:port Flight_Data.Ground_Speed            -> Ground_Speed;
+  B32:port Flight_Data.Ground_Track_Angle -> Ground_Track_Angle;
+  B33:port Flight_Data.Body_to_Earth_Transform -> Body_to_Earth_Transform;
+  B34:port Flight_Data.Body_to_Horizon_Transform -> Body_to_Horizon_Transform;
+  B35:port Flight_Data.Radar_to_Body_Transform -> Radar_to_Body_Transform;
+  B36:port Flight_Data.Radar_to_Earth_Transform  -> Radar_to_Earth_Transform;
 end Navigation.impl;
 
 process Monolithic_RAP
@@ -1938,51 +1938,51 @@ subcomponents
   RATL     : thread RATL_H;
   ADC      : thread ADC_H;
 connections
-  port Radar_Mode              -> Radar_H.Radar_Mode;
-  port Contact_Number_to_Track -> Radar_H.Contact_Number_to_Track;
-  port Radar_H.Contact_Table   -> Contact_Table;
-  port Radar_H.Target_Position -> Target_Position;
-  port Status                  -> Radar_H.Status;
+  B37:port Radar_Mode              -> Radar_H.Radar_Mode;
+  B38:port Contact_Number_to_Track -> Radar_H.Contact_Number_to_Track;
+  B39:port Radar_H.Contact_Table   -> Contact_Table;
+  B40:port Radar_H.Target_Position -> Target_Position;
+  B41:port Status                  -> Radar_H.Status;
 
-  port Threat_Radar_Frequency_Message -> RWR_H.Threat_Radar_Frequency_Message;
-  port Threat_Search_Sector_Message   -> RWR_H.Threat_Search_Sector_Message;
+  B42:port Threat_Radar_Frequency_Message -> RWR_H.Threat_Radar_Frequency_Message;
+  B43:port Threat_Search_Sector_Message   -> RWR_H.Threat_Search_Sector_Message;
 
-  port Acceleration -> NAV.Acceleration;
-  port Rate_of_Change_Airspeed -> NAV.Rate_of_Change_Airspeed;
-  port Ground_Speed -> NAV.Ground_Speed;
-  port Flight_Path_Angle -> NAV.Flight_Path_Angle;
-  port Ground_Track_Angle -> NAV.Ground_Track_Angle;
-  port Altitude -> NAV.Altitude;
-  port Body_to_Earth_Transform -> NAV.Body_to_Earth_Transform;
-  port Body_to_Horizon_Transform -> NAV.Body_to_Horizon_Transform;
-  port Radar_to_Body_Transform -> NAV.Radar_to_Body_Transform;
-  port Radar_to_Earth_Transform -> NAV.Radar_to_Earth_Transform;
+  B45:port Acceleration -> NAV.Acceleration;
+  B46:port Rate_of_Change_Airspeed -> NAV.Rate_of_Change_Airspeed;
+  B47:port Ground_Speed -> NAV.Ground_Speed;
+  B48:port Flight_Path_Angle -> NAV.Flight_Path_Angle;
+  B49:port Ground_Track_Angle -> NAV.Ground_Track_Angle;
+  B50:port Altitude -> NAV.Altitude;
+  B51:port Body_to_Earth_Transform -> NAV.Body_to_Earth_Transform;
+  B52:port Body_to_Horizon_Transform -> NAV.Body_to_Horizon_Transform;
+  B53:port Radar_to_Body_Transform -> NAV.Radar_to_Body_Transform;
+  B54:port Radar_to_Earth_Transform -> NAV.Radar_to_Earth_Transform;
 
-  port INS.Acceleration -> Acceleration;
-  port INS.Velocity -> Velocity;
-  port INS.Present_Position -> Present_Position;
-  port INS.True_Airspeed -> True_Airspeed;
-  port INS.Body_Rates -> Body_Rates;
-  port Reference_Velocity -> INS.Reference_Velocity;
+  B55:port INS.Acceleration -> Acceleration;
+  B56:port INS.Velocity -> Velocity;
+  B57:port INS.Present_Position -> Present_Position;
+  B58:port INS.True_Airspeed -> True_Airspeed;
+  B59:port INS.Body_Rates -> Body_Rates;
+  B60:port Reference_Velocity -> INS.Reference_Velocity;
   
-  port Weapon_Selected -> SMS.Weapon_Selected;
-  port Quantity_Selected -> SMS.Quantity_Selected;
-  port Interval_Selected -> SMS.Interval_Selected;
-  port SMS.Ballistic_Coefficients -> Ballistic_Coefficients;
-  port Release_Signal -> SMS.Release_Signal;
+  B61:port Weapon_Selected -> SMS.Weapon_Selected;
+  B62:port Quantity_Selected -> SMS.Quantity_Selected;
+  B63:port Interval_Selected -> SMS.Interval_Selected;
+  B64:port SMS.Ballistic_Coefficients -> Ballistic_Coefficients;
+  B65:port Release_Signal -> SMS.Release_Signal;
 
-  port Weapon_Down_Range_Travel -> AG.Weapon_Down_Range_Travel;
-  port Weapon_Cross_Range_Travel -> AG.Weapon_Cross_Range_Travel;
-  port Time_to_go_to_Release -> AG.Time_to_go_to_Release;
-  port Target_Velocity -> AG.Target_Velocity;
+  B66:port Weapon_Down_Range_Travel -> AG.Weapon_Down_Range_Travel;
+  B67:port Weapon_Cross_Range_Travel -> AG.Weapon_Cross_Range_Travel;
+  B68:port Time_to_go_to_Release -> AG.Time_to_go_to_Release;
+  B69:port Target_Velocity -> AG.Target_Velocity;
 
-  port RATL.Radar_Altitude -> Radar_Altitude;
+  B70:port RATL.Radar_Altitude -> Radar_Altitude;
 
-  port ADC.Barometric_Altitude -> Barometric_Altitude;
-  port ADC.Mach_Number -> Mach_Number;
-  port ADC.Angle_Of_Attack -> Angle_Of_Attack;
+  B71:port ADC.Barometric_Altitude -> Barometric_Altitude;
+  B72:port ADC.Mach_Number -> Mach_Number;
+  B73:port ADC.Angle_Of_Attack -> Angle_Of_Attack;
 
-  port Keyset_H.Keymap_Image -> Keymap_Image;
+  B74:port Keyset_H.Keymap_Image -> Keymap_Image;
 end Hardware_Emulator.Impl;
 
 ---------------
@@ -2061,8 +2061,8 @@ subcomponents
   the_bus : bus C_Bus.Impl;
 
 connections
-  bus access the_bus -> s_cpu.B;
-  bus access the_bus -> h_cpu.B;
+  B75:bus access the_bus -> s_cpu.B;
+  B76:bus access the_bus -> h_cpu.B;
 
   --  Weapons to displays
 
@@ -2295,8 +2295,8 @@ subcomponents
   h_device : device Transport_Device.Impl;
 
 connections
-  bus access the_bus -> s_device.A_Bus;
-  bus access the_bus -> h_device.A_Bus;
+  B77:bus access the_bus -> s_device.A_Bus;
+  B78:bus access the_bus -> h_device.A_Bus;
 
 properties
   Deployment::Execution_Platform => LEON_ORK applies to s_cpu;
@@ -2315,8 +2315,8 @@ subcomponents
   h_device : device Transport_Device.Impl;
 
 connections
-  bus access the_bus -> s_device.A_Bus;
-  bus access the_bus -> h_device.A_Bus;
+  B79:bus access the_bus -> s_device.A_Bus;
+  B80:bus access the_bus -> h_device.A_Bus;
 
 properties
   Deployment::Execution_Platform => ERC32_ORK applies to s_cpu;

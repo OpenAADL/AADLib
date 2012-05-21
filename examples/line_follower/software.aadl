@@ -1,4 +1,4 @@
-package Software
+package Software_lf
 public
 
   -----------------
@@ -7,7 +7,7 @@ public
   
   subprogram Main_Loop
   properties
-    source_language => C;
+    source_language => (C);
     source_name     => "robot_main";
     source_text     => ("robot.c");
   end Main_Loop;
@@ -40,4 +40,4 @@ public
     Task1 : thread Task.impl_1;
   end node_a.impl;
 
-end Software;
+end Software_lf;

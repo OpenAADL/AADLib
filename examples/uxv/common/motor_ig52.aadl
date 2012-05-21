@@ -2,8 +2,8 @@ package motor_ig52
 public
 
 with types;
-with buses;
-with Electricity;
+with buses::I2C;
+with Electricity_Properties;
 
 -----------------
 --   DEVICE   --
@@ -17,11 +17,16 @@ device implementation MOTOR_IG52.impl
 properties
   Implemented_As 	    => classifier (motor_ig52::MOTOR_IG52_Driver.impl);
   Initialize_Entrypoint => classifier (motor_ig52::Initialize);
-  Electricity::Idle_Current => 3 mA; -- no data
-  Electricity::Run_Current => 15 mA;  -- no data
-  Electricity::IO_Voltage_Range => 0 V .. 5.0 V; -- no data
-  Electricity::Core_Voltage => 12.0 V; 
-  Electricity::Acquisition_Time => 65 ms; -- no data
+  Electricity_Properties::Idle_Current => 3.0 mA; -- no data
+  Electricity_Properties::Run_Current => 15.0 mA;  -- no data
+  --Electricity_Properties::IO_Voltage_Range => 0.0 V .. 5.0 V; -- no data
+  Electricity_Properties::VIH_min => 0.0 V;
+  Electricity_Properties::VOH_min => 0.0 V;
+  Electricity_Properties::VIL_max => 5.0 V;
+  Electricity_Properties::VOL_max => 5.0 V;  
+  
+  Electricity_Properties::Core_Voltage => 12.0 V; 
+  Electricity_Properties::Acquisition_Time => 65 ms; -- no data
 end MOTOR_IG52.impl;
   
 -----------------------------------
@@ -54,7 +59,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("motor_ig52.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 
@@ -67,7 +72,7 @@ subprogram implementation Read_Acquisition.impl
 properties
   Source_Name => "read_acquisition";
   Source_Text => ("motor_ig52.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Acquisition.impl;
 
 subprogram Send
@@ -78,7 +83,7 @@ subprogram implementation Send.impl
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("motor_ig52.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Send.impl;
   
   

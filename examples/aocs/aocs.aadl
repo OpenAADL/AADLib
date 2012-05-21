@@ -1,7 +1,7 @@
 package AOCS
 public
   with hardware;
-  with software;
+  with software_aocs;
   with dataaocs;
   
   process AOCSprocessing
@@ -15,7 +15,7 @@ public
 
     -- Attitude control --
     sensored_attitude : in data port dataaocs::GYR_data;
-    sun_direction : in data port dataaocs::FSS_data;
+    sun_direction 	: in data port dataaocs::FSS_data;
     reference_torque : out data port dataaocs::RW_data;
     
     -- Orbit Control --
@@ -70,14 +70,14 @@ public
   
   process implementation AOCSprocessing.others
   subcomponents
-    ACF : thread Software::Attitude_Control_Function;
-    OCF : thread Software::Orbit_Control_Function  in modes (mode_NM);
-    TCP : thread Software::Telecommand_Processing;
-    TMP : thread Software::Telemetry_Processing;
-    FDR : thread Software::Failure_Detection_Isolation in modes (mode_NM);
-    FR  : thread Software::Failure_Recovery in modes (mode_NM);
-    Reconfig  : thread Software::Reconfigurations;
-    ME  : thread Software::Manoeuvre_Execution in modes (mode_NM);
+    ACF : thread software_aocs::Attitude_Control_Function;
+    OCF : thread software_aocs::Orbit_Control_Function  in modes (mode_NM);
+    TCP : thread software_aocs::Telecommand_Processing;
+    TMP : thread software_aocs::Telemetry_Processing;
+    FDR : thread software_aocs::Failure_Detection_Isolation in modes (mode_NM);
+    FR  : thread software_aocs::Failure_Recovery in modes (mode_NM);
+    Reconfig  : thread software_aocs::Reconfigurations;
+    ME  : thread software_aocs::Manoeuvre_Execution in modes (mode_NM);
   connections
     Cnx1 : port TCP.nominal_attitude -> ACF.nominal_attitude;
     Cnx2 : port TCP.nominal_orbit -> OCF.nominal_orbit;
@@ -97,7 +97,7 @@ public
   
   processor implementation Leon_Processor.impl
   properties
-    Scheduling_Protocol => (Round_Robin_Protocol); -- Non preemptive
+    Scheduling_Protocol => (FixedTimeline); -- Non preemptive
   end Leon_Processor.impl;
   
   system AOCS_Subsystem
@@ -124,8 +124,8 @@ public
     obdh: bus Hardware::OBDH;
   connections
     -- Attitude Control Function Connections --
-    DMA_Cnx1 : port GYR.GYR_data -> main.sun_direction;
-    DMA_Cnx2 : port FSS.FSS_data -> main.sensored_attitude;
+    DMA_Cnx1 : port GYR.GYR_data -> main.sensored_attitude;
+    DMA_Cnx2 : port FSS.FSS_data -> main.sun_direction;
     DMA_Cnx3 : port main.reference_torque -> RW.RW_data;
     
     -- Orbit Control Function Connections --
@@ -133,10 +133,10 @@ public
     
     -- Telecommand Processing Connections --
     OBDH_Cnx1 : port central_computer.telecommand -> main.telecommand;
-    DMA_Cnx5 : port main.power_status_FSS -> FSS.power_status_FSS;
-    DMA_Cnx6 : port main.power_status_CSS -> CSS.power_status_CSS;
-    DMA_Cnx7 : port main.power_status_SPS -> SPS.power_status_SPS;
-    DMA_Cnx8 : port main.power_status_ES -> ES.power_status_ES;
+    DMA_Cnx5 :  port main.power_status_FSS -> FSS.power_status_FSS;
+    DMA_Cnx6 :  port main.power_status_CSS -> CSS.power_status_CSS;
+    DMA_Cnx7 :  port main.power_status_SPS -> SPS.power_status_SPS;
+    DMA_Cnx8 :  port main.power_status_ES -> ES.power_status_ES;
     DMA_Cnx9 : port main.power_status_MGM -> MGM.power_status_MGM;
     DMA_Cnx10 : port main.power_status_GYR -> GYR.power_status_GYR;
     DMA_Cnx11 : port main.power_status_STR -> STR.power_status_STR;

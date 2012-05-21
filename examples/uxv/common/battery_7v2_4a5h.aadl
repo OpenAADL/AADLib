@@ -3,20 +3,20 @@ public
 
 with types;
 with buses;
-with Electricity;
+with Electricity_Properties;
 
 -----------------
 --   DEVICE   --
 -----------------
 device BAT_7V2_4A5H  
 features
-   Power_out :   requires bus access  buses:: VBat_bus.impl;
+   Power_out :   requires bus access  buses::VBat_bus.impl;
 end  BAT_7V2_4A5H;
 device implementation BAT_7V2_4A5H.impl
 properties
-  Electricity::Max_Current => 40000 mA; -- 10C max 
-  Electricity::Run_Current =>  0.0 A;
-  Electricity::Core_Voltage => 1.0 V;
+  Electricity_Properties::Max_Current => 40000.0 mA; -- 10C max 
+  Electricity_Properties::Run_Current =>  0.0 A;
+  Electricity_Properties::Core_Voltage => 1.0 V;
 end BAT_7V2_4A5H.impl;
    
 end battery_7v2_4a5h;

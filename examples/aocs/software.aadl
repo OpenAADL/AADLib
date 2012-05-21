@@ -1,4 +1,4 @@
-package software
+package software_aocs
 public
   with dataaocs;
 
@@ -129,7 +129,7 @@ public
   thread implementation Attitude_Control_Function.impl
   properties
     Dispatch_Protocol => Periodic;
-    Compute_Execution_Time => 0 ms .. 0.25 ms; -- about half the period time
+    Compute_Execution_Time => 0 ms .. 250 us; -- about half the period time
     Period => 500 us;
     Deadline => 500 us;
     Priority => 1;
@@ -138,7 +138,7 @@ public
   thread implementation Orbit_Control_Function.impl
   properties
     Dispatch_Protocol => Periodic;
-    Compute_Execution_Time => 0 ms .. 0.25 ms;
+    Compute_Execution_Time => 0 ms .. 250 us;
     Period => 5 min;
     Deadline => 5 min;
     Priority => 1;
@@ -147,13 +147,13 @@ public
   thread implementation Telecommand_Processing.impl
   properties
     Dispatch_Protocol => Aperiodic; -- Aperiodic telecommand messages from ground station
-    Compute_Execution_Time => 0 ms .. 0.1 ms;
+    Compute_Execution_Time => 0 ms .. 100 us;
   end Telecommand_Processing.impl;
   
   thread implementation Telemetry_Processing.impl
   properties
     Dispatch_Protocol => Periodic; -- Notify ground at periodic interval
-    Compute_Execution_Time => 0 ms .. 0.25 ms;
+    Compute_Execution_Time => 0 ms .. 250 us;
     Period => 2000 ms;
     Deadline => 2000 ms;
     Priority => 1;
@@ -162,7 +162,7 @@ public
   thread implementation Failure_Detection_Isolation.impl
   properties
     Dispatch_Protocol => Periodic;
-    Compute_Execution_Time => 0 ms .. 0.05 ms;
+    Compute_Execution_Time => 0 ms .. 050 us;
     Period => 60000 ms;
     Deadline => 600000 ms;
     Priority => 1;
@@ -171,7 +171,7 @@ public
   thread implementation Failure_Recovery.impl
   properties
     Dispatch_Protocol => Periodic;
-    Compute_Execution_Time => 0 ms .. 0.05 ms;
+    Compute_Execution_Time => 0 ms .. 050 us;
     Period => 60000 ms;
     Deadline => 60000 ms;
     Priority => 1;
@@ -180,10 +180,10 @@ public
   thread implementation Manoeuvre_Execution.impl
   properties
     Dispatch_Protocol => Aperiodic; -- Depends on telecommand message
-    Compute_Execution_Time => 0 ms .. 0.1 ms;
+    Compute_Execution_Time => 0 ms .. 100 us;
   end Manoeuvre_Execution.impl;
   
-end software;
+end software_aocs;
 
 
 

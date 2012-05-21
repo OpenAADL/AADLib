@@ -45,7 +45,7 @@ public
     P_Spg : subprogram Produce_Spg;
     };
   connections
-    parameter P_Spg.Data_Source -> Data_Source;
+    Z1:parameter P_Spg.Data_Source -> Data_Source;
   end P.Impl;
   
   thread Q
@@ -63,7 +63,7 @@ public
     Q_Spg : subprogram Consume_Spg;
     };
   connections
-    parameter Data_Sink -> Q_Spg.Data_Sink;
+    Z2:parameter Data_Sink -> Q_Spg.Data_Sink;
   end Q.Impl;
 
   ---------
@@ -95,7 +95,7 @@ public
   subcomponents
     Producer        : thread P.Impl;
   connections
-    port Producer.Data_Source -> Alpha;
+    Z3:port Producer.Data_Source -> Alpha;
   end A.Impl;
   
   process B
@@ -107,7 +107,7 @@ public
   subcomponents
     Consumer        : thread Q.Impl;
   connections
-    port Beta -> Consumer.Data_Sink;
+    Z4:port Beta -> Consumer.Data_Sink;
   end B.Impl;
   
   ------------
@@ -125,12 +125,12 @@ public
     CPU     : processor the_processor;
     the_bus : bus Ethernet_Bus;
   connections
-    bus access the_bus -> CPU.ETH;
-    port pr_A.Alpha -> pr_B.Beta
+    Z5:bus access the_bus -> CPU.ETH;
+    Z6:port pr_A.Alpha -> pr_B.Beta
     {Actual_Connection_Binding => (reference (the_bus));};
   properties
-    actual_processor_binding => reference (CPU) applies to pr_A;
-    actual_processor_binding => reference (CPU) applies to pr_B;
+    actual_processor_binding => (reference (CPU)) applies to pr_A;
+    actual_processor_binding => (reference (CPU)) applies to pr_B;
  annex real_specification {**
    theorem flow_latency
       foreach s in system_set do

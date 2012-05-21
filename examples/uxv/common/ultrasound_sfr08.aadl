@@ -20,9 +20,9 @@ device implementation US.impl
 properties
   Implemented_As 	    => classifier (ultrasound_sfr08::US_Driver.impl);
   Initialize_Entrypoint     => classifier (ultrasound_sfr08::Initialize);
-  Electricity_Properties::Idle_Current => 3 mA; -- datasheet
-  Electricity_Properties::Run_Current  => 15 mA; -- datasheet
-  Electricity_Properties::Peak_Current =>15 mA; -- extracted from measurement
+  Electricity_Properties::Idle_Current => 3.0 mA; -- datasheet
+  Electricity_Properties::Run_Current  => 15.0 mA; -- datasheet
+  Electricity_Properties::Peak_Current =>15.0 mA; -- extracted from measurement
   Electricity_Properties::Core_Voltage => 5.0 V;
   Electricity_Properties::Acquisition_Time => 24 ms; -- depends on distance max
   Electricity_Properties::Peak_Time    => 1 ms; -- extracted from measurement
@@ -53,7 +53,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("ultrasound_sfr08.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 subprogram Read_Acquisition
@@ -63,7 +63,7 @@ features
 properties
   Source_Name => "read_acquisition";
   Source_Text => ("ultrasound_sfr08.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Acquisition;
 
 subprogram Start_Acquisition
@@ -72,7 +72,7 @@ features
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("ultrasound_sfr08.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Start_Acquisition;
   
   

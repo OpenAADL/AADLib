@@ -27,7 +27,7 @@ public
 
   subprogram implementation B0_Send.impl
   properties
-    Source_Language => Ada95;
+    Source_Language => (Ada95);
     Source_Name => "TT.B0_Send";
   end B0_Send.impl;
 
@@ -39,7 +39,7 @@ public
 
   subprogram implementation B1_Receive_Send.impl
   properties
-    Source_Language => Ada95;
+    Source_Language => (Ada95);
     Source_Name => "TT.B1_Receive_Send";
   end B1_Receive_Send.impl;
 
@@ -50,7 +50,7 @@ public
 
   subprogram implementation B2_Receive.impl
   properties
-    Source_Language => Ada95;
+    Source_Language => (Ada95);
     Source_Name => "TT.B2_Receive";
   end B2_Receive.impl;
   
@@ -67,9 +67,9 @@ public
 
   thread implementation B0.impl
   calls 
-    Mycalls: { B0_Job : subprogram B0_Send.impl; };
+    Mycalls: { B0_Job : subprogram B0_Send; };
   connections
-    parameter B0_Job.Out_Value -> Out_Value;
+    D1:parameter B0_Job.Out_Value -> Out_Value;
   properties
     Dispatch_Protocol      => Periodic;
     Priority               => 103;            -- <Computed by Cheddar>
@@ -83,16 +83,16 @@ public
 
   thread B1
   features
-    In_Value : in data port Simple_Type { Timing => Delayed; };
+    In_Value : in data port Simple_Type;	-- { Timing => Delayed; };
     Out_value : out data port Simple_Type;
   end B1;
 
   thread implementation B1.impl
   calls 
-    Mycalls: { B1_Job : subprogram B1_Receive_Send.impl; };
+    Mycalls: { B1_Job : subprogram B1_Receive_Send; };
   connections
-    parameter In_Value -> B1_Job.In_Value;
-    parameter B1_Job.Out_Value -> Out_Value;
+    D2:parameter In_Value -> B1_Job.In_Value;
+    D3:parameter B1_Job.Out_Value -> Out_Value;
   properties
     Dispatch_Protocol      => Periodic;
     Priority               => 102;            -- <Computed by Cheddar>
@@ -106,14 +106,14 @@ public
 
   thread B2
   features
-    In_Value : in data port Simple_Type { Timing => Delayed; };
+    In_Value : in data port Simple_Type;	-- { Timing => Delayed; };
   end B2;
 
   thread implementation B2.impl
   calls 
-    Mycalls: { B2_Job : subprogram B2_Receive.impl; };
+    Mycalls: { B2_Job : subprogram B2_Receive; };
   connections
-    parameter In_Value -> B2_Job.In_Value;
+    D4:parameter In_Value -> B2_Job.In_Value;
   properties
     Dispatch_Protocol      => Periodic;
     Priority               => 101;            -- <Computed by Cheddar>
@@ -135,7 +135,7 @@ public
   processor implementation cpurm.impl
   properties
     Deployment::Execution_Platform => LEON_ORK; -- Generate code for ORK+, LEON2
-    Scheduling_Protocol => (POSIX_1003_Highest_Priority_First_Protocol);
+    Scheduling_Protocol => (RMS);
     Priority_Range      => 0 .. 255;
   end cpurm.impl;
 

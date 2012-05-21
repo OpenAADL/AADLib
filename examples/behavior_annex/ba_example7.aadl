@@ -16,8 +16,8 @@ public
     c : thread a_client;
     s : thread a_server.i;
   connections
-    access s.long -> c.pre;
-    access s.short -> c.post;
+    T1:subprogram access s.long -> c.pre;
+    T2:subprogram access s.short -> c.post;
   end client_server.i;
   
   thread a_client
@@ -51,8 +51,8 @@ public
   subcomponents
     local_result : data result_type.i;
   connections
-    access local_result -> long.result;
-    access local_result -> short.result;
+    T3:subprogram access local_result -> long;
+    T4:subprogram access local_result -> short;
   annex behavior_specification {**
     states
     s0 : initial complete final state;

@@ -18,8 +18,8 @@ public
     Implemented_As 	=> classifier (pressure_hca0811::PRESSURE_Driver.impl);
     Initialize_Entrypoint => classifier (pressure_hca0811::Initialize);
     Electricity_Properties::Idle_Current =>  0.1 mA; -- no  data  estimated value
-    Electricity_Properties::Run_Current =>  5 mA;
-    Electricity_Properties::Peak_Current => 100 mA; -- to measure
+    Electricity_Properties::Run_Current =>  5.0 mA;
+    Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
     Electricity_Properties::Core_Voltage => 5.0 V;
     Electricity_Properties::Acquisition_Time => 2 ms;
     Electricity_Properties::Peak_Time => 1 ms;
@@ -49,7 +49,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("pressure_hca0811.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 subprogram Read_Acquisition
@@ -59,7 +59,7 @@ features
 properties
   Source_Name => "read_acquisition";
   Source_Text => ("pressure_hca0811.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Acquisition;
 
 subprogram Start_Acquisition
@@ -68,7 +68,7 @@ features
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("pressure_hca0811.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Start_Acquisition;
    
   

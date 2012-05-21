@@ -4,13 +4,14 @@ package Voter
 public
 
   abstract Voting_Entity
-  features
-    Value : out data port;
+  --features
+    --Value : out data port;
   end Voting_Entity;
 
   abstract Voter
   prototypes
     Voter : abstract Voting_Entity;
+    component : abstract;
   features
     Value : out data port;
   end Voter;
@@ -54,7 +55,7 @@ public
   thread Voter_Thread extends Voter
   end Voter_Thread;
 
-  thread implementation Voter_Thread.i extends Voter_Function.i
+  thread implementation Voter_Thread.i extends Voter.Three
   end Voter_Thread.i;
 
   thread implementation Voter_Thread.i2
