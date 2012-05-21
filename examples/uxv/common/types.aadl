@@ -114,4 +114,14 @@ public
     Data_Model::Dimension => (64);  
   end State_estimation_dat;
   
+  data MOTOR_IG52_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end MOTOR_IG52_meas_dat;
+  
+  data MOTOR_meas_dat
+  properties
+    Data_Model::Data_Representation => Integer; 
+  end MOTOR_meas_dat;
+  
 end types;

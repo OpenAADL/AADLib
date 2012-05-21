@@ -58,7 +58,7 @@ public
 
   data protected_data 
   properties 
-    Concurrency_Control_Protocol => Protected_Access;
+    Concurrency_Control_Protocol => Spin_Lock;
     --  Queue_Processing_Protocol => FIFO; XXX
   end protected_data;
 
@@ -67,7 +67,7 @@ public
   
   virtual processor partition1_rt 
   properties
-    Scheduling_Protocol => (ROUND_ROBIN_PROTOCOL); 
+    Scheduling_Protocol => (Cooperative); 
   end partition1_rt;
 
   virtual processor implementation partition1_rt.impl 
@@ -75,7 +75,7 @@ public
 
   virtual processor partition2_rt 
   properties
-    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Scheduling_Protocol => (RMS);
   end partition2_rt;
   
   virtual processor implementation partition2_rt.impl 
@@ -132,8 +132,8 @@ public
     
   end sensor_receiveinput_thread;
 
-  thread implementation	sensor_receiveinput_thread.impl 
-  end	sensor_receiveinput_thread.impl;
+  --thread implementation	sensor_receiveinput_thread.impl 
+  --end	sensor_receiveinput_thread.impl;
 
   -- Threads for the second partition
   thread commandboard_receiveinput_thread 
@@ -194,12 +194,12 @@ public
   process implementation partition1_process.impl 
   subcomponents
     temperature : thread sensor_temperature_thread.impl;
-    order	: thread sensor_receiveinput_thread.impl;
+    order	: thread sensor_receiveinput_thread;
   
   connections
     bufferconnectionexample: port order.order -> temperature.order;
-    port queueingin -> order.commandin;
-    port temperature.tempout -> samplingout;
+    Po1:port queueingin -> order.commandin;
+    Po2:port temperature.tempout -> samplingout;
     
   end partition1_process.impl;
 
@@ -231,10 +231,10 @@ public
     -- example of intra-partition communication with event port (events) 
 
     eventconnectionexample: port receiver.newavg -> printer.newavg;
-    port printer.ordersensor -> queueingout;
-    port samplingin -> receiver.temp;
-    data access sem -> receiver.need_semaphore; --{ARINC653::Timeout => 20 ms;};
-    data access sem -> printer.need_semaphore;  --{ARINC653::Timeout => 10 ms;};
+    Po3:port printer.ordersensor -> queueingout;
+    Po4:port samplingin -> receiver.temp;
+    Po5:data access sem -> receiver.need_semaphore; --{ARINC653::Timeout => 20 ms;};
+    Po6:data access sem -> printer.need_semaphore;  --{ARINC653::Timeout => 10 ms;};
   end partition2_process.impl;
 
   -- Main runtime

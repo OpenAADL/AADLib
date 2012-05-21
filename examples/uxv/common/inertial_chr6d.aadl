@@ -18,9 +18,9 @@ device implementation INERTIAL.impl
 properties
   Implemented_As 	=> classifier (inertial_chr6d::INERTIAL_Driver.impl);
   Initialize_Entrypoint => classifier (inertial_chr6d::Initialize);
-  Electricity_Properties::Idle_Current => 1 mA;  -- no data  
-  Electricity_Properties::Run_Current =>  50 mA;  
-  Electricity_Properties::Peak_Current => 100 mA; -- to measure
+  Electricity_Properties::Idle_Current => 1.0 mA;  -- no data  
+  Electricity_Properties::Run_Current =>  50.0 mA;  
+  Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
   Electricity_Properties::Core_Voltage => 3.3 V; -- typical voltage (voltage range 2.6 V - 3.6 V)
   Electricity_Properties::Acquisition_Time => 6 ms; -- no data but transsmit frequency is 280 Hz
   Electricity_Properties::Peak_Time => 1 ms;
@@ -51,7 +51,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("inertial_chr6d.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 subprogram Read_Acquisition
@@ -60,14 +60,14 @@ features
 properties
   Source_Name => "read_acquisition";
   Source_Text => ("inertial_chr6d.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Acquisition;
 
 subprogram Start_Acquisition
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("inertial_chr6d.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Start_Acquisition;
   
 end inertial_chr6d;

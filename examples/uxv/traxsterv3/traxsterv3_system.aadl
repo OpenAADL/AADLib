@@ -108,37 +108,37 @@ public
     -- USART serial line, it is shared by CICAS and CCDS to support
     -- communication through the serial line.
     ------------------------------------------------------------------
-    bus access UART_IPC_bus -> UART0_ARM9.Serial_Wire;
-    bus access UART_IPC_bus -> UART0_ARM7.Serial_Wire;
+    N1:bus access UART_IPC_bus -> UART0_ARM9.Serial_Wire;
+    N2:bus access UART_IPC_bus -> UART0_ARM7.Serial_Wire;
  
     ------------------------------------------------------------------
     -- Node #1 bus connections : CICAS (ARM7 card)
     ------------------------------------------------------------------
-    bus access I2C_bus -> TWI_ARM7.Serial_Wire;
+    N3:bus access I2C_bus -> TWI_ARM7.Serial_Wire;
     
-    bus access I2C_bus -> US1.Serial_Wire;
-    bus access I2C_bus -> US2.Serial_Wire;
-    bus access I2C_bus -> COMPASS.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_1.Serial_Wire;
-    bus access I2C_bus -> VARIATOR_2.Serial_Wire;
+    N4:bus access I2C_bus -> US1.Serial_Wire;
+    N5:bus access I2C_bus -> US2.Serial_Wire;
+    N6:bus access I2C_bus -> COMPASS.Serial_Wire;
+    N7:bus access I2C_bus -> VARIATOR_1.Serial_Wire;
+    N8:bus access I2C_bus -> VARIATOR_2.Serial_Wire;
     --
-    bus access three_phases_1_bus -> VARIATOR_1.three_phases_Wire;
-    bus access three_phases_2_bus -> VARIATOR_2.three_phases_Wire;
+    N9:bus access three_phases_1_bus -> VARIATOR_1.three_phases_Wire;
+    N10:bus access three_phases_2_bus -> VARIATOR_2.three_phases_Wire;
     --
-    bus access three_phases_1_bus -> MOTOR_1.three_phases_Wire;
-    bus access three_phases_2_bus -> MOTOR_2.three_phases_Wire;
+    N11:bus access three_phases_1_bus -> MOTOR_1.three_phases_Wire;
+    N12:bus access three_phases_2_bus -> MOTOR_2.three_phases_Wire;
     --
     ------------------------------------------------------------------
     -- Node #2 bus connections : CCDS (ARM9 card)
     ------------------------------------------------------------------
-    bus access UART2_bus -> UART2_ARM9.Serial_Wire;
-    bus access UART2_bus -> INERTIAL_GPS.Serial_Wire;
+    N13:bus access UART2_bus -> UART2_ARM9.Serial_Wire;
+    N14:bus access UART2_bus -> INERTIAL_GPS.Serial_Wire;
     --
-    bus access USB1_bus -> USB1_ARM9.Serial_Wire;
-    bus access USB1_bus -> CAMERA.Serial_Wire;
+    N15:bus access USB1_bus -> USB1_ARM9.Serial_Wire;
+    N16:bus access USB1_bus -> CAMERA.Serial_Wire;
     --
-    bus access USB2_bus -> USB2_ARM9.Serial_Wire;
-    bus access USB2_bus -> TELEMETER.Serial_Wire;
+    N17:bus access USB2_bus -> USB2_ARM9.Serial_Wire;
+    N18:bus access USB2_bus -> TELEMETER.Serial_Wire;
     
   properties
     Actual_Processor_Binding => (reference (CPU_ARM7)) applies to proc_1;

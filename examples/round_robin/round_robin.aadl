@@ -33,7 +33,7 @@ public
 
   processor implementation Proc.RR_NoPreemption
   properties
-    Scheduling_Protocol => (ROUND_ROBIN_PROTOCOL);
+    Scheduling_Protocol => (cooperative);
     Scheduler_Quantum    => 20 ms;
     Preemptive_Scheduler => true;
     --  T = 0 -> T1 runs

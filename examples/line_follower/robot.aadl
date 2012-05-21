@@ -5,7 +5,7 @@ public
   with Devices::QRE1113;
   with Devices::HMC5843;
 
-  with Software;
+  with Software_lf;
 
   -------------------------
   -- Line_Follower_Robot --
@@ -30,7 +30,7 @@ public
       extends Boards::Arduino::Duemilanove.impl
 
   subcomponents
-    Code     : process Software::node_a.impl;
+    Code     : process Software_lf::node_a.impl;
     Ardumoto : device  Shields::Ardumoto::Ardumoto.impl;
     Xbee     : device  Shields::XBee::XBee.impl;
 
@@ -40,29 +40,29 @@ public
   connections
     -- Connect the Arduino to the XBee shield
 
-    port Digital_0   -> XBee.RX;
-    port Digital_1   -> XBee.TX;
+    X1:port Digital_0   -> XBee.RX;
+    X2:port Digital_1   -> XBee.TX;
 
     -- Connect the Arduino to the Ardumoto shield
 
-    port Digital_10 -> Ardumoto.Digital_10;
-    port Digital_11 -> Ardumoto.Digital_11;
-    port Digital_12 -> Ardumoto.Digital_12;
-    port Digital_13 -> Ardumoto.Digital_13;
-    port GND        -> Ardumoto.GND;
-    port VIN        -> Ardumoto.VIN;
+    X3:port Digital_10 -> Ardumoto.Digital_10;
+    X4:port Digital_11 -> Ardumoto.Digital_11;
+    X5:port Digital_12 -> Ardumoto.Digital_12;
+    X6:port Digital_13 -> Ardumoto.Digital_13;
+    X7:port GND        -> Ardumoto.GND;
+    X8:port VIN        -> Ardumoto.VIN;
 
     -- Connect the Arduino to one of the QRE1113 sensor
     
-    port Power_5V   -> IR_1.VCC;
-    port GND        -> IR_1.GND;
-    port Analog_0   -> IR_1.Outp;
+    X9:port Power_5V   -> IR_1.VCC;
+    X10:port GND        -> IR_1.GND;
+    X11:port Analog_0   -> IR_1.Outp;
 
     -- Connect the Arduino to the HMC5843
 
-    port Power_3V3  -> HMC5843.VCC;
-    port GND        -> HMC5843.GND;
-    bus access I2C  -> HMC5843.I2C_Link;
+    X12:port Power_3V3  -> HMC5843.VCC;
+    X13:port GND        -> HMC5843.GND;
+    X14:bus access I2C  -> HMC5843.I2C_Link;
 
   properties
     Actual_Processor_Binding => (reference (ATMEGA328p)) applies to Code;

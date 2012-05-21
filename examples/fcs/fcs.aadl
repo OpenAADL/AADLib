@@ -158,7 +158,7 @@ end cpurm;
 
 processor implementation cpurm.impl
 properties
-  Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+  Scheduling_Protocol => (RMS);
 end cpurm.impl;
 
 ---------------
@@ -185,20 +185,20 @@ subcomponents
   AP : thread AP;
 connections
   --  Inter-thread communication
-  port NL.acc_c   -> PL.acc_c;
-  port PL.angle_c -> FL.angle_c;
-  port NF.pos_o   -> NL.pos_o;
-  port PF.acc_o   -> PL.acc_o;
-  port FF.angle_o -> FL.angle_o;
-  port AP.acc_i   -> PF.acc_i;
-  port AP.pos_i   -> NF.pos_i;
+  V1:port NL.acc_c   -> PL.acc_c;
+  V2:port PL.angle_c -> FL.angle_c;
+  V3:port NF.pos_o   -> NL.pos_o;
+  V4:port PF.acc_o   -> PL.acc_o;
+  V5:port FF.angle_o -> FL.angle_o;
+  V6:port AP.acc_i   -> PF.acc_i;
+  V7:port AP.pos_i   -> NF.pos_i;
 
   -- Process/thread communication
-  port pos_c     -> NL.pos_c;
-  port FL.order -> order;
-  port angle    -> FF.angle;
-  port position -> AP.position;
-  port acc       -> AP.acc;
+  V8:port pos_c     -> NL.pos_c;
+  V9:port FL.order -> order;
+  V10:port angle    -> FF.angle;
+  V11:port position -> AP.position;
+  V12:port acc       -> AP.acc;
 end node_a.impl;
 
 -------------
@@ -256,21 +256,21 @@ subcomponents
    i2c      : bus       i2c;
 
 connections
-  port operator.pos_c -> node_a.pos_c
+  V13:port operator.pos_c -> node_a.pos_c
   { Actual_Connection_Binding => (reference (i2c));};
-  port node_a.order   -> platform.order
+  V14:port node_a.order   -> platform.order
   { Actual_Connection_Binding => (reference (i2c));};
-  port GPS.position   -> node_a.position
+  V15:port GPS.position   -> node_a.position
   { Actual_Connection_Binding => (reference (i2c));};
-  port IMU.angle      -> node_a.angle
+  V16:port IMU.angle      -> node_a.angle
   { Actual_Connection_Binding => (reference (i2c));};
-  port IMU.acc        -> node_a.acc
+  V17:port IMU.acc        -> node_a.acc
   { Actual_Connection_Binding => (reference (i2c));};
 
-  bus access i2c -> GPS.i2c;
-  bus access i2c -> IMU.i2c;
-  bus access i2c -> platform.i2c;
-  bus access i2c -> cpu_rm.i2c;
+  V18:bus access i2c -> GPS.i2c;
+  V19:bus access i2c -> IMU.i2c;
+  V20:bus access i2c -> platform.i2c;
+  V21:bus access i2c -> cpu_rm.i2c;
 
 properties
    Actual_Processor_Binding => (reference (cpu_rm)) applies to node_a;

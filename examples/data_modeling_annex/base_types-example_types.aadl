@@ -95,14 +95,14 @@ public
 
   data ASN1_Type
   properties
-    Source_Language => ASN1;
+    Source_Language => (ada95);
     Source_Text => ("ASN1_types.asn");
     Type_Source_Name => "the_type";
   end ASN1_Type;  
 
   data C_Type
   properties
-    Source_Language => C;
+    Source_Language => (C);
     Source_Text => ("types.h");
     Type_Source_Name => "the_type";
   end C_Type;  

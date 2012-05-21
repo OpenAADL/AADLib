@@ -20,9 +20,9 @@ device implementation INERTIAL_GPS.impl
 properties
   Implemented_As 	=> classifier (inertial_gps_ig500n::INERTIAL_GPS_Driver.impl);
   Initialize_Entrypoint => classifier (inertial_gps_ig500n::Initialize);
-  Electricity_Properties::Idle_Current => 1 mA;  -- no data  
-  Electricity_Properties::Run_Current =>  110 mA; --  no data but power consumption 550 mW at 5V
-  Electricity_Properties::Peak_Current => 100 mA; -- to measure
+  Electricity_Properties::Idle_Current => 1.0 mA;  -- no data  
+  Electricity_Properties::Run_Current =>  110.0 mA; --  no data but power consumption 550 mW at 5V
+  Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
   Electricity_Properties::Core_Voltage => 5.0 V; -- optimal consumption but range is 3.3 - 30 V
   Electricity_Properties::Acquisition_Time => 3500 ms; -- worst case is GPS aquisition time which is < 3.5 s / 34 s Hot start / Cold start
   Electricity_Properties::Peak_Time => 1 ms;
@@ -58,7 +58,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("inertial_gps_ig500n.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 subprogram Read_Acquisition
@@ -67,14 +67,14 @@ features
 properties
   Source_Name => "read_acquisition";
   Source_Text => ("inertial_gps_ig500n.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Acquisition;
 
 subprogram Start_Acquisition
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("inertial_gps_ig500n.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Start_Acquisition;
   
 end inertial_gps_ig500n;

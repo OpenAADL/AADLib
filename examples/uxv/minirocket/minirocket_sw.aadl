@@ -2,7 +2,10 @@ package minirocket_sw
 public
 
 with types;
-
+with pressure_hca0811;
+with inertial_chr6d;
+with camera_usb;
+with gps_lea4h;
 
 
 
@@ -20,7 +23,7 @@ subprogram implementation Telemetry_Management.impl
 properties
   Source_Name 			    => "manage_telemetry";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    => (C);
 end Telemetry_Management.impl;
 
  -- Receive Telecommand message from ARM9
@@ -32,7 +35,7 @@ subprogram implementation Telecommand_Management.impl
 properties
   Source_Name 			    => "manage_telecommand";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    =>(C);
 end Telecommand_Management.impl;
 
 
@@ -48,7 +51,7 @@ calls
   	PRESSURE_acquisition : subprogram pressure_hca0811::Read_Acquisition;
   };
 connections
-  parameter PRESSURE_acquisition.PRESSURE_meas -> PRESSURE_meas;
+  G1:parameter PRESSURE_acquisition.PRESSURE_meas -> PRESSURE_meas;
 end Pressure_Data_Processing.impl;
 
 
@@ -61,7 +64,7 @@ subprogram implementation Command_Law_Management.impl
 properties
   Source_Name 			    => "manage_command_law";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    => (C);
 end Command_Law_Management.impl;
 
 subprogram State_Estimation_management
@@ -76,7 +79,7 @@ subprogram implementation State_Estimation_management.impl
 properties
   Source_Name 			    => "manage_command_law";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    => (C);
 end State_Estimation_management.impl;
 
 
@@ -89,7 +92,7 @@ subprogram implementation Decision_management.impl
 properties
   Source_Name 			    => "manage_decision";
   Source_Text 			    => ("main_functions.c");
-  Source_Language 	   	    => C;
+  Source_Language 	   	    => (C);
 end Decision_management.impl;
 
 subprogram Camera_Data_Processing
@@ -102,7 +105,7 @@ calls
   	Image_acquisition : subprogram camera_usb::Read_Acquisition;
   };
 connections
-  parameter Image_acquisition.CAMERA_meas -> CAMERA_meas;
+  G2:parameter Image_acquisition.CAMERA_meas -> CAMERA_meas;
 end Camera_Data_Processing.impl;
 
 
@@ -116,7 +119,7 @@ calls
   	Gps_acquisition : subprogram gps_lea4h::Read_Acquisition;
   };
 connections
-  parameter Gps_acquisition.GPS_meas -> GPS_meas;
+  G3:parameter Gps_acquisition.GPS_meas -> GPS_meas;
 end Gps_Data_Processing.impl;
 
 subprogram Inertial_Data_Processing
@@ -129,7 +132,7 @@ calls
   	Inertial_acquisition : subprogram inertial_chr6d::Read_Acquisition;
   };
 connections
-  parameter Inertial_acquisition.INERTIAL_meas -> INERTIAL_meas;
+  G4:parameter Inertial_acquisition.INERTIAL_meas -> INERTIAL_meas;
 end Inertial_Data_Processing.impl;
 
 
@@ -151,11 +154,11 @@ end TM_Manager;
 thread implementation TM_Manager.impl
 calls 
   call1 : {
-    TM_Spg : subprogram Telemetry_Management.impl;
+    TM_Spg : subprogram Telemetry_Management;
   };
 connections
-  parameter PRESSURE_meas -> TM_Spg.PRESSURE_meas;
-  parameter TM_Spg.TM_frame -> TM_frame;
+  G5:parameter PRESSURE_meas -> TM_Spg.PRESSURE_meas;
+  G6:parameter TM_Spg.TM_frame -> TM_frame;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period			        => 10 ms;
@@ -172,10 +175,10 @@ end TC_Manager;
 thread implementation TC_Manager.impl
 calls 
   call1 : {
-    TC_Spg : subprogram Telecommand_Management.impl;
+    TC_Spg : subprogram Telecommand_Management;
   };
 connections
-   parameter TC_frame -> TC_Spg.TC_frame;
+   G7:parameter TC_frame -> TC_Spg.TC_frame;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period		        	=> 10 ms;
@@ -191,10 +194,10 @@ end PRESSURE_Manager;
 thread implementation PRESSURE_manager.impl
 calls 
   Mycall : {
-    PDP_Spg : subprogram Pressure_Data_Processing.impl;
+    PDP_Spg : subprogram Pressure_Data_Processing;
   };
 connections
-  parameter PDP_Spg.PRESSURE_meas -> PRESSURE_meas;
+  G8:parameter PDP_Spg.PRESSURE_meas -> PRESSURE_meas;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;
@@ -211,11 +214,11 @@ end CL_Manager;
 thread implementation CL_Manager.impl
 calls 
   call1 : {
-    CL_Spg : subprogram Command_Law_Management.impl;
+    CL_Spg : subprogram Command_Law_Management;
   };
 connections
-  parameter State_estimation -> CL_Spg.State_estimation;
-  parameter CL_Spg.TC_frame -> TC_frame;
+  G9:parameter State_estimation -> CL_Spg.State_estimation;
+  G10:parameter CL_Spg.TC_frame -> TC_frame;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period			        => 10 ms;
@@ -235,14 +238,14 @@ end SE_Manager;
 thread implementation SE_Manager.impl
 calls 
   call1 : {
-    SE_Spg : subprogram State_Estimation_management.impl;
+    SE_Spg : subprogram State_Estimation_management;
   };
 connections
-  parameter SE_Spg.State_estimation -> State_estimation;
-  parameter TM_frame -> SE_Spg.TM_frame;
-  parameter GPS_meas -> SE_Spg.GPS_meas;
-  parameter INERTIAL_meas -> SE_Spg.INERTIAL_meas;
-   parameter Decision -> SE_Spg.Decision;
+  G11:parameter SE_Spg.State_estimation -> State_estimation;
+  G12:parameter TM_frame -> SE_Spg.TM_frame;
+  G13:parameter GPS_meas -> SE_Spg.GPS_meas;
+  G14:parameter INERTIAL_meas -> SE_Spg.INERTIAL_meas;
+  G15:parameter Decision -> SE_Spg.Decision;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period			        => 10 ms;
@@ -258,11 +261,11 @@ end D_Manager;
 thread implementation D_Manager.impl
 calls 
   call1 : {
-    D_Spg : subprogram Decision_management.impl;
+    D_Spg : subprogram Decision_management;
   };
 connections
-  parameter D_Spg.Decision -> Decision;
-  parameter CAMERA_meas -> D_Spg.CAMERA_meas;
+  G16:parameter D_Spg.Decision -> Decision;
+  G17:parameter CAMERA_meas -> D_Spg.CAMERA_meas;
 properties       
   Dispatch_Protocol      	=> Periodic;
   Period			        => 10 ms;
@@ -279,10 +282,10 @@ end CAMERA_Manager;
 thread implementation CAMERA_manager.impl
 calls 
   Mycall : {
-    CAMERA_Spg : subprogram Camera_Data_Processing.impl;
+    CAMERA_Spg : subprogram Camera_Data_Processing;
   };
 connections
-  parameter CAMERA_Spg.CAMERA_meas -> CAMERA_meas;
+  G18:parameter CAMERA_Spg.CAMERA_meas -> CAMERA_meas;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;
@@ -299,10 +302,10 @@ end GPS_Manager;
 thread implementation GPS_Manager.impl
 calls 
   Mycall : {
-    GDP_Spg : subprogram Gps_Data_Processing.impl;
+    GDP_Spg : subprogram Gps_Data_Processing;
   };
 connections
-  parameter GDP_Spg.GPS_meas -> GPS_meas;
+  G19:parameter GDP_Spg.GPS_meas -> GPS_meas;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;
@@ -319,10 +322,10 @@ end INERTIAL_Manager;
 thread implementation INERTIAL_Manager.impl
 calls 
   Mycall : {
-    IDP_Spg : subprogram Inertial_Data_Processing.impl;
+    IDP_Spg : subprogram Inertial_Data_Processing;
   };
 connections
-  parameter IDP_Spg.INERTIAL_meas -> INERTIAL_meas;
+  G20:parameter IDP_Spg.INERTIAL_meas -> INERTIAL_meas;
 properties       
   Dispatch_Protocol       	=> Periodic;
   Period			        => 10 ms;

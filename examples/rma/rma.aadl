@@ -14,14 +14,14 @@ public
   
   subprogram Hello_Spg_1
   properties
-    source_language => C;
+    source_language => (C);
     source_name     => "user_hello_spg_1";
     source_text     => ("hello.c");
   end Hello_Spg_1;
   
   subprogram Hello_Spg_2
   properties
-    source_language => C;
+    source_language => (C);
     source_name     => "user_hello_spg_2";
     source_text     => ("hello.c");
   end Hello_Spg_2;
@@ -70,7 +70,7 @@ public
   
   processor implementation cpurm.impl
   properties
-    Scheduling_Protocol => Posix_1003_Highest_Priority_First_Protocol;
+    Scheduling_Protocol => (RMS);
   end cpurm.impl;
 
   ---------------
@@ -98,7 +98,7 @@ public
     node_a : process node_a.impl;
     cpu_rm : processor cpurm.impl;
   properties
-    Actual_Processor_Binding => reference (cpu_rm) applies to node_a;
+    Actual_Processor_Binding => (reference (cpu_rm)) applies to node_a;
   end rma.impl;
 
 end RMAAadl;

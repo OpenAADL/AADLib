@@ -52,8 +52,8 @@ public
     Mix_2 : abstract Interface_2;
 
   connections
-    port Port_1 -> Mix_1.Port_1;
-    port Port_2 -> Mix_2.Port_2;
+    Y1:port Port_1 -> Mix_1.Port_1;
+    Y2:port Port_2 -> Mix_2.Port_2;
   end Mixin.impl;
 
   -- Now, let us implement elements

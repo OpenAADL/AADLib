@@ -116,34 +116,34 @@ public
     -- USART serial line, it is shared by CICAS and CCDS to support
     -- communication through the serial line.
     ------------------------------------------------------------------
-    bus access UART_IPC_bus -> UART0_ARM9.Serial_Wire;
-    bus access UART_IPC_bus -> UART0_ARM7.Serial_Wire;
+    F1:bus access UART_IPC_bus -> UART0_ARM9.Serial_Wire;
+    F2:bus access UART_IPC_bus -> UART0_ARM7.Serial_Wire;
     
     ------------------------------------------------------------------
     -- Node #1 bus connections : CICAS (ARM7 card)
     ------------------------------------------------------------------
-    bus access I2C_bus -> TWI_ARM7.Serial_Wire;
-    bus access I2C_bus -> US1.Serial_Wire;
-    bus access I2C_bus -> US2.Serial_Wire;
+    F3:bus access I2C_bus -> TWI_ARM7.Serial_Wire;
+    F4:bus access I2C_bus -> US1.Serial_Wire;
+    F5:bus access I2C_bus -> US2.Serial_Wire;
     --
-    bus access TIMER_bus_ARM7 -> TIMER_ARM7.Serial_Wire;
-    bus access TIMER_bus_ARM7 -> ODOMETER1.Serial_Wire;
-    bus access TIMER_bus_ARM7 -> ODOMETER2.Serial_Wire;
-    bus access TIMER_bus_ARM7 -> RECEIVER.Serial_Wire;
+    F6:bus access TIMER_bus_ARM7 -> TIMER_ARM7.Serial_Wire;
+    F7:bus access TIMER_bus_ARM7 -> ODOMETER1.Serial_Wire;
+    F8:bus access TIMER_bus_ARM7 -> ODOMETER2.Serial_Wire;
+    F9:bus access TIMER_bus_ARM7 -> RECEIVER.Serial_Wire;
     -- 
     ------------------------------------------------------------------
     -- Node #2 bus connections : CCDS (ARM9 card)
     ------------------------------------------------------------------
-    bus access UART2_bus -> UART2_ARM9.Serial_Wire;
-    bus access UART2_bus -> INERTIAL_GPS.Serial_Wire;
+    F10:bus access UART2_bus -> UART2_ARM9.Serial_Wire;
+    F11:bus access UART2_bus -> INERTIAL_GPS.Serial_Wire;
     --
-    bus access USB1_bus -> USB1_ARM9.Serial_Wire;
-    bus access USB1_bus -> TELEMETER.Serial_Wire;
+    F12:bus access USB1_bus -> USB1_ARM9.Serial_Wire;
+    F13:bus access USB1_bus -> TELEMETER.Serial_Wire;
     --
-    bus access ETHERNET1_bus -> ETHERNET_ARM9.Serial_Wire;
-    bus access ETHERNET2_bus -> CAMERA_IP.PortCom;
-    bus access ETHERNET1_bus -> ROUTER_WIFI.Port1;
-    bus access ETHERNET2_bus -> ROUTER_WIFI.Port2;
+    F14:bus access ETHERNET1_bus -> ETHERNET_ARM9.Serial_Wire;
+    F15:bus access ETHERNET2_bus -> CAMERA_IP.PortCom;
+    F16:bus access ETHERNET1_bus -> ROUTER_WIFI.Port1;
+    F17:bus access ETHERNET2_bus -> ROUTER_WIFI.Port2;
     
     EventCnx1 : port proc_1.US1_evt -> US1.proc_evt ; 
     EventCnx2 : port proc_1.US2_evt -> US2.proc_evt ; 

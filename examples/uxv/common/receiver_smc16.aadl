@@ -19,9 +19,9 @@ device implementation RECEIVER.impl
 properties
   Implemented_As 	    => classifier (receiver_smc16::RECEIVER_Driver.impl);
   Initialize_Entrypoint => classifier (receiver_smc16::Initialize);
-  Electricity_Properties::Idle_Current => 1 mA; -- no data estimated value
-  Electricity_Properties::Run_Current =>  26 mA; 
-  Electricity_Properties::Peak_Current => 100 mA; -- to measure
+  Electricity_Properties::Idle_Current => 1.0 mA; -- no data estimated value
+  Electricity_Properties::Run_Current =>  26.0 mA; 
+  Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
   Electricity_Properties::Core_Voltage => 5.0 V;  
   Electricity_Properties::Acquisition_Time => 2 ms; -- no data
   Electricity_Properties::Peak_Time => 1 ms;
@@ -59,7 +59,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("receiver_smc16.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 subprogram Receive
 end Receive;
@@ -71,7 +71,7 @@ features
 properties
   Source_Name => "read_mode";
   Source_Text => ("receiver_smc16.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Mode;
 
 subprogram Read_cmd
@@ -81,7 +81,7 @@ features
 properties
   Source_Name => "read_cmd";
   Source_Text => ("receiver_smc16.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_cmd;
   
   

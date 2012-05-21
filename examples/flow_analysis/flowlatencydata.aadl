@@ -55,8 +55,8 @@ Mycall : {
 	myspg : subprogram step1spg;
 };
 connections
-	parameter ined -> myspg.ined;
-	parameter myspg.outed -> outed;
+	U1:parameter ined -> myspg.ined;
+	U2:parameter myspg.outed -> outed;
 end step1.periodic;
 
 
@@ -77,8 +77,8 @@ Mycall : {
 	myspg : subprogram step2spg;
 };
 connections
-	parameter ined -> myspg.ined;
-	parameter myspg.outed -> outed;
+	U3:parameter ined -> myspg.ined;
+	U4:parameter myspg.outed -> outed;
 end step2.periodic;
 
 
@@ -99,8 +99,8 @@ Mycall : {
 	myspg : subprogram step3spg;
 };
 connections
-	parameter ined -> myspg.ined;
-	parameter myspg.outed -> outed;
+	U5:parameter ined -> myspg.ined;
+	U6:parameter myspg.outed -> outed;
 end step3.periodic;
 
 -- at the beginning of each dispatch the sensor device reads the clock
@@ -133,7 +133,7 @@ Mycall : {
 	myspg : subprogram sensorspg;
 };
 connections
-	parameter myspg.outed -> outed;
+	U7:parameter myspg.outed -> outed;
 properties
   Dispatch_Protocol => Sporadic;
 end sensor_thread.aperiodic;
@@ -167,7 +167,7 @@ end sensor.aperiodic;
 -- and log the difference to the received data (sensor clock time) as its last action
 process actuator
 features
-  ined: in data port timedata {Timing => Delayed;};
+  ined: in data port timedata; --  {Timing => Delayed;};
 end actuator;
 
 -- output is sampled. This reducees the latency jitter.
@@ -203,7 +203,7 @@ Mycall : {
 	myspg : subprogram actuatorspg;
 };
 connections
-	parameter ined -> myspg.ined;
+	U8:parameter ined -> myspg.ined;
 properties
   Dispatch_Protocol => Periodic;
 end actuator_thread.periodic;
@@ -217,7 +217,7 @@ end actuator_thread.aperiodic;
 
 process Pstep1
 features
-  ined: in data port timedata {Timing => Delayed;};
+  ined: in data port timedata; --  {Timing => Delayed;};
   outed: out data port timedata;
 end Pstep1;
 
@@ -232,7 +232,7 @@ end Pstep1.periodic;
 
 process Pstep2
 features
-  ined: in data port timedata {Timing => Delayed;};
+  ined: in data port timedata; -- {Timing => Delayed;};
   outed: out data port timedata;
 end Pstep2;
 
@@ -240,14 +240,14 @@ process implementation Pstep2.periodic
 subcomponents
   Tstep2: thread Step2.periodic;
 connections
-  cin: port ined -> Tstep2.ined;
+  cin: port ined -> Tstep2.ined ;
   cout: port Tstep2.outed -> outed;
 end Pstep2.periodic;
 
 
 process Pstep3
 features
-  ined: in data port timedata {Timing => Delayed;};
+  ined: in data port timedata; --  {Timing => Delayed;};
   outed: out data port timedata;
 end Pstep3;
 
@@ -344,14 +344,14 @@ connections
   --  Pstep1, Pstep2, Pstep3 and actuator which have the Timing
   --   property set to delayed.
 
-  bus access db -> cpu.db;
-  bus access pb -> cpu.pb;
+  U9:bus access db -> cpu.db;
+  U10:bus access pb -> cpu.pb;
 properties
-  Actual_Processor_Binding => reference (cpu) applies to sense;
-  Actual_Processor_Binding => reference (cpu) applies to actuate;
-  Actual_Processor_Binding => reference (cpu) applies to compute1;
-  Actual_Processor_Binding => reference (cpu) applies to compute2;
-  Actual_Processor_Binding => reference (cpu) applies to compute3;
+  Actual_Processor_Binding => (reference (cpu)) applies to sense;
+  Actual_Processor_Binding => (reference (cpu)) applies to actuate;
+  Actual_Processor_Binding => (reference (cpu)) applies to compute1;
+  Actual_Processor_Binding => (reference (cpu)) applies to compute2;
+  Actual_Processor_Binding => (reference (cpu)) applies to compute3;
 end topsystem.distributedallperiodicdelayed;
 
 end Flowlatencydata;

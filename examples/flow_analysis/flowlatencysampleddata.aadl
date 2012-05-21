@@ -164,7 +164,7 @@ public
   flows
     flow1: flow source outed;
   properties
-    Device_Dispatch_Protocol => Periodic;
+    Dispatch_Protocol => Periodic;
   end sensor.periodic;
   
   -- Then sensor detects an in the physical environment occurs
@@ -174,7 +174,7 @@ public
   flows
     flow1: flow source outed;
   properties
-    Device_Dispatch_Protocol => Aperiodic;
+    Dispatch_Protocol => Aperiodic;
   end sensor.aperiodic;
   
   -- The actuator will read the clock and log the difference to the
@@ -197,7 +197,7 @@ public
   flows
     flow1: flow sink ined;
   properties
-    Device_Dispatch_Protocol => Periodic;
+    Dispatch_Protocol => Periodic;
   end actuator.periodic;
 
   -- arrival of data causes actuator to become active. 
@@ -206,7 +206,7 @@ public
   flows
     flow1: flow sink ined;
   properties
-    Device_Dispatch_Protocol => Aperiodic;
+    Dispatch_Protocol => Aperiodic;
   end actuator.aperiodic;
   
   process Pstep1
@@ -329,8 +329,8 @@ public
     compute12: port compute1.outed -> compute2.ined;
     compute23: port compute2.outed -> compute3.ined;
     actuateconn: port compute3.outed -> actuate.ined;
-    bus access db -> sense.devbus;
-    bus access db -> actuate.devbus;
+    W1:bus access db -> sense.devbus;
+    W2:bus access db -> actuate.devbus;
   flows
     etelatency: end to end flow sense.flow1 -> senseconn -> compute1.flow1
     -> compute12 -> compute2.flow1 -> compute23 -> compute3.flow1
@@ -359,8 +359,8 @@ public
     compute12: port compute1.outed -> compute2.ined;
     compute23: port compute2.outed -> compute3.ined;
     actuateconn: port compute3.outed -> actuate.ined;
-    bus access db -> sense.devbus;
-    bus access db -> actuate.devbus;
+    W3:bus access db -> sense.devbus;
+    W4:bus access db -> actuate.devbus;
   flows
     etelatency: end to end flow sense.flow1 -> senseconn -> compute1.flow1
     -> compute12 -> compute2.flow1 -> compute23 -> compute3.flow1
@@ -397,8 +397,8 @@ public
     cpu1: processor singleCPU.basic;
     db1: bus devicebus.basic;
   connections
-    bus access db1 -> cpu1.db;
-    bus access db1 -> db;
+    W5:bus access db1 -> cpu1.db;
+    W6:bus access db1 -> db;
   end hardwareplatform.single;
   
   system implementation hardwareplatform.dual
@@ -408,9 +408,9 @@ public
     db1: bus devicebus.basic;
     cpubus1: bus cpubus.basic;
   connections
-    bus access db1 -> cpu1.db;
-    bus access db1 -> cpu2.db;
-    bus access db1 -> db;
+    W7:bus access db1 -> cpu1.db;
+    W8:bus access db1 -> cpu2.db;
+    W9:bus access db1 -> db;
   end hardwareplatform.dual;
 
   -- system configurations: hardware and application

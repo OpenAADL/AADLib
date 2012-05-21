@@ -2,8 +2,8 @@ package motor_hg37d
 public
 
 with types;
-with buses;
-with Electricity;
+with buses::i2c;
+with Electricity_Properties;
 
 -----------------
 --   DEVICE   --
@@ -17,15 +17,15 @@ device implementation MOTOR.impl
 properties
   Implemented_As 	    => classifier (motor_hg37d::MOTOR_Driver.impl);
   Initialize_Entrypoint => classifier (motor_hg37d::Initialize);
-  Electricity::Idle_Current => 3 mA; -- no data
-  Electricity::Run_Current => 15 mA;  -- no data
-  Electricity::Core_Voltage => 12.0 V; 
-  Electricity::Acquisition_Time => 65 ms; -- no data
- Electricity::VIH_min => 3.1 V; 
-  Electricity::VIL_max => 1.5 V; 
-  Electricity::VOH_min => 4.7 V; 
-  Electricity::VOL_max => 0.4 V;  
-  Electricity::Device_Type => Slave;  
+  Electricity_Properties::Idle_Current => 3.0 mA; -- no data
+  Electricity_Properties::Run_Current => 15.0 mA;  -- no data
+  Electricity_Properties::Core_Voltage => 12.0 V; 
+  Electricity_Properties::Acquisition_Time => 65 ms; -- no data
+  Electricity_Properties::VIH_min => 3.1 V; 
+  Electricity_Properties::VIL_max => 1.5 V; 
+  Electricity_Properties::VOH_min => 4.7 V; 
+  Electricity_Properties::VOL_max => 0.4 V;  
+  Electricity_Properties::Device_Type => Slave;  
 end MOTOR.impl;
   
 -----------------------------------
@@ -58,7 +58,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("motor_hg37d.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 
@@ -71,7 +71,7 @@ subprogram implementation Read_Acquisition.impl
 properties
   Source_Name => "read_acquisition";
   Source_Text => ("motor_hg37d.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Acquisition.impl;
 
 subprogram Send
@@ -82,7 +82,7 @@ subprogram implementation Send.impl
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("motor_hg37d.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Send.impl;
   
   

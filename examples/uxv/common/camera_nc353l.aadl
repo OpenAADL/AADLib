@@ -19,9 +19,9 @@ device implementation CAMERA_IP.impl
 properties
   Implemented_As 	=> classifier (camera_nc353l::CAMERA_IP_Driver.impl);
   Initialize_Entrypoint => classifier (camera_nc353l::Initialize);
-  Electricity_Properties::Idle_Current => 1 mA;  -- no data  
-  Electricity_Properties::Run_Current =>  1600 mA; -- worst case  Typical power consumption between 2.4W - 5.8W depending on operation and load (under 3.3V)
-  Electricity_Properties::Peak_Current => 100 mA; -- to measure
+  Electricity_Properties::Idle_Current => 1.0 mA;  -- no data  
+  Electricity_Properties::Run_Current =>  1600.0 mA; -- worst case  Typical power consumption between 2.4W - 5.8W depending on operation and load (under 3.3V)
+  Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
   Electricity_Properties::Core_Voltage => 3.3 V; -- range is 3.3 V .. 48.0 V; -- 4-pin header provides unregulated 48VDC from PoE input circuitry and 3.3V system power
   Electricity_Properties::Acquisition_Time => 1 sec; -- no data
   Electricity_Properties::Peak_Time => 1 ms;
@@ -49,7 +49,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("camera_nc353l.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 subprogram Read_Acquisition
@@ -58,14 +58,14 @@ features
 properties
   Source_Name => "read_acquisition";
   Source_Text => ("camera_nc353l.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Acquisition;
 
 subprogram Start_Acquisition
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("camera_nc353l.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Start_Acquisition;
   
   

@@ -18,8 +18,8 @@ device implementation VARIATOR.impl
 properties
   Implemented_As 	    => classifier (variator_evx::VARIATOR_Driver.impl);
   Initialize_Entrypoint => classifier (variator_evx::Initialize);
-  Electricity_Properties::Idle_Current => 10 mA; -- no data 
-  Electricity_Properties::Run_Current => 3000 mA;  -- continious current (exsist breaking, forward, reverse current)
+  Electricity_Properties::Idle_Current => 10.0 mA; -- no data 
+  Electricity_Properties::Run_Current => 3000.0 mA;  -- continious current (exsist breaking, forward, reverse current)
   Electricity_Properties::Core_Voltage => 14.4 V; 
   Electricity_Properties::Acquisition_Time => 65 ms; -- should be always running / no acquisition for motor
   Electricity_Properties::VIH_min => 3.1 V; 
@@ -62,7 +62,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("variator_evx.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 
@@ -74,7 +74,7 @@ subprogram implementation SetValue.impl
 properties
   Source_Name => "SetValue";
   Source_Text => ("variator_evx.c");
-  Source_Language => C;
+  Source_Language => (C);
 end SetValue.impl;
   
   

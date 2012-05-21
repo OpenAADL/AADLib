@@ -20,8 +20,8 @@ properties
   Implemented_As 	=> classifier (compass_hmc6352::COMPASS_Driver.impl);
   Initialize_Entrypoint => classifier (compass_hmc6352::Initialize);
   Electricity_Properties::Idle_Current => 0.001 mA; 
-  Electricity_Properties::Run_Current =>  1 mA; -- steady state current
-  Electricity_Properties::Peak_Current => 100 mA; -- to measure
+  Electricity_Properties::Run_Current =>  1.0 mA; -- steady state current
+  Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
   Electricity_Properties::Core_Voltage => 3.3 V; -- typical voltage (voltage range 2.7 V - 5.2 V)
   Electricity_Properties::VIH_min => 2.0 V; 
   Electricity_Properties::VIL_max => 1.0 V; 
@@ -51,7 +51,7 @@ subprogram Initialize
 properties
   Source_Name => "initialize";
   Source_Text => ("compass_hmc6352.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Initialize;
 
 subprogram Read_Acquisition
@@ -61,7 +61,7 @@ features
 properties
   Source_Name => "read_acquisition";
   Source_Text => ("compass_hmc6352.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Read_Acquisition;
 
 subprogram Start_Acquisition
@@ -70,7 +70,7 @@ features
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("compass_hmc6352.c");
-  Source_Language => C;
+  Source_Language => (C);
 end Start_Acquisition;
    
   
