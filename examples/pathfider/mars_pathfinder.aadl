@@ -312,7 +312,7 @@ processor implementation rs_6000.impl
 	properties 
 	scheduling_protocol => (RMS);
 	-- to analyse with
-	-- scheduling_protocol => (EDF);
+	-- scheduling_protocol => (EDF) ;
 	
 end rs_6000.impl;
 
