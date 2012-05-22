@@ -104,11 +104,12 @@ end meteo_task;
 -----------------------------------------------------------------
 -------------------------devices---------------------------------
 -----------------------------------------------------------------
+-- devices plugged on VME 
 device camera
 	features
 	camera_control	: in data port camera_control;
 	images_data		: out data port images_data;
-	bus_1553		: requires bus access bus_1553;
+	req_access_vme	: requires bus access VME;
 	
 end camera;
 
@@ -116,57 +117,9 @@ device radio
 	features
 	emission_data	: in data port emission_data;
 	reception_data	: out data port reception_data;
-	bus_1553		: requires bus access bus_1553;
+	req_access_vme	: requires bus access VME;
 	
 end radio;
-
-device thrusters
-	features
-	measured_data	: out data port measured_data;
-	bus_1553		: requires bus access bus_1553;
-	
-end thrusters;
-
-device valves
-	features
-	measured_data	: out data port measured_data;
-	bus_1553		: requires bus access bus_1553;
-	
-end valves;
-
-device sun_sensors
-	features
-	measured_data	: out data port measured_data;
-	bus_1553		: requires bus access bus_1553;
-	
-end sun_sensors;
-
-device star_analyser
-	features
-	measured_data	: out data port measured_data;
-	bus_1553		: requires bus access bus_1553;
-	
-end star_analyser;
-
-device altimeter
-features
-	measured_data	: out data port measured_data;
-	bus_1553		: requires bus access bus_1553;
-end altimeter;
-
-device accelerometer
-features
-	measured_data	: out data port measured_data;
-	bus_1553		: requires bus access bus_1553;
-	
-end accelerometer;
-
-device meteorological
-features
-	measured_data	: out data port measured_data;
-	bus_1553		: requires bus access bus_1553;
-	
-end meteorological;
 
 device interface
 	features 
@@ -179,7 +132,65 @@ device interface
 	
 end interface;
 
+-- devices plugged on 1553
 
+-- rover Sojourner device
+
+device rover_sojourner
+	features
+	req_access_1553 : requires bus access bus_1553;
+	properties 
+	device_driver => classifier (coupler);
+	
+end rover_sojourner;
+
+device thrusters
+	features
+	control_data	: in data port control_data;
+	req_access_1553	: requires bus access bus_1553;
+	
+end thrusters;
+
+device valves
+	features
+	control_data	: in data port control_data;
+	req_access_1553	: requires bus access bus_1553;
+	
+end valves;
+
+device sun_sensors
+	features
+	measured_data	: out data port measured_data;
+	req_access_1553	: requires bus access bus_1553;
+	
+end sun_sensors;
+
+device star_analyser
+	features
+	measured_data	: out data port measured_data;
+	req_access_1553	: requires bus access bus_1553;
+	
+end star_analyser;
+
+device altimeter
+features
+	measured_data	: out data port measured_data;
+	req_access_1553	: requires bus access bus_1553;
+end altimeter;
+
+device accelerometer
+features
+	measured_data	: out data port measured_data;
+	req_access_1553	: requires bus access bus_1553;
+	
+end accelerometer;
+
+device meteorological
+features
+	measured_data	: out data port measured_data;
+	req_access_1553	: requires bus access bus_1553;
+	
+end meteorological;
 
 -----------------------------------------------------------------
 ---------------------------datas---------------------------------
@@ -207,22 +218,17 @@ data measured_data end measured_data;
 ------------------------------------------------------------------
 -----------------------buses--------------------------------------
 ------------------------------------------------------------------
-bus VME
-features 
-pro_access_vme: provides bus access VME;
+bus VME end VME;
 
-end VME;
-
-bus bus_1553
-features 
-pro_access_1553: provides bus access bus_1553;
-
-end bus_1553;
+bus bus_1553 end bus_1553;
 ------------------------------------------------------------------
 -----------------------memories-----------------------------------
 ------------------------------------------------------------------
 
 memory memories
+features
+req_access_vme	: requires bus access  VME; 
+
 end memories;
 
 -------------------------------------------------------------------
@@ -230,8 +236,6 @@ end memories;
 -------------------------------------------------------------------
 process PSC		
 -- pathfinder spacecraft control
-
-	
 end PSC;
 
 process implementation PSC.impl
@@ -240,23 +244,27 @@ process implementation PSC.impl
 	
 end PSC.impl;
 
+process coupler extends bus_interface
+end coupler;
+
 abstract bus_interface	
-features
-	pro_data_rw		:provides data access data_rw;
+	features
+	camera_control	: in out data port camera_control;
+	emission_data	: in out data port emission_data;
+	control_data	: in out data port control_data;
 	
-	camera_control	: out data port camera_control;
-	emission_data	: out data port emission_data;
-	control_data	: out data port control_data;
-	
-	reception_data	: in data port reception_data;
-	images_data		: in data port images_data;
-	measured_data	: in data port measured_data;
+	reception_data	: in out data port reception_data;
+	images_data		: in out data port images_data;
+	measured_data	: in out data port measured_data;
 end bus_interface;
 
 abstract implementation bus_interface.impl
-	end bus_interface.impl;
+end bus_interface.impl;
 
 process prs_bus_interface extends bus_interface	
+	features
+	pro_data_rw		: provides data access data_rw;
+	
 	end prs_bus_interface;
 		
 	process implementation prs_bus_interface.impl extends bus_interface.impl
@@ -288,25 +296,34 @@ process prs_bus_interface extends bus_interface
 	
 end prs_bus_interface.impl;
 
-
 -------------------------------------------------------------------
 ----------------------processor------------------------------------
 -------------------------------------------------------------------
 processor rs_6000
 	features
-	VME	: requires bus access VME;
+	req_access_vme	: requires bus access VME;
 	
 end rs_6000;
 
 processor implementation rs_6000.impl
+	subcomponents
+	memories			: memory memories;
+	
 	properties 
 	scheduling_protocol => (RMS);
+	-- to analyse with
+	-- scheduling_protocol => (EDF);
+	
 end rs_6000.impl;
 
 ------------------------------------------------------------------
 ----------------system--------------------------------------------
 ------------------------------------------------------------------
 system sys_mars_pathfinder
+	features 
+	pro_access_vme	: provides bus access  VME;
+	pro_access_1553	: provides bus access bus_1553;
+	
 end sys_mars_pathfinder;
 
 system implementation sys_mars_pathfinder.impl
@@ -314,11 +331,12 @@ system implementation sys_mars_pathfinder.impl
 	rs_6000				: processor rs_6000;
 	PSC					: process PSC.impl;
 	prs_bus_interface 	: process prs_bus_interface.impl;
+	coupler				: process coupler;
 	VME					: bus VME;
 	bus_1553			: bus bus_1553;
-	memories			: memory memories;
 	
 	radio				: device radio;
+	rover_sojourner		: device rover_sojourner;
 	-- measurement devices
 	camera				: device camera;
 	altimeter			: device altimeter;
@@ -333,39 +351,32 @@ system implementation sys_mars_pathfinder.impl
 	
 
 	connections 
-	P1: port prs_bus_interface.emission_data   -> radio.emission_data
-	{ Actual_Connection_Binding => (reference (bus_1553));};
-	P2: port prs_bus_interface.camera_control   -> camera.camera_control
-	{ Actual_Connection_Binding => (reference (bus_1553));};
-	P3: port prs_bus_interface.control_data   -> interface.control_data
-	{ Actual_Connection_Binding => (reference (bus_1553));};
+	P1: port prs_bus_interface.emission_data   	-> radio.emission_data;
+	P2: port prs_bus_interface.camera_control   -> camera.camera_control;
+	P3: port prs_bus_interface.control_data   	-> valves.control_data;
+	P4: port prs_bus_interface.control_data   	-> thrusters.control_data;
 	
-	P4: port camera.images_data -> prs_bus_interface.images_data
-	{ Actual_Connection_Binding => (reference (bus_1553));};
-	P5: port radio.reception_data -> prs_bus_interface.reception_data
-	{ Actual_Connection_Binding => (reference (bus_1553));};
-	P6: port valves.measured_data -> prs_bus_interface.measured_data
-	{ Actual_Connection_Binding => (reference (bus_1553));};
-	P7: port star_analyser.measured_data -> prs_bus_interface.measured_data
-	{ Actual_Connection_Binding => (reference (bus_1553));};
-	P8: port thrusters.measured_data -> prs_bus_interface.measured_data
-	{ Actual_Connection_Binding => (reference (bus_1553));};
-	P9: port sun_sensors.measured_data -> prs_bus_interface.measured_data
-	{ Actual_Connection_Binding => (reference (bus_1553));};
+	P5: port camera.images_data 		-> prs_bus_interface.images_data;
+	P6: port radio.reception_data 		-> prs_bus_interface.reception_data;
+	P7: port star_analyser.measured_data-> prs_bus_interface.measured_data;
+	P8: port sun_sensors.measured_data 	-> prs_bus_interface.measured_data;
 	
-	B1: bus access bus_1553	-> rs_6000.VME;
-	B2: bus access bus_1553	-> camera.bus_1553;
-	B3: bus access bus_1553	-> radio.bus_1553;
-	B4: bus access bus_1553	-> valves.bus_1553;
-	B5: bus access bus_1553	-> thrusters.bus_1553;
-	B6: bus access bus_1553	-> sun_sensors.bus_1553;
-	B7: bus access bus_1553	-> star_analyser.bus_1553;
-	--B8: bus access bus_1553 -> interface.bus_1553;
+	B2: bus access pro_access_vme	-> camera.req_access_vme;
+	B3: bus access pro_access_vme	-> radio.req_access_vme;
+	B8: bus access pro_access_vme	-> rs_6000.req_access_vme;
+	B9: bus access pro_access_vme	-> interface.req_access_vme;
+	
+	B4: bus access pro_access_1553	-> valves.req_access_1553;
+	B5: bus access pro_access_1553	-> thrusters.req_access_1553;
+	B6: bus access pro_access_1553	-> sun_sensors.req_access_1553;
+	B7: bus access pro_access_1553	-> star_analyser.req_access_1553;
+	B10:bus access pro_access_1553	-> interface.req_access_1553;
+	B11:bus access pro_access_1553	-> rover_sojourner.req_access_1553;
 	
 	properties 
 	Actual_processor_binding => (reference(rs_6000)) applies to PSC;
 	Actual_processor_binding => (reference(rs_6000)) applies to prs_bus_interface;
-
+	Actual_processor_binding => (reference(rs_6000)) applies to coupler;
 end sys_mars_pathfinder.impl;
 
 end mars_pathfinder;
