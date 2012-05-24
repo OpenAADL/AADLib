@@ -3,6 +3,7 @@ public
   with hardware;
   with software_aocs;
   with dataaocs;
+  with processors;
   
   process AOCSprocessing
   features
@@ -92,21 +93,18 @@ public
     mode_SM -[Getting_Back_To_Normal_Mode]-> mode_NM;
   end AOCSprocessing.others;
   
-  processor Leon_Processor
-  end Leon_Processor;
-  
-  processor implementation Leon_Processor.impl
+  processor Leon_Processor extends processors::leon2
   properties
-    Scheduling_Protocol => (FixedTimeline); -- Non preemptive
-  end Leon_Processor.impl;
-  
+    Scheduling_Protocol => (Round_Robin_Protocol); -- Non preemptive
+  end Leon_Processor;
+    
   system AOCS_Subsystem
   end AOCS_Subsystem;
   
   system implementation AOCS_Subsystem.impl
   subcomponents
     main : process AOCSprocessing.others;
-    cpu : processor Leon_Processor.impl;
+    cpu : processor Leon_Processor;
     FSS : device Hardware::FSS;
     CSS : device Hardware::CSS;
     SPS : device Hardware::SPS;

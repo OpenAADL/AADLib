@@ -7,7 +7,8 @@
 
 package Flight_Control_System
 public
-
+with processors;
+with buses::I2C;
 ----------
 -- Data --
 ----------
@@ -151,15 +152,15 @@ end AP;
 -- Processor --
 ---------------
 
-processor cpurm
+processor cpu extends processors::cpurm
 features
-  i2c   : requires bus access i2c;
-end cpurm;
+  i2c   : requires bus access i2c_bus;
+end cpu;
 
-processor implementation cpurm.impl
+processor implementation cpu.impl
 properties
-  Scheduling_Protocol => (RMS);
-end cpurm.impl;
+  Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+end cpu.impl;
 
 ---------------
 -- Processes --
@@ -208,35 +209,35 @@ end node_a.impl;
 device Operator
 features
   pos_c : out data port pos_c;
-  i2c   : requires bus access i2c;
+  i2c   : requires bus access i2c_bus;
 end Operator;
 
 device GPS
 features
   position : out data port position;
-  i2c   : requires bus access i2c;
+  i2c   : requires bus access i2c_bus;
 end GPS;
 
 device IMU
 features
   angle : out data port angle;
   acc   : out data port acc;
-  i2c   : requires bus access i2c;
+  i2c   : requires bus access i2c_bus;
 end IMU;
 
 device Platform
 features
   order : in data port order;
-  i2c   : requires bus access i2c;
+  i2c   : requires bus access i2c_bus;
 end Platform;
 
 ---------
 -- Bus --
 ---------
 
-bus I2C 
+bus I2C_bus extends buses::I2C::I2C 
   --  I2C bus
-end I2C;
+end I2C_bus;
 
 ------------
 -- System --
@@ -248,12 +249,12 @@ end fcs;
 system implementation fcs.impl
 subcomponents
    node_a   : process   node_a.impl;
-   cpu_rm   : processor cpurm.impl;
+   cpu_rm   : processor cpu.impl;
    operator : device    Operator;
    GPS      : device    GPS;
    IMU      : device    IMU;
    platform : device    Platform;
-   i2c      : bus       i2c;
+   i2c      : bus       i2c_bus;
 
 connections
   V13:port operator.pos_c -> node_a.pos_c

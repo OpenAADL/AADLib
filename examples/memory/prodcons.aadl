@@ -22,7 +22,7 @@ public
 
   subcomponents
     process1    : process Producer_Consummer_Software::prodcons_soft.impl;
-    processor1  : processor VxWorks_Platform::MC68040.impl;
+    processor1  : processor VxWorks_Platform::MC68040_proc.impl;
 
     --  logical_as denotes the software view of the memory
     logical_as  : memory VxWorks_Platform::address_space.vxworks;

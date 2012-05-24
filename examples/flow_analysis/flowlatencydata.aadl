@@ -2,7 +2,7 @@
 
 package Flowlatencydata
 public
-  with Data_Model, Deployment;
+  with Data_Model, Deployment, processors, buses;
 
 data timedata
 properties
@@ -295,7 +295,7 @@ connections
 end application.allperiodicdelayed;
 
 -- hardware platforms: single processor, dual processor
-processor singleCPU
+processor singleCPU extends processors::generic_cpu
 features
   db: requires bus access devicebus.basic;
   pb: requires bus access cpubus.basic;
@@ -307,18 +307,18 @@ end singleCPU;
 processor implementation singleCPU.basic
 end singleCPU.basic;
 
-bus cpubus
+bus cpubus extends buses::generic_bus
 end cpubus;
 
-bus implementation cpubus.basic
+bus implementation cpubus.basic extends buses::generic_bus.impl
 end cpubus.basic;
 
-bus devicebus
+bus devicebus extends buses::generic_bus
 properties
   Deployment::Transport_API => BSD_Sockets;
 end devicebus;
 
-bus implementation devicebus.basic
+bus implementation devicebus.basic extends buses::generic_bus.impl
 end devicebus.basic;
 
 system topsystem

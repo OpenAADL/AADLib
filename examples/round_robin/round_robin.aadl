@@ -5,6 +5,8 @@
 package Round_Robin
 public
 
+with processors;
+
   thread T
   properties
     Dispatch_Protocol => Periodic;
@@ -28,30 +30,14 @@ public
       };
   end P.impl;
 
-  processor Proc
+  processor Proc extends processors::Proc
   end Proc;
 
-  processor implementation Proc.RR_NoPreemption
-  properties
-    Scheduling_Protocol => (cooperative);
-    Scheduler_Quantum    => 20 ms;
-    Preemptive_Scheduler => true;
-    --  T = 0 -> T1 runs
-    --  T = 20 ms -> T2 runs
-    --  T = 40 ms -> T1 runs
-    --  T = 60ms (hyperperiod) -> T1 runs
-    --  ...
+  processor implementation Proc.RR_NoPreemption extends processors::Proc.RR_NoPreemption
+    end Proc.RR_NoPreemption;
 
-  end Proc.RR_NoPreemption;
-
-  processor implementation Proc.RR_Preemption
-  properties
-    Preemptive_Scheduler => false;
-    --  T = 0 -> T1 runs
-    --  T = xx -> T2 runs
-    --  T = yy -> T1 runs
-    --  T = zz -> T1 runs
-  end Proc.RR_Preemption;
+  processor implementation Proc.RR_Preemption extends processors::Proc.RR_Preemption
+	end Proc.RR_Preemption;
 
   system RR
   end RR;
