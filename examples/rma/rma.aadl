@@ -63,7 +63,7 @@ public
   -- Processor --
   ---------------
   
-  processor cpu extends processors::cpurm
+  processor cpu extends processors::cpu_rma
   end cpu;
 
   ---------------

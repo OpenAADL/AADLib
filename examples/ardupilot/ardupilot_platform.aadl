@@ -1,9 +1,12 @@
+-- this package is not used in ardupilot system
 package ardupilot_platform
 public
+with processors;
+with memories;
 
-  processor cpu end cpu;
+  processor cpu extends processors::generic_cpu end cpu;
   
-  memory mem end mem;
+  memory mem extends memories::ROM end mem;
   
   memory implementation mem.i
   end mem.i;

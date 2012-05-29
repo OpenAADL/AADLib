@@ -152,15 +152,11 @@ end AP;
 -- Processor --
 ---------------
 
-processor cpu extends processors::cpurm
+processor cpu extends processors::cpu_rma
 features
   i2c   : requires bus access i2c_bus;
-end cpu;
 
-processor implementation cpu.impl
-properties
-  Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
-end cpu.impl;
+end cpu;
 
 ---------------
 -- Processes --
@@ -249,7 +245,7 @@ end fcs;
 system implementation fcs.impl
 subcomponents
    node_a   : process   node_a.impl;
-   cpu_rm   : processor cpu.impl;
+   cpu_rm   : processor cpu;
    operator : device    Operator;
    GPS      : device    GPS;
    IMU      : device    IMU;

@@ -13,11 +13,11 @@ with Deployment;
   end Generic_CPU;
   
   -- imported from rma.aadl
-  processor cpurm
+  processor cpu_rma
   properties
     Deployment::Execution_Platform => Native;
-    Scheduling_Protocol => (RMS);
-  end cpurm;
+    Scheduling_Protocol => (Posix_1003_Highest_Priority_First_Protocol);
+  end cpu_rma;
   
   -- imported from radar.aadl
   
