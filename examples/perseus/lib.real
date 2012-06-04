@@ -1,0 +1,21 @@
+--------------------------------------------------------------------------------
+-- High level theorem for Perseus
+-- 
+
+theorem check_perseus
+   foreach s in system_set do
+     requires (check_electricity);
+     check (1 = 1);
+end check_perseus;
+--------------------------------------------------------------------------------
+
+theorem check_electricity
+   foreach d in device_set do
+
+   check ((not property_exists (d, "electricity_properties::max_current"))
+       or (property_exists (d, "electricity_properties::run_current")	
+          and (get_property_value (d, "electricity_properties::run_current") <=
+	       get_property_value (d, "electricity_properties::max_current"))));
+
+end check_electricity;
+--------------------------------------------------------------------------------
