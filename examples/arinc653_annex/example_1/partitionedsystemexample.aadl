@@ -52,13 +52,15 @@
 package PartitionedSystemExample 
 public
   with ARINC653;
+  with Processors::PPC;
+  with memories;
 
   data integer end integer;
   data ordercmd end ordercmd;
 
   data protected_data 
   properties 
-    Concurrency_Control_Protocol => Spin_Lock;
+    Concurrency_Control_Protocol => Protected_Access;
     --  Queue_Processing_Protocol => FIFO; XXX
   end protected_data;
 
@@ -67,7 +69,7 @@ public
   
   virtual processor partition1_rt 
   properties
-    Scheduling_Protocol => (Cooperative); 
+    Scheduling_Protocol => (ROUND_ROBIN_PROTOCOL); 
   end partition1_rt;
 
   virtual processor implementation partition1_rt.impl 
@@ -75,7 +77,7 @@ public
 
   virtual processor partition2_rt 
   properties
-    Scheduling_Protocol => (RMS);
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
   end partition2_rt;
   
   virtual processor implementation partition2_rt.impl 
@@ -238,9 +240,10 @@ public
   end partition2_process.impl;
 
   -- Main runtime
-  processor powerpc end powerpc;
+  processor powerpc extends Processors::PPC::PPC750
+   end powerpc;
   
-  processor implementation powerpc.impl 
+  processor implementation powerpc.impl extends Processors::PPC::PPC750.impl  
   subcomponents
     part1:	virtual processor partition1_rt.impl;
     part2:	virtual processor partition2_rt.impl;
@@ -266,7 +269,7 @@ public
     ARINC653::Memory_Kind => Memory_Code;
   end partition2_memory;
 
-  memory main_memory 
+  memory main_memory extends memories::ROM
   end main_memory;
 
   memory implementation main_memory.impl 

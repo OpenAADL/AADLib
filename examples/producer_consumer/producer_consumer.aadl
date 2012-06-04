@@ -4,6 +4,8 @@ package Producer::Consumer
 public
   with Deployment;
   with Data_Model;
+  with buses::ethernet;
+  with processors;
 
   ----------
   -- Data --
@@ -70,14 +72,14 @@ public
   -- Bus --
   ---------
   
-  bus Ethernet_Bus
+  bus Ethernet_Bus extends buses::ethernet::ethernet
   end Ethernet_Bus;
   
   ---------------
   -- Processor --
   ---------------
   
-  processor the_processor
+  processor the_processor extends processors::Generic_cpu
   features
     ETH : requires bus access Ethernet_Bus;
   end the_processor;

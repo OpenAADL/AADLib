@@ -49,6 +49,9 @@ package radar_system
 public
   with radar_types;
   with deployment;
+  with processors;
+  with buses::VME;
+  with memories;
 
 SYSTEM radar
 END radar;
@@ -66,7 +69,7 @@ SUBCOMPONENTS
   rotor : DEVICE motor;
   monitor : DEVICE screen;
   main : PROCESS processing.others;
-  cpu : PROCESSOR leon2;
+  cpu : PROCESSOR cpu_leon2;
   VME : BUS VME;
   RAM : MEMORY RAM;
 CONNECTIONS
@@ -302,25 +305,20 @@ END Controller_Spg;
 --  by operating systems
 -- such as scheduling protocol in our case).
 
-PROCESSOR leon2
+PROCESSOR cpu_leon2 extends processors::leon2
 FEATURES
   VME : REQUIRES BUS ACCESS VME;
-PROPERTIES
-  Clock_Period => 200 ns;
-  Scheduling_Protocol => (RMS);
-  Deployment::Execution_Platform => LEON_ORK;
-  Priority_Range => 0 .. 255;
-END leon2;
+END cpu_leon2;
 
 -- The bus ensures communications between the antenna and the main process
 --  stored in memory
 
-BUS VME
+BUS VME extends buses::VME::VME
 END VME;
 
 -- The memory hosts the address space of the main process.
 
-MEMORY RAM
+MEMORY RAM extends memories::RAM
 FEATURES
   VME : REQUIRES BUS ACCESS VME;
 END RAM;

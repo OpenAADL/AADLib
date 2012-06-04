@@ -6,7 +6,7 @@
 
 package RMAAadl
 public
-  with Deployment;
+  with processors;
   
   -----------------
   -- Subprograms --
@@ -63,15 +63,8 @@ public
   -- Processor --
   ---------------
   
-  processor cpurm
-  properties
-    Deployment::Execution_Platform => Native;
-  end cpurm;
-  
-  processor implementation cpurm.impl
-  properties
-    Scheduling_Protocol => (RMS);
-  end cpurm.impl;
+  processor cpu extends processors::cpu_rma
+  end cpu;
 
   ---------------
   -- Processes --
@@ -96,9 +89,9 @@ public
   system implementation rma.impl
   subcomponents
     node_a : process node_a.impl;
-    cpu_rm : processor cpurm.impl;
+    cpu	   : processor cpu;
   properties
-    Actual_Processor_Binding => (reference (cpu_rm)) applies to node_a;
+    Actual_Processor_Binding => (reference (cpu)) applies to node_a;
   end rma.impl;
 
 end RMAAadl;

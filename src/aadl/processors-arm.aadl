@@ -64,7 +64,7 @@ public
     "http://www.atmel.com:80/dyn/products/product_card.asp?part_id=3578";
 
     Deployment::Execution_Platform => Native;
-    Scheduling_Protocol => (RMS);
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
 
     Electricity_Properties::Idle_Current => 40.0 mA; -- estimation
     Electricity_Properties::Run_Current => 40.0 mA; -- estimation -> should be 70 mA (datasheet)

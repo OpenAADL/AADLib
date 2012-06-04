@@ -13,7 +13,7 @@ public
   
   system implementation Ardupilot.i
   subcomponents
-    CPU         : processor Processors::Atmega::ATMEGA328p.impl
+    CPU         : processor Processors::Atmega::ATMEGA328.impl
     {Deployment::Execution_Platform => Native;
     Scheduling_Protocol => (RMS);
 --    Thread_Limit        => 42;

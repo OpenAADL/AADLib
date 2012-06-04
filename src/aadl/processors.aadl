@@ -3,6 +3,7 @@
 package Processors
 public
 
+with Deployment;
   -----------------
   -- Generic_CPU --
   -----------------
@@ -10,5 +11,62 @@ public
   processor Generic_CPU
     -- Empty processor definition, for refinement purposes
   end Generic_CPU;
+  
+  -- imported from rma.aadl
+  processor cpu_rma
+  properties
+    Deployment::Execution_Platform => Native;
+    Scheduling_Protocol => (Posix_1003_Highest_Priority_First_Protocol);
+  end cpu_rma;
+  
+  -- imported from radar.aadl
+  
+PROCESSOR leon2
+PROPERTIES
+  Clock_Period					=> 200 ns;
+  Scheduling_Protocol 			=> (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+  Deployment::Execution_Platform=> LEON_ORK; -- Generate code for ORK+, LEON2
+  Priority_Range				=> 0 .. 255;
+  Preemptive_Scheduler 			=> true;
+END leon2; 
+
+-- imported from round_robin.aadl
+
+processor Proc
+  end Proc;
+  
+  processor implementation Proc.RR_NoPreemption
+  properties
+    Scheduling_Protocol => (ROUND_ROBIN_PROTOCOL);
+    Scheduler_Quantum    => 20 ms;
+    Preemptive_Scheduler => true;
+    --  T = 0 -> T1 runs
+    --  T = 20 ms -> T2 runs
+    --  T = 40 ms -> T1 runs
+    --  T = 60ms (hyperperiod) -> T1 runs
+    --  ...
+
+  end Proc.RR_NoPreemption;
+
+  processor implementation Proc.RR_Preemption
+  properties
+    Preemptive_Scheduler => false;
+    --  T = 0 -> T1 runs
+    --  T = xx -> T2 runs
+    --  T = yy -> T1 runs
+    --  T = zz -> T1 runs
+  end Proc.RR_Preemption;
+  
+  processor arinckernel
+  end arinckernel;
+
+	-- imported from vxworks_platform
+processor MC68040
+  properties
+    Deployment::Execution_Platform => VxWorks;
+  end MC68040;
+  
+processor rs_6000
+end rs_6000;  
 
 end Processors;

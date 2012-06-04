@@ -3,6 +3,9 @@ public
   with Data_Model;
   with Deployment;
   with Transformations;
+  with processors;
+  with buses;
+  with memories;
 
   ----------
   -- Data --
@@ -1989,7 +1992,7 @@ end Hardware_Emulator.Impl;
 -- Processor --
 ---------------
 
-processor cpu
+processor cpu extends processors::generic_cpu
 features
   B : requires bus access C_Bus.Impl;
 end cpu;
@@ -2001,7 +2004,7 @@ end cpu.impl;
 -- Bus --
 ---------
 
-bus C_Bus
+bus C_Bus extends buses::generic_bus
 end C_Bus;
 
 bus implementation C_Bus.Impl
@@ -2016,7 +2019,7 @@ end C_Bus.Impl;
 --  Memory  --
 --------------
 
-memory ram
+memory ram extends memories::RAM
 end ram;
 
 ------------

@@ -1,8 +1,9 @@
 package Ravenscar_Example
 public
   with Data_Model;
-  with Deployment;
   with Systems;
+  with deployment;
+  with processors;
 
   data Workload
   properties
@@ -126,13 +127,7 @@ public
     -> External_Interrupt;
   end Interrupt_Simulator.Impl;
   
-  processor The_Processor
-  properties
-    Deployment::Execution_Platform           => LEON_ORK;
-    Preemptive_Scheduler => true;
-    Scheduling_Protocol                      => 
-    (RMS);
-    Priority_Range                           => 0 .. 255;
+  processor The_Processor extends processors::leon2
   end The_Processor;
   
   system Case_Study extends Systems::Ravenscar_System

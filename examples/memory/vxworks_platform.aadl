@@ -3,149 +3,43 @@
 
 package VxWorks_Platform
 public
-  with Deployment;
-  with Memory_Segment_Properties;
-  with ARINC653;
-  with ARINC653_Extended;
+ 
+  with processors;
+  with memories_vxworks;
 
   ---------------
   -- Processor --
   ---------------
   
-  processor MC68040
-  properties
-    Deployment::Execution_Platform => VxWorks;
-  end MC68040;
+  processor MC68040_proc extends processors::MC68040
+  end MC68040_proc;
   
-  processor implementation MC68040.impl
-  end MC68040.impl;
+  processor implementation MC68040_proc.impl
+  end MC68040_proc.impl;
 
   ------------
   -- Memory --
   ------------
 
-  memory memory_segment
-  properties
-    memory_segment_properties::Segment_Kind => memory_segment;
-  end memory_segment;
-  
-  memory implementation memory_segment.impl
-    --  This models a generic memory segment. It will be later refined
-  end memory_segment.impl;
+ memory memory_segment extends memories_vxworks::memory_segment 
+ end memory_segment;
+ 
+ memory implementation memory_segment.impl extends memories_vxworks::memory_segment.impl 
+ end memory_segment.impl;
 
-  memory implementation memory_segment.system_image
-  --  VxWorks system Image : segment sizes can be obtained
-  --  after the OS compilation
-
-  subcomponents
-    seg_text : memory memory_segment.impl {  -- text segment
-       Base_Address => 016#001000#;
-       ARINC653_Extended::Memory_Kind => text;
-       ARINC653_Extended::Access_Type => (execute, read);
-       Byte_Count => 3000;
-    };
-    seg_bss : memory memory_segment.impl {   -- bss segment
-       Base_Address => 016#003000#;
-       ARINC653_Extended::Memory_Kind => bss;
-       };
-    seg_data : memory memory_segment.impl {  -- data segment
-       Base_Address => 016#002000#;
-       ARINC653_Extended::Memory_Kind => data_seg;
-    };
-  properties
-    Base_Address => 016#001000#;
-    ARINC653_Extended::Memory_Kind => image;
-    
-  annex real_specification {**
-    theorem check_system_image
-       foreach m in local_set do
- 	requires (check_system_image_order);	
- 	check(1=1);
-    end check_system_image;
-  **};
-  end memory_segment.system_image;
-
-  memory implementation memory_segment.board_specific
-  --  This memory segment defines the first 4Kbytes segment, per the
-  --  VxWorks documentation
-
-  subcomponents
-    it_vector : memory memory_segment.impl {
-       Base_Address => 016#000000#;
-       Byte_Count => 016#000120#;
-    };
-    reserved : memory memory_segment.impl {
-       Base_Address => 016#000120#;
-       Byte_Count => 016#0005E0#;
-    };
-    boot_line : memory memory_segment.impl {
-       Base_Address => 016#000700#;
-       Byte_Count => 016#000100#;
-    };
-    exception_msg : memory memory_segment.impl {
-       Base_Address => 016#000800#;
-       Byte_Count => 016#000100#;
-    };
-    initial_stack : memory memory_segment.impl {
-       Base_Address => 016#000900#;
-       Byte_Count => 016#000700#;
-    };
- properties
-   Base_Address => 016#00000000#;
-   Byte_Count => 016#00001000#;
+ memory implementation memory_segment.system_image extends memories_vxworks::memory_segment.system_image
+ end memory_segment.system_image;
+ 
+ memory implementation memory_segment.board_specific extends memories_vxworks::memory_segment.board_specific
  end memory_segment.board_specific;
  
- memory address_space
- -- memory mapping  (OS point of view of the memory usage)
- -- some section localizations are well known, others
- -- depend of the system usage, or compilation results.
- 
- properties
-   memory_segment_properties::Segment_Kind => address_space;
+ memory address_space extends memories_vxworks::address_space
  end address_space;
-
- memory implementation address_space.vxworks	
- subcomponents 
-   system_memory_pool : memory  memory_segment.impl {
-      Base_Address => 016#FF800000#;
-      Byte_Count => 016#00040000#;
-   }; 
-   system_reserved : memory memory_segment.board_specific;
-   system_image : memory  memory_segment.system_image;
-   boot_code_and_data : memory memory_segment.impl;
-   it_stack : memory memory_segment.impl {
-      Byte_Count => 016#00001000#;
-   };
-   
- properties
-   Base_Address => 016#00000000#; 
-   memory_segment_properties::Page_Size => 016#1000# Bytes;
-   Byte_Count  => 002#1#e32; -- 32 bit address bus
-   memory_segment_properties::Address_Kind => logical_as;
- end address_space.vxworks;
-
- memory implementation address_space.mv162
- -- physical memory mapping for the Motorola mv162 board.
  
- subcomponents
-   ram : memory memory_segment.impl {
-      Base_Address => 016#00000000#;  --  LOCAL_MEM_LOCAL_ADRS
-      Byte_Count => 016#00400000#;
-      Word_Space => 2;
-      ARINC653_Extended::Access_Type => (read, write, execute);
-   };
-   rom : memory memory_segment.impl {
-      Base_Address => 016#FF800000#;  
-      Byte_Count => 016#00040000#;
-      Word_Space => 2;
-      ARINC653_Extended::Access_Type => (read, execute);
-   };
+ memory implementation address_space.vxworks extends memories_vxworks::address_space.vxworks
+ end address_space.vxworks;		
+ 
+  memory implementation address_space.mv162 extends memories_vxworks::address_space.mv162
+   end address_space.mv162;
    
- properties
-   Base_Address => 016#00000000#;
-   Byte_Count   => 002#1#e32;
-   memory_segment_properties::Address_Kind => physical_as;
-   ARINC653_Extended::Access_Type => (read, execute);
- end address_space.mv162;
-
 end VxWorks_Platform;

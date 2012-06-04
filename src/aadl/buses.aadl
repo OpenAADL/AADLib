@@ -75,4 +75,10 @@ public
   bus implementation V12_bus.impl
   end V12_bus.impl;
   
+  bus generic_bus
+  end generic_bus;
+  
+  bus implementation generic_bus.impl
+  end generic_bus.impl;
+  
 end Buses;

@@ -35,17 +35,20 @@
 
 package arincexample2
 public
-  
-  with ARINC653;
+ 
+  with ARINC653; 
+  with buses;
+  with memories;
+  with processors;
   -- First, define generic component 
 
   data integer end integer;
 
-  memory memchunk end memchunk;
-  memory mainmemory end mainmemory;
+  memory memchunk extends memories::ROM end memchunk;
+  memory mainmemory extends memories::ROM end mainmemory;
 
-  bus anybus end anybus;
-  bus implementation anybus.i end anybus.i;
+  bus anybus extends buses::generic_bus end anybus;
+  bus implementation anybus.i extends buses::generic_bus.impl end anybus.i;
 
   thread network_driver_thread 
   properties
@@ -78,10 +81,10 @@ public
 
   virtual processor partition_runtime
   properties
-    Scheduling_Protocol => (RMS);
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
   end partition_runtime;
 
-  processor arinckernel 
+  processor arinckernel extends processors::arinckernel
   end arinckernel;
 
   -- Then, we define the first module and its subcomponents.

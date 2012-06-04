@@ -5,6 +5,7 @@ package Time_Triggered
 public
   with Data_Model;  -- Data modeling annex, AS5506/2
   with Deployment;  -- Deployment properties, Ocarina
+  with processors;
   
   ----------
   -- Data -- 
@@ -127,17 +128,8 @@ public
   -- Processor --
   ---------------
   
-  processor cpurm
-  properties
-    Preemptive_Scheduler => true;
+  processor cpurm extends processors::leon2
   end cpurm;
-  
-  processor implementation cpurm.impl
-  properties
-    Deployment::Execution_Platform => LEON_ORK; -- Generate code for ORK+, LEON2
-    Scheduling_Protocol => (RMS);
-    Priority_Range      => 0 .. 255;
-  end cpurm.impl;
 
   ---------------
   -- Processes --
@@ -166,9 +158,9 @@ public
   system implementation tt.impl
   subcomponents
     node_a : process node_a.impl;
-    cpu_rm : processor cpurm.impl;
+    cpurm	   : processor cpurm;
   properties
-    Actual_Processor_Binding => (reference (cpu_rm)) applies to node_a;
+    Actual_Processor_Binding => (reference (cpurm)) applies to node_a;
   end tt.impl;
 
 end Time_Triggered;

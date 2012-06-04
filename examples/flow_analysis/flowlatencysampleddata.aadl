@@ -44,6 +44,8 @@ package Flowlatencysampleddata
 public
   with Data_Model;
   with ARINC653;
+  with processors;
+  with buses;
   
   data timedata
   end timedata;
@@ -369,7 +371,7 @@ public
   
   
   -- hardware platforms: single processor, dual processor
-  processor singleCPU
+  processor singleCPU extends processors::generic_cpu
   features
     db: requires bus access devicebus.basic;
     pb: requires bus access cpubus;
@@ -378,13 +380,13 @@ public
   processor implementation singleCPU.basic
   end singleCPU.basic;
   
-  bus cpubus end cpubus;
+  bus cpubus extends buses::generic_bus end cpubus;
   
-  bus implementation cpubus.basic end cpubus.basic;
+  bus implementation cpubus.basic extends buses::generic_bus.impl end cpubus.basic;
 
-  bus devicebus end devicebus;
+  bus devicebus extends buses::generic_bus end devicebus;
 
-  bus implementation devicebus.basic
+  bus implementation devicebus.basic extends buses::generic_bus.impl
   end devicebus.basic;
 
   system hardwareplatform

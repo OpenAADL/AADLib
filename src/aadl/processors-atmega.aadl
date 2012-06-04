@@ -125,10 +125,24 @@ public
 
   processor implementation ATMEGA328p.impl extends ATMEGA8.impl
   properties
-    Scheduling_Protocol => (RMS);
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
     Byte_Count => 32_768 applies to Flash_Memory;
     Byte_Count =>  2_048 applies to SRAM;
     Byte_Count =>  1_024 applies to EEPROM;
   end ATMEGA328p.impl;
+  
+  ----------------
+  -- ATMEGA328 --
+  ----------------
+  
+  processor ATMEGA328 extends ATMEGA328p
+  properties
+  	Data_Sheet::UUID
+  		=> "http://www.atmel.com/devices/ATMEGA328.aspx?tab=parameters";
+  	Processor_Properties::Processor_Frequency => 20 Mhz;
+	end ATMEGA328;
+
+  processor implementation ATMEGA328.impl extends ATMEGA328p.impl
+   end ATMEGA328.impl;
 
 end Processors::ATMEGA;
