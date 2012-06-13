@@ -1,14 +1,30 @@
--- this package is not used in ardupilot system
-package ardupilot_platform
+package ardupilot_devices
 public
-with processors;
-with memories;
 
-  processor cpu extends processors::generic_cpu end cpu;
+-- Ardupilot devices to defin 
+  device GPS
+  end GPS;
   
-  memory mem extends memories::ROM end mem;
+  device ESC 
+  end ESC;
   
-  memory implementation mem.i
-  end mem.i;
+  device elevator
+  end elevator;
   
-end ardupilot_platform;
+  device aileron
+  end aileron;
+  
+  device battery
+  end battery;
+  
+  device RC_Rx
+  end RC_Rx;
+  
+  device XYZ_sensor
+  end XYZ_sensor;
+  
+  device Shield
+  end Shield;
+  
+  
+end ardupilot_devices;

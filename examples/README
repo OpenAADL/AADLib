@@ -2,7 +2,7 @@ README for AADLib examples
 ==========================
 
 These examples illustrate some use of the AADLib AADL component
-libraries, adapted from exising AADL models (either v1 or v2) to
+libraries, adapted from existing AADL models (either v1 or v2) to
 AADLv2, and the AADLib AADL components library.
 
 For each example:
@@ -27,7 +27,7 @@ In addition, the following target is always available:
 
 Here is a short description of each example
 
-* aocs: model of an Attitude Orbital Constrol System, derived from
+* aocs: model of an Attitude Orbital Control System, derived from
  design document from
  http://control.ee.ethz.ch/~ceg/AocsFramework/index.html
  (XXX)	
@@ -37,10 +37,8 @@ Here is a short description of each example
 
 * arinc653_annex: models from the ARINC653 annex document for AADLv2
 
-* asl: work in progress REAL theorems in preparaton for the ASL annex
+* asl: work in progress REAL theorems in preparation for the ASL annex
  as part of SAE AS2/C committee work
-
-* avionices_nasa: 
 
 * behavior_annex: models from the Behavior annex language for AADLv2
 

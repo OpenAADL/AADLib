@@ -1,0 +1,33 @@
+package Main_Ardupilot
+public
+  with Boards::Ardupilot;
+  with Ardupilot_Software;
+  with Ardupilot_devices;
+  with Deployment;  
+  with data_sheet;
+
+  ---------------
+  -- Ardupilot --
+  ---------------
+
+  system Ardupilot_Map extends Boards::Ardupilot::Ardupilot 
+  Properties 
+  Data_Sheet::UUID => "http://code.google.com/p/ardupilot/wiki/AirFrame";
+  end Ardupilot_Map;
+  
+  system implementation Ardupilot_Map.impl extends Boards::Ardupilot::Ardupilot.impl
+  subcomponents
+   process_Ardupilot : process Ardupilot_software::Ardupilot_code.impl;
+   GPS		: device Ardupilot_devices::GPS;
+   Shield	: device Ardupilot_devices::Shield;		
+   ESC		: device Ardupilot_devices::ESC;
+   Battery	: device Ardupilot_devices::Battery;
+   XYZ		: device Ardupilot_devices::XYZ_sensor;
+   aileron	: device Ardupilot_devices::aileron;
+   RC_RX	: device Ardupilot_devices::RC_Rx;
+  properties
+    Actual_Processor_Binding => (reference (ATM328)) applies to process_Ardupilot;
+
+  end Ardupilot_Map.impl;
+
+end Main_Ardupilot;

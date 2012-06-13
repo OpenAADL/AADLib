@@ -1,0 +1,22 @@
+package devices::EM406A
+public
+
+with Electricity_Properties;
+with Data_Sheet;
+
+device EM406A
+	Properties 
+	 Data_Sheet::UUID => "http://www.sparkfun.com/products/465";
+	 	
+end EM406A;
+
+device implementation  EM406A.impl
+	properties 
+	Electricity_Properties::Acquisition_Time => 42000 ms; -- the worst case acquisistin time "Cold start"
+	Electricity_Properties::Core_Voltage => 6.5 v;
+	Electricity_Properties::Run_current => 4.5mA; -- no Idle, peack current specified
+	-- noise margin is not specified in datasheet
+
+end EM406A.impl;
+
+end devices::EM406A;

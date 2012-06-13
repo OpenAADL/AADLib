@@ -1,0 +1,26 @@
+-- This is a high-precision, ultra-low power barometric pressure sensor
+
+package devices::BMP085
+public 
+
+with Electricity_Properties;
+with Data_sheet;
+
+device BMP085
+	Properties 
+	Data_Sheet::UUID => "http://www.sparkfun.com/products/9603";
+end BMP085;
+
+device implementation BMP085.impl
+	Properties 
+	Electricity_Properties::VIL_max => 0.72 v;
+	Electricity_Properties::VIH_min => 2.88 v;
+	Electricity_Properties::VOH_min => 1.32 v;
+	Electricity_Properties::VOL_max => 0.3 v;
+	
+	Electricity_Properties::Core_Voltage => 3.6 v;
+	Electricity_Properties::Acquisition_Time => 25_500 us;-- for the ultra high resolution
+	Electricity_Properties::Run_Current => 96.0 uA;
+end BMP085.impl;
+
+end devices::BMP085;

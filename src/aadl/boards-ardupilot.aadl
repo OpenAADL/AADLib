@@ -1,0 +1,128 @@
+-- This package aims modelize Ardupilot2.7 Board
+-- Documentation source http://code.google.com/p/ardupilot/wiki/ArduPilot
+
+package Boards::Ardupilot
+public
+
+with Processors::ATMEGA;
+with data_Sheet;
+with deployment;
+
+system Ardupilot
+	features
+	SPort	: in out event port;
+	GPSport	: in out event port;
+	XY_port	: in event port;
+	Z_port	: in event port;
+	Bvolt	: in event port;
+	SI_Bv	: in event port;
+	Pres	: in event port;
+	CTRL 	: in event port;
+	IN1		: in event port;
+	IN2		: in event port;
+	IN3		: in event port;
+	IN4		: in event port;
+	IN5V	: in event port;
+	Mux_in	: in event port;
+	Out1	: out event port;
+	Out2	: out event port;
+	Out3	: out event port;
+	Out4	: out event port;
+	YLed	: out event port;
+	BLed	: out event port;
+	RBFF	: out event port;
+	VccLed	: out event port;
+	
+	Properties 
+	Data_Sheet::UUID => 
+	"http://code.google.com/p/ardupilot/wiki/HardwareDiagram";
+	
+end Ardupilot;
+
+system implementation Ardupilot.impl
+	Subcomponents
+	ATM328			: processor Processors::ATMEGA::ATMEGA328.impl
+	{
+	Deployment::Execution_Platform => Native;
+    Scheduling_Protocol => (RMS);
+    Thread_Limit        => 4;
+    };
+	Muxer			: processor ATtiny45_Mux.impl;
+	Mux_driver		: device Mux_driver;
+	
+	connections
+	-- See http://code.google.com/p/ardupilot/wiki/HardwareDiagram for more details 
+	-- for this mapping
+	
+		-- ATM328 interface
+	C1 : port SPort    <-> ATM328.PC6;
+	C2 : port SPort		-> ATM328.PD0;
+	C3 : port ATM328.PD1-> SPort;
+	C4 : port ATM328.PD0-> GPSport;
+	C5 : port GPSport	-> ATM328.PD1;
+	C6 : port ATM328.PD7-> GPSport;
+	C7 : port ATM328.PD7-> IN5V;
+	C8 : port XY_port	-> ATM328.PC0;
+	C9 : port XY_port	-> ATM328.PC1;
+	C10: port Z_port	-> ATM328.PC2;
+	C11: port SI_Bv		-> ATM328.PC4;
+	C12: port Bvolt		-> ATM328.PC5;
+	C13: port Pres		-> ATM328.PC3;
+	C14: port IN3		-> ATM328.PD2;
+	C15: port IN2		-> ATM328.PD3;
+	C16: port ATM328.PB5-> YLed;
+	C17: port ATM328.PB5-> BLed;
+	C18: port RBFF		-> ATM328.PD6;
+	
+	-- ATiny multiplexer interface
+	
+	P1 : port CTRL	-> Muxer.PB2;
+	P2 : port IN1	-> Muxer.S1A;
+	P3 : port IN2	-> Muxer.S2A;
+	P4 : port IN3	-> Muxer.S3A;
+	P5 : port Mux_in-> Muxer.S3B;
+	P6 : port Mux_in-> Muxer.S4B;
+	P7 : port IN4	-> Muxer.S4A; 
+	P8 : port Muxer.out_mux1	-> OUT1;
+	P9 : port Muxer.out_mux2	-> OUT2;
+	P10: port Muxer.out_mux3	-> OUT3;
+	P11: port Muxer.out_mux4	-> OUT4;
+	
+	-- ATtiny multiplexer / ATM328 interface
+	
+	L1 : port ATM328.PB1	-> Muxer.S1B;
+	L2 : port ATM328.PB2	-> Muxer.S2B;
+	L3 : port Muxer.PB1		-> ATM328.PD4;
+	L4 : port Muxer.PB3		-> ATM328.PD5;
+	-- GPS power switch and attenuator are not modeled
+end Ardupilot.impl;
+	
+	device Mux_driver
+		properties	-- ATtiny45 microcontroller used like multiplexer
+		Device_Driver => classifier (ATtiny45_Mux);
+	end Mux_driver;
+	
+	processor ATtiny45_Mux extends Processors::ATMEGA::ATtiny45
+		 features
+		 out_mux1	: out event port;
+		 out_mux3	: out event port;
+		 out_mux2	: out event port;
+		 out_mux4	: out event port;
+		 RMLed 		: out event port;
+		 GMLed 		: out event port;
+		 S1A		: in event port;
+		 S1B		: in event port;
+		 S2A		: in event port;
+		 S2B		: in event port;
+		 S3A		: in event port;
+		 S3B		: in event port;
+		 S4A		: in event port;
+		 S4B		: in event port;
+		 Mux_S3B	: in event port;
+	end Attiny45_Mux;
+	
+	processor implementation ATtiny45_Mux.impl extends Processors::ATMEGA::ATtiny45.impl
+	-- Internal archetecture of Multiplexer not designed
+	end Attiny45_Mux.impl;
+	
+end Boards::Ardupilot;
