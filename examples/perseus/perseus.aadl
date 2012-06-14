@@ -6,7 +6,7 @@ public
 
   device OBC
   properties
-    Electricity_Properties::Max_Current => 1 A; 
+    Electricity_Properties::Max_Current => 1.0 A; 
   end OBC;
 
   device implementation OBC.impl1
