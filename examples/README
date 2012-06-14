@@ -10,16 +10,16 @@ For each example:
  - "make help" return the list of available targets for this example,
    from the following list:
 
- - "make parse-aadl" : compile the example using Ocarina
- - "make c"          : generate architecture C code derived from the AADL
-                       model, using the Ocarina/C code generator
- - "make build_c"    : generate and compile C code
- - "make ada"        : generate architecture Ada code
- - "make build_ada"  : generate and compile C code
- - "make real"       : check REAL theorems applicable to this model
- - "make cheddar"    : check scheduling of the corresponding model
- - "arinc653_conf"   : generate ARINC653 XML descriptor from AADLv2 model
- - "make clean"      : remove generated files
+ - "make parse-aadl"    : compile the example using Ocarina
+ - "make c"             : generate architecture C code derived from the AADL
+                          model, using the Ocarina/C code generator
+ - "make build_c"       : generate and compile C code
+ - "make ada"           : generate architecture Ada code
+ - "make build_ada"     : generate and compile C code
+ - "make real"          : check REAL theorems applicable to this model
+ - "make cheddar"       : check scheduling of the corresponding model
+ - "make arinc653_conf" : generate ARINC653 XML descriptor from AADLv2 model
+ - "make clean"         : remove generated files
 
 In addition, the following target is always available:
 
@@ -63,7 +63,7 @@ Here is a short description of each example
  and J. Hugues (ISAE)
 
 * radar: a naive model of a radar system, made in collaboration with
- F. Singhoff from UBO, P. Disseaux from Ellidiss and Nader KHAMMASSI
+ F. Singhoff from UBO, P. Disseaux from Ellidiss and Nader Khammassi
  from Virtualys and J. Hugues (ISAE). Adapted to AADLv2
 
 * rap: Ravenscar Avionics Platform, written by Olivier Gilles during

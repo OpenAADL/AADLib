@@ -87,6 +87,7 @@ AC_OUTPUT([
 	examples/line_follower/Makefile
 	examples/mixin/Makefile
 	examples/memory/Makefile
+	examples/perseus/Makefile
 	examples/producer_consumer/Makefile
 	examples/radar/Makefile
 	examples/rap/Makefile

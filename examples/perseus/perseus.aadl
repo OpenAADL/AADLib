@@ -1,0 +1,32 @@
+package Perseus
+public
+  with Electricity_Properties;
+
+  -- OBC: On-board Computer
+
+  device OBC
+  properties
+    Electricity_Properties::Max_Current => 1 A; 
+  end OBC;
+
+  device implementation OBC.impl1
+  properties
+    Electricity_Properties::Run_Current => 0.5 A;
+  end OBC.impl1;
+
+  --  Perseus_Rocket
+
+  system Perseus_Rocket
+  end Perseus_Rocket;
+
+  system implementation Perseus_Rocket.Master
+  subcomponents
+    OBC : device OBC;
+  end Perseus_Rocket.Master;
+
+  system implementation Perseus_Rocket.impl1 extends Perseus_Rocket.Master
+  subcomponents
+    OBC : refined to device OBC.impl1;
+  end Perseus_Rocket.impl1;
+
+end Perseus;
