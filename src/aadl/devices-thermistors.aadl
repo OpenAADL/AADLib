@@ -1,0 +1,18 @@
+package devices::thermistors
+public 
+
+With devices::resistance;
+with Electricity_Properties;
+
+device thermistor extends devices::resistance::Generic_Resistance
+	features
+	X : in out event port;
+	Y : in out event port;
+	
+	Properties 
+	Electricity_Properties::Max_Resistance => 4700.0 Kohms;	
+	Electricity_Properties::Thermistor_Type => PTC;
+	Electricity_Properties::Resistance_Value => 24.0 KOhms;
+end thermistor; 
+
+end devices::thermistors;

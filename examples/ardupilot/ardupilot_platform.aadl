@@ -6,25 +6,59 @@ public
   end GPS;
   
   device ESC 
+  features
+  pin : in event port;
+  outM: out event port;
+  Vin : in event port;
   end ESC;
   
   device elevator
+  features 
+  ele : in event port;
   end elevator;
   
   device aileron
+  features
+  ail : in event port;
   end aileron;
   
   device battery
+  features
+  Vout : out event port;
   end battery;
   
   device RC_Rx
+  features
+  ch1 : out event port;
+  ch2 : out event port;
+  ch3 : out event port;
+  ch4 : in out event port;-- not used in Ardupilot
+  ch5 : out event port;	
+  ch6 : in out event port;-- not used in Ardupilot
   end RC_Rx;
   
   device XYZ_sensor
+  features
+  Out_XY : out event port;
+  Out_Z	 : out event port;
   end XYZ_sensor;
+
   
-  device Shield
-  end Shield;
+  device Motor
+  features
+  pin : in event port;
+  end Motor;
   
+  device AVR_SPI_PRG_6NS
+  features 
+  SCK : in event port;
+  RST : in event port;
+  MOSI: in out event port;
+  MISO: in out event port;
+  VCC : in out event port;
+  GND : in out event port;
+  end AVR_SPI_PRG_6NS;
   
+  Properties
+  Data_sheet::UUID => "-atmel.com";	-- see doc0943
 end ardupilot_devices;

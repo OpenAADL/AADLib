@@ -139,31 +139,12 @@ public
   properties
   	Data_Sheet::UUID
   		=> "http://www.atmel.com/devices/ATMEGA328.aspx?tab=parameters";
+  	
 	end ATMEGA328;
 
   processor implementation ATMEGA328.impl extends ATMEGA328p.impl
    end ATMEGA328.impl;
    
-  ----------------
-  -- ATtiny45  --
-  ----------------
-  
-  Processor ATtiny45 extends Processors::Generic_CPU
-   features
-  	PB0	: in out event port;
-  	PB1	: in out event port;
-  	PB2	: in out event port;
-  	PB3	: in out event port;
-  	PB4	: in out event port;
-  	PB5	: in out event port;
-  	GND	: in event port;
-  	VCC : in event port;
-   properties
-  	Data_Sheet::UUID
-  		=> "http://www.atmel.com/Images/doc2586.pdf";
-  end ATtiny45;
-  
-  Processor implementation ATtiny45.impl
-  end ATtiny45.impl;
+ 
 
 end Processors::ATMEGA;

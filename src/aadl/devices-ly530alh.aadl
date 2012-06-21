@@ -14,7 +14,7 @@ public
     Theta_X : out data port Unit::Rotation;
 
   properties
-    Data_Sheet::UUID => "XXX";
+    Data_Sheet::UUID => "http://www.sparkfun.com/products/9956";
   end LY530ALH;
 
   device implementation LY530ALH.impl

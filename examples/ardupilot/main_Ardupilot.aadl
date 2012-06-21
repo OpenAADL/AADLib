@@ -3,14 +3,37 @@ public
   with Boards::Ardupilot;
   with Ardupilot_Software;
   with Ardupilot_devices;
+  with devices::EM406A;
+  with devices::MPXV7002DP;
+  with devices::XYZ_IR;
+  with shield::Ardupilot;
   with Deployment;  
   with data_sheet;
-
+  
   ---------------
   -- Ardupilot --
   ---------------
-
-  system Ardupilot_Map extends Boards::Ardupilot::Ardupilot 
+  
+  -- red + blue card
+  
+  system Ardupilot_Shield 
+  end Ardupilot_Shield;
+  
+  system implementation Ardupilot_Shield.impl
+  subcomponents
+  Shield	: device shield::Ardupilot::Ardupilot;
+  IR_S		: device devices::MPXV7002DP::MPXV7002DP; 
+  GPS		: device devices::EM406A::EM406A;
+  XYZ		: device devices::XYZ_IR::XYZ_IR;
+  
+  Connections
+  B1 : port XYZ.Out_XY -> Shield.XY_in;
+  B2 : port XYZ.Out_Z -> Shield.Z_in;
+  B3 : port GPS.PPS -> Shield.ada_gps;
+  end Ardupilot_Shield.impl;
+  
+  
+  system Ardupilot_Map extends Boards::Ardupilot::Ardupilot
   Properties 
   Data_Sheet::UUID => "http://code.google.com/p/ardupilot/wiki/AirFrame";
   end Ardupilot_Map;
@@ -18,16 +41,32 @@ public
   system implementation Ardupilot_Map.impl extends Boards::Ardupilot::Ardupilot.impl
   subcomponents
    process_Ardupilot : process Ardupilot_software::Ardupilot_code.impl;
-   GPS		: device Ardupilot_devices::GPS;
-   Shield	: device Ardupilot_devices::Shield;		
+   Ardupilot: system Boards::Ardupilot::Ardupilot.impl;
    ESC		: device Ardupilot_devices::ESC;
    Battery	: device Ardupilot_devices::Battery;
-   XYZ		: device Ardupilot_devices::XYZ_sensor;
    aileron	: device Ardupilot_devices::aileron;
-   RC_RX	: device Ardupilot_devices::RC_Rx;
+   RC_Rx	: device Ardupilot_devices::RC_Rx;
+   elevator	: device Ardupilot_devices::elevator;
+   Motor	: device Ardupilot_devices::Motor;
+  Connections
+  -- RC Rx / Ardupilot
+  Cx1 : port RC_Rx.ch1 -> Ardupilot.IN1;
+  Cx2 : port RC_Rx.ch2 -> Ardupilot.IN2;
+  Cx3 : port RC_Rx.ch3 -> Ardupilot.IN3;
+  Cx4 : port RC_Rx.ch5 -> Ardupilot.CTRL; 
+  
+  -- servos, battery /Ardupilot
+  Cx5 : port Ardupilot.out1 -> aileron.ail;	
+  Cx6 : port Ardupilot.out2 -> elevator.ele;	  
+  Cx7 : port Ardupilot.out3 -> ESC.pin;
+  
+  -- between components
+  Cx8 : port ESC.outM -> Motor.pin;
+  Cx9 : port battery.vout -> ESC.Vin; 
+  	  
   properties
     Actual_Processor_Binding => (reference (ATM328)) applies to process_Ardupilot;
-
+  
   end Ardupilot_Map.impl;
 
 end Main_Ardupilot;
