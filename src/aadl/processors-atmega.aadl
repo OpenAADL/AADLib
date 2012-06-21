@@ -139,10 +139,12 @@ public
   properties
   	Data_Sheet::UUID
   		=> "http://www.atmel.com/devices/ATMEGA328.aspx?tab=parameters";
-  	Processor_Properties::Processor_Frequency => 20 Mhz;
+  	
 	end ATMEGA328;
 
   processor implementation ATMEGA328.impl extends ATMEGA328p.impl
    end ATMEGA328.impl;
+   
+ 
 
 end Processors::ATMEGA;

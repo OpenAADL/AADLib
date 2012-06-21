@@ -1,0 +1,40 @@
+-- QUADRUPLE 2-LINE TO 1-LINE DATA SELECTIOR/MULTIPLEXER
+package devices::SN74LS157D
+public
+
+with Data_Sheet;
+with Electricity_Properties;
+
+device SN74LS157D
+features 
+	A1 : in event port;
+	B1 : in event port;
+	A2 : in event port;
+	B2 : in event port;
+	A3 : in event port;
+	B3 : in event port;
+	A4 : in event port;
+	B4 : in event port;
+	
+	Y1 : out event port;
+	Y2 : out event port;
+	Y3 : out event port;
+	Y4 : out event port;
+	
+	Ab_B: in out event port;
+	Gb	: in out event port;
+Properties 
+	Data_Sheet::UUID => 
+	"http://pdf1.alldatasheet.com/datasheet-pdf/view/170857/TI/SN74LS157D.html";
+end SN74LS157D;
+
+device implementation SN74LS157D.impl 
+properties 
+	Electricity_Properties::Core_Voltage => 5.25 v; 
+	Electricity_Properties::VIH_min	=> 2.0 v;
+	Electricity_Properties::VIL_max => 0.8 v;
+	Electricity_Properties::VOH_min => 2.4 v;
+	Electricity_Properties::VOL_max => 0.4 v;
+end SN74LS157D.impl;
+
+end devices::SN74LS157D;

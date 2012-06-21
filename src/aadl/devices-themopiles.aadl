@@ -1,0 +1,23 @@
+package devices::thermopiles
+public
+
+with Data_Sheet;
+With Electricity_Properties;
+with devices::thermistors;
+
+device MLX90247 extends devices::Thermistors::Thermistor
+ features
+  pin1 : in out event port;
+  pin2 : in out event port;
+  pin3 : in out event port;
+  pin4 : in out event port;
+Properties
+	Data_Sheet::UUID => 
+	"http://www.digikey.com/product-detail/en/TMP006AIYZFR/296-28819-2-ND/2672544";
+end MLX90247;
+
+device implementation MLX90247.impl
+	
+end MLX90247.impl;  
+
+end devices::thermopiles;

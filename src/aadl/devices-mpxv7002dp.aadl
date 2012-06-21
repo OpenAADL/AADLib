@@ -1,0 +1,15 @@
+package devices::MPXV7002DP
+public 
+
+with Electricity_Properties;
+with Data_Sheet;
+
+device MPXV7002DP
+	properties
+	Data_Sheet::UUID => "http://store.diydrones.com/product_p/br-0002-10.htm";
+	
+	Electricity_Properties::Core_Voltage => 5.25 v;
+	Electricity_Properties::run_current => 10.0 mA;
+end MPXV7002DP;
+
+end devices::MPXV7002DP;

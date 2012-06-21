@@ -1,0 +1,125 @@
+-- This package aims modelize Ardupilot2.7 Board
+-- Documentation source http://code.google.com/p/ardupilot/wiki/ArduPilot
+
+package Boards::Ardupilot
+public
+
+with Processors::ATMEGA;
+with Processors::ATtiny;
+with data_Sheet;
+with deployment;
+with devices::SN74LS157D;
+with ardupilot_devices;
+
+system Ardupilot
+	features
+	SPort	: in out event port;
+	GPSport	: in out event port;
+	XY_port	: in event port;
+	Z_port	: in event port;
+	Bvolt	: in event port;
+	SI_Bv	: in event port;
+	Pres	: in event port;
+	CTRL 	: in event port;
+	IN1		: in event port;
+	IN2		: in event port;
+	IN3		: in event port;
+	IN4		: in event port;
+	IN5V	: in event port;
+	Mux_in1	: in event port;
+	Mux_in2	: in event port;
+	Out1	: out event port;
+	Out2	: out event port;
+	Out3	: out event port;
+	Out4	: out event port;
+	YLed	: out event port;
+	BLed	: out event port;
+	RBFF	: out event port;
+	VccLed	: out event port;
+	
+	
+	
+	Properties 
+	Data_Sheet::UUID => 
+	"http://code.google.com/p/ardupilot/wiki/HardwareDiagram";
+	
+end Ardupilot;
+
+system implementation Ardupilot.impl
+	Subcomponents
+	ATM328			: processor Processors::ATMEGA::ATMEGA328.impl
+	{
+	Deployment::Execution_Platform => Native;
+    Scheduling_Protocol => (RMS);
+    Thread_Limit        => 4;
+    };
+	AT45			: processor Processors::ATtiny::ATtiny45.impl;
+	Multiplexer		: device devices::SN74LS157D::SN74LS157D.impl;
+	SPI5			: device ardupilot_devices::AVR_SPI_PRG_6NS;
+	SPI6			: device ardupilot_devices::AVR_SPI_PRG_6NS;
+	connections
+	-- See http://code.google.com/p/ardupilot/wiki/HardwareDiagram for more details 
+	-- for this mapping
+	
+		-- ATM328 interface
+	C1 : port SPort    <-> ATM328.PC6;
+	C2 : port SPort		-> ATM328.PD0;
+	C3 : port ATM328.PD1-> SPort;
+	C4 : port ATM328.PD0-> GPSport;
+	C5 : port GPSport	-> ATM328.PD1;
+	C6 : port ATM328.PD7-> GPSport;
+	C7 : port ATM328.PD7-> IN5V;
+	C8 : port XY_port	-> ATM328.PC0;
+	C9 : port XY_port	-> ATM328.PC1;
+	C10: port Z_port	-> ATM328.PC2;
+	C11: port SI_Bv		-> ATM328.PC4;
+	C12: port Bvolt		-> ATM328.PC5;
+	C13: port Pres		-> ATM328.PC3;
+	C14: port IN3		-> ATM328.PD2;
+	C15: port IN2		-> ATM328.PD3;
+	C16: port ATM328.PB5-> YLed;
+	C17: port ATM328.PB5-> BLed;
+	C18: port RBFF		-> ATM328.PD6;
+	C19: port IN1		-> ATM328.PD2;
+	
+	-- Multiplexer interface
+	
+	P2 : port IN1	-> Multiplexer.A1;
+	P3 : port IN2	-> Multiplexer.A2;
+	P4 : port IN3	-> Multiplexer.A3;
+	P5 : port Mux_in2-> Multiplexer.B3;
+	P6 : port Mux_in1-> Multiplexer.B4;
+	P7 : port IN4	 -> Multiplexer.A4; 
+	P8 : port Multiplexer.Y1	-> OUT1;
+	P9 : port Multiplexer.Y2	-> OUT2;
+	P10: port Multiplexer.Y3	-> OUT3;
+	P11: port Multiplexer.Y4	-> OUT4;
+	
+	--Mmultiplexer / ATM328 interface
+	
+	L1 : port ATM328.PB1	-> Multiplexer.B1;
+	L2 : port ATM328.PB2	-> Multiplexer.B2;
+	L3 : port AT45.PB1		-> ATM328.PD4;
+	L4 : port AT45.PB3		-> ATM328.PD5;
+	
+	X1 : port CTRL		-> AT45.PB2; 			-- AT45 iterface
+	X2 : port AT45.PB0 	-> Multiplexer.Ab_B; 	-- Mux / AT45
+	X3 : port CTRL 		-> SPI6.SCK;			-- 
+	
+	-- interface SPI5=JP5 / ATM3258
+	A1 : port ATM328.PB4 -> SPI5.MISO;
+	A2 : port ATM328.PB5 -> SPI5.SCK;
+	A3 : port ATM328.PC6 -> SPI5.RST;
+	A4 : port SPI5.MOSI	 -> ATM328.PB3;	
+	
+	-- interface SPI6=JP6 / AT45
+	A6 : port AT45.PB2 -> SPI6.SCK;
+	A7 : port AT45.PB1 -> SPI6.MISO;
+	A8 : port AT45.PB2 -> SPI6.SCK;
+	A9 : port SPI6.MOSI -> AT45.PB0;
+	
+	-- GPS power switch and battery attenuator are not modeled
+end Ardupilot.impl;
+
+	
+end Boards::Ardupilot;

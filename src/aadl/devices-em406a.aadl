@@ -1,0 +1,41 @@
+-- The EM-406A GPS module 
+
+package devices::EM406A
+public
+
+with Electricity_Properties;
+with Data_Sheet;
+
+device EM406A
+	features
+	VIN : in event port;
+	TX	: in out event port;
+	RX	: in out event port;
+	GND	: in out event port;
+	PPS	: out event port;
+	Properties 
+	 Data_Sheet::UUID => "http://www.sparkfun.com/products/465";
+	 	
+end EM406A;
+
+device implementation  EM406A.impl
+	properties 
+	Electricity_Properties::Acquisition_Time => 42000 ms; -- the worst case acquisistin time "Cold start"
+	Electricity_Properties::Core_Voltage => 6.5 v;
+	Electricity_Properties::Run_current => 4.5mA; -- no Idle, peack current specified
+	-- noise margin is not specified in datasheet
+
+end EM406A.impl;
+
+device V_Regulator
+-- on-board voltage regulation included in GPS mudule
+	Features 
+	GPS_5V	: in event port;
+	V3_3	: out event port;
+	Properties
+	Data_Sheet::UUID => "http://api.ning.com/files/BdPAnXQKPPBivh4NGdRV3nuWUin7czE860PWaCUObsdzglDPoc05u*
+	ZEX9FAONjZntUSL75TFGt5vNji-0mdA3Fzxusc0qn3/ArduPilot_Shield1.png";
+		
+end V_Regulator;
+
+end devices::EM406A;

@@ -1,0 +1,30 @@
+-- Ardupilot Shield V2
+
+package Shield::Ardupilot
+public
+
+with Data_sheet;
+with devices::MPXV7002DP;
+	
+	device Ardupilot
+	features
+	V3_3	: in event port;	-- 3.3 V for GPS/Modem
+	V5		: in event port;	-- 5 V for GPS/Modem	
+	ada_gps	: in out event port;	-- Em406/uBlox Adapter GPS
+	XY_in   : in event port;
+	Z_in 	: in event port;
+	Properties
+	Data_sheet::UUID => 
+	"http://store.diydrones.com/ProductDetails.asp?ProductCode=KT-0001-01";
+	end Ardupilot;
+	
+	device implementation Ardupilot.impl
+	Properties 
+	Device_Driver => classifier (D_MPXV7002DP);
+	end Ardupilot.impl;
+	
+	device D_MPXV7002DP extends devices::MPXV7002DP::MPXV7002DP
+	-- airspeed sensor
+	end D_MPXV7002DP ;
+
+end Shield::Ardupilot;
