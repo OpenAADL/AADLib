@@ -3,7 +3,8 @@
 	<name>Test_AADL</name>
 	<comment></comment>
 	<projects>
-		</projects>
+		<project>Plugin_Resources</project>
+	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.xtext.ui.shared.xtextBuilder</name>

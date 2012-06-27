@@ -1,0 +1,196 @@
+package software_pathfinder
+public
+
+-------------------------------------------------------------------
+-----------------------processes-------------------------------------
+-------------------------------------------------------------------
+process PSC		
+-- pathfinder spacecraft control
+end PSC;
+
+process implementation PSC.impl
+	subcomponents
+	bus_interface	: abstract bus_interface;	
+	
+end PSC.impl;
+
+process coupler extends bus_interface
+	-- comunication interface between pathfinder lander and rover sojourner
+end coupler;
+
+abstract bus_interface	
+	features
+	-- interface between VME bus and 1533 bus
+	camera_control	: in out data port camera_control;
+	emission_data	: in out data port emission_data;
+	control_data	: in out data port control_data;
+	
+	reception_data	: in out data port reception_data;
+	images_data		: in out data port images_data;
+	measured_data	: in out data port measured_data;
+end bus_interface;
+
+abstract implementation bus_interface.impl
+end bus_interface.impl;
+
+process prs_bus_interface extends bus_interface	
+	features
+	pro_data_rw		: provides data access data_rw;
+	
+	end prs_bus_interface;
+		
+	process implementation prs_bus_interface.impl extends bus_interface.impl
+	subcomponents
+	bus_scheduling		: thread bus_scheduling;
+	data_distribution	: thread data_distribution;
+	control_task		: thread control_task;
+	radio_task			: thread radio_task;
+	camera_task			: thread camera_task;
+	mesure_task			: thread mesure_task;
+	meteo_task			: thread meteo_task;
+	
+	data_rw				: data data_rw;		-- critical ressource 
+	
+	connections
+	-- by default access is required for the duration of the thread execution
+	C1: data access pro_data_rw -> data_distribution.req_data_rw;
+	C2: data access pro_data_rw -> control_task.req_data_rw;
+	C3: data access pro_data_rw -> mesure_task.req_data_rw;
+	C4: data access pro_data_rw -> meteo_task.req_data_rw;
+	
+	C5: port bus_scheduling.control_data	-> control_data;
+	C6: port camera_task.camera_control 	-> camera_control;
+	C7: port radio_task.emission_data		-> emission_data ;
+	
+	C8: port images_data	-> camera_task.images_data;
+	C9: port reception_data	-> radio_task.reception_data;
+	C10:port measured_data	-> data_distribution.measured_data;
+	
+end prs_bus_interface.impl;
+
+-------------------------------------------------------------------
+-----------------------threads-------------------------------------
+-------------------------------------------------------------------
+
+thread bus_scheduling	
+	-- bus control task
+	features
+	control_data	: out data port control_data;
+		
+	properties
+	Dispatch_protocol		=> periodic;
+	period			 		=> 125 ms;
+	compute_execution_time	=> 0 ms .. 25 ms;
+	deadline				=> 125 ms;
+	priority				=> 7;
+		
+end bus_scheduling;
+
+thread data_distribution	
+	-- 1553 bus control
+	features 
+	req_data_rw 	: requires data access data_rw;
+	measured_data	: in data port measured_data;
+	
+	properties
+	Dispatch_protocol		=> periodic;
+	period			 		=> 125 ms;
+	compute_execution_time	=> 0 ms .. 25 ms;
+	deadline				=> 125 ms;
+	priority				=> 6;
+end data_distribution;
+
+thread control_task	
+	-- rover control task
+	features 
+	req_data_rw : requires data access data_rw;
+	
+	properties
+	Dispatch_protocol		=> periodic;
+	period			 		=> 250 ms;
+	compute_execution_time	=> 0 ms .. 25 ms;
+	deadline				=> 250 ms;
+	priority				=> 5;
+end control_task;
+
+thread radio_task	
+	-- radio communication management task
+	features
+	reception_data	: in data port reception_data;
+	emission_data	: out data port emission_data;
+	
+	properties
+	Dispatch_protocol		=> periodic;
+	period			 		=> 250 ms;
+	compute_execution_time	=> 0 ms .. 25 ms;
+	deadline				=> 250 ms;
+	priority				=> 4;
+end radio_task;
+
+thread camera_task	
+	-- camera control task
+	features
+	images_data		: in data port images_data;	
+	camera_control	: out data port camera_control;	
+	
+	properties
+	Dispatch_protocol		=> periodic;
+	period			 		=> 250 ms;
+	compute_execution_time	=> 0 ms .. 25 ms;
+	deadline				=> 250 ms;
+	priority				=> 3;
+end camera_task;
+
+thread mesure_task	
+	-- mesurement task
+	features 
+	req_data_rw : requires data access data_rw;
+	
+	properties
+	Dispatch_protocol		=> periodic;
+	period			 		=> 5000 ms;
+	compute_execution_time	=> 0 ms .. 50 ms;
+	deadline				=> 5000 ms;
+	priority				=> 2;
+end mesure_task;
+
+thread meteo_task	
+	-- meteorological data task
+	features 
+	req_data_rw : requires data access data_rw;
+	
+	properties
+	Dispatch_protocol		=> periodic;
+	priority				=> 1;
+	period			 		=> 5000 ms;
+	deadline				=> 5000 ms;
+	compute_execution_time	=> 0 ms .. 50 ms;
+	--to analysis with
+--	compute_execution_time	=> 0 ms .. 75 ms; -- depend on data communication size
+
+end meteo_task;
+-----------------------------------------------------------------
+---------------------------datas---------------------------------
+-----------------------------------------------------------------
+data data_rw	
+	-- critical resource
+	properties
+	Concurrency_Control_Protocol => None_Specified;
+	-- to analysis with
+--	Concurrency_Control_Protocol => Priority_Inheritance;
+--	Concurrency_Control_Protocol => Priority_Ceiling;
+end data_rw;
+
+data control_data end control_data;
+
+data images_data end images_data;
+
+data camera_control end camera_control;
+
+data reception_data end reception_data;
+
+data emission_data end emission_data;
+
+data measured_data end measured_data;
+
+end software_pathfinder;
