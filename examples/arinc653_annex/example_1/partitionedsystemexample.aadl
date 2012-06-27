@@ -125,6 +125,7 @@ public
     Initialize_Entrypoint 
        => classifier (PartitionedSystemExample::sensor_receiveinput_spg);
     Priority => 10;
+    Dispatch_Protocol => periodic;
     Source_Stack_Size => 100 Kbyte;
     Period => 20 ms;
     Compute_Execution_Time => 8 ms .. 10 ms;

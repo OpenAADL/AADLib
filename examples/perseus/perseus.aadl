@@ -21,7 +21,7 @@ public
 
   system implementation Perseus_Rocket.Master
   subcomponents
-    OBC : device OBC;
+    OBC : device OBC.impl1;
   end Perseus_Rocket.Master;
 
   system implementation Perseus_Rocket.impl1 extends Perseus_Rocket.Master

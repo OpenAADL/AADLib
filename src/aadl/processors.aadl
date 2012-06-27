@@ -19,6 +19,9 @@ with Deployment;
     Scheduling_Protocol => (Posix_1003_Highest_Priority_First_Protocol);
   end cpu_rma;
   
+  Processor implementation cpu_rma.impl
+  end cpu_rma.impl;
+  
   -- imported from radar.aadl
   
 PROCESSOR leon2

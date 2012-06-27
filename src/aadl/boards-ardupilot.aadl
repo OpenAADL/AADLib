@@ -34,7 +34,7 @@ system Ardupilot
 	Out4	: out event port;
 	YLed	: out event port;
 	BLed	: out event port;
-	RBFF	: out event port;
+	RBFF	: in event port;
 	VccLed	: out event port;
 	
 	
@@ -68,7 +68,7 @@ system implementation Ardupilot.impl
 	C4 : port ATM328.PD0-> GPSport;
 	C5 : port GPSport	-> ATM328.PD1;
 	C6 : port ATM328.PD7-> GPSport;
-	C7 : port ATM328.PD7-> IN5V;
+	C7 : port IN5V     -> ATM328.PD7;
 	C8 : port XY_port	-> ATM328.PC0;
 	C9 : port XY_port	-> ATM328.PC1;
 	C10: port Z_port	-> ATM328.PC2;

@@ -13,18 +13,17 @@ public
   ---------------
   -- Ardupilot --
   ---------------
-  
-  -- red + blue card
+
   
   system Ardupilot_Shield 
   end Ardupilot_Shield;
   
   system implementation Ardupilot_Shield.impl
   subcomponents
-  Shield	: device shield::Ardupilot::Ardupilot;
-  IR_S		: device devices::MPXV7002DP::MPXV7002DP; 
-  GPS		: device devices::EM406A::EM406A;
-  XYZ		: device devices::XYZ_IR::XYZ_IR;
+  Shield	: device shield::Ardupilot::Ardupilot;	-- Ardupilot Shield
+  IR_S		: device devices::MPXV7002DP::MPXV7002DP; -- On board differential pressure sensor
+  GPS		: device devices::EM406A::EM406A;	-- GPS module
+  XYZ		: device devices::XYZ_IR::XYZ_IR;	-- Infrared Sensor 
   
   Connections
   B1 : port XYZ.Out_XY -> Shield.XY_in;
@@ -42,11 +41,11 @@ public
   subcomponents
    process_Ardupilot : process Ardupilot_software::Ardupilot_code.impl;
    Ardupilot: system Boards::Ardupilot::Ardupilot.impl;
-   ESC		: device Ardupilot_devices::ESC;
-   Battery	: device Ardupilot_devices::Battery;
-   aileron	: device Ardupilot_devices::aileron;
-   RC_Rx	: device Ardupilot_devices::RC_Rx;
-   elevator	: device Ardupilot_devices::elevator;
+   ESC		: device Ardupilot_devices::ESC;	-- electronic speed control
+   Battery	: device Ardupilot_devices::Battery;-- supply battery 
+   aileron	: device Ardupilot_devices::aileron;-- hinged flight control surfaces
+   RC_Rx	: device Ardupilot_devices::RC_Rx;	-- receiver channel
+   elevator	: device Ardupilot_devices::elevator; -- elevator servo
    Motor	: device Ardupilot_devices::Motor;
   Connections
   -- RC Rx / Ardupilot
