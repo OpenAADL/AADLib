@@ -1,0 +1,9 @@
+/device-BMP085.aadl
+/device-EM-406A.aadl
+/devices-mpxv7002dp.aadl
+/shield-ardupilot.aadl
+/processors-attiny.aadl
+/devices-resistances.aadl
+/devices-themopiles.aadl
+/devices-thermistors.aadl
+/devices::xyz_ir.aadl
