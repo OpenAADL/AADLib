@@ -1,3 +1,10 @@
+<<<<<<< HEAD
 #Wed May 16 14:51:55 CEST 2012
+=======
+#Thu Jun 21 22:01:07 CEST 2012
+>>>>>>> branch 'master' of https://github.com/yoogx/AADLib.git
+source.directory=/aadl
+model.directory=/aaxl
+#Thu Jun 21 22:01:07 CEST 2012
 source.directory=/aadl
 model.directory=/aaxl
