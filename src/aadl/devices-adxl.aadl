@@ -1,6 +1,6 @@
 -- This package defines some Accelerometer from the ADXL family
 
-package Devices::ADXL335
+package Devices::ADXL
 public
   with Data_Sheet;
   with Unit;
@@ -15,7 +15,7 @@ public
   features
     X : out data port Unit::Acceleration;
     Y : out data port Unit::Acceleration;
-    Z : out data port Unit::Acceleration;   
+    Z : out data port Unit::Acceleration;
 
   properties
     Data_Sheet::UUID => "http://www.sparkfun.com/products/9265";
@@ -30,29 +30,25 @@ public
   Electricity_Properties::Core_Voltage => 3.0 V;
   Electricity_Properties::Acquisition_Time => 1 ms;
   Electricity_Properties::Run_Current => 350.0 uA;
-  
+
   end ADXL335.impl;
 
   -------------
   -- ADXL345 --
   -------------
 
-device ADXL345
-	properties
-	Data_Sheet::UUID => "http://www.sparkfun.com/products/9045";
-end ADXL345;
+  device ADXL345
+  properties
+    Data_Sheet::UUID => "http://www.sparkfun.com/products/9045";
+  end ADXL345;
 
-device implementation ADXL345.impl
-	properties
-	Electricity_Properties::Core_Voltage => 3.6 v;
-	
-	Electricity_Properties::VIH_min => 2.88 v;
-	Electricity_Properties::VIL_max => 0.72 v;
-	Electricity_Properties::VOH_min => 3.06 v;
-	Electricity_Properties::VOL_max => 0.54 v;
-	
-	
-end ADXL345.impl;
+  device implementation ADXL345.impl
+  properties
+    Electricity_Properties::Core_Voltage => 3.6 v;
+    Electricity_Properties::VIH_min => 2.88 v;
+    Electricity_Properties::VIL_max => 0.72 v;
+    Electricity_Properties::VOH_min => 3.06 v;
+    Electricity_Properties::VOL_max => 0.54 v;
+  end ADXL345.impl;
 
-
-end Devices::ADXL335;
+end Devices::ADXL;
