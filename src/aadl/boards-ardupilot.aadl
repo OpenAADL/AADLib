@@ -9,7 +9,7 @@ with Processors::ATtiny;
 with data_Sheet;
 with deployment;
 with devices::SN74LS157D;
-with ardupilot_devices;
+with devices::spi;
 
 system Ardupilot
 	features
@@ -55,8 +55,8 @@ system implementation Ardupilot.impl
     };
 	AT45			: processor Processors::ATtiny::ATtiny45.impl;
 	Multiplexer		: device devices::SN74LS157D::SN74LS157D.impl;
-	SPI5			: device ardupilot_devices::AVR_SPI_PRG_6NS;
-	SPI6			: device ardupilot_devices::AVR_SPI_PRG_6NS;
+	SPI5			: device devices::spi::spi_pins;
+	SPI6			: device devices::spi::spi_pins;
 	connections
 	-- See http://code.google.com/p/ardupilot/wiki/HardwareDiagram for more details 
 	-- for this mapping
@@ -104,18 +104,18 @@ system implementation Ardupilot.impl
 	
 	X1 : port CTRL		-> AT45.PB2; 			-- AT45 iterface
 	X2 : port AT45.PB0 	-> Multiplexer.Ab_B; 	-- Mux / AT45
-	X3 : port CTRL 		-> SPI6.SCK;			-- 
+	X3 : port CTRL 		-> SPI6.SCLK;			-- 
 	
 	-- interface SPI5=JP5 / ATM3258
 	A1 : port ATM328.PB4 -> SPI5.MISO;
-	A2 : port ATM328.PB5 -> SPI5.SCK;
+	A2 : port ATM328.PB5 -> SPI5.SCLK;
 	A3 : port ATM328.PC6 -> SPI5.RST;
 	A4 : port SPI5.MOSI	 -> ATM328.PB3;	
 	
 	-- interface SPI6=JP6 / AT45
-	A6 : port AT45.PB2 -> SPI6.SCK;
+	A6 : port AT45.PB2 -> SPI6.SCLK;
 	A7 : port AT45.PB1 -> SPI6.MISO;
-	A8 : port AT45.PB2 -> SPI6.SCK;
+	A8 : port AT45.PB2 -> SPI6.SCLK;
 	A9 : port SPI6.MOSI -> AT45.PB0;
 	
 	-- GPS power switch and battery attenuator are not modeled

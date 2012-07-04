@@ -88,6 +88,6 @@ property set Deployment is
   Configuration_Type : classifier (data) applies to (all);
   
   -- added on 06/01/2012, for emaxxv2_power_distrib package property 
-  Power_Level : aadlinteger applies to (bus, device);
+  Power_Level : aadlinteger applies to (device);
 
 end Deployment;

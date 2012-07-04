@@ -6,7 +6,7 @@ public
   with devices::EM406A;
   with devices::MPXV7002DP;
   with devices::XYZ_IR;
-  with shield::Ardupilot;
+  with shields::Ardupilot;
   with Deployment;  
   with data_sheet;
   
@@ -20,7 +20,7 @@ public
   
   system implementation Ardupilot_Shield.impl
   subcomponents
-  Shield	: device shield::Ardupilot::Ardupilot;	-- Ardupilot Shield
+  Shield	: device shields::Ardupilot::Ardupilot;	-- Ardupilot Shield
   IR_S		: device devices::MPXV7002DP::MPXV7002DP; -- On board differential pressure sensor
   GPS		: device devices::EM406A::EM406A;	-- GPS module
   XYZ		: device devices::XYZ_IR::XYZ_IR;	-- Infrared Sensor 

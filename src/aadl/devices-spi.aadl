@@ -1,12 +1,13 @@
-package Buses::SPI
+package Devices::SPI
 public
 
-  feature group SPI_Pins
+  device SPI_Pins
   features
     MISO : in     event port; -- Master Input, Slave Output
     MOSI :    out event port; -- Master Output, Slave Input 
     SCLK : in out event port; -- Serial Clock
     SS   : in out event port; -- Slave select
+    RST  : in	  event port; -- Reset
   end SPI_Pins;
 
-end Buses::SPI;
+end Devices::SPI;

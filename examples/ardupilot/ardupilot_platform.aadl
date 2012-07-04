@@ -49,16 +49,6 @@ public
   pin : in event port;
   end Motor;
   
-  device AVR_SPI_PRG_6NS
-  features 
-  SCK : in event port;
-  RST : in event port;
-  MOSI: in out event port;
-  MISO: in out event port;
-  VCC : in out event port;
-  GND : in out event port;
-  end AVR_SPI_PRG_6NS;
-  
   Properties
   Data_sheet::UUID => "-atmel.com";	-- see doc0943
 end ardupilot_devices;

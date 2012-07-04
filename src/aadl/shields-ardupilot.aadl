@@ -1,12 +1,13 @@
 -- Ardupilot Shield V2
 
-package Shield::Ardupilot
+package Shields::Ardupilot
 public
 
 with Data_sheet;
 with devices::MPXV7002DP;
+with shields;
 	
-	device Ardupilot
+	device Ardupilot extends shields::Empty_Shield
 	features
 	V3_3	: in event port;	-- 3.3 V for GPS/Modem
 	V5		: in event port;	-- 5 V for GPS/Modem	
@@ -27,4 +28,4 @@ with devices::MPXV7002DP;
 	-- airspeed sensor
 	end D_MPXV7002DP ;
 
-end Shield::Ardupilot;
+end Shields::Ardupilot;

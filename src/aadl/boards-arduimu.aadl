@@ -9,7 +9,7 @@ public
   with Processor_Properties;
 
   with Buses::I2C;
-  with Buses::SPI;
+  with Devices::SPI;
   with Buses::UART;
 
   with Devices::ADXL335;

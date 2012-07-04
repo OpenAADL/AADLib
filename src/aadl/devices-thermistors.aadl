@@ -1,10 +1,10 @@
 package devices::thermistors
 public 
 
-With devices::resistance;
+With devices::resistances;
 with Electricity_Properties;
 
-device thermistor extends devices::resistance::Generic_Resistance
+device thermistor extends devices::resistances::Generic_Resistance
 	features
 	X : in out event port;
 	Y : in out event port;
