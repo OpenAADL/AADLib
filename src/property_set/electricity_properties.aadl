@@ -8,59 +8,59 @@ property set Electricity_Properties is
 
   Resistance_Value: Electricity_Properties::Resistance applies to (device);
 
-  Acquisition_Time: Time applies to (Device); 
-  Peak_Time: Time applies to (Device); 
+  Acquisition_Time: Time applies to (Device);
+  Peak_Time: Time applies to (Device);
 
   Efficiency: aadlreal applies to (Device);
 
-  Device_Type: Electricity_Properties::Allowed_Device_Type applies to (Device); --  
+  Device_Type: Electricity_Properties::Allowed_Device_Type applies to (Device); --
   Allowed_Device_Type : type enumeration (Master, Slave);
-   
-  VOH_min: Electricity_Properties::Voltage applies to (Device); --   
-  VOL_max: Electricity_Properties::Voltage applies to (Device); --   
-  VIH_min: Electricity_Properties::Voltage applies to (Device); --   
-  VIL_max: Electricity_Properties::Voltage applies to (Device); --   
 
-  Level_Shifter_VOH_min: Electricity_Properties::Voltage applies to (Device); --   
-  Level_Shifter_VOL_max: Electricity_Properties::Voltage applies to (Device); --   
-  Level_Shifter_VIH_min: Electricity_Properties::Voltage applies to (Device); --   
-  Level_Shifter_VIL_max: Electricity_Properties::Voltage applies to (Device); --   
+  VOH_min: Electricity_Properties::Voltage applies to (Device); --
+  VOL_max: Electricity_Properties::Voltage applies to (Device); --
+  VIH_min: Electricity_Properties::Voltage applies to (Device); --
+  VIL_max: Electricity_Properties::Voltage applies to (Device); --
+
+  Level_Shifter_VOH_min: Electricity_Properties::Voltage applies to (Device); --
+  Level_Shifter_VOL_max: Electricity_Properties::Voltage applies to (Device); --
+  Level_Shifter_VIH_min: Electricity_Properties::Voltage applies to (Device); --
+  Level_Shifter_VIL_max: Electricity_Properties::Voltage applies to (Device); --
 
   Bus_Voltage_Range: Electricity_Properties::Voltage_Range applies to (Bus); -- Power Bus  Voltage
- 
+
   Max_Current: Electricity_Properties::Current applies to (Device); -- define max current capability of a regulator
 
   Allowed_Regulator_Type:  type enumeration (Linear, Switcher);
-  
+
   Thermistor_Type: Electricity_Properties::Allowed_Thermistor_Type applies to (device);
   Allowed_Thermistor_Type: type enumeration (PTC, NTC);
-  
+
   Device_Regulator: Electricity_Properties::Allowed_Regulator_Type applies to (Device);
-  
-  Max_Resistance: Electricity_Properties::Resistance applies to (device); 
-  
+
+  Max_Resistance: Electricity_Properties::Resistance applies to (device);
+
   Current_Units: type units (
-  uA, 
+  uA,
   mA => uA * 1000,
   A  => mA * 1000);
-  
+
   Voltage_Units: type units (
-  uV, 
+  uV,
   mV => uV * 1000,
   V  => mV *1000);
-  
+
   Resistance_Units: type units (
-  ohms, 
+  ohms,
   Kohms => ohms * 1000,
   Mohms  => Kohms * 1000);
 
   Current: type aadlreal 0.0 A .. 350.0 A units Electricity_Properties::Current_Units;
   Voltage: type aadlreal -5.0 V .. 24.0 V units Electricity_Properties::Voltage_Units;
-  Resistance: type aadlreal 0.0 OHMS .. 470000.0 OHMS units Electricity_Properties::Resistance_Units;   
-  
+  Resistance: type aadlreal 0.0 OHMS .. 10000000000.0 OHMS units Electricity_Properties::Resistance_Units;
+
   Voltage_Range: type range of Electricity_Properties::Voltage;
 
   Output_Voltage : Electricity_Properties::Voltage applies to (Device, Processor, Port);
   Input_Voltage : Electricity_Properties::Voltage applies to (Device, Processor, Port);
-  
+
 end Electricity_Properties;

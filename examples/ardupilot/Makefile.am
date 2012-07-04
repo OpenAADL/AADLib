@@ -1,5 +1,5 @@
-AADL_SOURCES = $(srcdir)/main.aadl
-AADL_ROOT    = ardupilot.i
+AADL_SOURCES = $(srcdir)/main_Ardupilot.aadl
+AADL_ROOT    = ardupilot_shield.impl
 
 OTHER_FILES =					\
 	$(srcdir)/ardupilot_platform.aadl	\
@@ -12,8 +12,8 @@ OTHER_FILES =					\
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl real 
+AVAILABLE_TARGETS= parse-aadl real
 # build_c: probleme pour prendre en compte userdefined.mk lors d'un distcheck
 
-distclean-local: 
+distclean-local:
 	-rm -rf ardupilot_i

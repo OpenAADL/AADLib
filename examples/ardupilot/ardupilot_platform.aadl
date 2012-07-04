@@ -1,54 +1,55 @@
-package ardupilot_devices
+package ardupilot_platform
 public
+  with Data_Sheet;
 
--- Ardupilot devices to defin 
+  -- Ardupilot devices to defin
   device GPS
   end GPS;
-  
-  device ESC 
+
+  device ESC
   features
   pin : in event port;
   outM: out event port;
   Vin : in event port;
   end ESC;
-  
+
   device elevator
-  features 
+  features
   ele : in event port;
   end elevator;
-  
+
   device aileron
   features
   ail : in event port;
   end aileron;
-  
+
   device battery
   features
   Vout : out event port;
   end battery;
-  
+
   device RC_Rx
   features
   ch1 : out event port;
   ch2 : out event port;
   ch3 : out event port;
   ch4 : in out event port;-- not used in Ardupilot
-  ch5 : out event port;	
+  ch5 : out event port;
   ch6 : in out event port;-- not used in Ardupilot
   end RC_Rx;
-  
+
   device XYZ_sensor
   features
   Out_XY : out event port;
   Out_Z	 : out event port;
   end XYZ_sensor;
 
-  
+
   device Motor
   features
   pin : in event port;
   end Motor;
-  
+
   Properties
   Data_sheet::UUID => "-atmel.com";	-- see doc0943
-end ardupilot_devices;
+end ardupilot_platform;

@@ -33,5 +33,5 @@ with shields;
 	device MPXV7002DP extends devices::MPXV7002DP::MPXV7002DP 
 	-- airspeed sensor, its included in ArduPilot shield v2 kit
 	end MPXV7002DP;
-	
+
 end Shields::Ardupilot;
