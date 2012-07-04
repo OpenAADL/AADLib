@@ -1,6 +1,7 @@
 package devices::xyz_ir
 public
 
+
 with devices::thermopiles;
 with Data_Sheet;
 
@@ -12,5 +13,6 @@ device XYZ_IR extends devices::thermopiles::MLX90247
 	Data_Sheet::UUID => 
 	"http://paparazzi.enac.fr/wiki/Sensors/IR#Hardware_Architecture";
 end XYZ_IR;
+
 
 end devices::xyz_ir;

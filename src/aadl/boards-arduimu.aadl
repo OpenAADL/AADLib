@@ -12,7 +12,7 @@ public
   with Devices::SPI;
   with Buses::UART;
 
-  with Devices::ADXL335;
+  with Devices::ADXL;
   with Devices::LPR530AL;
   with Devices::LY530ALH;
 
@@ -37,7 +37,7 @@ public
     ATMEGA328p : processor Processors::ATMEGA::ATMEGA328p.impl
     { Processor_Properties::Processor_Frequency => 16 Mhz; };
 
-    ADXL335  : device Devices::ADXL335::ADXL335.impl;
+    ADXL335  : device Devices::ADXL::ADXL335.impl;
     LPR530AL : device Devices::LPR530AL::LPR530AL.impl;
     LY530ALH : device Devices::LY530ALH::LY530ALH.impl;
 

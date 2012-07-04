@@ -19,7 +19,7 @@ AADL_SOURCES=					\
 	$(srcdir)/buses-uart.aadl		\
 	$(srcdir)/buses-usb.aadl		\
 	$(srcdir)/buses-vme.aadl		\
-	$(srcdir)/devices-adxl335.aadl		\
+	$(srcdir)/devices-adxl.aadl		\
 	$(srcdir)/devices-afdx.aadl		\
 	$(srcdir)/devices-lpr530al.aadl		\
 	$(srcdir)/devices-ly530alh.aadl		\

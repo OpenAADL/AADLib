@@ -1,7 +1,7 @@
 package hardware_pathfider
 public
 with software_pathfinder;
-with Devices::ADXL335;
+with Devices::ADXL;
 with buses::VME;
 with buses::mil1553;
 with memories;
@@ -84,7 +84,7 @@ features
 	req_access_1553	: requires bus access bus_1553;
 end altimeter;
 
-device accelerometer extends Devices::ADXL335::ADXL335 
+device accelerometer extends Devices::ADXL::ADXL335 
 features
 	measured_data	: out data port software_pathfinder::measured_data;
 	req_access_1553	: requires bus access bus_1553;
