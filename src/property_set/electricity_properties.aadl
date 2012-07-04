@@ -56,7 +56,7 @@ property set Electricity_Properties is
 
   Current: type aadlreal 0.0 A .. 350.0 A units Electricity_Properties::Current_Units;
   Voltage: type aadlreal -5.0 V .. 24.0 V units Electricity_Properties::Voltage_Units;
-  Resistance: type aadlreal 0.0 OHMS .. 10_000_000_000.0 OHMS units Electricity_Properties::Resistance_Units;
+  Resistance: type aadlreal 0.0 OHMS .. 10000000000.0 OHMS units Electricity_Properties::Resistance_Units;
 
   Voltage_Range: type range of Electricity_Properties::Voltage;
 
