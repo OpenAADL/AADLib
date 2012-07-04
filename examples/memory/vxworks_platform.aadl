@@ -3,17 +3,17 @@
 
 package VxWorks_Platform
 public
- 
+
   with processors;
   with memories_vxworks;
 
   ---------------
   -- Processor --
   ---------------
-  
+
   processor MC68040_proc extends processors::MC68040
   end MC68040_proc;
-  
+
   processor implementation MC68040_proc.impl
   end MC68040_proc.impl;
 
@@ -21,25 +21,25 @@ public
   -- Memory --
   ------------
 
- memory memory_segment extends memories_vxworks::memory_segment 
+ memory memory_segment extends memories_vxworks::memory_segment
  end memory_segment;
- 
- memory implementation memory_segment.impl extends memories_vxworks::memory_segment.impl 
+
+ memory implementation memory_segment.impl extends memories_vxworks::memory_segment.impl
  end memory_segment.impl;
 
  memory implementation memory_segment.system_image extends memories_vxworks::memory_segment.system_image
  end memory_segment.system_image;
- 
+
  memory implementation memory_segment.board_specific extends memories_vxworks::memory_segment.board_specific
  end memory_segment.board_specific;
- 
+
  memory address_space extends memories_vxworks::address_space
  end address_space;
- 
+
  memory implementation address_space.vxworks extends memories_vxworks::address_space.vxworks
- end address_space.vxworks;		
- 
-  memory implementation address_space.mv162 extends memories_vxworks::address_space.mv162
-   end address_space.mv162;
-   
+ end address_space.vxworks;
+
+ memory implementation address_space.mv162 extends memories_vxworks::address_space.mv162
+ end address_space.mv162;
+
 end VxWorks_Platform;
