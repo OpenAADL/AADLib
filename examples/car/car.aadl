@@ -9,9 +9,9 @@ public
   with Buses::CAN;
   with Processors;
 
-  -- Generic Components 
+  -- Generic Components
 
-  thread T 
+  thread T
   properties
     Dispatch_Protocol => Periodic;
   end T;
@@ -44,14 +44,14 @@ public
     M2_In  : in  event data port M2;
   end PA;
 
-  process implementation PA.A 
+  process implementation PA.A
   subcomponents
-    T1 : thread T1 { 
+    T1 : thread T1 {
       Compute_Execution_Time => 52 ms .. 52 ms;
       Deadline               => 200 ms;
       Period                 => 100 ms;
     };
-    T2 : thread T2 { 
+    T2 : thread T2 {
       Compute_Execution_Time => 52 ms .. 52 ms;
       Deadline               => 280 ms;
       Period                 => 160 ms;
@@ -63,9 +63,9 @@ public
 
   processor implementation CPU.A
   properties
-    Scheduling_Protocol => (RMS);
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
   end CPU.A;
- 
+
  ------------
   -- Node B --
   ------------
@@ -90,22 +90,22 @@ public
 
   process implementation PB.B
   subcomponents
-    T3 : thread T { 
+    T3 : thread T {
       Compute_Execution_Time => 10 ms .. 10 ms;
       Deadline               => 60 ms;
       Period                 => 40 ms;
     };
-    T4 : thread T { 
+    T4 : thread T {
       Compute_Execution_Time => 20 ms .. 20 ms;
       Deadline               => 85 ms;
       Period                 => 60 ms;
     };
-    T5 : thread T5 { 
+    T5 : thread T5 {
       Compute_Execution_Time => 52 ms .. 52 ms;
       Deadline               => 150 ms;
       Period                 => 160 ms;
     };
-    T6 : thread T6 { 
+    T6 : thread T6 {
       Compute_Execution_Time => 52 ms .. 52 ms;
       Deadline               => 220 ms;
       Period                 => 100 ms;
@@ -118,7 +118,7 @@ public
 
   processor implementation CPU.B
   properties
-    Scheduling_Protocol => (EDF);
+    Scheduling_Protocol => (EARLIEST_DEADLINE_FIRST_PROTOCOL);
   end CPU.B;
 
   ------------
@@ -137,23 +137,23 @@ public
   end T8;
 
   process PC
-  features 
+  features
     M3_In : in event data port M3;
   end PC;
 
   process implementation PC.C
   subcomponents
-    T7 : thread T { 
+    T7 : thread T {
       Compute_Execution_Time => 28 ms .. 28 ms;
       Deadline               => 60 ms;
       Period                 => 60 ms;
     };
-    T8 : thread T8 { 
+    T8 : thread T8 {
       Compute_Execution_Time => 25 ms .. 25 ms;
       Deadline               => 320 ms;
       Period                 => 100 ms;
     };
-    T9 : thread T9 { 
+    T9 : thread T9 {
       Compute_Execution_Time => 14 ms .. 14 ms;
       Deadline               => 250 ms;
       Period                 => 100 ms;
@@ -165,7 +165,7 @@ public
 
   processor implementation CPU.C
   properties
-    Scheduling_Protocol => (RMS);
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
   end CPU.C;
 
   ----------------
