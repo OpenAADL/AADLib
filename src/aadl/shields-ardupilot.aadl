@@ -22,17 +22,20 @@ public
   device implementation Ardupilot.impl
   Properties
     Device_Driver => classifier (Shields::Ardupilot::Dr_MPXV7002DP);
-    --  XXX needs full qualification here?
+    -- Ardupilot shield is defined like a device, and it equiped with  
+    -- an airspeed sensor which is fixed on board, but we cannot 
+    -- reference in device shield a sensor device subcomponents. 
+    -- we defined Device_Driver property which specifies a reference to
+    -- Dr_MPXV7002DP abstarct component wich includes device (MPXV7002DP)
+    -- as a subcomponent 
   end Ardupilot.impl;
 
-  abstract Dr_MPXV7002DP
+  abstract Dr_MPXV7002DP 
   end Dr_MPXV7002DP ;
-
-  device D_MPXV7002DP extends Dr_MPXV7002DP
-  end D_MPXV7002DP;
-
-  device MPXV7002DP extends devices::MPXV7002DP::MPXV7002DP
-    -- airspeed sensor, its included in ArduPilot shield v2 kit
-  end MPXV7002DP;
+  
+  abstract implementation Dr_MPXV7002DP.impl 
+  subcomponents
+  MPXV7002DP : device devices::MPXV7002DP::MPXV7002DP;
+  end Dr_MPXV7002DP.impl ;
 
 end Shields::Ardupilot;
