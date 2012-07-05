@@ -14,14 +14,12 @@ public
   -- Ardupilot --
   ---------------
 
-
   system Ardupilot_Shield
   end Ardupilot_Shield;
 
   system implementation Ardupilot_Shield.impl
   subcomponents
-  Shield	: device shields::Ardupilot::Ardupilot;	-- Ardupilot Shield
-  IR_S		: device devices::MPXV7002DP::MPXV7002DP; -- On board differential pressure sensor
+  Shield	: system shields::Ardupilot::Ardupilot;	-- Ardupilot Shield 
   GPS		: device devices::EM406A::EM406A;	-- GPS module
   XYZ		: device devices::XYZ_IR::XYZ_IR;	-- Infrared Sensor
 
