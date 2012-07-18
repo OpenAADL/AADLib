@@ -7,9 +7,6 @@ with hardware_pathfider;
 ----------------system--------------------------------------------
 ------------------------------------------------------------------
 system sys_mars_pathfinder
-	features 
-	pro_access_vme	: provides bus access  hardware_pathfider::VME;
-	pro_access_1553	: provides bus access hardware_pathfider::bus_1553;
 	
 end sys_mars_pathfinder;
 
@@ -48,17 +45,16 @@ system implementation sys_mars_pathfinder.impl
 	P7: port star_analyser.measured_data-> prs_bus_interface.measured_data;
 	P8: port sun_sensors.measured_data 	-> prs_bus_interface.measured_data;
 	
-	B2: bus access pro_access_vme	-> camera.req_access_vme;
-	B3: bus access pro_access_vme	-> radio.req_access_vme;
-	B8: bus access pro_access_vme	-> rs_6000.req_access_vme;
-	B9: bus access pro_access_vme	-> interface.req_access_vme;
+	B1: bus access RS_6000.pro_access_vme	-> camera.req_access_vme;
+	B2: bus access RS_6000.pro_access_vme	-> radio.req_access_vme;
+	B3: bus access RS_6000.pro_access_vme	-> interface.req_access_vme;
 	
-	B4: bus access pro_access_1553	-> valves.req_access_1553;
-	B5: bus access pro_access_1553	-> thrusters.req_access_1553;
-	B6: bus access pro_access_1553	-> sun_sensors.req_access_1553;
-	B7: bus access pro_access_1553	-> star_analyser.req_access_1553;
-	B10:bus access pro_access_1553	-> interface.req_access_1553;
-	B11:bus access pro_access_1553	-> rover_sojourner.req_access_1553;
+	B4: bus access RS_6000.pro_access_1553	-> valves.req_access_1553;
+	B5: bus access RS_6000.pro_access_1553	-> thrusters.req_access_1553;
+	B6: bus access RS_6000.pro_access_1553	-> sun_sensors.req_access_1553;
+	B7: bus access RS_6000.pro_access_1553	-> star_analyser.req_access_1553;
+	B8: bus access RS_6000.pro_access_1553	-> interface.req_access_1553;
+	B9: bus access RS_6000.pro_access_1553	-> rover_sojourner.req_access_1553;
 	
 	properties 
 	Actual_processor_binding => (reference(rs_6000)) applies to PSC;

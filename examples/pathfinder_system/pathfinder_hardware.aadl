@@ -118,8 +118,9 @@ end memories;
 ----------------------processor------------------------------------
 -------------------------------------------------------------------
 processor rs_6000 extends processors::rs_6000
-	features
-	req_access_vme	: requires bus access VME;
+	features 
+	pro_access_vme	: provides bus access hardware_pathfider::VME;
+	pro_access_1553	: provides bus access hardware_pathfider::bus_1553;
 	
 end rs_6000;
 

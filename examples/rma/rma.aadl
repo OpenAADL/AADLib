@@ -94,6 +94,18 @@ public
     cpu	   : processor cpu.impl;
   properties
     Actual_Processor_Binding => (reference (cpu)) applies to node_a;
+ 
+  annex real_specification {** 
+  	
+  	therorem check_thread
+  	foreach e in thread_set do
+  	requires(periodic_thread);
+  	check(1=1);
+  	end check_thread;
+  	
+  **};
+  
+  
   end rma.impl;
 
 end RMAAadl;
