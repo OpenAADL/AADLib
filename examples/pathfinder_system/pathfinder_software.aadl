@@ -53,10 +53,10 @@ process prs_bus_interface extends bus_interface
 	
 	connections
 	-- by default access is required for the duration of the thread execution
-	C1: data access pro_data_rw <-> data_distribution.req_data_rw;
-	C2: data access pro_data_rw <-> control_task.req_data_rw;
-	C3: data access pro_data_rw <-> mesure_task.req_data_rw;
-	C4: data access pro_data_rw <-> meteo_task.req_data_rw;
+--	C1: data access pro_data_rw -> data_distribution.req_data_rw;
+--	C2: data access pro_data_rw -> control_task.req_data_rw;
+--	C3: data access pro_data_rw -> mesure_task.req_data_rw;
+--	C4: data access pro_data_rw -> meteo_task.req_data_rw;
 	
 	C5: port bus_scheduling.control_data	-> control_data;
 	C6: port camera_task.camera_control 	-> camera_control;
@@ -161,7 +161,7 @@ thread meteo_task
 	
 	properties
 	Dispatch_protocol		=> periodic;
-	priority				=> 1;
+	--priority				=> 1;
 	period			 		=> 5000 ms;
 	deadline				=> 5000 ms;
 	compute_execution_time	=> 0 ms .. 50 ms;

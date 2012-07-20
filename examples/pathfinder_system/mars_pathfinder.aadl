@@ -17,8 +17,8 @@ system implementation sys_mars_pathfinder.impl
 	prs_bus_interface 	: process software_pathfinder::prs_bus_interface.impl;
 	coupler				: process software_pathfinder::coupler;
 	VME					: bus hardware_pathfider::VME;
-	bus_1553			: bus hardware_pathfider::bus_1553;
-	
+	bus_1553			: bus hardware_pathfider::bus_1553 ;
+	--memories			: memory hardware_pathfider::memories;
 	radio				: device hardware_pathfider::radio;
 	rover_sojourner		: device hardware_pathfider::rover_sojourner;
 	-- measurement devices
@@ -60,6 +60,14 @@ system implementation sys_mars_pathfinder.impl
 	Actual_processor_binding => (reference(rs_6000)) applies to PSC;
 	Actual_processor_binding => (reference(rs_6000)) applies to prs_bus_interface;
 	Actual_processor_binding => (reference(rs_6000)) applies to coupler;
+	
+	annex real_specification {**
+      theorem exists_collection
+      foreach s in memory_set do
+      requires(collection);
+      check(1=1);
+    end exists_collection;
+    **};
 end sys_mars_pathfinder.impl;
 
 end mars_pathfinder;
