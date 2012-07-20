@@ -67,7 +67,7 @@ prefix='$(OCARINA_PREFIX)'
 
 dnl Important! One file per line, nothing before
 dnl or after except whitespace! This section
-dnl may, one day, be edited automatically to remove 
+dnl may, one day, be edited automatically to remove
 dnl some entries.
 
 AC_OUTPUT([
@@ -86,6 +86,7 @@ AC_OUTPUT([
 	examples/flow_analysis/Makefile
 	examples/line_follower/Makefile
 	examples/mixin/Makefile
+	examples/pathfinder_system/Makefile
 	examples/memory/Makefile
 	examples/perseus/Makefile
 	examples/producer_consumer/Makefile

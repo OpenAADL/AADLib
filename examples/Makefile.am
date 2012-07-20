@@ -1,7 +1,7 @@
 SUBDIRS= aocs ardupilot arinc653_annex asl behavior_annex car		\
-	data_modeling_annex fcs flow_analysis line_follower mixin	\
-	memory perseus producer_consumer ravenscar radar rap		\
-	redundancy rma round_robin time_triggered uxv voter
+	 data_modeling_annex fcs flow_analysis line_follower mixin	\
+	 memory pathfinder_system perseus producer_consumer ravenscar	\
+	radar rap redundancy rma round_robin time_triggered uxv voter
 
 EXTRA_DIST=$(srcdir)/Makefile.common
 
@@ -14,4 +14,4 @@ uninstall-local:
 	rm -rf $(DESTDIR)$(SAMPLE_DIR)
 
 clean-local:
-	-rm -rf *~ 
+	-rm -rf *~

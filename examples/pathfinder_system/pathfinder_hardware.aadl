@@ -1,6 +1,6 @@
-package hardware_pathfider
+package pathfinder_hardware
 public
-with software_pathfinder;
+with pathfinder_software;
 with Devices::ADXL;
 with buses::VME;
 with buses::mil1553;
@@ -9,33 +9,33 @@ with processors;
 -----------------------------------------------------------------
 -------------------------devices---------------------------------
 -----------------------------------------------------------------
--- devices plugged on VME 
+-- devices plugged on VME
 device camera
 	features
-	camera_control	: in data port software_pathfinder::camera_control;
-	images_data		: out data port software_pathfinder::images_data;
+	camera_control	: in data port pathfinder_software::camera_control;
+	images_data		: out data port pathfinder_software::images_data;
 	req_access_vme	: requires bus access VME;
-	
+
 end camera;
 
 device radio
 	features
-	emission_data	: in data port software_pathfinder::emission_data;
-	reception_data	: out data port software_pathfinder::reception_data;
+	emission_data	: in data port pathfinder_software::emission_data;
+	reception_data	: out data port pathfinder_software::reception_data;
 	req_access_vme	: requires bus access VME;
-	
+
 end radio;
 
 device interface
-	features 
+	features
 	req_access_vme 	: requires bus access VME;
 	req_access_1553 : requires bus access bus_1553;
-	control_data 	: in data port software_pathfinder::control_data;
-	
+	control_data 	: in data port pathfinder_software::control_data;
+
 	properties
 	-- driver of the interface between VME and 1553
-	device_driver => classifier (software_pathfinder::bus_interface);
-	
+	device_driver => classifier (pathfinder_software::bus_interface);
+
 end interface;
 
 -- devices plugged on 1553
@@ -44,58 +44,58 @@ device rover_sojourner
 -- rover Sojourner device
 	features
 	req_access_1553 : requires bus access bus_1553;
-	properties 
-	-- driver of the communication between lander and sojourner 
-	device_driver => classifier (software_pathfinder::coupler);
-	
+	properties
+	-- driver of the communication between lander and sojourner
+	device_driver => classifier (pathfinder_software::coupler);
+
 end rover_sojourner;
 
 device thrusters
 	features
-	control_data	: in data port software_pathfinder::control_data;
+	control_data	: in data port pathfinder_software::control_data;
 	req_access_1553	: requires bus access bus_1553;
-	
+
 end thrusters;
 
 device valves
 	features
-	control_data	: in data port software_pathfinder::control_data;
+	control_data	: in data port pathfinder_software::control_data;
 	req_access_1553	: requires bus access bus_1553;
-	
+
 end valves;
 
 device sun_sensors
 	features
-	measured_data	: out data port software_pathfinder::measured_data;
+	measured_data	: out data port pathfinder_software::measured_data;
 	req_access_1553	: requires bus access bus_1553;
-	
+
 end sun_sensors;
 
 device star_analyser
 	features
-	measured_data	: out data port software_pathfinder::measured_data;
+	measured_data	: out data port pathfinder_software::measured_data;
 	req_access_1553	: requires bus access bus_1553;
-	
+
 end star_analyser;
 
 device altimeter
 features
-	measured_data	: out data port software_pathfinder::measured_data;
+	measured_data	: out data port pathfinder_software::measured_data;
 	req_access_1553	: requires bus access bus_1553;
 end altimeter;
 
-device accelerometer extends Devices::ADXL::ADXL335 
+device accelerometer extends Devices::ADXL::ADXL335
 features
-	measured_data	: out data port software_pathfinder::measured_data;
+	measured_data	: out data port pathfinder_software::measured_data;
 	req_access_1553	: requires bus access bus_1553;
-	
+
 end accelerometer;
 
 device meteorological
 features
-	measured_data	: out data port software_pathfinder::measured_data;
+	measured_data	: out data port pathfinder_software::measured_data;
 	req_access_1553	: requires bus access bus_1553;
-	
+
 end meteorological;
 
 
@@ -111,28 +111,28 @@ bus bus_1553 extends buses::MIL1553::MIL1553 end bus_1553;
 
 memory memories extends memories::ROM
 features
-req_access_vme	: requires bus access  VME; 
+req_access_vme	: requires bus access  VME;
 end memories;
 
 -------------------------------------------------------------------
 ----------------------processor------------------------------------
 -------------------------------------------------------------------
 processor rs_6000 extends processors::rs_6000
-	features 
-	pro_access_vme	: provides bus access hardware_pathfider::VME;
-	pro_access_1553	: provides bus access hardware_pathfider::bus_1553;
-	
+	features
+	pro_access_vme	: provides bus access pathfinder_hardware::VME;
+	pro_access_1553	: provides bus access pathfinder_hardware::bus_1553;
+
 end rs_6000;
 
 processor implementation rs_6000.impl
 	subcomponents
 	memories			: memory memories;
-	
-	properties 
+
+	properties
 	scheduling_protocol => (RMS);
 	-- to analyse with
 	-- scheduling_protocol => (EDF) ;
-	
+
 end rs_6000.impl;
 
-end hardware_pathfider;
+end pathfinder_hardware;
