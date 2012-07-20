@@ -48,7 +48,8 @@ mast:
 
 real:
 	$(OCARINA) $(OCARINA_FLAGS) -g real_theorem \
-		-real_lib $(top_srcdir)/src/real/aadl_theorems.real \
+                -real_continue_eval \
+	        -real_lib $(top_srcdir)/src/real/aadl_theorems.real \
 		-real_lib $(top_srcdir)/src/real/arinc653_theorems.real \
 		-real_lib $(top_srcdir)/src/real/bare_board_theorems.real \
 		-real_lib $(top_srcdir)/src/real/data_model_theorems.real \
