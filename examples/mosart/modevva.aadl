@@ -1,0 +1,114 @@
+--  Case study for MoDeVVA'12 paper, written for Yassine OUHAMMOU
+
+package MoDeVVa
+public
+
+  --------------
+  -- Regulate --
+  --------------
+
+  thread regulate
+  features
+    mbx : requires data access Mailbox.impl;
+  end regulate;
+
+  thread implementation regulate.impl
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 8ms;
+    Deadline          => 8ms;
+    Compute_Execution_Time => 0 ms .. 4 ms;
+  end regulate.impl;
+
+  -------------
+  -- Display --
+  -------------
+
+  thread display
+  features
+    mbx : requires data access Mailbox.impl;
+  end display;
+
+  thread implementation display.impl
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 10 ms;
+    Deadline          => 10 ms;
+    Compute_Execution_Time => 0 ms .. 3 ms;
+  end display.impl;
+
+  -------------
+  -- Acquire --
+  -------------
+
+  thread acquire
+  end acquire;
+
+  thread implementation acquire.impl
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 8 ms;
+    Deadline          => 8 ms;
+    Compute_Execution_Time => 0 ms .. 2 ms;
+  end acquire.impl;
+
+  -------------
+  -- Mailbox --
+  -------------
+
+  subprogram Store
+  features
+    this : requires data access Mailbox.impl;
+  properties
+    Compute_Execution_Time => 1 ms .. 1 ms;
+  end Store;
+
+  data Mailbox
+  features
+    Store : provides subprogram access Store;
+  properties
+    Priority => 240;
+    Concurrency_Control_Protocol => Priority_Ceiling;
+  end Mailbox;
+
+  data implementation Mailbox.impl
+  subcomponents
+    spgStore : subprogram Store;
+  connections
+    Cnx_1 : subprogram access spgStore -> Store;
+  end Mailbox.impl;
+
+  -------------
+  -- MoDeVVa --
+  -------------
+
+  process p end p;
+
+  process implementation p.impl
+  subcomponents
+    regulate : thread regulate.impl;
+    display  : thread display.impl;
+    acquire  : thread acquire.impl;
+    mbx      : data   mailbox.impl;
+  connections
+    cnx_1 : data access mbx -> regulate.mbx;
+    cnx_2 : data access mbx -> display.mbx;
+  end p.impl;
+
+  processor CPU
+  properties
+    Scheduling_Protocol => (RATE_MONOTONIC_PROTOCOL);
+  end CPU;
+
+  system modevva
+  end modevva;
+
+  system implementation modevva.impl
+  subcomponents
+    CPU : processor CPU;
+    Proc : process p.impl;
+  properties
+    Actual_Processor_Binding => (reference (CPU)) applies to Proc;
+  end modevva.impl;
+
+end MoDeVVa;

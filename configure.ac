@@ -85,9 +85,10 @@ AC_OUTPUT([
 	examples/fcs/Makefile
 	examples/flow_analysis/Makefile
 	examples/line_follower/Makefile
-	examples/mixin/Makefile
-	examples/pathfinder_system/Makefile
 	examples/memory/Makefile
+	examples/mixin/Makefile
+        examples/mosarts/Makefile
+	examples/pathfinder_system/Makefile
 	examples/perseus/Makefile
 	examples/producer_consumer/Makefile
 	examples/radar/Makefile
