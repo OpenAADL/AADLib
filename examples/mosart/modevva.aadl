@@ -67,7 +67,8 @@ public
   features
     Store : provides subprogram access Store;
   properties
-    Priority => 240;
+    --Priority => 240;
+    -- Priority cannot applied to data component
     Concurrency_Control_Protocol => Priority_Ceiling;
   end Mailbox;
 
@@ -97,7 +98,7 @@ public
 
   processor CPU
   properties
-    Scheduling_Protocol => (RATE_MONOTONIC_PROTOCOL);
+    Scheduling_Protocol => (RMS);
   end CPU;
 
   system modevva
