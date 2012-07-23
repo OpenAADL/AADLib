@@ -1,32 +1,17 @@
 --------------------------------------------------------------------------------
 --  Check whether the threads bound to each processors can be
---  scheduled with RMA (cf. Liu, Layland. "Scheduling Algorithms for
+--  schedduled with RMA (cf. Liu, Layland. "Scheduling Algorithms for
 --  Multi-programming in hard-Real-Time Environment", JACM, 01/1973)
 
---theorem rma
+theorem rma
 
---foreach e in Processor_Set do
+foreach e in Processor_Set do
 
-  --Proc_Set(e) := {x in Process_Set | Is_Bound_To (x, e)};
+  Proc_Set(e) := {x in Process_Set | Is_Bound_To (x, e)};
 
-  --Threads := {x in Thread_Set | Is_Subcomponent_Of (x, Proc_Set)};
-  
-  --check (Scheduling_rma);
-  
---end rma;
+  Threads := {x in Thread_Set | Is_Subcomponent_Of (x, Proc_Set)};
 
---theorem Scheduling_rma
+  check (sum (get_property_value (Threads, "RTOS_properties::Utilization")) <=
+           (Cardinal (Threads) * (2 ** (1 / Cardinal (Threads))) -1));
 
---foreach e in thread_set do
-
---var zeta := (Last (get_property_value (e, "compute_execution_time")));
-  
-  --var lan := (get_property_value (e,"period")) / 10**9;
-  
-  --var xon := zeta / lan ;
-  
- --return(MSum(lan));
-
-  --check (sum (xon) <= sum (lan));--(Cardinal (e) * (2 ** (1 / Cardinal (e))) -1));
-  
-  --end Scheduling_rma;
+end rma;

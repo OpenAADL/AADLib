@@ -95,14 +95,13 @@ public
   properties
     Actual_Processor_Binding => (reference (cpu)) applies to node_a;
  
-  annex real_specification {**
-      theorem check_power_tree
-      foreach s in thread_set do
-      requires(per_thread);
-      --requires(Power_Consumption);
-      check(1=1);
-    end check_power_tree;
-    **};
+--  annex real_specification {**
+--      theorem check_power_tree
+--      foreach s in processor_set do
+--      requires(vrai_rma);
+--      check(1=1);
+--    end check_power_tree;
+--    **};
   
   
   end rma.impl;

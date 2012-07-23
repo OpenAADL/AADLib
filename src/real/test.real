@@ -1,6 +1,0 @@
-
-theorem per_thread
-  foreach e in Thread_Set do
-  check (Get_Property_Value(e, "dispatch_protocol") = "Periodic");
-  end per_thread;
- 
