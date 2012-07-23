@@ -104,3 +104,19 @@ end UniqueCall ;
   
   end range ;
 
+  ----------------------------------------------------------------------------
+
+--theorem rma
+
+--foreach e in Processor_Set do
+
+--  Proc_Set(e) := {x in Process_Set | Is_Bound_To (x, e)};
+
+--  Threads := {x in Thread_Set | Is_Subcomponent_Of (x, Proc_Set)};
+  
+  --var C_sur_T := 
+
+--  check (sum (get_property_value (Threads, "period")) <=
+--           (Cardinal (Threads) * (2 ** (1 / Cardinal (Threads))) -1));
+
+--end rma;

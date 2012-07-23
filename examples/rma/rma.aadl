@@ -100,7 +100,7 @@ public
       foreach s in thread_set do
       requires(per_thread);
       --requires(Power_Consumption);
-      check(1.0 > 0.0);
+      check(1=1);
     end check_power_tree;
     **};
   
