@@ -68,6 +68,7 @@ public
 
   processor implementation cpu.impl extends processors::cpu_rma.impl
   end cpu.impl;
+
   ---------------
   -- Processes --
   ---------------
@@ -94,10 +95,6 @@ public
     cpu	   : processor cpu.impl;
   properties
     Actual_Processor_Binding => (reference (cpu)) applies to node_a;
-<<<<<<< HEAD
-
-=======
->>>>>>> 7ffab9428b518771f7ad1bb416901cd1521c8d9c
   annex real_specification {**
       theorem strange
       foreach s in thread_set do
@@ -109,7 +106,7 @@ public
 --      requires(test_flows);
 --      check(1=1);
 --    end test_flows;
-    
+
     **};
 
 
