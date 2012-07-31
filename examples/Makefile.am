@@ -1,6 +1,6 @@
 SUBDIRS= aocs ardupilot arinc653_annex asl behavior_annex car		\
 	  data_modeling_annex fcs flow_analysis line_follower mixin	\
-	  memory mosarts pathfinder_system perseus producer_consumer	\
+	  memory mosart pathfinder_system perseus producer_consumer	\
 	 ravenscar radar rap redundancy rma round_robin			\
 	 time_triggered uxv voter
 
