@@ -73,13 +73,13 @@ public
 
     Thread_Limit => 1;
 
-  annex real_specification {**
-     theorem check_model2
-        foreach s in local_set do
-	   requires (check_bare_board_system);
-	      check (1 = 1);
-     end check_model2;
-  **};
+--  annex real_specification {**
+--     theorem check_model2
+--        foreach s in local_set do
+--	     requires (check_bare_board_system);
+--	      check (1 = 1);
+--     end check_model2;
+--  **};
   end ATMEGA8;
 
   processor implementation ATMEGA8.impl
