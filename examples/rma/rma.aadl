@@ -94,14 +94,22 @@ public
     cpu	   : processor cpu.impl;
   properties
     Actual_Processor_Binding => (reference (cpu)) applies to node_a;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7ffab9428b518771f7ad1bb416901cd1521c8d9c
   annex real_specification {**
-      theorem check_power_tree
+      theorem strange
       foreach s in thread_set do
-      requires(per_thread);
-      --requires(Power_Consumption);
-      check(1.0 > 0.0);
-    end check_power_tree;
+      --requires(test_thread);
+      check(1=1);
+    end strange;
+--    theorem test_flows
+--      foreach f in processor_set do
+--      requires(test_flows);
+--      check(1=1);
+--    end test_flows;
+    
     **};
 
 

@@ -11,57 +11,57 @@ system sys_mars_pathfinder
 end sys_mars_pathfinder;
 
 system implementation sys_mars_pathfinder.impl
-	subcomponents
-	rs_6000				: processor pathfinder_hardware::rs_6000;
-	PSC					: process pathfinder_software::PSC.impl;
-	prs_bus_interface 	: process pathfinder_software::prs_bus_interface.impl;
-	coupler				: process pathfinder_software::coupler;
-	VME					: bus pathfinder_hardware::VME;
-	bus_1553			: bus pathfinder_hardware::bus_1553 ;
-	--memories			: memory pathfinder_hardware::memories;
-	radio				: device pathfinder_hardware::radio;
-	rover_sojourner		: device pathfinder_hardware::rover_sojourner;
-	-- measurement devices
-	camera				: device pathfinder_hardware::camera;
-	altimeter			: device pathfinder_hardware::altimeter;
-	accelerometer		: device pathfinder_hardware::accelerometer;
-	meterological		: device pathfinder_hardware::meteorological;
-	sun_sensors			: device pathfinder_hardware::sun_sensors;
-	star_analyser		: device pathfinder_hardware::star_analyser;
-	-- control devices
-	thrusters			: device pathfinder_hardware::thrusters;
-	interface			: device pathfinder_hardware::interface;
-	valves				: device pathfinder_hardware::valves;
+subcomponents
+rs_6000 : processor pathfinder_hardware::rs_6000;
+PSC : process pathfinder_software::PSC.impl;
+prs_bus_interface : process pathfinder_software::prs_bus_interface.impl;
+coupler : process pathfinder_software::coupler;
+VME : bus pathfinder_hardware::VME;
+bus_1553 : bus pathfinder_hardware::bus_1553 ;
+--memories : memory pathfinder_hardware::memories;
+radio : device pathfinder_hardware::radio;
+rover_sojourner : device pathfinder_hardware::rover_sojourner;
+-- measurement devices
+camera : device pathfinder_hardware::camera;
+altimeter : device pathfinder_hardware::altimeter;
+accelerometer : device pathfinder_hardware::accelerometer;
+meterological : device pathfinder_hardware::meteorological;
+sun_sensors : device pathfinder_hardware::sun_sensors;
+star_analyser : device pathfinder_hardware::star_analyser;
+-- control devices
+thrusters : device pathfinder_hardware::thrusters;
+interface : device pathfinder_hardware::interface;
+valves : device pathfinder_hardware::valves;
 
 
-	connections
-	P1: port prs_bus_interface.emission_data   	-> radio.emission_data;
-	P2: port prs_bus_interface.camera_control   -> camera.camera_control;
-	P3: port prs_bus_interface.control_data   	-> valves.control_data;
-	P4: port prs_bus_interface.control_data   	-> thrusters.control_data;
+connections
+P1: port prs_bus_interface.emission_data -> radio.emission_data;
+P2: port prs_bus_interface.camera_control -> camera.camera_control;
+P3: port prs_bus_interface.control_data -> valves.control_data;
+P4: port prs_bus_interface.control_data -> thrusters.control_data;
 
-	P5: port camera.images_data 		-> prs_bus_interface.images_data;
-	P6: port radio.reception_data 		-> prs_bus_interface.reception_data;
-	P7: port star_analyser.measured_data-> prs_bus_interface.measured_data;
-	P8: port sun_sensors.measured_data 	-> prs_bus_interface.measured_data;
+P5: port camera.images_data -> prs_bus_interface.images_data;
+P6: port radio.reception_data -> prs_bus_interface.reception_data;
+P7: port star_analyser.measured_data-> prs_bus_interface.measured_data;
+P8: port sun_sensors.measured_data -> prs_bus_interface.measured_data;
 
-	B1: bus access RS_6000.pro_access_vme	-> camera.req_access_vme;
-	B2: bus access RS_6000.pro_access_vme	-> radio.req_access_vme;
-	B3: bus access RS_6000.pro_access_vme	-> interface.req_access_vme;
+B1: bus access RS_6000.pro_access_vme -> camera.req_access_vme;
+B2: bus access RS_6000.pro_access_vme -> radio.req_access_vme;
+B3: bus access RS_6000.pro_access_vme -> interface.req_access_vme;
 
-	B4: bus access RS_6000.pro_access_1553	-> valves.req_access_1553;
-	B5: bus access RS_6000.pro_access_1553	-> thrusters.req_access_1553;
-	B6: bus access RS_6000.pro_access_1553	-> sun_sensors.req_access_1553;
-	B7: bus access RS_6000.pro_access_1553	-> star_analyser.req_access_1553;
-	B8: bus access RS_6000.pro_access_1553	-> interface.req_access_1553;
-	B9: bus access RS_6000.pro_access_1553	-> rover_sojourner.req_access_1553;
+B4: bus access RS_6000.pro_access_1553 -> valves.req_access_1553;
+B5: bus access RS_6000.pro_access_1553 -> thrusters.req_access_1553;
+B6: bus access RS_6000.pro_access_1553 -> sun_sensors.req_access_1553;
+B7: bus access RS_6000.pro_access_1553 -> star_analyser.req_access_1553;
+B8: bus access RS_6000.pro_access_1553 -> interface.req_access_1553;
+B9: bus access RS_6000.pro_access_1553 -> rover_sojourner.req_access_1553;
 
-	properties
-	Actual_processor_binding => (reference(rs_6000)) applies to PSC;
-	Actual_processor_binding => (reference(rs_6000)) applies to prs_bus_interface;
-	Actual_processor_binding => (reference(rs_6000)) applies to coupler;
+properties
+Actual_processor_binding => (reference(rs_6000)) applies to PSC;
+Actual_processor_binding => (reference(rs_6000)) applies to prs_bus_interface;
+Actual_processor_binding => (reference(rs_6000)) applies to coupler;
 
-	annex real_specification {**
+annex real_specification {**
       theorem exists_collection
       foreach s in memory_set do
       requires(collection);

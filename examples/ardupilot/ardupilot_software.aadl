@@ -23,17 +23,18 @@ public
   subprogram spg_gps_simulation
   features
     gps_pos : out parameter GPS_Position.i;
-
   properties
     Source_Language  => (C);
     Source_Name => "gps_simulation";
     Source_Text => ("gps.c");
+    compute_execution_time => 3 ms .. 5ms;
   end spg_gps_simulation;
   
   thread thr_gps_simulation
   features
     gps_pos : out data port GPS_Position.i;
-
+  flows 
+  	fs1 : flow source gps_pos;
   properties
     Dispatch_Protocol      => Periodic;
     Period                 => 1000ms;
@@ -63,11 +64,17 @@ public
 
     speed     : out parameter Base_Types::Integer;
     angle     : out parameter Base_Types::Integer;
+    
+  flows 
+  	fs1 : flow sink gps_pos;
+  	fs2 : flow source speed;
+  	fs3 : flow source angle;
 
   properties
     Source_Language => (C);
     Source_Name => "flt_mgmt_simulation";
     Source_Text => ("flt-mgmt.c");
+    compute_execution_time => 3 ms .. 5ms;
   end spg_flt_mgmt_simulation;
   
   subprogram spg_flt_mgmt_init
@@ -83,6 +90,11 @@ public
 
     speed       : out data port Base_Types::Integer;
     angle       : out data port Base_Types::Integer;
+    
+  flows
+  	fs1 : flow sink gps_pos;
+  	fs2 : flow source speed;
+  	fs3 : flow source angle;  
 
   properties
     Dispatch_Protocol       => Periodic;
@@ -116,18 +128,22 @@ public
     Source_Language => (C);
     Source_Name => "throttle_simulation";
     Source_Text => ("throttle.c");
+    compute_execution_time => 3 ms .. 5ms;
   end spg_throttle_simulation;
   
   thread thr_throttle_simulation
   features
     speed : in data port Base_Types::Integer;
 
+  flows 
+  	fs1 : flow sink speed;
+  	
   properties
     Dispatch_Protocol       => Periodic;
     Period                  => 1000ms;
     Deadline                => 1000ms;
     Compute_Execution_Time  => 5ms .. 10ms;
-
+  
   end thr_throttle_simulation;
   
   thread implementation thr_throttle_simulation.i
@@ -150,12 +166,14 @@ public
     Source_Language => (C);
     Source_Name => "yaw_simulation";
     Source_Text => ("yaw.c");
+    compute_execution_time => 3 ms .. 5ms;
   end spg_yaw_simulation;
   
   thread thr_yaw_simulation
   features
     angle : in data port Base_Types::Integer;
-
+  flows
+  	fs1 : flow sink angle;
   properties
     Dispatch_Protocol      => Periodic;
     Period                 => 1000ms;
@@ -191,7 +209,16 @@ public
 
     R8:port prs_mgmt.speed    -> prs_throttle.speed;
     R9:port prs_mgmt.angle    -> prs_yaw.angle;
-
+    
+--  flows
+--  	flow1 : end to end flow prs_gps.fs1 -> R7 -> prs_mgmt.fs1
+-- 							{Actual_Latency => 2 ms ..3 ms;};
+--  							
+--  	flow2 : end to end flow prs_mgmt.fs2 -> R8 -> prs_throttle.fs1
+--  							{Actual_Latency => 2 ms ..3 ms;};
+--  
+--  	flow3 : end to end flow prs_mgmt.fs3 -> R9 -> prs_yaw.fs1
+--  							{Actual_Latency  => 2 ms ..3 ms;};
   end Ardupilot_Code.impl;
 
 end Ardupilot_Software;

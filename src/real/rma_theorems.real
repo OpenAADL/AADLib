@@ -1,8 +1,8 @@
 
 --------------------------------------------------------------------------------
---  Check whether the threads bound to each processors can be
---  scheduled with RMA (cf. Liu, Layland. "Scheduling Algorithms for
---  Multi-programming in hard-Real-Time Environment", JACM, 01/1973)
+-- Check whether the threads bound to each processors can be
+-- schedduled with RMA (cf. Liu, Layland. "Scheduling Algorithms for
+-- Multi-programming in hard-Real-Time Environment", JACM, 01/1973)
 
 --  Utility theorem: compute Utilization factor for a set of threads
 
