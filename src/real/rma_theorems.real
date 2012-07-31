@@ -1,7 +1,22 @@
+
 --------------------------------------------------------------------------------
 --  Check whether the threads bound to each processors can be
 --  scheduled with RMA (cf. Liu, Layland. "Scheduling Algorithms for
 --  Multi-programming in hard-Real-Time Environment", JACM, 01/1973)
+
+--  Utility theorem: compute Utilization factor for a set of threads
+
+theorem evaluate_utilization
+  foreach e in Local_Set do
+    var Period := get_property_value (e, "period");
+    var WCET := Last (get_property_value (e, "compute_execution_time"));
+    var U := WCET/Period;
+
+    return (MSum (U));
+
+end evaluate_utilization;
+
+--  Main RMA theorem starts here
 
 theorem rma
 
@@ -11,7 +26,8 @@ foreach e in Processor_Set do
 
   Threads := {x in Thread_Set | Is_Subcomponent_Of (x, Proc_Set)};
 
-  check (sum (get_property_value (Threads, "RTOS_properties::Utilization")) <=
-           (Cardinal (Threads) * (2 ** (1 / Cardinal (Threads))) -1));
+  var U := compute evaluate_utilization (Threads);
+
+  check (U <= (Cardinal (Threads) * (2 ** (1 / Cardinal (Threads))) -1));
 
 end rma;
