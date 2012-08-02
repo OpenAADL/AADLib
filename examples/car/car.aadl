@@ -118,7 +118,7 @@ public
 
   processor implementation CPU.B
   properties
-    Scheduling_Protocol => (EARLIEST_DEADLINE_FIRST_PROTOCOL);
+    Scheduling_Protocol => (EDF);
   end CPU.B;
 
   ------------

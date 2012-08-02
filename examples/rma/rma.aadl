@@ -97,8 +97,8 @@ public
     Actual_Processor_Binding => (reference (cpu)) applies to node_a;
   annex real_specification {**
       theorem strange
-      foreach s in thread_set do
-      --requires(test_thread);
+      foreach s in processor_set do
+      requires(edf);
       check(1=1);
     end strange;
 --    theorem test_flows

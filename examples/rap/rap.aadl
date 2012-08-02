@@ -313,7 +313,7 @@ public
     Time_to_go_to_Release  : out parameter RAP_Int_32;
     Weapon_Down_Range_Travel  : out parameter RAP_Int_32;
     Weapon_Cross_Range_Travel : out parameter RAP_Int_32;
-    do_relaunch         : out event port;
+    do_relaunch         : in out event port;
   properties
     source_language => (Ada95);
     source_name => "Weapon_Trajectory.On_Relaunch";
@@ -325,8 +325,8 @@ public
     Weapon_Release_Interval : in parameter RAP_Int_32;
     Delivery_Mode_Selected  : in parameter RAP_Int_32;
     Bomb_Button_Depressed   : in parameter RAP_Int_32;
-    do_relaunch             : out event port;
-    Release_Signal          : out event port;
+    do_relaunch             : in out event port;
+    Release_Signal          : in out event port;
   properties
     source_language => (Ada95);
     source_name => "Weapon_Release.On_Manual_Weapon_Release";
@@ -338,8 +338,8 @@ public
     Weapon_Release_Interval : in parameter RAP_Int_32;
     Delivery_Mode_Selected  : in parameter RAP_Int_32;
     Bomb_Button_Depressed   : in parameter RAP_Int_32;
-    do_relaunch             : out event port;
-    Release_Signal          : out event port;
+    do_relaunch             : in out event port;
+    Release_Signal          : in out event port;
   properties
     source_language => (Ada95);
     source_name => "Weapon_Release.On_Relaunch";
@@ -389,7 +389,7 @@ public
     Keymap_Image                  : in parameter RAP_Int_32;
     Waypoint_Steering_Selected    : out parameter RAP_Int_32;	
     Quantity_Select_Request       : out parameter RAP_Int_32;
-    Auto_CCIP_Toggle              : out event port;
+    Auto_CCIP_Toggle              : in out event port;
   properties
     source_language => (Ada95);
     source_name => "Keyset.Job";
@@ -424,7 +424,7 @@ public
   subprogram HOTAS_Job
   features
     Bomb_Button            : out parameter RAP_Int_32;
-    Manual_Weapon_Release  : out event port;
+    Manual_Weapon_Release  : in out event port;
   properties
     source_language => (Ada95);
     source_name => "HOTAS.Job";
@@ -1360,7 +1360,7 @@ features
   --  From ADC
 
   Angle_Of_Attack           : in data port RAP_Int_32;
-
+  
 end Weapons;
 
 process implementation Weapons.impl
