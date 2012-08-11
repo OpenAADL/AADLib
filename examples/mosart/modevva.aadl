@@ -3,6 +3,7 @@
 package MoDeVVa
 public
 
+with Processors;
   --------------
   -- Regulate --
   --------------
@@ -96,7 +97,7 @@ public
     cnx_2 : data access mbx -> display.mbx;
   end p.impl;
 
-  processor CPU
+  processor CPU extends Processors::Generic_CPU
   properties
     Scheduling_Protocol => (RMS);
   end CPU;

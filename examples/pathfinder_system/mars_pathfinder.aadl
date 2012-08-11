@@ -12,26 +12,30 @@ end sys_mars_pathfinder;
 
 system implementation sys_mars_pathfinder.impl
 subcomponents
-rs_6000 : processor pathfinder_hardware::rs_6000;
-PSC : process pathfinder_software::PSC.impl;
-prs_bus_interface : process pathfinder_software::prs_bus_interface.impl;
-coupler : process pathfinder_software::coupler;
-VME : bus pathfinder_hardware::VME;
-bus_1553 : bus pathfinder_hardware::bus_1553 ;
---memories : memory pathfinder_hardware::memories;
-radio : device pathfinder_hardware::radio;
+rs_6000 			:processor pathfinder_hardware::rs_6000;
+PSC 				: process pathfinder_software::PSC.impl;
+prs_bus_interface 	: process pathfinder_software::prs_bus_interface.impl;
+coupler 			: process pathfinder_software::coupler;
+
+VME 		: bus pathfinder_hardware::VME;
+bus_1553 	: bus pathfinder_hardware::bus_1553 ;
+memories 	: memory pathfinder_hardware::memories;
+
+radio 			: device pathfinder_hardware::radio;
 rover_sojourner : device pathfinder_hardware::rover_sojourner;
+
 -- measurement devices
-camera : device pathfinder_hardware::camera;
-altimeter : device pathfinder_hardware::altimeter;
-accelerometer : device pathfinder_hardware::accelerometer;
-meterological : device pathfinder_hardware::meteorological;
-sun_sensors : device pathfinder_hardware::sun_sensors;
-star_analyser : device pathfinder_hardware::star_analyser;
+camera 			: device pathfinder_hardware::camera;
+altimeter 		: device pathfinder_hardware::altimeter;
+accelerometer 	: device pathfinder_hardware::accelerometer;
+meterological 	: device pathfinder_hardware::meteorological;
+sun_sensors 	: device pathfinder_hardware::sun_sensors;
+star_analyser 	: device pathfinder_hardware::star_analyser;
+
 -- control devices
-thrusters : device pathfinder_hardware::thrusters;
-interface : device pathfinder_hardware::interface;
-valves : device pathfinder_hardware::valves;
+thrusters 	: device pathfinder_hardware::thrusters;
+interface 	: device pathfinder_hardware::interface;
+valves 		: device pathfinder_hardware::valves;
 
 
 connections
@@ -61,13 +65,6 @@ Actual_processor_binding => (reference(rs_6000)) applies to PSC;
 Actual_processor_binding => (reference(rs_6000)) applies to prs_bus_interface;
 Actual_processor_binding => (reference(rs_6000)) applies to coupler;
 
-annex real_specification {**
-      theorem exists_collection
-      foreach s in memory_set do
-      requires(collection);
-      check(1=1);
-    end exists_collection;
-    **};
 end sys_mars_pathfinder.impl;
 
 end mars_pathfinder;

@@ -2,12 +2,12 @@ package emaxxv2_sw
 public
 
 with types;
-with inertial_gps_ig500n;
-with ultrasound_sfr08;
-with odometer_refx;
-with motor_tm550;
-with telemeter_utm30lx;
-with camera_nc353l;
+with devices::inertial_gps_ig500n;
+with devices::ultrasound_sfr08;
+with devices::odometer_refx;
+with devices::motor_tm550;
+with devices::telemeter_utm30lx;
+with devices::camera_nc353l;
 ------------------------------------------------------------------
 --------------------------    ARM7    ----------------------------
 ------------------------------------------------------------------ 
@@ -55,8 +55,8 @@ end UltraSound_Data_Processing;
 subprogram implementation UltraSound_Data_Processing.impl
 calls 
   Main: {
-  	US1_acquisition : subprogram ultrasound_sfr08::Read_Acquisition;
-  	US2_acquisition : subprogram ultrasound_sfr08::Read_Acquisition;
+  	US1_acquisition : subprogram devices::ultrasound_sfr08::Read_Acquisition;
+  	US2_acquisition : subprogram devices::ultrasound_sfr08::Read_Acquisition;
   };
 connections
   E1:parameter US1_acquisition.US_meas -> US1_meas;
@@ -71,7 +71,7 @@ end Odometer_Data_Processing;
 subprogram implementation Odometer_Data_Processing.impl
 calls 
   Main: {
-  	ODOMETER_acquisition : subprogram odometer_refx::Read_Acquisition;
+  	ODOMETER_acquisition : subprogram devices::odometer_refx::Read_Acquisition;
   };
 connections
   E3:parameter ODOMETER_acquisition.ODOMETER_meas -> ODOMETER_meas;
@@ -86,7 +86,7 @@ end ACTUATORS_control;
 subprogram implementation ACTUATORS_control.impl
 calls 
   Main: {
-  	ACTUATORS_command : subprogram motor_tm550::Apply_speed;
+  	ACTUATORS_command : subprogram devices::motor_tm550::Apply_speed;
   };
 connections
 	E4:parameter ACTUATORS_cmd -> ACTUATORS_command.ACTUATORS_cmd;
@@ -310,7 +310,7 @@ end Camera_Data_Processing;
 subprogram implementation Camera_Data_Processing.impl
 calls 
   Main: {
-  	Image_acquisition : subprogram camera_nc353l::Read_Acquisition;
+  	Image_acquisition : subprogram devices::camera_nc353l::Read_Acquisition;
   };
 connections
   E16:parameter Image_acquisition.CAMERA_IP_meas -> CAMERA_IP_meas;
@@ -323,7 +323,7 @@ end Telemeter_Data_Processing;
 subprogram implementation Telemeter_Data_Processing.impl
 calls 
   Main: {
-  	Telemeter_acquisition : subprogram telemeter_utm30lx::Read_Acquisition;
+  	Telemeter_acquisition : subprogram devices::telemeter_utm30lx::Read_Acquisition;
   };
 connections
   E17:parameter Telemeter_acquisition.TELEMETER_meas -> TELEMETER_meas;
@@ -336,7 +336,7 @@ end Inertial_Gps_Data_Processing;
 subprogram implementation Inertial_Gps_Data_Processing.impl
 calls 
   Main: {
-  	Inertial_Gps_acquisition : subprogram inertial_gps_ig500n::Read_Acquisition;
+  	Inertial_Gps_acquisition : subprogram devices::inertial_gps_ig500n::Read_Acquisition;
   };
 connections
   E18:parameter Inertial_Gps_acquisition.INERTIAL_GPS_meas -> INERTIAL_GPS_meas;

@@ -1,0 +1,81 @@
+package devices::gps_lea4h
+public
+
+  with types;
+  with buses;
+  with Buses::UART;
+  with Electricity_Properties;
+
+-----------------
+--   DEVICE   --
+-----------------
+device GPS   
+features
+   Serial_Wire :    requires bus access  buses::UART::UART.impl;     
+   proc_evt : out event port;   
+end  GPS;
+device implementation GPS.impl
+properties
+  Implemented_As 	=> classifier (devices::gps_lea4h::GPS_Driver.impl);
+  Initialize_Entrypoint => classifier (devices::gps_lea4h::Initialize);
+  Electricity_Properties::Idle_Current => 0.065 mA;    
+  Electricity_Properties::Run_Current =>  39.0 mA; --  at 3.0 V 
+  Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
+  Electricity_Properties::Core_Voltage => 3.3 V; -- 2.7 V - 3.3 power supply
+  Electricity_Properties::Acquisition_Time => 3500 ms; -- reacquisition, hot start < 3.5s, cold start 34s 
+  Electricity_Properties::Peak_Time => 1 ms;
+  Electricity_Properties::VIH_min => 2.0 V;  --  5V tolerant inputs
+  Electricity_Properties::VIL_max => 1.0 V; 
+  Electricity_Properties::VOH_min => 3.2 V; 
+  Electricity_Properties::VOL_max => 0.4 V;  
+  -- level shifter added to conenct to ARM9
+  Electricity_Properties::Level_Shifter_VIH_min => 1.2 V;  
+  Electricity_Properties::Level_Shifter_VIL_max => 0.5 V;  
+  Electricity_Properties::Level_Shifter_VOH_min => 1.7 V;  
+  Electricity_Properties::Level_Shifter_VOL_max => 0.1 V;  
+  Electricity_Properties::Device_Type => Slave;  
+end GPS.impl;
+  
+-----------------------------------
+--  GPS DRIVER FOR UART INTERFACE --
+-----------------------------------
+
+abstract GPS_Driver
+end GPS_Driver;
+abstract implementation  GPS_Driver.impl
+end GPS_Driver.impl;
+
+
+-----------------
+-- SUBPROGRAMS --
+----------------- 
+-- These subprograms model the high-level view of the serial line
+-- protocol stack. They define an API used by the stack to send and
+-- receive data, and perform node's initialisation.
+subprogram Initialize
+properties
+  Source_Name => "initialize";
+  Source_Text => ("gps_lea4h.c");
+  Source_Language => (C);
+end Initialize;
+
+subprogram Read_Acquisition
+features
+ GPS_meas        : out parameter types::GPS_meas_dat;
+properties
+  Source_Name => "read_acquisition";
+  Source_Text => ("gps_lea4h.c");
+  Source_Language => (C);
+end Read_Acquisition;
+
+subprogram Start_Acquisition
+properties
+  Source_Name => "start_acquisition";
+  Source_Text => ("gps_lea4h.c");
+  Source_Language => (C);
+end Start_Acquisition;
+  
+
+  
+end devices::gps_lea4h;
+ 

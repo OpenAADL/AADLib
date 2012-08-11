@@ -1,4 +1,4 @@
-package regulator_ten40_4812
+package devices::regulator_ten40_4812
 public
 
 with types;
@@ -23,5 +23,5 @@ properties
 end REG_12V.impl;
   
 
-end regulator_ten40_4812;
+end devices::regulator_ten40_4812;
  

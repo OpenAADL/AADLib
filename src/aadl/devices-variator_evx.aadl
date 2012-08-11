@@ -1,4 +1,4 @@
-package variator_evx
+package devices::variator_evx
 public
 
 with types;
@@ -16,8 +16,8 @@ end  VARIATOR;
 
 device implementation VARIATOR.impl
 properties
-  Implemented_As 	    => classifier (variator_evx::VARIATOR_Driver.impl);
-  Initialize_Entrypoint => classifier (variator_evx::Initialize);
+  Implemented_As 	    => classifier (devices::variator_evx::VARIATOR_Driver.impl);
+  Initialize_Entrypoint => classifier (devices::variator_evx::Initialize);
   Electricity_Properties::Idle_Current => 10.0 mA; -- no data 
   Electricity_Properties::Run_Current => 3000.0 mA;  -- continious current (exsist breaking, forward, reverse current)
   Electricity_Properties::Core_Voltage => 14.4 V; 
@@ -78,5 +78,5 @@ properties
 end SetValue.impl;
   
   
-end variator_evx;
+end devices::variator_evx;
  

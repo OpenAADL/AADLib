@@ -59,12 +59,10 @@ processor Proc
     --  T = yy -> T1 runs
     --  T = zz -> T1 runs
   end Proc.RR_Preemption;
-  
-  processor arinckernel
-  end arinckernel;
 
-	-- imported from vxworks_platform
+	
 processor MC68040
+-- imported from vxworks_platform
   properties
     Deployment::Execution_Platform => VxWorks;
   end MC68040;

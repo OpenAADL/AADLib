@@ -1,4 +1,4 @@
-package compass_hmc6352
+package devices::compass_hmc6352
 public
 
 with types;
@@ -17,8 +17,8 @@ end COMPASS;
 
 device implementation COMPASS.impl
 properties
-  Implemented_As 	=> classifier (compass_hmc6352::COMPASS_Driver.impl);
-  Initialize_Entrypoint => classifier (compass_hmc6352::Initialize);
+  Implemented_As 	=> classifier (devices::compass_hmc6352::COMPASS_Driver.impl);
+  Initialize_Entrypoint => classifier (devices::compass_hmc6352::Initialize);
   Electricity_Properties::Idle_Current => 0.001 mA; 
   Electricity_Properties::Run_Current =>  1.0 mA; -- steady state current
   Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
@@ -74,5 +74,5 @@ properties
 end Start_Acquisition;
    
   
-end compass_hmc6352;
+end devices::compass_hmc6352;
  

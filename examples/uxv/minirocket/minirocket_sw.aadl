@@ -2,10 +2,10 @@ package minirocket_sw
 public
 
 with types;
-with pressure_hca0811;
-with inertial_chr6d;
-with camera_usb;
-with gps_lea4h;
+with devices::pressure_hca0811;
+with devices::inertial_chr6d;
+with devices::camera_usb;
+with devices::gps_lea4h;
 
 
 
@@ -48,7 +48,7 @@ end Pressure_Data_Processing;
 subprogram implementation Pressure_Data_Processing.impl
 calls 
   Main: {
-  	PRESSURE_acquisition : subprogram pressure_hca0811::Read_Acquisition;
+  	PRESSURE_acquisition : subprogram devices::pressure_hca0811::Read_Acquisition;
   };
 connections
   G1:parameter PRESSURE_acquisition.PRESSURE_meas -> PRESSURE_meas;
@@ -102,7 +102,7 @@ end Camera_Data_Processing;
 subprogram implementation Camera_Data_Processing.impl
 calls 
   Main: {
-  	Image_acquisition : subprogram camera_usb::Read_Acquisition;
+  	Image_acquisition : subprogram devices::camera_usb::Read_Acquisition;
   };
 connections
   G2:parameter Image_acquisition.CAMERA_meas -> CAMERA_meas;
@@ -116,7 +116,7 @@ end Gps_Data_Processing;
 subprogram implementation Gps_Data_Processing.impl
 calls 
   Main: {
-  	Gps_acquisition : subprogram gps_lea4h::Read_Acquisition;
+  	Gps_acquisition : subprogram devices::gps_lea4h::Read_Acquisition;
   };
 connections
   G3:parameter Gps_acquisition.GPS_meas -> GPS_meas;
@@ -129,7 +129,7 @@ end Inertial_Data_Processing;
 subprogram implementation Inertial_Data_Processing.impl
 calls 
   Main: {
-  	Inertial_acquisition : subprogram inertial_chr6d::Read_Acquisition;
+  	Inertial_acquisition : subprogram devices::inertial_chr6d::Read_Acquisition;
   };
 connections
   G4:parameter Inertial_acquisition.INERTIAL_meas -> INERTIAL_meas;

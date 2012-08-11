@@ -7,13 +7,13 @@ public
   with Buses::I2C;
   with Buses::UART;
   with Buses::USB;
-  with ultrasound_sfr08;
-  with compass_hmc6352;
-  with motor_bl2824;
-  with variator_blctlv12;
-  with inertial_gps_ig500n;
-  with telemeter_urg04lx;
-  with camera_usb;
+  with devices::ultrasound_sfr08;
+  with devices::compass_hmc6352;
+  with devices::motor_bl2824;
+  with devices::variator_blctlv12;
+  with devices::inertial_gps_ig500n;
+  with devices::telemeter_urg04lx;
+  with devices::camera_usb;
   with traxsterv3_sw;
   
   ------------
@@ -84,23 +84,23 @@ public
     --  List of sensors/actuators
     ------------------------------------------------------------------
     --------------------- ARM7 ----------------------
-    US1       :      device     ultrasound_sfr08::US.impl
+    US1       :      device     devices::ultrasound_sfr08::US.impl
     { Deployment::Location => "0xE0";}; -- define here the address of US1
-    US2       :      device     ultrasound_sfr08::US.impl
+    US2       :      device     devices::ultrasound_sfr08::US.impl
     { Deployment::Location => "0xE4";}; -- define here the address of US2
-    COMPASS   :      device     compass_hmc6352::COMPASS.impl
+    COMPASS   :      device     devices::compass_hmc6352::COMPASS.impl
     { Deployment::Location => "xxx";}; -- define here the address of the I2C device
-    MOTOR_1 :         device     motor_bl2824::MOTOR.impl;
-    MOTOR_2 :         device     motor_bl2824::MOTOR.impl;
-    VARIATOR_1  :     device     variator_blctlv12::VARIATOR.impl
+    MOTOR_1 :         device     devices::motor_bl2824::MOTOR.impl;
+    MOTOR_2 :         device     devices::motor_bl2824::MOTOR.impl;
+    VARIATOR_1  :     device     devices::variator_blctlv12::VARIATOR.impl
     { Deployment::Location => "xxx";}; -- define here the address of the I2C device
-    VARIATOR_2  :     device     variator_blctlv12::VARIATOR.impl
+    VARIATOR_2  :     device     devices::variator_blctlv12::VARIATOR.impl
     { Deployment::Location => "xxx";}; -- define here the address of the I2C device
     
     ---------------------- ARM9 ----------------------
-    INERTIAL_GPS :   device     inertial_gps_ig500n::INERTIAL_GPS.impl;
-    TELEMETER    :   device     telemeter_urg04lx::TELEMETER.impl;
-    CAMERA       :   device     camera_usb::CAMERA.impl;
+    INERTIAL_GPS :   device     devices::inertial_gps_ig500n::INERTIAL_GPS.impl;
+    TELEMETER    :   device     devices::telemeter_urg04lx::TELEMETER.impl;
+    CAMERA       :   device     devices::camera_usb::CAMERA.impl;
     
   connections
     ------------------------------------------------------------------

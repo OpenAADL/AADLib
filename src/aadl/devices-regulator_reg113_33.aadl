@@ -1,4 +1,4 @@
-package regulator_reg113_33
+package devices::regulator_reg113_33
 public
 
 with types;
@@ -24,5 +24,5 @@ end REG_3V3.impl;
 
 
   
-end regulator_reg113_33;
+end devices::regulator_reg113_33;
  

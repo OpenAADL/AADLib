@@ -66,7 +66,7 @@ public
     Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
   end CPU.A;
 
- ------------
+ ------------check_edf
   -- Node B --
   ------------
 
@@ -122,7 +122,7 @@ public
   end CPU.B;
 
   ------------
-  -- Node C --
+  -- Node C --check_edf
   ------------
 
   thread T9 extends T
@@ -199,6 +199,14 @@ public
     Actual_Connection_Binding => (reference (CAN)) applies to C1;
     Actual_Connection_Binding => (reference (CAN)) applies to C2;
     Actual_Connection_Binding => (reference (CAN)) applies to C3;
+  
+   annex real_specification {**
+      theorem check_edf
+      foreach s in processor_set do
+      requires(edf);
+      check(1=1);
+      end check_edf;
+      **};
   end Car.impl;
 
 end Car;

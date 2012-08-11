@@ -8,23 +8,23 @@ public
   with Buses::Ethernet;
   with Processors::ARM;
 
-  with ultrasound_sfr08;
-  with odometer_refx;
-  with receiver_smc16;
-  with motor_tm550;
-  with variator_evx;
+  with devices::ultrasound_sfr08;
+  with devices::odometer_refx;
+  with devices::receiver_smc16;
+  with devices::motor_tm550;
+  with devices::variator_evx;
   
-  with inertial_gps_ig500n;
-  with telemeter_utm30lx;
-  with camera_nc353l;
-  with router_wifi_wndr3300;
+  with devices::inertial_gps_ig500n;
+  with devices::telemeter_utm30lx;
+  with devices::camera_nc353l;
+  with devices::router_wifi_wndr3300;
   
   with emaxxv2_sw;
   
-  with battery_14v_4ah;
-  with regulator_tsi10n;
-  with regulator_ten40_4812;
-  with regulator_reg113_33;
+  with devices::battery_14v_4ah;
+  with devices::regulator_tsi10n;
+  with devices::regulator_ten40_4812;
+  with devices::regulator_reg113_33;
   
   ------------
   -- System --
@@ -56,6 +56,8 @@ public
     ------------------------------------------------------------------
     --  Processor peripherals for CICAS communication with sensors
     ------------------------------------------------------------------
+     US1           :      device     devices::ultrasound_sfr08::US.impl
+    { Deployment::Location => "0xE0";}; -- define here the address of US1
     TWI_ARM7       :      device     Processors::ARM::TWI_Peripheral.impl;	   
     UART0_ARM7     :      device     Processors::ARM::USART0_Peripheral.impl;	
     TIMER_ARM7     :      device     Processors::ARM::TIMER_Peripheral.impl;
@@ -96,19 +98,18 @@ public
     --  List of sensors/actuators
     ------------------------------------------------------------------
     --------------------- ARM7 ----------------------
-    US1       :      device     ultrasound_sfr08::US.impl
-    { Deployment::Location => "0xE0";}; -- define here the address of US1
-    US2       :      device     ultrasound_sfr08::US.impl
+   
+    US2       :      device     devices::ultrasound_sfr08::US.impl
     { Deployment::Location => "0xE4";}; -- define here the address of US2
-    ODOMETER1  :      device     odometer_refx::ODOMETER.impl;
-    ODOMETER2  :      device     odometer_refx::ODOMETER.impl;
-    RECEIVER   :      device     receiver_smc16::RECEIVER.impl;
+    ODOMETER1  :      device     devices::odometer_refx::ODOMETER.impl;
+    ODOMETER2  :      device     devices::odometer_refx::ODOMETER.impl;
+    RECEIVER   :      device     devices::receiver_smc16::RECEIVER.impl;
     
     ---------------------- ARM9 ----------------------
-    INERTIAL_GPS  :   device     inertial_gps_ig500n::INERTIAL_GPS.impl;
-    TELEMETER     :   device     telemeter_utm30lx::TELEMETER.impl;
-    CAMERA_IP     :   device     camera_nc353l::CAMERA_IP.impl;
-    ROUTER_WIFI   :   device     router_wifi_wndr3300::ROUTER_WIFI.impl;
+    INERTIAL_GPS  :   device     devices::inertial_gps_ig500n::INERTIAL_GPS.impl;
+    TELEMETER     :   device     devices::telemeter_utm30lx::TELEMETER.impl;
+    CAMERA_IP     :   device     devices::camera_nc353l::CAMERA_IP.impl;
+    ROUTER_WIFI   :   device     devices::router_wifi_wndr3300::ROUTER_WIFI.impl;
     
   connections
     ------------------------------------------------------------------
@@ -157,14 +158,26 @@ public
     --Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
     
   annex real_specification {**
+  	
+    theorem test_connections
+    foreach e in process_Set do
+    --requires(test_connections);
+    check(1=1);
+    end test_connections;  
+  	
     theorem check_model
-    foreach s in system_set do
-    --requires(Electricity_Prop_Defined);
-    --var crt_drain := compute Current_Drain;
-    --check(crt_drain > 0.0);
-    requires(Electrical_Compatibility);
+    foreach s in device_set do
+    --requires(Device_Current_Drain_2);
+    requires(get_Svalue);
     check(1 = 1);
     end check_model;
+    
+    theorem Electrical_Compatibility
+    foreach e in Processor_Set do
+    --requires(Processor_Current_Drain);
+    check(1=1);
+    end Electrical_Compatibility;
+    
     **};
     end emaxxv2.impl;
 

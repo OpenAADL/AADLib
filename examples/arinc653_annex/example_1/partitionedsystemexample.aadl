@@ -258,19 +258,19 @@ public
   end powerpc.impl;
 
   -- Memory 
-  memory partition1_memory 
+  memory partition1_memory extends memories::RAM
   properties
     Base_Address => 0;
     ARINC653::Memory_Kind => Memory_Code;
   end partition1_memory;
 
-  memory partition2_memory 
+  memory partition2_memory extends memories::RAM
   properties
     Base_Address => 100;
     ARINC653::Memory_Kind => Memory_Code;
   end partition2_memory;
 
-  memory main_memory extends memories::ROM
+  memory main_memory 
   end main_memory;
 
   memory implementation main_memory.impl 

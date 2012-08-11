@@ -1,4 +1,4 @@
-package battery_14v_4ah
+package devices::battery_14v_4ah
 public
 
 with types;
@@ -19,5 +19,5 @@ properties
   Electricity_Properties::Core_Voltage => 14.0 V;
 end BAT_14V_4AH.impl;
    
-end battery_14v_4ah;
+end devices::battery_14v_4ah;
  

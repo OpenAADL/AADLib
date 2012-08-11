@@ -1,4 +1,4 @@
-package regulator_tsi10n
+package devices::regulator_tsi10n
 public
 
 with types;
@@ -25,5 +25,5 @@ end REG_5V.impl;
 
 
   
-end regulator_tsi10n;
+end devices::regulator_tsi10n;
  

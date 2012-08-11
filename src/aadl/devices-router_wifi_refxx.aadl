@@ -1,4 +1,4 @@
-package router_wifi_refxx
+package devices::router_wifi_refxx
 public
 
 with types;
@@ -30,5 +30,5 @@ properties
 end ROUTER_WIFI.impl;
   
   
-end router_wifi_refxx;
+end devices::router_wifi_refxx;
  

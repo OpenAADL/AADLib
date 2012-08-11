@@ -2,10 +2,10 @@ package minirocket_system
 public 
   with Deployment;
   with buses;
-  with pressure_hca0811;
-  with gps_lea4h;
-  with inertial_chr6d;
-  with camera_usb;
+  with devices::pressure_hca0811;
+  with devices::gps_lea4h;
+  with devices::inertial_chr6d;
+  with devices::camera_usb;
   with minirocket_sw;
   with Buses::I2C;
   with Buses::UART;
@@ -51,11 +51,11 @@ public
    --  List of sensors/actuators
    ------------------------------------------------------------------
     --------------------- ARM7 ----------------------
-    PRESSURE   :      device     pressure_hca0811::PRESSURE.impl
+    PRESSURE   :      device     devices::pressure_hca0811::PRESSURE.impl
     { Deployment::Location => "xxx";}; -- define here the address of the I2C device
-    INERTIAL      :   device     inertial_chr6d::INERTIAL.impl;
-    GPS           :   device     gps_lea4h::GPS.impl;
-    CAMERA        :   device     camera_usb::CAMERA.impl;
+    INERTIAL      :   device     devices::inertial_chr6d::INERTIAL.impl;
+    GPS           :   device     devices::gps_lea4h::GPS.impl;
+    CAMERA        :   device     devices::camera_usb::CAMERA.impl;
     
   connections
     ------------------------------------------------------------------

@@ -1,4 +1,4 @@
-package camera_nc353l
+package devices::camera_nc353l
 public
 
 with types;
@@ -17,8 +17,8 @@ features
 end  CAMERA_IP;
 device implementation CAMERA_IP.impl
 properties
-  Implemented_As 	=> classifier (camera_nc353l::CAMERA_IP_Driver.impl);
-  Initialize_Entrypoint => classifier (camera_nc353l::Initialize);
+  Implemented_As 	=> classifier (devices::camera_nc353l::CAMERA_IP_Driver.impl);
+  Initialize_Entrypoint => classifier (devices::camera_nc353l::Initialize);
   Electricity_Properties::Idle_Current => 1.0 mA;  -- no data  
   Electricity_Properties::Run_Current =>  1600.0 mA; -- worst case  Typical power consumption between 2.4W - 5.8W depending on operation and load (under 3.3V)
   Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
@@ -69,5 +69,5 @@ properties
 end Start_Acquisition;
   
   
-end camera_nc353l;
+end devices::camera_nc353l;
  

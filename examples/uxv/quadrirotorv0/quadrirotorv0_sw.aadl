@@ -2,12 +2,12 @@ package quadrirotorv0_sw
 public
 
    with types;
-   with inertial_gps_ig500n;
-   with ultrasound_sfr08;
-   with pressure_hca0811;
-   with variator_blctlv12;
-   with telemeter_urg04lx;
-   with camera_usb;
+   with devices::inertial_gps_ig500n;
+   with devices::ultrasound_sfr08;
+   with devices::pressure_hca0811;
+   with devices::variator_blctlv12;
+   with devices::telemeter_urg04lx;
+   with devices::camera_usb;
 	
 subprogram Telemetry_Management
 features
@@ -43,12 +43,12 @@ features
    US1_meas :  out parameter types::US_meas_dat;
    US2_meas :  out parameter types::US_meas_dat;
 end UltraSound_Data_Processing;
-
+ 
 subprogram implementation UltraSound_Data_Processing.impl
 calls 
    Main: {
-      US1_acquisition : subprogram ultrasound_sfr08::Read_Acquisition;
-      US2_acquisition : subprogram ultrasound_sfr08::Read_Acquisition;
+      US1_acquisition : subprogram devices::ultrasound_sfr08::Read_Acquisition;
+      US2_acquisition : subprogram devices::ultrasound_sfr08::Read_Acquisition;
    };
 connections
    --parameter US_acquisition.device_address -> ; *** get the device address from device property
@@ -65,7 +65,7 @@ end Pressure_Data_Processing;
 subprogram implementation Pressure_Data_Processing.impl
 calls 
    Main: {
-      PRESSURE_acquisition : subprogram pressure_hca0811::Read_Acquisition;
+      PRESSURE_acquisition : subprogram devices::pressure_hca0811::Read_Acquisition;
    };
 connections
    I3:parameter PRESSURE_acquisition.PRESSURE_meas -> PRESSURE_meas;
@@ -80,7 +80,7 @@ end ACTUATORS_control;
 subprogram implementation ACTUATORS_control.impl
 calls 
    Main: {
-      ACTUATORS_command : subprogram variator_blctlv12::Apply_speed;
+      ACTUATORS_command : subprogram devices::variator_blctlv12::Apply_speed;
    };
 connections
    I4:parameter ACTUATORS_cmd -> ACTUATORS_command.ACTUATORS_cmd;
@@ -285,7 +285,7 @@ end Camera_Data_Processing;
 subprogram implementation Camera_Data_Processing.impl
 calls 
    Main: {
-      Image_acquisition : subprogram camera_usb::Read_Acquisition;
+      Image_acquisition : subprogram devices::camera_usb::Read_Acquisition;
    };
 connections
    I15:parameter Image_acquisition.CAMERA_meas -> CAMERA_meas;
@@ -299,7 +299,7 @@ end Telemeter_Data_Processing;
 subprogram implementation Telemeter_Data_Processing.impl
 calls 
    Main: {
-      Telemeter_acquisition : subprogram telemeter_urg04lx::Read_Acquisition;
+      Telemeter_acquisition : subprogram devices::telemeter_urg04lx::Read_Acquisition;
    };
 connections
    I16:parameter Telemeter_acquisition.TELEMETER_meas -> TELEMETER_meas;
@@ -313,7 +313,7 @@ end Inertial_Gps_Data_Processing;
 subprogram implementation Inertial_Gps_Data_Processing.impl
 calls 
    Main: {
-      Inertial_Gps_acquisition : subprogram inertial_gps_ig500n::Read_Acquisition;
+      Inertial_Gps_acquisition : subprogram devices::inertial_gps_ig500n::Read_Acquisition;
    };
 connections
    I17:parameter Inertial_Gps_acquisition.INERTIAL_GPS_meas -> INERTIAL_GPS_meas;

@@ -1,4 +1,4 @@
-package motor_tm550
+package devices::motor_tm550
 public
 
 with types;
@@ -17,8 +17,8 @@ end  MOTOR_TM550;
 
 device implementation MOTOR_TM550.impl
 properties
-  Implemented_As 	    => classifier (motor_tm550::MOTOR_TM550_Driver.impl);
-  Initialize_Entrypoint => classifier (motor_tm550::Initialize);
+  Implemented_As 	    => classifier (devices::motor_tm550::MOTOR_TM550_Driver.impl);
+  Initialize_Entrypoint => classifier (devices::motor_tm550::Initialize);
   Electricity_Properties::Idle_Current => 5000.0 mA; -- Run current
   Electricity_Properties::Run_Current => 13000.0 mA; -- Peak current
   Electricity_Properties::Acquisition_Time => 1 ms;
@@ -69,5 +69,5 @@ properties
 end Apply_speed;
   
   
-end motor_tm550;
+end devices::motor_tm550;
  

@@ -6,14 +6,14 @@ public
   with Buses::I2C;
   with Buses::UART;
   with Buses::USB;
-  with ultrasound_sfr08;
-  with pressure_hca0811;
-  with motor_bl2824;
-  with variator_blctlv12;
-  with gps_lea4h;
-  with inertial_chr6d;
-  with telemeter_urg04lx;
-  with camera_usb;
+  with devices::ultrasound_sfr08;
+  with devices::pressure_hca0811;
+  with devices::motor_bl2824;
+  with devices::variator_blctlv12;
+  with devices::gps_lea4h;
+  with devices::inertial_chr6d;
+  with devices::telemeter_urg04lx;
+  with devices::camera_usb;
   with quadrirotorv1_sw;
   with Processors::ARM;
 
@@ -45,21 +45,21 @@ public
     USB1_ARM9            : device     Processors::ARM::USB1_Peripheral; 
     USB2_ARM9            : device     Processors::ARM::USB2_Peripheral; 
 
-    US1                  : device     ultrasound_sfr08::US.impl { Deployment::Location => "0xE0";}; -- define here the address of US1
-    US2                  : device     ultrasound_sfr08::US.impl { Deployment::Location => "0xE4";}; -- define here the address of US2
-    PRESSURE             : device     pressure_hca0811::PRESSURE.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
-    MOTOR_1              : device     motor_bl2824::MOTOR.impl;
-    MOTOR_2              : device     motor_bl2824::MOTOR.impl;
-    MOTOR_3              : device     motor_bl2824::MOTOR.impl;
-    MOTOR_4              : device     motor_bl2824::MOTOR.impl;
-    VARIATOR_1           : device     variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
-    VARIATOR_2           : device     variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
-    VARIATOR_3           : device     variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
-    VARIATOR_4           : device     variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
-    INERTIAL             : device     inertial_chr6d::INERTIAL.impl;
-    GPS                  : device     gps_lea4h::GPS.impl;
-    TELEMETER            : device     telemeter_urg04lx::TELEMETER.impl;
-    CAMERA               : device     camera_usb::CAMERA.impl;
+    US1                  : device     devices::ultrasound_sfr08::US.impl { Deployment::Location => "0xE0";}; -- define here the address of US1
+    US2                  : device     devices::ultrasound_sfr08::US.impl { Deployment::Location => "0xE4";}; -- define here the address of US2
+    PRESSURE             : device     devices::pressure_hca0811::PRESSURE.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    MOTOR_1              : device     devices::motor_bl2824::MOTOR.impl;
+    MOTOR_2              : device     devices::motor_bl2824::MOTOR.impl;
+    MOTOR_3              : device     devices::motor_bl2824::MOTOR.impl;
+    MOTOR_4              : device     devices::motor_bl2824::MOTOR.impl;
+    VARIATOR_1           : device     devices::variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    VARIATOR_2           : device     devices::variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    VARIATOR_3           : device     devices::variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    VARIATOR_4           : device     devices::variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
+    INERTIAL             : device     devices::inertial_chr6d::INERTIAL.impl;
+    GPS                  : device     devices::gps_lea4h::GPS.impl;
+    TELEMETER            : device     devices::telemeter_urg04lx::TELEMETER.impl;
+    CAMERA               : device     devices::camera_usb::CAMERA.impl;
 
   connections
     L1:bus access I2C_bus -> TWI_ARM9.Serial_Wire;

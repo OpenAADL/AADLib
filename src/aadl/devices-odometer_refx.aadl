@@ -1,4 +1,4 @@
-package odometer_refx
+package devices::odometer_refx
 public
 
 with types;
@@ -17,8 +17,8 @@ end  ODOMETER;
 
 device implementation ODOMETER.impl
 properties
-  Implemented_As 	    => classifier (odometer_refx::ODOMETER_Driver.impl);
-  Initialize_Entrypoint => classifier (odometer_refx::Initialize);
+  Implemented_As 	    => classifier (devices::odometer_refx::ODOMETER_Driver.impl);
+  Initialize_Entrypoint => classifier (devices::odometer_refx::Initialize);
   Electricity_Properties::Idle_Current => 0.0 mA; -- N/A
   Electricity_Properties::Run_Current =>  0.1 mA; -- no data estimated value
   Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
@@ -84,5 +84,5 @@ properties
 end Start_Acquisition;
 
    
-end odometer_refx;
+end devices::odometer_refx;
  

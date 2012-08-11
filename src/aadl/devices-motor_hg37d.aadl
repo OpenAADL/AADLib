@@ -1,50 +1,49 @@
-package motor_ig52
+package devices::motor_hg37d
 public
 
 with types;
-with buses::I2C;
+with buses::i2c;
 with Electricity_Properties;
 
 -----------------
 --   DEVICE   --
 -----------------
-device MOTOR_IG52  
+device MOTOR  
 features
    Serial_Wire :    requires bus access Buses::I2C::I2C.impl;
-end  MOTOR_IG52;
+end  MOTOR;
 
-device implementation MOTOR_IG52.impl
+device implementation MOTOR.impl
 properties
-  Implemented_As 	    => classifier (motor_ig52::MOTOR_IG52_Driver.impl);
-  Initialize_Entrypoint => classifier (motor_ig52::Initialize);
+  Implemented_As 	    => classifier (devices::motor_hg37d::MOTOR_Driver.impl);
+  Initialize_Entrypoint => classifier (devices::motor_hg37d::Initialize);
   Electricity_Properties::Idle_Current => 3.0 mA; -- no data
   Electricity_Properties::Run_Current => 15.0 mA;  -- no data
-  --Electricity_Properties::IO_Voltage_Range => 0.0 V .. 5.0 V; -- no data
-  Electricity_Properties::VIH_min => 0.0 V;
-  Electricity_Properties::VOH_min => 0.0 V;
-  Electricity_Properties::VIL_max => 5.0 V;
-  Electricity_Properties::VOL_max => 5.0 V;  
-  
   Electricity_Properties::Core_Voltage => 12.0 V; 
   Electricity_Properties::Acquisition_Time => 65 ms; -- no data
-end MOTOR_IG52.impl;
+  Electricity_Properties::VIH_min => 3.1 V; 
+  Electricity_Properties::VIL_max => 1.5 V; 
+  Electricity_Properties::VOH_min => 4.7 V; 
+  Electricity_Properties::VOL_max => 0.4 V;  
+  Electricity_Properties::Device_Type => Slave;  
+end MOTOR.impl;
   
 -----------------------------------
---  MOTOR_IG52 DRIVER FOR I2C INTERFACE --
+--  MOTOR DRIVER FOR I2C INTERFACE --
 -----------------------------------
 
-abstract MOTOR_IG52_Driver
+abstract MOTOR_Driver
 --properties
 	-- device_address => "0xE0";
-end MOTOR_IG52_Driver;
+end MOTOR_Driver;
 
 ---------------------------------------------------------
 -- /!\ The threads implementing the driver functions
 -- should respect this naming convention :
 -- (Driver_Name)_Thread_(Function_name)
 ---------------------------------------------------------
-abstract implementation MOTOR_IG52_Driver.impl
-end MOTOR_IG52_Driver.impl;
+abstract implementation MOTOR_Driver.impl
+end MOTOR_Driver.impl;
 
 
 
@@ -58,34 +57,34 @@ end MOTOR_IG52_Driver.impl;
 subprogram Initialize
 properties
   Source_Name => "initialize";
-  Source_Text => ("motor_ig52.c");
+  Source_Text => ("motor_hg37d.c");
   Source_Language => (C);
 end Initialize;
 
 
 subprogram Read_Acquisition
 features
-  device_address       : in parameter types::MOTOR_IG52_meas_dat; -- device address type
-  MOTOR_IG52_meas         : out parameter types::MOTOR_IG52_meas_dat;
+  device_address       : in parameter types::MOTOR_meas_dat; -- device address type
+  MOTOR_meas         : out parameter types::MOTOR_meas_dat;
 end Read_Acquisition;
 subprogram implementation Read_Acquisition.impl
 properties
   Source_Name => "read_acquisition";
-  Source_Text => ("motor_ig52.c");
+  Source_Text => ("motor_hg37d.c");
   Source_Language => (C);
 end Read_Acquisition.impl;
 
 subprogram Send
 features
-  device_address       : in parameter types::MOTOR_IG52_meas_dat; -- device address type
+  device_address       : in parameter types::MOTOR_meas_dat; -- device address type
 end Send;
 subprogram implementation Send.impl
 properties
   Source_Name => "start_acquisition";
-  Source_Text => ("motor_ig52.c");
+  Source_Text => ("motor_hg37d.c");
   Source_Language => (C);
 end Send.impl;
   
   
-end motor_ig52;
+end devices::motor_hg37d;
  

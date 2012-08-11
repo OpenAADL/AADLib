@@ -1,4 +1,4 @@
-package camera_usb
+package devices::camera_usb
 public
 
   with types;
@@ -15,8 +15,8 @@ public
 
   device implementation CAMERA.impl
   properties
-    Implemented_As 	=> classifier (camera_usb::CAMERA_Driver.impl);
-    Initialize_Entrypoint => classifier (camera_usb::Initialize);
+    Implemented_As 	=> classifier (devices::camera_usb::CAMERA_Driver.impl);
+    Initialize_Entrypoint => classifier (devices::camera_usb::Initialize);
     Electricity_Properties::Idle_Current => 1.0 mA;  -- no data  
     Electricity_Properties::Run_Current =>  50.0 mA; --  no data 
     Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
@@ -63,5 +63,5 @@ public
     Source_Language => (C);
   end Start_Acquisition;
   
-end camera_usb;
+end devices::camera_usb;
  

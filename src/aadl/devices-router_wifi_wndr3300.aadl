@@ -1,4 +1,4 @@
-package router_wifi_wndr3300
+package devices::router_wifi_wndr3300
 public
 
 with types;
@@ -34,5 +34,5 @@ properties
 end ROUTER_WIFI.impl;
   
   
-end router_wifi_wndr3300;
+end devices::router_wifi_wndr3300;
  

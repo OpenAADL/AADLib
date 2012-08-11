@@ -1,4 +1,4 @@
-package variator_blctlv12
+package devices::variator_blctlv12
 public
 
 with types;
@@ -17,8 +17,8 @@ end  VARIATOR;
 
 device implementation VARIATOR.impl
 properties
-  Implemented_As 	    => classifier (variator_blctlv12::VARIATOR_Driver.impl);
-  Initialize_Entrypoint => classifier (variator_blctlv12::Initialize);
+  Implemented_As 	    => classifier (devices::variator_blctlv12::VARIATOR_Driver.impl);
+  Initialize_Entrypoint => classifier (devices::variator_blctlv12::Initialize);
   Electricity_Properties::Idle_Current => 3.0 mA; -- no data
   Electricity_Properties::Run_Current => 50.0 mA;  -- no data
   Electricity_Properties::VIH_min => 2.0 V; 
@@ -62,5 +62,5 @@ properties
   Source_Language => (C);
 end Apply_speed;
   
-end variator_blctlv12;
+end devices::variator_blctlv12;
  

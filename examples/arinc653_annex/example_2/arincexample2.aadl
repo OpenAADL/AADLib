@@ -84,7 +84,7 @@ public
     Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
   end partition_runtime;
 
-  processor arinckernel extends processors::arinckernel
+  processor arinckernel extends processors::Generic_CPU
   end arinckernel;
 
   -- Then, we define the first module and its subcomponents.

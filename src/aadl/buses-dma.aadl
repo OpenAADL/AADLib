@@ -1,0 +1,11 @@
+-- Modeling Direct memory access buses
+package buses::DMA
+public
+
+with Bus_Properties;
+
+bus DMA
+-- Empty, to define
+end DMA;
+
+end buses::DMA;

@@ -1,4 +1,4 @@
-package ultrasound_sfr08
+package devices::ultrasound_sfr08
 public
 
 with types;
@@ -18,8 +18,8 @@ end  US;
 
 device implementation US.impl
 properties
-  Implemented_As 	    => classifier (ultrasound_sfr08::US_Driver.impl);
-  Initialize_Entrypoint     => classifier (ultrasound_sfr08::Initialize);
+  Implemented_As 	    => classifier (devices::ultrasound_sfr08::US_Driver.impl);
+  Initialize_Entrypoint     => classifier (devices::ultrasound_sfr08::Initialize);
   Electricity_Properties::Idle_Current => 3.0 mA; -- datasheet
   Electricity_Properties::Run_Current  => 15.0 mA; -- datasheet
   Electricity_Properties::Peak_Current =>15.0 mA; -- extracted from measurement
@@ -76,5 +76,5 @@ properties
 end Start_Acquisition;
   
   
-end ultrasound_sfr08;
+end devices::ultrasound_sfr08;
  

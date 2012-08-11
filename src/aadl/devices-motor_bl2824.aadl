@@ -1,4 +1,4 @@
-package motor_bl2824
+package devices::motor_bl2824
 public
 
 with types;
@@ -32,5 +32,5 @@ properties
 end MOTOR.impl;
 
 
-end motor_bl2824;
+end devices::motor_bl2824;
  

@@ -1,4 +1,4 @@
-package pressure_hca0811
+package devices::pressure_hca0811
 public
   with types;
   with buses;
@@ -15,8 +15,8 @@ public
   end  PRESSURE;
   device implementation PRESSURE.impl
   properties
-    Implemented_As 	=> classifier (pressure_hca0811::PRESSURE_Driver.impl);
-    Initialize_Entrypoint => classifier (pressure_hca0811::Initialize);
+    Implemented_As 	=> classifier (devices::pressure_hca0811::PRESSURE_Driver.impl);
+    Initialize_Entrypoint => classifier (devices::pressure_hca0811::Initialize);
     Electricity_Properties::Idle_Current =>  0.1 mA; -- no  data  estimated value
     Electricity_Properties::Run_Current =>  5.0 mA;
     Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
@@ -72,5 +72,5 @@ properties
 end Start_Acquisition;
    
   
-end pressure_hca0811;
+end devices::pressure_hca0811;
  

@@ -1,0 +1,13 @@
+-- On-Board Data Handling bus modeling package
+
+package buses::OBDH
+Public
+
+With Bus_Properties;
+
+bus OBDH
+-- Empty component, to define
+end OBDH;
+
+
+end buses::OBDH;

@@ -67,6 +67,14 @@ public
   end cpu;
 
   processor implementation cpu.impl extends processors::cpu_rma.impl
+    annex real_specification {**
+      theorem check_edf
+      foreach s in processor_set do
+      requires(edf);
+      check(1=1);
+    end check_edf;
+    **};
+    
   end cpu.impl;
 
   ---------------
@@ -95,21 +103,6 @@ public
     cpu	   : processor cpu.impl;
   properties
     Actual_Processor_Binding => (reference (cpu)) applies to node_a;
-  annex real_specification {**
-      theorem strange
-      foreach s in processor_set do
-      requires(edf);
-      check(1=1);
-    end strange;
---    theorem test_flows
---      foreach f in processor_set do
---      requires(test_flows);
---      check(1=1);
---    end test_flows;
-
-    **};
-
-
   end rma.impl;
 
 end RMAAadl;

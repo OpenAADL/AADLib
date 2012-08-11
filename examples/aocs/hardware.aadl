@@ -1,15 +1,17 @@
 package hardware
 public
   with dataaocs;
+  With buses::DMA;
+  With buses::OBDH;
 
   -----------------------------
   --     Device definition   --
   -----------------------------
   
-  bus DMA -- AOCS internal bus
+  bus DMA extends buses::DMA::DMA -- AOCS internal bus
   end DMA;
   
-  bus OBDH -- Satellite bus
+  bus OBDH extends buses::OBDH::OBDH  -- Satellite bus
   end OBDH; 
   
   -----------------------------
