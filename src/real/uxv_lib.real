@@ -11,23 +11,23 @@ foreach e in Bus_Set do
   Master_Device := 
      { d in Device_Set | 
 	Is_Accessed_By (d, Cnx_Set) and 
-	Property_Exists(d,"Electricity::Device_Type") and
-	(Get_Property_Value (d,"Electricity::Device_Type") = "Master")
+	Property_Exists(d,"Electricity_Properties::Device_Type") and
+	(Get_Property_Value (d,"Electricity_Properties::Device_Type") = "Master")
     };
 
 
   Slave_Device_Set := 
      { d in Device_Set | 
        Is_Accessed_By (d, Cnx_Set) and 
-	Property_Exists(d,"Electricity::Device_Type") and
-	(Get_Property_Value (d,"Electricity::Device_Type") = "Slave")
+	Property_Exists(d,"Electricity_Properties::Device_Type") and
+	(Get_Property_Value (d,"Electricity_Properties::Device_Type") = "Slave")
     };
   
 
-  check ( (Max(Get_Property_Value (Master_Device,"Electricity::VOH_min")) >= Max(Get_Property_Value(Slave_Device_Set,"Electricity::VIH_min"))) and
-	(Min(Get_Property_Value(Master_Device,"Electricity::VOL_max")) <= Min(Get_Property_Value(Slave_Device_Set,"Electricity::VIL_max"))) and
-	(Max(Get_Property_Value (Slave_Device_Set,"Electricity::VOH_min")) >= Max(Get_Property_Value(Master_Device,"Electricity::VIH_min"))) and
-	(Min(Get_Property_Value(Slave_Device_Set,"Electricity::VOL_max")) <= Min(Get_Property_Value(Master_Device,"Electricity::VIL_max")))
+  check ( (Max(Get_Property_Value (Master_Device,"Electricity_Properties::VOH_min")) >= Max(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VIH_min"))) and
+	(Min(Get_Property_Value(Master_Device,"Electricity_Properties::VOL_max")) <= Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VIL_max"))) and
+	(Max(Get_Property_Value (Slave_Device_Set,"Electricity_Properties::VOH_min")) >= Max(Get_Property_Value(Master_Device,"Electricity_Properties::VIH_min"))) and
+	(Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VOL_max")) <= Min(Get_Property_Value(Master_Device,"Electricity_Properties::VIL_max")))
 );
 
 end Electrical_Compatibility;
@@ -50,12 +50,12 @@ theorem Electricity_Prop_Defined
 
 foreach e in Device_Set do
 
-  check(Property_Exists(e,"Electricity::Run_Current") and 
-		Property_Exists(e,"Electricity::Idle_Current") and
-  	   	Property_Exists(e,"Electricity::Peak_Current") and
-  	   	Property_Exists(e,"Electricity::Core_Voltage") and
-  	   	Property_Exists(e,"Electricity::Peak_Time") and
-  	   	Property_Exists(e,"Electricity::Acquisition_Time"));
+  check(Property_Exists(e,"Electricity_Properties::Run_Current") and 
+		Property_Exists(e,"Electricity_Properties::Idle_Current") and
+  	   	Property_Exists(e,"Electricity_Properties::Peak_Current") and
+  	   	Property_Exists(e,"Electricity_Properties::Core_Voltage") and
+  	   	Property_Exists(e,"Electricity_Properties::Peak_Time") and
+  	   	Property_Exists(e,"Electricity_Properties::Acquisition_Time"));
 
 end Electricity_Prop_Defined;
 
@@ -72,12 +72,12 @@ foreach d in Device_Set do
    Thread_Connected := { x in Thread_Set | Is_Connected_To(x,d) };
 
    var period_t := sum(Get_Property_Value(Thread_Connected, "Period"));
-   var peak_crt := Get_Property_Value(d,"Electricity::Peak_Current");
-   var idle_crt := Get_Property_Value(d,"Electricity::Idle_Current");
-   var run_crt  := Get_Property_Value(d,"Electricity::Run_Current");
-   var acq_time := Get_Property_Value(d,"Electricity::Acquisition_Time");
-   var peak_time := Get_Property_Value(d,"Electricity::Peak_Time");
-   var voltage  := Get_Property_Value(d,"Electricity::Core_Voltage");
+   var peak_crt := Get_Property_Value(d,"Electricity_Properties::Peak_Current");
+   var idle_crt := Get_Property_Value(d,"Electricity_Properties::Idle_Current");
+   var run_crt  := Get_Property_Value(d,"Electricity_Properties::Run_Current");
+   var acq_time := Get_Property_Value(d,"Electricity_Properties::Acquisition_Time");
+   var peak_time := Get_Property_Value(d,"Electricity_Properties::Peak_Time");
+   var voltage  := Get_Property_Value(d,"Electricity_Properties::Core_Voltage");
 
    --check(Cardinal(Thread_Connected)> 0);
 
@@ -102,11 +102,11 @@ foreach e in Processor_Set do
   var CPU_Util := compute CPU_Utilization;
   var idle_ratio := 1.0 - CPU_Util;
 
-  var run_conso := Get_Property_Value(e, "Electricity::Run_Current") *
-  	   	 Get_Property_Value(e, "Electricity::Core_Voltage") *
+  var run_conso := Get_Property_Value(e, "Electricity_Properties::Run_Current") *
+  	   	 Get_Property_Value(e, "Electricity_Properties::Core_Voltage") *
 		 CPU_Util;
-  var idle_conso := Get_Property_Value (e, "Electricity::Idle_Current") *
-  	   	 Get_Property_Value (e, "Electricity::Core_Voltage") * 
+  var idle_conso := Get_Property_Value (e, "Electricity_Properties::Idle_Current") *
+  	   	 Get_Property_Value (e, "Electricity_Properties::Core_Voltage") * 
 		 idle_ratio;
 
  return ( MSum(run_conso + idle_conso));
