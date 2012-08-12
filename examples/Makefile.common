@@ -53,6 +53,7 @@ real:
 		-real_lib $(top_srcdir)/src/real/arinc653_theorems.real \
 		-real_lib $(top_srcdir)/src/real/bare_board_theorems.real \
 		-real_lib $(top_srcdir)/src/real/data_model_theorems.real \
+		-real_lib $(top_srcdir)/src/real/edf_theorems.real \
 		-real_lib $(top_srcdir)/src/real/flow_latency.real \
 		-real_lib $(top_srcdir)/src/real/memory_theorems.real \
 		-real_lib $(top_srcdir)/src/real/ravenscar_theorems.real \
