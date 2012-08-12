@@ -1,11 +1,11 @@
 AADL_SOURCES = $(srcdir)/emaxxv2_system.aadl
-AADL_ROOT    = 
+AADL_ROOT    = emaxxv2.impl
 
 AADL_LIB = -I$(srcdir)/../common
 
 include $(srcdir)/../../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl 
+AVAILABLE_TARGETS= parse-aadl
 
 OTHER_FILES = $(srcdir)/emaxxv2_sw.aadl
 
