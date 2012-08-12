@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------------
 -- Compute for each bus the consumption of all devices connected (ignore regulator capabilities)
- 
+
 theorem Power_Consumption
 
 foreach e in Bus_Set do
@@ -14,7 +14,7 @@ foreach e in Bus_Set do
 
    Power_Supplier := { d in Connected_Device | (Property_Exists (d,"Deployment::Power_Level")) and (Get_Property_Value(d,"Deployment::Power_Level") <= Min_Power_Level)
    };
-  
+
    -- includes regulators and normal devices (but not processors)
    Power_Device_Consumers := { d in Connected_Device | (Property_Exists (d, "Deployment::Power_Level")) and (Get_Property_Value(d,"Deployment::Power_Level") > Min_Power_Level)
    };
@@ -28,7 +28,7 @@ end Power_Consumption;
 
 ----------------------------------------------------------------------------------------
 -- Check that the total max consumption (in all power buses) does not exceed max battery power
- 
+
 theorem Battery_Sizing
 
 foreach e in System_Set do
@@ -44,4 +44,3 @@ foreach e in System_Set do
    check(pwr_consumption <= max_batteries_power);
 
 end Battery_Sizing;
-

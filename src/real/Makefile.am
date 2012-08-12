@@ -1,12 +1,7 @@
-REAL_SOURCES=					\
-	$(srcdir)/aadl_theorems.real		\
-	$(srcdir)/arinc653_theorems.real	\
-	$(srcdir)/bare_board_theorems.real	\
-	$(srcdir)/data_model_theorems.real	\
-	$(srcdir)/flow_latency.real		\
-	$(srcdir)/memory_theorems.real		\
-	$(srcdir)/ravenscar_theorems.real	\
-	$(srcdir)/rma_theorems.real
+# Retrieve all source files
+
+BRUTE_REAL=${shell find . $(srcdir) -name '*.real' | grep -v 'b~' 2> /dev/null}
+REAL_SOURCES = ${sort $(srcdir) $(BRUTE_REAL)}
 
 EXTRA_DIST= $(REAL_SOURCES)
 
