@@ -1,7 +1,7 @@
 AADL_SOURCES = $(srcdir)/perseus.aadl
 AADL_ROOT    = perseus_rocket.impl1
 
-OTHER_FILES = $(srcdir)/lib.real
+OTHER_FILES =
 
 CLEANDIRS =
 CLEANFILES =
