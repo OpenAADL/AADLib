@@ -159,22 +159,9 @@ public
     
   annex real_specification {**
   	
-    theorem test_connections
-    foreach e in process_Set do
-    --requires(test_connections);
-    check(1=1);
-    end test_connections;  
-  	
-    theorem check_model
-    foreach s in device_set do
-    --requires(Device_Current_Drain_2);
-    requires(get_Svalue);
-    check(1 = 1);
-    end check_model;
-    
     theorem Electrical_Compatibility
-    foreach e in Processor_Set do
-    --requires(Processor_Current_Drain);
+    foreach e in Device_Set do
+    requires(Device_Current_Drain);
     check(1=1);
     end Electrical_Compatibility;
     

@@ -5,9 +5,9 @@ theorem Power_Consumption
 
 foreach e in Bus_Set do
 
-   Cnx_Set (e) := {x in Connection_Set | (Property_Exists (e,"Electricity::Bus_Voltage_Range")) and (Is_Accessing_To (x,e)) };
+   Cnx_Set (e) := {x in Connection_Set | (Property_Exists (e,"Electricity_Properties::Bus_Voltage_Range")) and (Is_Accessing_To (x,e)) };
 
-   Connected_Device := { d in Device_Set |  (Property_Exists (e,"Electricity::Bus_Voltage_Range")) and (Is_Accessed_By (d, Cnx_Set))
+   Connected_Device := { d in Device_Set |  (Property_Exists (e,"Electricity_Properties::Bus_Voltage_Range")) and (Is_Accessed_By (d, Cnx_Set))
    };
 
    var Min_Power_Level := Min(Get_Property_Value(Connected_Device,"Deployment::Power_Level"));
@@ -19,8 +19,8 @@ foreach e in Bus_Set do
    Power_Device_Consumers := { d in Connected_Device | (Property_Exists (d, "Deployment::Power_Level")) and (Get_Property_Value(d,"Deployment::Power_Level") > Min_Power_Level)
    };
 
-   var max_bus_voltage := (Last(Get_Property_Value(e,"Electricity::Bus_Voltage_Range")));
-   var device_max_current := sum(Get_Property_Value (Power_Device_Consumers, "Electricity::Run_Current"));
+   var max_bus_voltage := (Last(Get_Property_Value(e,"Electricity_Properties_Properties::Bus_Voltage_Range")));
+   var device_max_current := sum(Get_Property_Value (Power_Device_Consumers, "Electricity_Properties_Properties::Run_Current"));
    var power_consumption := device_max_current * max_bus_voltage;
    return(MSum(power_consumption));
 
@@ -37,8 +37,8 @@ foreach e in System_Set do
    };
 
    var pwr_consumption :=  compute Power_Consumption;
-   var max_batteries_current := sum(Get_Property_Value(Battery_Device, "Electricity::Max_Current"));
-   var batteries_voltage := sum(Get_Property_Value(Battery_Device, "Electricity::Core_Voltage"));
+   var max_batteries_current := sum(Get_Property_Value(Battery_Device, "Electricity_Properties_Properties::Max_Current"));
+   var batteries_voltage := sum(Get_Property_Value(Battery_Device, "Electricity_Properties_Properties::Core_Voltage"));
    var max_batteries_power := max_batteries_current * batteries_voltage;
 
    check(pwr_consumption <= max_batteries_power);
