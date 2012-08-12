@@ -6,6 +6,20 @@
 
 --  Utility theorem: compute Utilization factor for a set of threads
 
+-- check_prop_def : verify existence of required properties
+-- and then all threads are periodics
+
+theorem rma_prop_def
+
+foreach e in thread_set do
+
+check(  Exists (e,"Dispatch_Protocol")
+	and (Property (e, "Dispatch_Protocol") = "Periodic")
+	and Exists (e,"compute_execution_time")
+   	and Exists (e,"Period"));
+
+end rma_prop_def;
+
 theorem evaluate_utilization
   foreach e in Local_Set do
     var Period := get_property_value (e, "period");
