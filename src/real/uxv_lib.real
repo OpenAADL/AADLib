@@ -2,6 +2,17 @@
 -- Check that for each bus, each connected device has its IO voltage properties compatible
 -- with the others devices' ones.
 
+theorem Electrical_Prop
+-- Required properties for Electrical_Compatibility theorems
+foreach e in device_set do 
+
+Check ( Exists (e, "Electricity_Properties::VOH_min")
+	and	Exists (e, "Electricity_Properties::VIH_min")
+	and	Exists (e, "Electricity_Properties::VOL_max")
+	and	Exists (e, "Electricity_Properties::VIL_max"));
+	
+end Electrical_Prop;
+
 theorem Electrical_Compatibility
 
 foreach e in Bus_Set do
@@ -34,7 +45,18 @@ end Electrical_Compatibility;
 
 ----------------------------------------------------------------------------------------
 -- Compute CPU_Utilization through thread execution time and period
- 
+
+theorem Utilization_prop_def
+
+foreach e in thread_set do
+
+check(  Exists (e,"Dispatch_Protocol")
+	and (Property (e, "Dispatch_Protocol") = "Periodic")
+	and Exists (e,"compute_execution_time")
+   	and Exists (e,"Period"));
+
+end Utilization_prop_def; 
+
 theorem CPU_Utilization
 
 foreach t in Thread_Set do
@@ -58,6 +80,16 @@ foreach e in Device_Set do
   	   	Property_Exists(e,"Electricity_Properties::Acquisition_Time"));
 
 end Electricity_Prop_Defined;
+
+-- check that all threads are periodics
+
+theorem threads_periodics
+
+foreach e in thread_set do
+check (Exists (e, "Dispatch_protocol")
+and (Property (e, "Dispatch_protocol") = "periodic"));
+
+end threads_periodics;
 
 ---------------------------------------------------------------------------------------
 -- Compute the current drain of all system devices (Power)

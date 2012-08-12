@@ -68,9 +68,16 @@ public
 
   processor implementation cpu.impl extends processors::cpu_rma.impl
     annex real_specification {**
+      
+      theorem check_prop
+      foreach s in thread_set do
+      requires(threads_periodics);
+      check(1=1);
+      end check_prop;
+      
       theorem check_edf
       foreach s in processor_set do
-      requires(edf);
+      requires(edf and rma);
       check(1=1);
     end check_edf;
     **};

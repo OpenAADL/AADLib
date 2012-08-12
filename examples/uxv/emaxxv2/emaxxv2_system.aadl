@@ -161,7 +161,13 @@ public
   	
     theorem Electrical_Compatibility
     foreach e in Device_Set do
-    requires(Device_Current_Drain);
+    requires(Electrical_Prop);
+    check(1=1);
+    end Electrical_Compatibility;
+    
+    theorem Electrical_Compatibility
+    foreach e in threads_Set do
+    requires(threads_periodics);
     check(1=1);
     end Electrical_Compatibility;
     
