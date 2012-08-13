@@ -57,6 +57,7 @@ real:
 		-real_lib $(top_srcdir)/src/real/flow_latency.real \
 		-real_lib $(top_srcdir)/src/real/memory_theorems.real \
 		-real_lib $(top_srcdir)/src/real/ravenscar_theorems.real \
+		-real_lib $(top_srcdir)/src/real/rma_theorems.real \
 		-real_lib $(top_srcdir)/src/real/uxv_lib.real \
 		-r $(AADL_ROOT) \
 		$(AADL_SOURCES)
