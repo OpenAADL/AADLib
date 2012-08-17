@@ -2,22 +2,11 @@
 -- Check that for each bus, each connected device has its IO voltage properties compatible
 -- with the others devices' ones.
 
-theorem Electrical_Prop
--- Required properties for Electrical_Compatibility theorems
-foreach e in device_set do 
-
-Check ( Exists (e, "Electricity_Properties::VOH_min")
-	and	Exists (e, "Electricity_Properties::VIH_min")
-	and	Exists (e, "Electricity_Properties::VOL_max")
-	and	Exists (e, "Electricity_Properties::VIL_max"));
-	
-end Electrical_Prop;
-
 theorem Electrical_Compatibility
 
 foreach e in Bus_Set do
    Cnx_Set (e) := {x in Connection_Set | Is_Accessing_To (x,e) } ;
-
+   
 -- Requires previous checking on number of masters (only one master allowed)
   Master_Device := 
      { d in Device_Set | 
@@ -77,20 +66,14 @@ foreach e in Device_Set do
   	   	Property_Exists(e,"Electricity_Properties::Peak_Current") and
   	   	Property_Exists(e,"Electricity_Properties::Core_Voltage") and
   	   	Property_Exists(e,"Electricity_Properties::Peak_Time") and
-  	   	Property_Exists(e,"Electricity_Properties::Acquisition_Time"));
+  	   	Property_Exists(e,"Electricity_Properties::Acquisition_Time") and 
+  	   	Exists (e, "Electricity_Properties::VOH_min") and
+		Exists (e, "Electricity_Properties::VIH_min") and
+		Exists (e, "Electricity_Properties::VOL_max") and
+		Exists (e, "Electricity_Properties::VIL_max") and
+		Exists (e, "Electricity_Properties::Device_Type"));
 
 end Electricity_Prop_Defined;
-
--- check that all threads are periodics
-
-theorem threads_periodics
-
-foreach e in thread_set do
-check (Exists (e, "Dispatch_protocol")
-and (Property (e, "Dispatch_protocol") = "periodic"));
-
-end threads_periodics;
-
 ---------------------------------------------------------------------------------------
 -- Compute the current drain of all system devices (Power)
 -- Each device is controlled by a thread. When the thread executes, the device
@@ -112,12 +95,13 @@ foreach d in Device_Set do
    var voltage  := Get_Property_Value(d,"Electricity_Properties::Core_Voltage");
 
    --check(Cardinal(Thread_Connected)> 0);
-
-   var idle_mode := (1 - (acq_time + peak_time) / period_t);
-   var average_current_peak := (peak_time * peak_crt / period_t );
-   var average_current_run := (acq_time * run_crt / period_t ); -- REAL do not allow 2 consecutive additions
+   
+   var idle_mode := if (period_t <= 0) then 0.0 else (1 - (acq_time + peak_time) / period_t);
+   var average_current_peak := if (period_t <= 0) then 0.0 else (peak_time * peak_crt / period_t );
+   var average_current_run := if (period_t <= 0) then 0.0 else (acq_time * run_crt / period_t ); -- REAL do not allow 2 consecutive additions
    var average_current_idle :=  idle_mode * idle_crt;
-   var average_current := average_current_peak + average_current_run + average_current_idle;
+   var average_current := if (Cardinal (Thread_Connected) <= 0 ) then run_crt		-- If a device is not controlled by task 
+   else (average_current_peak + average_current_run + average_current_idle);		-- we suppose than it work statically in run current mode
 
 
    return( MSum(average_current * voltage));

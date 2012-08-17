@@ -77,12 +77,21 @@ public
   properties
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
     --Actual_Processor_Binding => (reference (CPU_ARM7)) applies to I2C_Cnx;
-    annex real_specification {**
-    theorem check_model
-    foreach s in system_set do
-    requires (th);
-    check (1 = 1);
-  end check_model;
+    annex 
+    real_specification {**
+    	
+    theorem Electricity_Prop_Defined
+    foreach e in Device_Set do
+    requires(Electricity_Prop_Defined);
+    check(1=1);
+    end Electricity_Prop_Defined;
+    
+    theorem Utilization_prop_def
+    foreach e in Thread_Set do
+    requires(Utilization_prop_def);
+    check(1=1);
+    end Utilization_prop_def;
+    
   **};
   end minirocket.impl;
 
