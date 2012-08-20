@@ -39,10 +39,10 @@ public
     ------------------------------------------------------------------
     --  Processor peripherals for CCDS communication with sensors
     ------------------------------------------------------------------
-    TWI_ARM9   :      device     Processors::ARM::TWI_Peripheral;  
-    UART1_ARM9 :      device     Processors::ARM::USART1_Peripheral; 
-    UART2_ARM9 :      device     Processors::ARM::USART2_Peripheral; 
-    USB1_ARM9  :       device     Processors::ARM::USB1_Peripheral; 
+    TWI_ARM9   :      device     Processors::ARM::TWI_Peripheral.impl;  
+    UART1_ARM9 :      device     Processors::ARM::USART1_Peripheral.impl; 
+    UART2_ARM9 :      device     Processors::ARM::USART2_Peripheral.impl; 
+    USB1_ARM9  :       device     Processors::ARM::USB1_Peripheral.impl; 
     ------------------------------------------------------------------
     -- End Node
     ------------------------------------------------------------------
@@ -67,12 +67,11 @@ public
     H3:bus access UART1_bus -> UART1_ARM9.Serial_Wire;
     H4:bus access UART1_bus -> GPS.Serial_Wire;
     
-    H5:bus access UART2_bus -> UART2_ARM9.Serial_Wire;
-    H6:bus access UART2_bus -> INERTIAL.Serial_Wire;
+    H5:bus access UART2_bus -> UART2_ARM9.Serial_Wire;	-- The twoth connections are not
+    H6:bus access UART2_bus -> INERTIAL.Serial_Wire;	-- verfy Electrical_Compatibility theroem 
     --
     H7:bus access USB1_bus -> USB1_ARM9.Serial_Wire;
     H8:bus access USB1_bus -> CAMERA.Serial_Wire;
-    
     
   properties
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
@@ -91,6 +90,18 @@ public
     requires(Utilization_prop_def);
     check(1=1);
     end Utilization_prop_def;
+    
+    theorem Current_Drain
+    foreach e in System_Set do
+    requires(Current_Drain);
+    check(1=1);
+    end Current_Drain;
+    
+    theorem Electrical_Compatibility
+    foreach e in Bus_Set do
+    requires(Electrical_Compatibility);
+    check(1=1);
+    end Electrical_Compatibility;
     
   **};
   end minirocket.impl;

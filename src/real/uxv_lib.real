@@ -23,11 +23,20 @@ foreach e in Bus_Set do
 	(Get_Property_Value (d,"Electricity_Properties::Device_Type") = "Slave")
     };
   
+  var shift_bool := if (Max(Property (Slave_Device_Set, "Electricity_Properties::Level_Shifter_VIH_min")) > 0)
+  						then 1 else 0;
 
-  check ( (Max(Get_Property_Value (Master_Device,"Electricity_Properties::VOH_min")) >= Max(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VIH_min"))) and
+  check (if (shift_bool = 0) then
+  ( (Max(Get_Property_Value (Master_Device,"Electricity_Properties::VOH_min")) >= Max(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VIH_min"))) and
 	(Min(Get_Property_Value(Master_Device,"Electricity_Properties::VOL_max")) <= Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VIL_max"))) and
 	(Max(Get_Property_Value (Slave_Device_Set,"Electricity_Properties::VOH_min")) >= Max(Get_Property_Value(Master_Device,"Electricity_Properties::VIH_min"))) and
-	(Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VOL_max")) <= Min(Get_Property_Value(Master_Device,"Electricity_Properties::VIL_max")))
+	(Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VOL_max")) <= Min(Get_Property_Value(Master_Device,"Electricity_Properties::VIL_max"))) )
+	else
+	( (Max(Get_Property_Value (Master_Device,"Electricity_Properties::VOH_min")) >= Max(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::Level_Shifter_VIH_min"))) and
+	(Min(Get_Property_Value(Master_Device,"Electricity_Properties::VOL_max")) <= Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::Level_Shifter_VIL_max"))) and
+	(Max(Get_Property_Value (Slave_Device_Set,"Electricity_Properties::Level_Shifter_VOH_min")) >= Max(Get_Property_Value(Master_Device,"Electricity_Properties::VIH_min"))) and
+	(Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::Level_Shifter_VOL_max")) <= Min(Get_Property_Value(Master_Device,"Electricity_Properties::VIL_max"))) )
+	
 );
 
 end Electrical_Compatibility;
