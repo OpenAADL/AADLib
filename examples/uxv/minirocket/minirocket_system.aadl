@@ -67,8 +67,8 @@ public
     H3:bus access UART1_bus -> UART1_ARM9.Serial_Wire;
     H4:bus access UART1_bus -> GPS.Serial_Wire;
     
-    H5:bus access UART2_bus -> UART2_ARM9.Serial_Wire;	-- The twoth connections are not
-    H6:bus access UART2_bus -> INERTIAL.Serial_Wire;	-- verfy Electrical_Compatibility theroem 
+    H5:bus access UART2_bus -> UART2_ARM9.Serial_Wire;	
+    H6:bus access UART2_bus -> INERTIAL.Serial_Wire;	 
     --
     H7:bus access USB1_bus -> USB1_ARM9.Serial_Wire;
     H8:bus access USB1_bus -> CAMERA.Serial_Wire;

@@ -134,17 +134,34 @@ public
   connections
     J25:bus access UART_IPC_bus -> arm9_board.Serial_Wire;
     J26:bus access UART_IPC_bus -> arm7_board.Serial_Wire;
-    annex real_specification {**
-    theorem check_model
-    foreach s in system_set do
-    --requires(Electricity_Prop_Defined);
-    --var crt_drain := compute Current_Drain;
-    --check(crt_drain > 0.0);
-    --   requires(Electrical_Compatibility);
     
-    requires(Power_Consumption);
-    check(1 = 1);
-  end check_model;
+    annex 
+    real_specification {**
+    	
+    theorem Electricity_Prop_Defined
+    foreach e in Device_Set do
+    requires(Electricity_Prop_Defined);
+    check(1=1);
+    end Electricity_Prop_Defined;
+    
+    theorem Utilization_prop_def
+    foreach e in Thread_Set do
+    requires(Utilization_prop_def);
+    check(1=1);
+    end Utilization_prop_def;
+    
+    theorem Current_Drain
+    foreach e in System_Set do
+    requires(Current_Drain);
+    check(1=1);
+    end Current_Drain;
+    
+    theorem Electrical_Compatibility
+    foreach e in Bus_Set do
+    requires(Electrical_Compatibility);
+    check(1=1);
+    end Electrical_Compatibility;
+    
   **};
   end quadrirotorv0.impl;
 

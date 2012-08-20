@@ -25,7 +25,7 @@ theorem Utilization_Factor
 
 foreach e in Local_Set do
 
-var Period 	:= Property (e, "period") / 10**9;
+var Period 	:= Property (e, "period");
 var CET		:= Last ( Property (e, "compute_execution_time"));
 var Factor	:= CET / Period;
 

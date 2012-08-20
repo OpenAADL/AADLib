@@ -39,11 +39,11 @@ public
     proc_2               : process    quadrirotorv1_sw::proc_2.impl;
     CPU_ARM9             : processor  Processors::ARM::AT91SAM9G20.impl;
     
-    TWI_ARM9             : device     Processors::ARM::TWI_Peripheral;  
-    UART1_ARM9           : device     Processors::ARM::USART1_Peripheral; 
-    UART2_ARM9           : device     Processors::ARM::USART2_Peripheral; 
-    USB1_ARM9            : device     Processors::ARM::USB1_Peripheral; 
-    USB2_ARM9            : device     Processors::ARM::USB2_Peripheral; 
+    TWI_ARM9             : device     Processors::ARM::TWI_Peripheral.impl;  
+    UART1_ARM9           : device     Processors::ARM::USART1_Peripheral.impl; 
+    UART2_ARM9           : device     Processors::ARM::USART2_Peripheral.impl; 
+    USB1_ARM9            : device     Processors::ARM::USB1_Peripheral.impl; 
+    USB2_ARM9            : device     Processors::ARM::USB2_Peripheral.impl; 
 
     US1                  : device     devices::ultrasound_sfr08::US.impl { Deployment::Location => "0xE0";}; -- define here the address of US1
     US2                  : device     devices::ultrasound_sfr08::US.impl { Deployment::Location => "0xE4";}; -- define here the address of US2
@@ -100,6 +100,36 @@ public
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to USB2_ARM9;
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to UART1_ARM9;
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to UART2_ARM9;
+    
+    annex 
+    real_specification {**
+    	
+    theorem Electricity_Prop_Defined
+    foreach e in Device_Set do
+    requires(Electricity_Prop_Defined);
+    check(1=1);
+    end Electricity_Prop_Defined;
+    
+    theorem Utilization_prop_def
+    foreach e in Thread_Set do
+    requires(Utilization_prop_def);
+    check(1=1);
+    end Utilization_prop_def;
+    
+    theorem Current_Drain
+    foreach e in System_Set do
+    requires(Current_Drain);
+    check(1=1);
+    end Current_Drain;
+    
+    theorem Electrical_Compatibility
+    foreach e in Bus_Set do
+    requires(Electrical_Compatibility);
+    check(1=1);
+    end Electrical_Compatibility;
+    
+  **};
+    
   end quadrirotorv1.impl;
   
 end  quadrirotorv1_system;

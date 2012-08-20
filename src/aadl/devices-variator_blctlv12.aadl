@@ -26,7 +26,10 @@ properties
   Electricity_Properties::VOH_min => 3.2 V; 
   Electricity_Properties::VOL_max => 0.4 V;  
   Electricity_Properties::Device_Type => Slave;  
-  Electricity_Properties::Core_Voltage => 12.0 V; 
+  Electricity_Properties::Core_Voltage => 12.0 V;
+  Electricity_Properties::Peak_current => 0.0 mA;
+  Electricity_Properties::Acquisition_Time => 0 ms;
+  Electricity_Properties::Peak_Time => 0 ms;  
 end VARIATOR.impl;
   
 -----------------------------------

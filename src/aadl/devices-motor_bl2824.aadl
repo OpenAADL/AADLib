@@ -17,8 +17,10 @@ device implementation MOTOR.impl
 properties
   Electricity_Properties::Idle_Current => 0.0mA; -- no data
   Electricity_Properties::Run_Current => 15.0 mA;  -- 90W motor
-  Electricity_Properties::Core_Voltage => 14.8 V; 
-
+  Electricity_Properties::Core_Voltage => 14.8 V;
+  Electricity_Properties::Peak_current => 0.0 mA;
+  Electricity_Properties::Acquisition_Time => 0 ms;
+  Electricity_Properties::Peak_Time => 0 ms; 
 
 -- BEGIN : Added by Julien
   Electricity_Properties::Device_Type => Master;

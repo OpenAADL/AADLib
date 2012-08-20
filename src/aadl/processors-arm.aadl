@@ -181,7 +181,7 @@ public
   properties
     Electricity_Properties::VIH_min => 1.2 V;  
     Electricity_Properties::VIL_max => 0.5 V;  
-    Electricity_Properties::VOH_min => 1.7 V;  
+    Electricity_Properties::VOH_min => 2.0 V;  
     Electricity_Properties::VOL_max => 0.1 V;  
     Electricity_Properties::Device_Type => Master;  
     Electricity_Properties::Run_Current =>  0.0 A;
