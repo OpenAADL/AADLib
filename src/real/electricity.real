@@ -1,0 +1,169 @@
+----------------------------------------------------------------------------------------
+-- Check that for each bus, each connected device has its IO voltage properties compatible
+-- with the others devices' ones.
+
+theorem Electrical_Compatibility
+
+foreach e in Bus_Set do
+   Cnx_Set (e) := {x in Connection_Set | Is_Accessing_To (x,e) } ;
+   
+-- Requires previous checking on number of masters (only one master allowed)
+  Master_Device := 
+     { d in Device_Set | 
+	Is_Accessed_By (d, Cnx_Set) and 
+	Property_Exists(d,"Electricity_Properties::Device_Type") and
+	(Get_Property_Value (d,"Electricity_Properties::Device_Type") = "Master")
+    };
+
+
+  Slave_Device_Set := 
+     { d in Device_Set | 
+       Is_Accessed_By (d, Cnx_Set) and 
+	Property_Exists(d,"Electricity_Properties::Device_Type") and
+	(Get_Property_Value (d,"Electricity_Properties::Device_Type") = "Slave")
+    };
+  
+  var shift_bool := if (Max(Property (Slave_Device_Set, "Electricity_Properties::Level_Shifter_VIH_min")) > 0)
+  						then 1 else 0;
+
+  check (if (shift_bool = 0) then
+  ( (Max(Get_Property_Value (Master_Device,"Electricity_Properties::VOH_min")) >= Max(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VIH_min"))) and
+	(Min(Get_Property_Value(Master_Device,"Electricity_Properties::VOL_max")) <= Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VIL_max"))) and
+	(Max(Get_Property_Value (Slave_Device_Set,"Electricity_Properties::VOH_min")) >= Max(Get_Property_Value(Master_Device,"Electricity_Properties::VIH_min"))) and
+	(Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::VOL_max")) <= Min(Get_Property_Value(Master_Device,"Electricity_Properties::VIL_max"))) )
+	else
+	( (Max(Get_Property_Value (Master_Device,"Electricity_Properties::VOH_min")) >= Max(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::Level_Shifter_VIH_min"))) and
+	(Min(Get_Property_Value(Master_Device,"Electricity_Properties::VOL_max")) <= Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::Level_Shifter_VIL_max"))) and
+	(Max(Get_Property_Value (Slave_Device_Set,"Electricity_Properties::Level_Shifter_VOH_min")) >= Max(Get_Property_Value(Master_Device,"Electricity_Properties::VIH_min"))) and
+	(Min(Get_Property_Value(Slave_Device_Set,"Electricity_Properties::Level_Shifter_VOL_max")) <= Min(Get_Property_Value(Master_Device,"Electricity_Properties::VIL_max"))) )
+	
+);
+
+end Electrical_Compatibility;
+
+----------------------------------------------------------------------------------------
+-- Compute CPU_Utilization through thread execution time and period
+
+theorem Utilization_prop_def
+
+foreach e in thread_set do
+
+check(  Exists (e,"Dispatch_Protocol")
+	and (Property (e, "Dispatch_Protocol") = "Periodic")
+	and Exists (e,"compute_execution_time")
+   	and Exists (e,"Period"));
+
+end Utilization_prop_def; 
+
+theorem CPU_Utilization
+
+foreach t in Thread_Set do
+
+  return( MSum (Last(Get_Property_Value (t, "Compute_Execution_Time")) / Get_Property_Value (t, "Period")));
+
+end CPU_Utilization;
+
+----------------------------------------------------------------------------------------
+-- Check that all electrical properties are correctly defined for all system devices
+ 
+theorem Electricity_Prop_Defined
+
+foreach e in Device_Set do
+
+  check(Property_Exists(e,"Electricity_Properties::Run_Current") and 
+		Property_Exists(e,"Electricity_Properties::Idle_Current") and
+  	   	Property_Exists(e,"Electricity_Properties::Peak_Current") and
+  	   	Property_Exists(e,"Electricity_Properties::Core_Voltage") and
+  	   	Property_Exists(e,"Electricity_Properties::Peak_Time") and
+  	   	Property_Exists(e,"Electricity_Properties::Acquisition_Time") and 
+  	   	Exists (e, "Electricity_Properties::VOH_min") and
+		Exists (e, "Electricity_Properties::VIH_min") and
+		Exists (e, "Electricity_Properties::VOL_max") and
+		Exists (e, "Electricity_Properties::VIL_max") and
+		Exists (e, "Electricity_Properties::Device_Type"));
+
+end Electricity_Prop_Defined;
+---------------------------------------------------------------------------------------
+-- Compute the current drain of all system devices (Power)
+-- Each device is controlled by a thread. When the thread executes, the device
+-- goes to run mode for the acquisition time and switches back to idle mode right after
+-- until next period
+
+theorem Device_Current_Drain
+		
+foreach d in Device_Set do
+
+   Thread_Connected := { x in Thread_Set | Is_Connected_To(x,d) };
+
+   var period_t := sum(Get_Property_Value(Thread_Connected, "Period"));
+   var peak_crt := Get_Property_Value(d,"Electricity_Properties::Peak_Current");
+   var idle_crt := Get_Property_Value(d,"Electricity_Properties::Idle_Current");
+   var run_crt  := Get_Property_Value(d,"Electricity_Properties::Run_Current");
+   var acq_time := Get_Property_Value(d,"Electricity_Properties::Acquisition_Time");
+   var peak_time := Get_Property_Value(d,"Electricity_Properties::Peak_Time");
+   var voltage  := Get_Property_Value(d,"Electricity_Properties::Core_Voltage");
+
+   --check(Cardinal(Thread_Connected)> 0);
+   
+   var idle_mode := if (period_t <= 0) then 0.0 else (1 - (acq_time + peak_time) / period_t);
+   var average_current_peak := if (period_t <= 0) then 0.0 else (peak_time * peak_crt / period_t );
+   var average_current_run := if (period_t <= 0) then 0.0 else (acq_time * run_crt / period_t ); -- REAL do not allow 2 consecutive additions
+   var average_current_idle :=  idle_mode * idle_crt;
+   var average_current := if (Cardinal (Thread_Connected) <= 0 ) then run_crt		-- If a device is not controlled by task 
+   else (average_current_peak + average_current_run + average_current_idle);		-- we suppose than it work statically in run current mode
+
+
+   return( MSum(average_current * voltage));
+
+end Device_Current_Drain;
+
+---------------------------------------------------------------------------------------
+-- Compute the average consumption of all system processors thanks of CPU utilization
+
+theorem Processor_Current_Drain
+
+foreach e in Processor_Set do
+
+  var CPU_Util := compute CPU_Utilization;
+  var idle_ratio := 1.0 - CPU_Util;
+
+  var run_conso := Get_Property_Value(e, "Electricity_Properties::Run_Current") *
+  	   	 Get_Property_Value(e, "Electricity_Properties::Core_Voltage") *
+		 CPU_Util;
+  var idle_conso := Get_Property_Value (e, "Electricity_Properties::Idle_Current") *
+  	   	 Get_Property_Value (e, "Electricity_Properties::Core_Voltage") * 
+		 idle_ratio;
+
+ return ( MSum(run_conso + idle_conso));
+
+end Processor_Current_Drain;
+
+
+---------------------------------------------------------------------------------------
+-- Compute the current drain of all processors and devices
+theorem Current_Drain
+
+foreach s in System_Set do
+
+  var Processor_A := compute Processor_Current_Drain;
+  var Device_A    := compute Device_Current_Drain;
+
+return( MSum(Processor_A + Device_A) ); 
+--return( MSum(Processor_A));
+end Current_Drain;
+
+
+
+theorem Buses_Rate
+
+foreach e in Bus_Set do
+  
+  Cnx_Set(e) := {x in Connection_Set | Is_Bound_To (x, e)};
+
+  Connected_Data_Set := {x in Data_Set | Is_Accessed_By (x, Cnx_Set)};
+
+  check (Get_Property_Value (e, "Bus_Properties::Bandwidth") >= 
+   	 Sum (Get_Property_Value (Connected_Data_Set, "source_data_size")));
+
+end;
+

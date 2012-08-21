@@ -1,0 +1,82 @@
+--------------------------------------------------------------------------------
+-- Check whether the threads bound to each processors can be
+-- schedduled with RMA (cf. Liu, Layland. "Scheduling Algorithms for
+-- Multi-programming in hard-Real-Time Environment", JACM, 01/1973)
+
+-- Earliest deadline first (EDF) is a dynamic scheduling 
+-- algorithm used in real-time operating systems 
+
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+
+theorem check_scheduling
+
+-- This theorems check rma and edf schedulability hypothesis
+
+foreach e in system_set do
+	requires(required_properties);
+	check (1 <> 2);
+end check_scheduling;
+
+-------------------------------------------------------------------------
+
+theorem required_properties
+
+foreach e in thread_set do
+
+check(  Exists (e,"Dispatch_Protocol")
+	and (Property (e, "Dispatch_Protocol") = "Periodic")
+	and Exists (e,"compute_execution_time")
+   	and Exists (e,"Period"));
+
+end required_properties;
+
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+
+-- Utilization_Factor : compute and return utilization factor
+-- of a thread set.
+
+theorem Utilization_Factor
+
+foreach e in Local_Set do
+
+var Period 	:= Property (e, "period");
+var CET		:= Last ( Property (e, "compute_execution_time"));
+var Factor	:= CET / Period;
+
+return (MSum (Factor));
+
+end Utilization_Factor;
+
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+-------------------------------------------------------------------------
+
+-- Scheduling theorem is designed for checking EDF and RMA schedulability
+
+theorem scheduling
+foreach e in processor_set do 
+
+Processes(e) := { x in process_set | Is_Bound_To (x,e)};
+threads	:= {x in thread_set | Is_Subcomponent_Of (x, processes)};
+var U := Compute Utilization_Factor(Threads);
+
+var get_protocol := Property(e,"Scheduling_Protocol");
+
+var rms_protocol := list ("RMS");
+var edf_protocol := list ("EDF");
+
+var bool_RMS := if (is_in (rms_protocol, get_protocol)) then 1 else 0;
+var bool_EDF := if (is_in (edf_protocol, get_protocol)) then 1 else 0;
+var single_protocol := if ( (bool_RMS + bool_EDF) <> 1 ) then 0 else (bool_RMS + bool_EDF);
+
+ check (if (bool_RMS * single_protocol = 1)
+ 		then (U <= (Cardinal (Threads) * (2 ** (1 / Cardinal (Threads))) -1)) 	-- Check RMA
+ 		else (if ( bool_EDF * single_protocol = 1)							
+ 		then (U <= 1 * bool_EDF * single_protocol)		-- Check EDF
+ 		else (1 < 0) ) ); 		-- Return FALSE
+ 		
+ end scheduling;

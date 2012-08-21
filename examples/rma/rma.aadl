@@ -67,20 +67,27 @@ public
   end cpu;
 
   processor implementation cpu.impl extends processors::cpu_rma.impl
-    annex real_specification {**
-      
-      theorem check_prop
-      foreach s in thread_set do
-      requires(rma_prop_def);
-      check(1=1);
-      end check_prop;
-
-      theorem check_edf
-      foreach s in processor_set do
-      requires(edf and rma);
-      check(1=1);
-    end check_edf;
-    **};
+--    annex real_specification {**
+--      
+--      theorem check_prop
+--      foreach s in thread_set do
+--      requires(rma_prop_def);
+--      check(1=1);
+--      end check_prop;
+--
+--      theorem check_edf
+--      foreach s in processor_set do
+--      requires(edf and rma);
+--      check(1=1);
+--      
+--      theorem scheduling
+--      foreach e in processor do
+--      requires(schedulability);
+--      check(1=1);
+--      end scheduling;
+--      
+--    end check_edf;
+--    **};
     
   end cpu.impl;
 
@@ -110,6 +117,23 @@ public
     cpu	   : processor cpu.impl;
   properties
     Actual_Processor_Binding => (reference (cpu)) applies to node_a;
+    
+    annex real_specification {**
+     
+     theorem check_scheduling
+      foreach e in system_set do
+      requires(check_scheduling);
+      check(1=1);
+      end check_scheduling;
+      
+      theorem scheduling
+      foreach e in processor_set do
+      requires(scheduling);
+      check(1=1);
+      end scheduling;
+  
+    **};
+    
   end rma.impl;
 
 end RMAAadl;
