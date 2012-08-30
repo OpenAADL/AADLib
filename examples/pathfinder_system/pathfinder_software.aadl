@@ -35,9 +35,9 @@ process implementation prs_PSC.impl extends bus_interface.impl
 	meteo_task 			: thread meteo_task;
 
 	data_rw : data data_rw; -- critical ressource
-
+		
 connections
--- by default access is required for the duration of the thread execution
+ --by default access is required for the duration of the thread execution
 	C1: data access data_rw <-> data_distribution.req_data_rw ;
 	C2: data access data_rw <-> control_task.req_data_rw;
 	C3: data access data_rw <-> mesure_task.req_data_rw;
@@ -161,6 +161,7 @@ data data_rw
 -- critical resource
 properties
 Concurrency_Control_Protocol => None_Specified;
+Priority => 6;
 -- to analysis with
 -- Concurrency_Control_Protocol => Priority_Inheritance;
 -- Concurrency_Control_Protocol => Priority_Ceiling;

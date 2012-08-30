@@ -26,5 +26,11 @@ property set Processor_Properties is
    FPU_Present : aadlboolean applies to (processor);
 
    MIPS : aadlinteger 0 .. Max_Aadlinteger applies to (processor);
+   
+   Max_Prio_First : processor_properties::Alowed_Max_Prio_First applies to (processor);
+   Alowed_Max_Prio_First : type enumeration (high, low);
+   
+   -- Max_Prio_First indicates if the scheduler takes the highest priority of threads 
+   -- is the highest value of threads priorities or inversely   
 
 end Processor_Properties;

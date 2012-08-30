@@ -115,8 +115,8 @@ end rs_6000;
 processor implementation rs_6000.impl
 	properties
 	Deployment::Execution_Platform => VxWorks;
-	scheduling_protocol => (RMS);
-	Processor_Properties::Max_Prio_First => True;
+	--scheduling_protocol => (RMS);
+	Processor_Properties::Max_Prio_First => high;
 	-- to analyse with
 	-- scheduling_protocol => (EDF) ;
 

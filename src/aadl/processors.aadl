@@ -4,6 +4,7 @@ package Processors
 public
 
 with Deployment;
+with Processor_properties;
   -----------------
   -- Generic_CPU --
   -----------------
@@ -17,6 +18,7 @@ with Deployment;
   properties
     Deployment::Execution_Platform => Native;
     Scheduling_Protocol => (Posix_1003_Highest_Priority_First_Protocol);
+    Processor_properties::Max_Prio_First => high;
   end cpu_rma;
   
   Processor implementation cpu_rma.impl
@@ -68,6 +70,10 @@ processor MC68040
   end MC68040;
   
 processor rs_6000
+properties
+    Deployment::Execution_Platform => VxWorks;
+    Processor_Properties::Max_Prio_First => high;
+    scheduling_protocol => (RMS);
 end rs_6000;  
 
 end Processors;
