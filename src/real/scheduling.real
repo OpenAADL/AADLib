@@ -46,24 +46,29 @@ theorem shared_data
 
 foreach e in data_set do
 
-accessor_connections := { x in connection_set | Is_Accessed_By (e,x) };
-accessor_threads := {t in thread_set |  Is_Accessed_By (t,accessor_connections)};
-processes := { p in Process_Set | Is_Subcomponent_Of (accessor_threads, p ) } ;
-threads_processors := {p in processor_set | Is_Bound_to ( processes, p) };
+connections := { x in connection_set | Is_Accessed_By (e,x) };
+threads 	:= { t in thread_set |  Is_Accessed_By (t,connections)};
+processes 	:= { p in Process_Set | Is_Subcomponent_Of (threads, p ) } ;
+processors 	:= { p in processor_set | Is_Bound_to ( processes, p) };
 
-var protocol := Property (threads_processors, "Scheduling_protocol");
 var supported_pcp := list("rms");
 
-var tmp := cardinal (accessor_threads);
+var MPF_high := List ("high");
+var MPF_low := List ("low");
 
-check(	if (cardinal (accessor_threads) <= 1)
+check(	if (cardinal (threads) <= 1)
 		then (1=1)
 		
 			-- check PCP applicability
-		else (	if (Is_In (protocol , supported_pcp) )
-					and (Property (e, "priority") >=  Max (Property (accessor_threads, "priority")) )
+			
+		else (	if ((Is_In (Property (processors, "Scheduling_protocol") , supported_pcp) )
+					and ( Property (e, "priority") >=  Max (Property (threads, "priority"))) 
+					and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_high)) )
 				then (1=1) 
-				else (1<>1) )
+				
+				else ((Is_In (Property (processors, "Scheduling_protocol") , supported_pcp) )
+						and ( Property (e, "priority") <=  Max (Property (threads, "priority"))) 
+						and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_low))) )
 	);
 
 end shared_data;
