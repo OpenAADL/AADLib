@@ -55,7 +55,7 @@ public
     Dispatch_Protocol                  => Periodic;
     Priority                           => 2;
     Period                             => 500 ms;
-    Compute_Execution_time             => 0 ms .. 3 ms;
+    Compute_Execution_time             => 0 ms .. 5 ms;
     Deadline                           => 500 ms;
   end Task.impl_2;
 
@@ -105,6 +105,12 @@ public
       requires(check_scheduling);
       check(1=1);
       end check_scheduling;
+      
+      theorem check_wcrt
+      foreach s in local_set do
+      requires(wcrt);
+      check(1=1);
+      end check_wcrt;
      
     **};
     

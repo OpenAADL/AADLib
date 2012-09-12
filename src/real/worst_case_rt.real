@@ -1,0 +1,138 @@
+theorem wcrt
+-- Worst case response time
+foreach e in thread_set do 
+
+var priority := Property (e, "priority");
+
+global cet_global := Last (Property (e, "compute_execution_time"));
+
+high_priority := {t in Thread_Set | Property (t, "priority") > priority};
+
+--%%%%%%%%%%%%%%%%%%%%%%%%%
+
+var tempo1 := compute iteration1 ( high_priority);
+global wc1 := cet_global + tempo1;
+
+--%%%%%%%%%%%%%%%%%%%%%%%%%
+
+var tempo2 := compute iteration2 (high_priority);
+global wc2 := cet_global + tempo2;
+
+--%%%%%%%%%%%%%%%%%%%%%%%%%
+
+var tempo3 := compute iteration3 (high_priority);
+global wc3:= cet_global + tempo3;
+
+--%%%%%%%%%%%%%%%%%%%%%%%%%
+
+var tempo4 := compute iteration4 (high_priority);
+global wc4 := cet_global + tempo4;
+
+--%%%%%%%%%%%%%%%%%%%%%%%%%
+
+var tempo5 := compute iteration5 (high_priority);
+global wc5 := cet_global + tempo5;
+
+--%%%%%%%%%%%%%%%%%%%%%%%%%
+
+var tempo6 := compute iteration6 (high_priority);
+global wc6 := cet_global + tempo6;
+
+--%%%%%%%%%%%%%%%%%%%%%%%%%
+
+check( (wc6 = wc5) and wc5 <= Property (e, "period"));
+
+end wcrt;
+
+-------------------
+-------------------
+
+theorem iteration1
+
+foreach e in local_set do
+var cet := Last (Property (e, "compute_execution_time"));
+var per := Property (e, "period");
+
+var quot := (cet_global/per) + 0.4999;
+var entier := integer (quot);
+var tmp :=  entier*cet;
+
+return (MSum(tmp));
+
+end iteration1;
+
+-------------------
+-------------------
+
+theorem iteration2
+foreach e in local_set do
+
+var cet := Last (Property (e, "compute_execution_time"));
+var per := Property (e, "period");
+
+var quot := (wc1/per) + 0.4999;
+
+var entier := integer (quot);
+var tmp := cet*entier;
+return (MSum(tmp));
+end iteration2;
+-------------------
+-------------------
+
+theorem iteration3
+foreach e in local_set do
+
+var cet := Last (Property (e, "compute_execution_time"));
+var per := Property (e, "period");
+
+var quot := (wc2/per) + 0.4999;
+
+var entier := integer (quot);
+var tmp := cet*entier;
+return (MSum(tmp));
+end iteration3;
+-------------------
+-------------------
+
+theorem iteration4
+foreach e in local_set do
+
+var cet := Last (Property (e, "compute_execution_time"));
+var per := Property (e, "period");
+
+var quot := (wc3/per) + 0.4999;
+
+var entier := integer (quot);
+var tmp := cet*entier;
+return (MSum(tmp));
+end iteration4;
+-------------------
+-------------------
+
+theorem iteration5
+foreach e in local_set do
+
+var cet := Last (Property (e, "compute_execution_time"));
+var per := Property (e, "period");
+
+var quot := (wc4/per) + 0.4999;
+
+var entier := integer (quot);
+var tmp := cet*entier;
+return (MSum(tmp));
+end iteration5;
+-------------------
+-------------------
+
+theorem iteration6
+foreach e in local_set do
+
+var cet := Last (Property (e, "compute_execution_time"));
+var per := Property (e, "period");
+
+var quot := (wc5/per) + 0.4999;
+
+var entier := integer (quot);
+var tmp := cet*entier;
+return (MSum(tmp));
+end iteration6;
