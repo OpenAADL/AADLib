@@ -1,8 +1,32 @@
+-- This theorem was designed to evaluate the worst case response time on static 
+-- priority scheduling (cf. Laurent Pautet."Ordonnancement temps réel 1.5")
+
 theorem wcrt
--- Worst case response time
-foreach e in thread_set do 
+
+foreach e in thread_set do
 
 var priority := Property (e, "priority");
+low_priority := {t in Thread_Set | Property (t, "priority") < priority};
+
+con_to_shared := { x in connection_set | Is_Accessed_By (data_set,x) };
+
+con_to_thread := { x in con_to_shared | Is_Accessed_By (e,x)};
+
+shared_data := { d in data_set | is_accessed_by (d,con_to_thread)};
+
+conn_acc_shared := {x in con_to_shared | is_accessed_by(shared_data,x)};
+
+threads_acc_shared	:= { t in low_priority | Is_Accessed_By (t,conn_acc_shared)};
+
+-- When access duration on shared data is low than period of task, "Access_Time" 
+-- AADL properties must be designed for quantify this time. This theorem manages 
+-- access duration which is equal to period of task.
+-- "Access_Time" properties is not yet managed by REAL when this theorem is designed.
+ 
+var B_i := if (cardinal (threads_acc_shared) > 0) 
+				then 
+				Sum (Last (Property (threads_acc_shared, "compute_execution_time")))
+				else 0;
 
 global cet_global := Last (Property (e, "compute_execution_time"));
 
@@ -16,27 +40,27 @@ global wc1 := cet_global + tempo1;
 --%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var tempo2 := compute iteration2 (high_priority);
-global wc2 := cet_global + tempo2;
+global wc2 := cet_global + tempo2 + B_i;
 
 --%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var tempo3 := compute iteration3 (high_priority);
-global wc3:= cet_global + tempo3;
+global wc3:= cet_global + tempo3 + B_i;
 
 --%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var tempo4 := compute iteration4 (high_priority);
-global wc4 := cet_global + tempo4;
+global wc4 := cet_global + tempo4 + B_i;
 
 --%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var tempo5 := compute iteration5 (high_priority);
-global wc5 := cet_global + tempo5;
+global wc5 := cet_global + tempo5 + B_i;
 
 --%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var tempo6 := compute iteration6 (high_priority);
-global wc6 := cet_global + tempo6;
+global wc6 := cet_global + tempo6 + B_i;
 
 --%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -55,7 +79,7 @@ var per := Property (e, "period");
 
 var quot := (cet_global/per) + 0.4999;
 var entier := integer (quot);
-var tmp :=  entier*cet;
+var tmp := entier*cet;
 
 return (MSum(tmp));
 
