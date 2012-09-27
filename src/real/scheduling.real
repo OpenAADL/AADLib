@@ -6,6 +6,10 @@
 -- Earliest deadline first (EDF) is a dynamic scheduling 
 -- algorithm used in real-time operating systems 
 
+-- Checking of the both scheduling protocol which designed in this theorems 
+-- (RMS & EDF) assume shared data between tasks (cf. Laurent Pautet."Ordonnancement
+-- temps réel 1.5")
+
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
@@ -42,34 +46,40 @@ end required_properties;
 
 -------------------------------------------------------------------------
 
+
 theorem shared_data
 
 foreach e in data_set do
 
 connections := { x in connection_set | Is_Accessed_By (e,x) };
-threads 	:= { t in thread_set |  Is_Accessed_By (t,connections)};
-processes 	:= { p in Process_Set | Is_Subcomponent_Of (threads, p ) } ;
-processors 	:= { p in processor_set | Is_Bound_to ( processes, p) };
+threads := { t in thread_set | Is_Accessed_By (t,connections)};
+processes := { p in Process_Set | Is_Subcomponent_Of (threads, p ) } ;
+processors := { p in processor_set | Is_Bound_to ( processes, p) };
 
 var supported_pcp := list("rms");
-
+var supoorted_shared_data := list("rms","edf");
 var MPF_high := List ("high");
 var MPF_low := List ("low");
 
-check(	if (cardinal (threads) <= 1)
-		then (1=1)
-		
-			-- check PCP applicability
-			
-		else (	if ((Is_In (Property (processors, "Scheduling_protocol") , supported_pcp) )
-					and ( Property (e, "priority") >=  Max (Property (threads, "priority"))) 
-					and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_high)) )
-				then (1=1) 
-				
-				else ((Is_In (Property (processors, "Scheduling_protocol") , supported_pcp) )
-						and ( Property (e, "priority") <=  Max (Property (threads, "priority"))) 
-						and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_low))) )
-	);
+check( if (cardinal (threads) <= 1)
+then (1=1)
+
+-- check PCP applicability
+
+else 
+( ((Is_In (Property (processors, "Scheduling_protocol") , supported_pcp) )
+and ( Property (e, "priority") >= Max (Property (threads, "priority")))
+and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_high)) )
+or
+((Is_In (Property (processors, "Scheduling_protocol") , supported_pcp) )
+and ( Property (e, "priority") <= Max (Property (threads, "priority")))
+and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_low))) )
+
+-- Shared data managed by scheduling protocol
+
+or
+(Is_In (Property (processors, "Scheduling_protocol") , supoorted_shared_data))
+);
 
 end shared_data;
 
@@ -77,7 +87,7 @@ end shared_data;
 
 theorem check_priority_rma
 
-foreach e in thread_set do 
+foreach e in thread_set do
 
 var priority := Property (e, "priority");
 
@@ -86,27 +96,27 @@ Equal_priority := {t in Thread_Set | Property (t, "priority") = priority};
 
 var period := Property (e, "Period");
 
-high_periods_high := { t in high_priority | Property (t, "period") > period}; 
-high_periods_low := { t in high_priority | Property (t, "period") < period}; 
+high_periods_high := { t in high_priority | Property (t, "period") > period};
+high_periods_low := { t in high_priority | Property (t, "period") < period};
 
-Processors := {x in processor_set | (Exists (x,"Processor_properties::Max_Prio_First")  
-										and Exists (x,"scheduling_protocol") )};
+Processors := {x in processor_set | (Exists (x,"Processor_properties::Max_Prio_First")
+and Exists (x,"scheduling_protocol") )};
 
 var rms_protocol := list ("RMS");
 
 var MPF_high := List ("high");
 var MPF_low := List ("low");
-			 
+
 check ( if ( cardinal (processor_set) = 1
-			and Is_In (rms_protocol, Property (Processors, "scheduling_protocol"))
-			and (cardinal (Equal_priority) = 1)
-			)
-			
-			then ( if (Is_In (MPF_high, Property (Processors, "Processor_properties::Max_Prio_First")))
-					then (cardinal (high_periods_high) = 0) 
-					else (cardinal (high_periods_low) = 0) )
-					
-		else (1<>1));
+and Is_In (rms_protocol, Property (Processors, "scheduling_protocol"))
+and (cardinal (Equal_priority) = 1)
+)
+
+then ( if (Is_In (MPF_high, Property (Processors, "Processor_properties::Max_Prio_First")))
+then (cardinal (high_periods_high) = 0)
+else (cardinal (high_periods_low) = 0) )
+
+else ( not Is_In (rms_protocol, Property (Processors, "scheduling_protocol"))));
 
 end check_priority_rma;
 -------------------------------------------------------------------------
@@ -120,9 +130,32 @@ theorem Utilization_Factor
 
 foreach e in Local_Set do
 
+var priority := Property (e, "priority");
+low_priority := {t in Thread_Set | Property (t, "priority") < priority};
+
+con_to_shared := { x in connection_set | Is_Accessed_By (data_set,x) };
+
+con_to_thread := { x in con_to_shared | Is_Accessed_By (e,x)};
+
+shared_data := { d in data_set | is_accessed_by (d,con_to_thread)};
+
+conn_acc_shared := {x in con_to_shared | is_accessed_by(shared_data,x)};
+
+threads_acc_shared	:= { t in low_priority | Is_Accessed_By (t,conn_acc_shared)};
+
+-- When access duration on shared data is low than period of task, "Access_Time" 
+-- AADL properties must be designed for quantify this time. This theorem manages 
+-- access duration which is equal to period of task.
+-- "Access_Time" properties is not yet managed by REAL when this theorem is designed.
+ 
+var B_i := if (cardinal (threads_acc_shared) > 0) 
+				then 
+				Sum (Last (Property (threads_acc_shared, "compute_execution_time")))
+				else 0;
+
 var Period 	:= Property (e, "period");
 var CET		:= Last ( Property (e, "compute_execution_time"));
-var Factor	:= CET / Period;
+var Factor	:= (CET + B_i) / Period;
 
 return (MSum (Factor));
 
