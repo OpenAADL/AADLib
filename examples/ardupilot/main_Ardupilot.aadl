@@ -19,7 +19,7 @@ public
 
   system implementation Ardupilot_Shield.impl
   subcomponents
-  Shield	: system shields::Ardupilot::Ardupilot;	-- Ardupilot Shield 
+  Shield	: system shields::Ardupilot::Ardupilot;	-- Ardupilot Shield
   GPS		: device devices::EM406A::EM406A;	-- GPS module
   XYZ		: device devices::XYZ_IR::XYZ_IR;	-- Infrared Sensor
 
@@ -63,41 +63,7 @@ public
 
   properties
     Actual_Processor_Binding => (reference (ATM328)) applies to process_Ardupilot;
-  
-  annex real_specification {**
-     
-    theorem test_etef
-      foreach f in end_to_end_flows_set do
-      --requires(test_etef);
-      check(1=1);
-    end test_etef;
-    
-    theorem test_flows
-      foreach f in process_set do
-      --requires(test_flows);
-      check(1=1);
-    end test_flows;
-   
-   theorem sum_cet
-      foreach f in process_set do
-      requires(sum_cet);
-      check(1=1);
-    end sum_cet;
-    
-      theorem flows
-      foreach f in process_set do
-      requires(flows);
-      check(1=1);
-    end flows;
-    
-    theorem thread_dim
-      foreach f in thread_set do
-      requires(thread_dim);
-      check(1=1);
-    end thread_dim;
-   
-    **};
-  
+
   end Ardupilot_Map.impl;
 
 end Main_Ardupilot;
