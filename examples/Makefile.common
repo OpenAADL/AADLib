@@ -46,6 +46,10 @@ mast:
 	$(OCARINA) $(OCARINA_FLAGS) -g mast -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
+petri:
+	$(OCARINA) $(OCARINA_FLAGS) -g petri_nets -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
 real:
 	$(OCARINA) $(OCARINA_FLAGS) -g real_theorem \
                 -real_continue_eval \
