@@ -1,7 +1,6 @@
 # Retrieve all source files
 
-BRUTE_AADL=${shell find . $(srcdir) -name '*.aadl' | grep -v 'b~' 2> /dev/null}
-AADL_SOURCES = ${sort $(srcdir) $(BRUTE_AADL)}
+AADL_SOURCES = ${shell find $(srcdir) -name '*.aadl'}
 
 debug:
 	@echo $(AADL_SOURCES)
@@ -13,5 +12,10 @@ check-local:
 
 clean-local:
 	-rm *~
+
+install-data-local:
+	for file in $(AADL_SOURCES); do \
+	 $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/ocarina/AADLv2 || exit 1; \
+	done
 
 EXTRA_DIST= $(AADL_SOURCES)
