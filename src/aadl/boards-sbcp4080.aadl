@@ -7,6 +7,7 @@ public
   with Buses::UART, Buses::Ethernet, Buses::PCI;
   with Processor_Properties;
   with Memories;
+  with Data_Sheet;
 
   --------------
   -- SBCP4080E --
@@ -24,6 +25,7 @@ public
 
   properties
     Data_Sheet::UUID => "http://www.windriver.com/products/OCD/SBCP4080/";
+
   end SBCP4080E;
 
   system implementation SBCP4080E.impl
