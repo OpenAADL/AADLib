@@ -3,13 +3,12 @@ AADL_ROOT    = vxworks.impl
 
 OTHER_FILES =							\
 	$(srcdir)/arinc653_extended.aadl			\
-	$(srcdir)/memory_segment_properties.aadl		\
 	$(srcdir)/prodcons.aadl					\
 	$(srcdir)/producer_consummer_software.aadl		\
 	$(srcdir)/vxworks_platform.aadl				\
 	$(srcdir)/mem3.real					\
 	$(srcdir)/soft.real					\
-	$(srcdir)/vxworks.real				
+	$(srcdir)/vxworks.real
 
 CLEANDIRS = vxworks_impl
 
