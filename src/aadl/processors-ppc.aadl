@@ -36,4 +36,35 @@ public
     Thread_Limit => 32;
   end PPC750.impl;
 
+  -----------
+  -- P4080 --
+  -----------
+
+  --  The P4080 is a 8-core processor, each core being a e500mc
+
+  --  See http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=P4080
+  --  for more details
+
+  virtual processor e500mc
+  end e500mc;
+
+  virtual processor implementation e500mc.impl
+  end e500mc.impl;
+
+  processor P4080
+  end P4080;
+
+  processor implementation P4080.impl
+  subcomponents
+    Core_1 : virtual processor e500mc.impl;
+    Core_2 : virtual processor e500mc.impl;
+    Core_3 : virtual processor e500mc.impl;
+    Core_4 : virtual processor e500mc.impl;
+    Core_5 : virtual processor e500mc.impl;
+    Core_6 : virtual processor e500mc.impl;
+    Core_7 : virtual processor e500mc.impl;
+    Core_8 : virtual processor e500mc.impl;
+
+  end P4080.impl;
+
 end Processors::PPC;

@@ -1,0 +1,46 @@
+-- This package models the SBCP4080 Edevelopment board. This
+-- board is compatible with VxWorks RTOS kernels.
+
+package Boards::SBCP4080E
+public
+  with Processors::PPC;
+  with Buses::UART, Buses::Ethernet, Buses::PCI;
+  with Processor_Properties;
+  with Memories;
+
+  --------------
+  -- SBCP4080E --
+  --------------
+
+  system SBCP4080E
+  features
+    uart_core_1 : requires bus access Buses::UART::UART.impl;
+    uart_core_2 : requires bus access Buses::UART::UART.impl;
+
+    eth_1       : requires bus access Buses::Ethernet::Ethernet.impl;
+    eth_2       : requires bus access Buses::Ethernet::Ethernet.impl;
+
+    pci : requires bus access Buses::PCI::PCI.impl;
+
+  properties
+    Data_Sheet::UUID => "http://www.windriver.com/products/OCD/SBCP4080/";
+  end SBCP4080E;
+
+  system implementation SBCP4080E.impl
+  subcomponents
+    P4080 : processor Processors::PPC::P4080.impl
+    { Processor_Properties::Processor_Frequency => 1_500 Mhz; };
+
+    SDRAM_1 : memory Memories::SRAM {Byte_Count => 2_000_000_000; };
+    SDRAM_2 : memory Memories::SRAM {Byte_Count => 2_000_000_000; };
+
+    --  XXX check wether it is part of the micro or not
+    Flash_Memory : memory Memories::Flash_Memory.impl
+    {Byte_Count => 1_000_000_000;};
+
+    EEPROM       : memory Memories::EEPROM.impl
+    {Byte_Count => 8_000;};
+
+  end SBCP4080E.impl;
+
+end Boards::SBCP4080E;
