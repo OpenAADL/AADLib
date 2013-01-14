@@ -1,7 +1,6 @@
 # Retrieve all source files
 
-BRUTE_AADL=${shell find . $(srcdir) -name '*.aadl' | grep -v 'b~' 2> /dev/null}
-AADL_SOURCES = ${sort $(srcdir) $(BRUTE_AADL)}
+AADL_SOURCES = ${shell find $(srcdir) -name '*.aadl'}
 
 EXTRA_DIST= $(AADL_SOURCES)
 
