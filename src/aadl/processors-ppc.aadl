@@ -56,14 +56,14 @@ public
 
   processor implementation P4080.impl
   subcomponents
-    Core_1 : virtual processor e500mc.impl;
-    Core_2 : virtual processor e500mc.impl;
-    Core_3 : virtual processor e500mc.impl;
-    Core_4 : virtual processor e500mc.impl;
-    Core_5 : virtual processor e500mc.impl;
-    Core_6 : virtual processor e500mc.impl;
-    Core_7 : virtual processor e500mc.impl;
-    Core_8 : virtual processor e500mc.impl;
+    Core_1 : virtual processor e500mc.impl { Processor_Properties::Core_Id => 0;};
+    Core_2 : virtual processor e500mc.impl { Processor_Properties::Core_Id => 1;};
+    Core_3 : virtual processor e500mc.impl { Processor_Properties::Core_Id => 2;};
+    Core_4 : virtual processor e500mc.impl { Processor_Properties::Core_Id => 3;};
+    Core_5 : virtual processor e500mc.impl { Processor_Properties::Core_Id => 4;};
+    Core_6 : virtual processor e500mc.impl { Processor_Properties::Core_Id => 5;};
+    Core_7 : virtual processor e500mc.impl { Processor_Properties::Core_Id => 6;};
+    Core_8 : virtual processor e500mc.impl { Processor_Properties::Core_Id => 7;};
 
   end P4080.impl;
 

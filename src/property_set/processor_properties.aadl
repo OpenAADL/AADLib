@@ -9,13 +9,13 @@ property set Processor_Properties is
   Processor_Family : enumeration
         (ARM, AVR, SPARC, PowerPC, x86, x86_64) applies to (processor);
 
-   Frequency : type aadlinteger 0 Hz .. 2#1#e32 Hz units 
+   Frequency : type aadlinteger 0 Hz .. 2#1#e32 Hz units
        (Hz, KHz => Hz  * 1000, MHz => KHz * 1000, GHz => MHz * 1000);
    --  Frequency of a processor
 
    Processor_Frequency : Processor_Properties::Frequency applies to (processor);
 
-   Endianess: enumeration (Little_Endian, Big_Endian, Bi_Endian) 
+   Endianess: enumeration (Little_Endian, Big_Endian, Bi_Endian)
       applies to (processor);
    --  Endianess of the processor. Note that some processors can either
    --  be Little- or Big- endian, the OS decides of the actual endianess.
@@ -26,11 +26,15 @@ property set Processor_Properties is
    FPU_Present : aadlboolean applies to (processor);
 
    MIPS : aadlinteger 0 .. Max_Aadlinteger applies to (processor);
-   
-   Max_Prio_First : processor_properties::Alowed_Max_Prio_First applies to (processor);
+
+   Max_Prio_First : processor_properties::Alowed_Max_Prio_First
+     applies to (processor);
+
    Alowed_Max_Prio_First : type enumeration (high, low);
-   
-   -- Max_Prio_First indicates if the scheduler takes the highest priority of threads 
-   -- is the highest value of threads priorities or inversely   
+   -- Max_Prio_First indicates if the scheduler takes the highest
+   -- priority of threads is the highest value of threads priorities
+   -- or inversely
+
+   Core_Id : aadlinteger 0 .. Max_Aadlinteger applies to (virtual processor);
 
 end Processor_Properties;
