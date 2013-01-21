@@ -14,8 +14,12 @@ clean-local:
 	-rm *~
 
 install-data-local:
+	mkdir -p $(DESTDIR)$(datadir)/ocarina/AADLv2
 	for file in $(AADL_SOURCES); do \
 	 $(INSTALL_DATA) $$file $(DESTDIR)$(datadir)/ocarina/AADLv2 || exit 1; \
 	done
+
+uninstall-local:
+	rm -rf $(DESTDIR)$(datadir)/ocarina/AADLv2
 
 EXTRA_DIST= $(AADL_SOURCES)

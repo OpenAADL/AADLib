@@ -2,7 +2,6 @@ AADL_SOURCES = $(srcdir)/prodcons.aadl
 AADL_ROOT    = vxworks.impl
 
 OTHER_FILES =							\
-	$(srcdir)/arinc653_extended.aadl			\
 	$(srcdir)/prodcons.aadl					\
 	$(srcdir)/producer_consummer_software.aadl		\
 	$(srcdir)/vxworks_platform.aadl				\
