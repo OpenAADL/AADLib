@@ -7,7 +7,7 @@ public
 
   bus AFDX extends Buses::Ethernet::Ethernet
   properties
-    Transmission_Time => (Fixed => 0 ms .. 10ms; PerByte => 0 ms .. 10 ms;);
+    Transmission_Time => [ Fixed => 0 ms .. 10ms; PerByte => 0 ms .. 10 ms; ];
   end AFDX;
 
 end Buses::AFDX;
