@@ -1,0 +1,88 @@
+--  The following is inspired from the Dimensionnality Checking
+--  supported in GNAT.
+
+property set Unit_PS is
+
+  -- Dimension_Type defines a dimension following the SI unit
+  -- system: a dimension is defined by a symbol and a
+  -- combination of fundamental units
+  --   Dimension ::= (m^mc).(kg^kc).(s^sc).(A^Ac).(K^Kc).(mol^molc).(cd^cdc)
+
+  Dimension_Type : type record
+  (Symbol               : aadlstring;  -- Symbol in SI system
+   AADL_Unit_Identifier : aadlstring;  -- Unit identifier used in AADL
+   Meter_Cardinality    : aadlinteger; -- distance, m
+   Kilogram_Cardinality : aadlinteger; -- mass, kg
+   Second_Cardinality   : aadlinteger; -- time, s
+   Ampere_Cardinality   : aadlinteger; -- electric current, A
+   Kelvin_Cardinality   : aadlinteger; -- temperature, K
+   Mole_Cardinality     : aadlinteger; -- amount of substance, mol
+   Candela_Cardinality  : aadlinteger; -- luminous intensity, cd
+  );
+
+  --  Note: Dimension_Type cardinality elements can be seen as a
+  --  vector. Thus allowing for dimensionnality checking when
+  --  combining dimensions:
+  --
+  --  "+" : result, LHS and RHS have same unit
+  --  "-" : result, LHS and RHS have same unit
+  --  "*" : result  unit is build as follows
+  --   (m,k,s,a,ke,mo,ca) :=
+  --     (m1+m2, k1+k2, s1+s2, a1+a2,ke1+ke2,mo1+mo2, ca1+ca2)
+  --  "/" : result  unit is build as follows
+  --   (m,k,s,a,ke,mo,ca) :=
+  --    (m1-m2, k1-k2, s1-s2, a1-a2,ke1-ke2,mo1-mo2, ca1-ca2)
+
+  Measurement_Unit : Unit_PS::Dimension_Type
+  applies to ( data, port, parameter );
+  --  The Measurement_Unit property specifies the measurement unit of
+  --  the data being communicated.
+
+  -- Library of units
+
+  Second : constant Unit_PS::Dimension_Type =>
+  [ Symbol => "s";
+    AADL_Unit_Identifier => "sec"; -- As defined in AADL_Project
+    Meter_Cardinality    => 0;
+    Kilogram_Cardinality => 0;
+    Second_Cardinality   => 1;
+    Ampere_Cardinality   => 0;
+    Kelvin_Cardinality   => 0;
+    Mole_Cardinality     => 0;
+    Candela_Cardinality  => 0;
+  ];
+
+  Meter : constant Unit_PS::Dimension_Type =>
+  [ Symbol => "m";
+    Meter_Cardinality    => 1;
+    Kilogram_Cardinality => 0;
+    Second_Cardinality   => 0;
+    Ampere_Cardinality   => 0;
+    Kelvin_Cardinality   => 0;
+    Mole_Cardinality     => 0;
+    Candela_Cardinality  => 0;
+  ];
+
+  Speed : constant Unit_PS::Dimension_Type =>
+  [ Symbol => "m/s";
+    Meter_Cardinality    => 1;
+    Kilogram_Cardinality => 0;
+    Second_Cardinality   => -1;
+    Ampere_Cardinality   => 0;
+    Kelvin_Cardinality   => 0;
+    Mole_Cardinality     => 0;
+    Candela_Cardinality  => 0;
+  ];
+
+  Acceleration : constant Unit_PS::Dimension_Type =>
+  [ Symbol => "m/s^2";
+    Meter_Cardinality    => 1;
+    Kilogram_Cardinality => 0;
+    Second_Cardinality   => -2;
+    Ampere_Cardinality   => 0;
+    Kelvin_Cardinality   => 0;
+    Mole_Cardinality     => 0;
+    Candela_Cardinality  => 0;
+  ];
+
+end Unit_PS;

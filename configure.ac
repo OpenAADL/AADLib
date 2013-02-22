@@ -98,6 +98,7 @@ AC_OUTPUT([
 	examples/redundancy/Makefile
 	examples/round_robin/Makefile
 	examples/time_triggered/Makefile
+	examples/units/Makefile
 	examples/uxv/Makefile
 	examples/uxv/emaxxv2/Makefile
 	examples/uxv/minirocket/Makefile
