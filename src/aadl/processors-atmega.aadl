@@ -5,7 +5,7 @@
 package Processors::ATMEGA
 public
   with Data_Sheet, Memories, Deployment, Processor_Properties;
-  with Processors, ARINC653;
+  with Processors, ARINC653_Extended;
 
   -------------
   -- ATMEGA8 --
@@ -87,13 +87,13 @@ public
     -- ATMEGA have three memory areas, one for code, two for data.
 
     Flash_Memory : memory Memories::Flash_Memory.impl
-    {ARINC653::Memory_Kind => Memory_Code;};
+    {ARINC653_Extended::Memory_Kind => text;};
 
     SRAM         : memory Memories::SRAM.impl
-    {ARINC653::Memory_Kind => Memory_Data;};
+    {ARINC653_Extended::Memory_Kind => bss;};
 
     EEPROM       : memory Memories::EEPROM.impl
-    {ARINC653::Memory_Kind => Memory_Data;};
+    {ARINC653_Extended::Memory_Kind => bss;};
   end ATMEGA8.impl;
 
   ---------------

@@ -43,7 +43,7 @@ end CAMERA_IP_Driver.impl;
 ----------------- 
 -- These subprograms model the high-level view of the serial line
 -- protocol stack. They define an API used by the stack to send and
--- receive data, and perform node's initialisation.
+-- receive data, and perform node's initialization.
 
 subprogram Initialize
 properties

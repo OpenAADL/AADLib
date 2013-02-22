@@ -1,4 +1,4 @@
--- This package aims modelize Ardupilot2.7 Board
+-- This package models Ardupilot2.7 Board
 -- Documentation source http://code.google.com/p/ardupilot/wiki/ArduPilot
 
 package Boards::Ardupilot

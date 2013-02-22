@@ -10,7 +10,7 @@ public
 
   memory EEPROM
   properties
-    ARINC653::Access_Type => Read_Write;
+    ARINC653::Access_Type => (Read, Write);
   end EEPROM;
 
   memory implementation EEPROM.impl
@@ -22,7 +22,7 @@ public
 
   memory Flash_Memory
   properties
-    ARINC653::Access_Type => Read_Write;
+    ARINC653::Access_Type => (Read, Write);
   end Flash_Memory;
 
   memory implementation Flash_Memory.impl
@@ -34,7 +34,7 @@ public
 
   memory RAM
   properties
-    ARINC653::Access_Type => Read_Write;
+    ARINC653::Access_Type => (Read, Write);
   end RAM;
 
   ---------
@@ -43,7 +43,7 @@ public
 
   memory ROM
   properties
-    ARINC653::Access_Type => Read;
+    ARINC653::Access_Type => (Read);
   end ROM;
 
   ----------
