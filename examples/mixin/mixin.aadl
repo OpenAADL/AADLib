@@ -1,4 +1,4 @@
--- This package demonstrates how to support multiple inheritace in
+-- This package demonstrates how to support multiple inheritance in
 -- AADLv2, using the mixin pattern defined in many object-oriented
 -- languages like Ada.
 
@@ -80,7 +80,7 @@ public
   --
   --  Here, we directly inherits features from the mixin, and
   --  connections as part of the extension of the corresponding
-  --  component implemnetation.
+  --  component implementation.
 
   system Demo extends Mixin
   end Demo;
