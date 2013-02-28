@@ -1,24 +1,10 @@
 with PolyORB_HI.Output;
-with PolyORB_HI_Generated.Deployment;
 
 package body Producer_Consumer is
 
    use PolyORB_HI.Output;
-   use PolyORB_HI_Generated.Deployment;
 
    The_Data : Alpha_Type := 1;
-
-   function Get_Node return String;
-   --  Return the current node name
-
-   --------------
-   -- Get_Node --
-   --------------
-
-   function Get_Node return String is
-   begin
-      return Node_Type'Image (My_Node);
-   end Get_Node;
 
    -----------------
    -- Produce_Spg --
@@ -28,10 +14,7 @@ package body Producer_Consumer is
    begin
       Data_Source := The_Data;
       The_Data := The_Data + 1;
-
-      Put_Line (Normal, Get_Node
-                & ": produced "
-                & Alpha_Type'Image (Data_Source));
+      Put_Line (Normal, " Produced " & Alpha_Type'Image (Data_Source));
    end Produce_Spg;
 
    -----------------
@@ -40,9 +23,7 @@ package body Producer_Consumer is
 
    procedure Consume_Spg (Data_Sink : Alpha_Type) is
    begin
-      Put_Line (Normal, Get_Node
-                & "                              : consumed "
-                & Alpha_Type'Image (Data_Sink));
+      Put_Line (Normal, "Consumed " & Alpha_Type'Image (Data_Sink));
    end Consume_Spg;
 
 end Producer_Consumer;
