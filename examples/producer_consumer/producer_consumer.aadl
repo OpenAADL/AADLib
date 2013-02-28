@@ -2,8 +2,8 @@ package Producer::Consumer
 public
   with Deployment;
   with Data_Model;
-  with buses::ethernet;
-  with processors;
+  with Buses::Ethernet;
+  with Processors;
 
   ----------
   -- Data --
@@ -11,9 +11,9 @@ public
 
   data Alpha_Type
   properties
-    Data_Model::Data_Representation => integer;
-    Data_Model::Number_Representation => Signed;
-    Source_Data_Size => 4 Bytes;
+    Data_Model::Data_Representation => Integer;
+    -- Data_Model::Number_Representation => Signed;
+    -- Source_Data_Size => 4 Bytes;
   end Alpha_Type;
 
   -----------------
@@ -24,16 +24,16 @@ public
   features
     Data_Source : out parameter Alpha_Type;
   properties
-    source_language => Ada95;
-    source_name     => "Producer_Consumer.Produce_Spg";
+    Source_Language => (Ada95);
+    Source_Name     => "Producer_Consumer.Produce_Spg";
   end Produce_Spg;
 
   subprogram Consume_Spg
   features
     Data_Sink : in parameter Alpha_Type;
   properties
-    source_language => Ada95;
-    source_name     => "Producer_Consumer.Consume_Spg";
+    Source_Language => (Ada95);
+    Source_Name     => "Producer_Consumer.Consume_Spg";
   end Consume_Spg;
 
   -------------
@@ -42,12 +42,13 @@ public
 
   thread P
   features
-    Data_Source : out data port Alpha_Type;
+    Data_Source : out event data port Alpha_Type;
+    --  XXX Data seems corrupted if Data_Source is an out data port
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 1 ms .. 10 ms;
-    priority => 1;
-    period => 500 ms;
+    Priority => 1;
+    Period => 500 ms;
   end P;
 
   thread implementation P.Impl
@@ -65,8 +66,8 @@ public
   properties
     Dispatch_Protocol => Sporadic;
     Compute_Execution_Time => 1 ms .. 20 ms;
-    priority => 2;
-    period => 10 ms;
+    Priority => 2;
+    Period => 10 ms;
   end Q;
 
   thread implementation Q.Impl
@@ -146,8 +147,9 @@ public
     Z6:port pr_A.Alpha -> pr_B.Beta
     {Actual_Connection_Binding => (reference (the_bus));};
   properties
-    actual_processor_binding => (reference (CPU)) applies to pr_A;
-    actual_processor_binding => (reference (CPU)) applies to pr_B;
+    Actual_Processor_Binding => (reference (CPU)) applies to pr_A;
+    Actual_Processor_Binding => (reference (CPU)) applies to pr_B;
+
  annex real_specification {**
    theorem flow_latency
       foreach s in system_set do
