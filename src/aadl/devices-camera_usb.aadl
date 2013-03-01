@@ -15,7 +15,6 @@ public
 
   device implementation CAMERA.impl
   properties
-    Implemented_As => classifier (devices::camera_usb::CAMERA_Driver.impl);
     Initialize_Entrypoint => classifier (devices::camera_usb::Initialize);
     Electricity_Properties::Idle_Current => 1.0 mA;  -- no data  
     Electricity_Properties::Run_Current =>  50.0 mA; --  no data 

@@ -17,7 +17,6 @@ features
 end  TELEMETER;
 device implementation TELEMETER.impl
 properties
-  Implemented_As 	=> classifier (devices::telemeter_utm30lx::TELEMETER_Driver.impl);
   Initialize_Entrypoint => classifier (devices::telemeter_utm30lx::Initialize);
   Electricity_Properties::Idle_Current => 10.0 mA;  -- no data 
   Electricity_Properties::Run_Current =>  800.0 mA; --  800 mA nominal

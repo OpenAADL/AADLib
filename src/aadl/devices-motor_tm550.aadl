@@ -17,7 +17,6 @@ end  MOTOR_TM550;
 
 device implementation MOTOR_TM550.impl
 properties
-  Implemented_As 	    => classifier (devices::motor_tm550::MOTOR_TM550_Driver.impl);
   Initialize_Entrypoint => classifier (devices::motor_tm550::Initialize);
   Electricity_Properties::Idle_Current => 5000.0 mA; -- Run current
   Electricity_Properties::Run_Current => 13000.0 mA; -- Peak current

@@ -15,7 +15,6 @@ public
   end  PRESSURE;
   device implementation PRESSURE.impl
   properties
-    Implemented_As 	=> classifier (devices::pressure_hca0811::PRESSURE_Driver.impl);
     Initialize_Entrypoint => classifier (devices::pressure_hca0811::Initialize);
     Electricity_Properties::Idle_Current =>  0.1 mA; -- no  data  estimated value
     Electricity_Properties::Run_Current =>  5.0 mA;

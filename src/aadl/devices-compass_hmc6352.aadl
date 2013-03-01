@@ -17,7 +17,6 @@ end COMPASS;
 
 device implementation COMPASS.impl
 properties
-  Implemented_As 	=> classifier (devices::compass_hmc6352::COMPASS_Driver.impl);
   Initialize_Entrypoint => classifier (devices::compass_hmc6352::Initialize);
   Electricity_Properties::Idle_Current => 0.001 mA; 
   Electricity_Properties::Run_Current =>  1.0 mA; -- steady state current

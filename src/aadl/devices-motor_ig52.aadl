@@ -15,7 +15,6 @@ end  MOTOR_IG52;
 
 device implementation MOTOR_IG52.impl
 properties
-  Implemented_As 	    => classifier (devices::motor_ig52::MOTOR_IG52_Driver.impl);
   Initialize_Entrypoint => classifier (devices::motor_ig52::Initialize);
   Electricity_Properties::Idle_Current => 3.0 mA; -- no data
   Electricity_Properties::Run_Current => 15.0 mA;  -- no data

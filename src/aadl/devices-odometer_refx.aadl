@@ -17,7 +17,6 @@ end  ODOMETER;
 
 device implementation ODOMETER.impl
 properties
-  Implemented_As 	    => classifier (devices::odometer_refx::ODOMETER_Driver.impl);
   Initialize_Entrypoint => classifier (devices::odometer_refx::Initialize);
   Electricity_Properties::Idle_Current => 0.0 mA; -- N/A
   Electricity_Properties::Run_Current =>  0.1 mA; -- no data estimated value

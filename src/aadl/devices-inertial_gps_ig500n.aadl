@@ -18,7 +18,6 @@ features
 end  INERTIAL_GPS;
 device implementation INERTIAL_GPS.impl
 properties
-  Implemented_As 	=> classifier (devices::inertial_gps_ig500n::INERTIAL_GPS_Driver.impl);
   Initialize_Entrypoint => classifier (devices::inertial_gps_ig500n::Initialize);
   Electricity_Properties::Idle_Current => 1.0 mA;  -- no data  
   Electricity_Properties::Run_Current =>  110.0 mA; --  no data but power consumption 550 mW at 5V

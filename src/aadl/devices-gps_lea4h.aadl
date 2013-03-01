@@ -14,9 +14,9 @@ features
    Serial_Wire :    requires bus access  buses::UART::UART.impl;     
    proc_evt : out event port;   
 end  GPS;
+
 device implementation GPS.impl
 properties
-  Implemented_As 	=> classifier (devices::gps_lea4h::GPS_Driver.impl);
   Initialize_Entrypoint => classifier (devices::gps_lea4h::Initialize);
   Electricity_Properties::Idle_Current => 0.065 mA;    
   Electricity_Properties::Run_Current =>  39.0 mA; --  at 3.0 V 
@@ -51,7 +51,7 @@ end GPS_Driver.impl;
 ----------------- 
 -- These subprograms model the high-level view of the serial line
 -- protocol stack. They define an API used by the stack to send and
--- receive data, and perform node's initialisation.
+-- receive data, and perform node's initialization.
 subprogram Initialize
 properties
   Source_Name => "initialize";
@@ -74,8 +74,6 @@ properties
   Source_Text => ("gps_lea4h.c");
   Source_Language => (C);
 end Start_Acquisition;
-  
-
   
 end devices::gps_lea4h;
  
