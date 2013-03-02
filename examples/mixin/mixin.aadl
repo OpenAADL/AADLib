@@ -87,8 +87,8 @@ public
 
   system implementation Demo.impl extends Mixin.impl
   subcomponents
-    Mix_1 : refined to device Buzzer.impl;
-    Mix_2 : refined to device Light.impl;
+    Mix_1 : refined to device Buzzer.impl { Classifier_Substitution_Rule => Signature_Match;};
+    Mix_2 : refined to device Light.impl { Classifier_Substitution_Rule => Signature_Match;};
   end Demo.impl;
 
 end Mixin;
