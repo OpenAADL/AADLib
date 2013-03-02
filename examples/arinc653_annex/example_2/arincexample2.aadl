@@ -25,7 +25,7 @@
 -- interface.
 --
 -- e. These two ARINC653 modules communicate through AADL event data
--- ports. It maps the concept of ARINC653 queueing ports between two
+-- ports. It maps the concept of ARINC653 queuing ports between two
 -- ARINC653 modules.
 --
 -- f. Notice that the ARINC653 modules communicate across a bus named
@@ -61,6 +61,16 @@ public
   thread implementation network_driver_thread.i
   end network_driver_thread.i;
 
+ --  JH addition
+  abstract network_driver_partition_holder
+  end network_driver_partition_holder;
+  
+  abstract implementation network_driver_partition_holder.i
+  subcomponents
+    ndp : process network_driver_partition.i;
+  end network_driver_partition_holder.i;
+  -- /JH addition
+    
   process network_driver_partition
   end network_driver_partition;
 
@@ -73,7 +83,7 @@ public
   features
     thebus: requires bus access anybus.i;
   properties
-    Device_Driver => classifier (arincexample2::network_driver_partition);
+    Device_Driver => classifier (network_driver_partition_holder.i);
   end network_interface;
 
   device implementation network_interface.i
