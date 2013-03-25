@@ -1,0 +1,85 @@
+package EWBus
+public
+
+  with Messages;
+  
+  subprogram BCInit
+    features
+      InitComplete : out parameter Messages::InitializationMsg;
+    properties
+      Source_Language =>  (C);
+      Source_Name     =>  "bcinit";
+      Source_Text     =>  ("BCMgr.c");
+  end BCInit;
+  
+  subprogram BCManager
+    features
+      InitComplete  : in parameter Messages::InitializationMsg;
+      M0RTtoBCMsg   : in parameter Messages::BusMessage;
+      M1RTtoBCMsg   : in parameter Messages::BusMessage;
+      M2RTtoBCMsg   : in parameter Messages::BusMessage;
+    properties
+      Source_Language =>  (C);
+      Source_Name     =>  "bcmgr";
+      Source_Text     =>  ("BCMgr.c");
+  end BCManager;
+  
+  thread BusControllerInitialization
+    features
+      InitComplete : out data port Messages::InitializationMsg;
+  end BusControllerInitialization;
+  
+  thread implementation BusControllerInitialization.impl
+    calls
+      EWCALL0 : { BCCALL0  : subprogram BCInit;};
+    connections
+      C0  : parameter BCCALL0.InitComplete -> InitComplete;
+    properties
+      Dispatch_Protocol       =>  Background;
+      Priority                =>  30;
+      POSIX_Scheduling_Policy =>  SCHED_RR;
+  end BusControllerInitialization.impl;
+  
+  thread BusController
+    features
+      InitComplete  : in data port Messages::InitializationMsg;
+      M0RTtoBCMsg   : in data port Messages::BusMessage;
+      M1RTtoBCMsg   : in data port Messages::BusMessage;
+      M2RTtoBCMsg   : in data port Messages::BusMessage;
+  end BusController;
+  
+  thread implementation BusController.impl
+    calls
+      EWCALL0 : { BCCALL0  : subprogram BCManager;};
+    connections
+      C0  : parameter InitComplete  -> BCCALL0.InitComplete;
+      C1  : parameter M0RTtoBCMsg   -> BCCALL0.M0RTtoBCMsg;
+      C2  : parameter M1RTtoBCMsg   -> BCCALL0.M1RTtoBCMsg;
+      C3  : parameter M2RTtoBCMsg   -> BCCALL0.M2RTtoBCMsg;
+    properties
+      Dispatch_Protocol       =>  Periodic;
+      Period                  =>  10 ms;
+      Compute_Execution_Time  =>  0 ms .. 3 ms;
+      Priority                =>  20;
+      POSIX_Scheduling_Policy =>  SCHED_FIFO;
+  end BusController.impl;
+  
+  process BusControllerMgr
+    features
+      M0RTtoBCMsg : in data port Messages::BusMessage;
+      M1RTtoBCMsg : in data port Messages::BusMessage;
+      M2RTtoBCMsg : in data port Messages::BusMessage;
+  end BusControllerMgr;
+  
+  process implementation BusControllerMgr.impl
+    subcomponents
+      BCINIT  : thread BusControllerInitialization.impl;
+      BCMGR   : thread BusController.impl;
+    connections
+      C0  : port BCINIT.InitComplete  ->  BCMGR.InitComplete;
+      C1  : port M0RTtoBCMsg          ->  BCMGR.M0RTtoBCMsg;
+      C2  : port M1RTtoBCMsg          ->  BCMGR.M1RTtoBCMsg;
+      C3  : port M2RTtoBCMsg          ->  BCMGR.M2RTtoBCMsg;
+  end BusControllerMgr.impl;
+  
+end EWBus;

@@ -1,0 +1,74 @@
+package MissionBus2
+public
+  with Messages;
+  
+  subprogram M2RTInit
+    features
+      InitComplete : out parameter Messages::InitializationMsg;
+    properties
+      Source_Language =>  (C);
+      Source_Name     =>  "m2rtinit";
+      Source_Text     =>  ("M2RTMgr.c");
+  end M2RTInit;
+  
+  subprogram M2RTManager
+    features
+      InitComplete : in parameter Messages::InitializationMsg;
+      RTtoBCMsg    : out parameter Messages::BusMessage;
+    properties
+      Source_Language =>  (C);
+      Source_Name     =>  "m2rtmgr";
+      Source_Text     =>  ("M2RTMgr.c");
+  end M2RTManager;
+  
+  thread M2RemoteTerminalInitialization
+    features
+      InitComplete : out data port Messages::InitializationMsg;
+  end M2RemoteTerminalInitialization;
+  
+  thread implementation M2RemoteTerminalInitialization.impl
+    calls
+      RTCALL0 : { M2RTCALL0  : subprogram M2RTInit;};
+    connections
+      C0  : parameter M2RTCALL0.InitComplete -> InitComplete;
+    properties
+      Dispatch_Protocol       =>  Background;
+      Priority                =>  30;
+      POSIX_Scheduling_Policy =>  SCHED_RR;
+  end M2RemoteTerminalInitialization.impl;
+  
+  thread M2RemoteTerminal
+    features
+      InitComplete  : in data port Messages::InitializationMsg;
+      RTtoBCMsg     : out data port Messages::BusMessage;
+  end M2RemoteTerminal;
+  
+  thread implementation M2RemoteTerminal.impl
+    calls
+      RTCALL0 : { M2RTCALL0  : subprogram M2RTManager;};
+    connections
+      C0  : parameter InitComplete        -> M2RTCALL0.InitComplete;
+      C1  : parameter M2RTCALL0.RTtoBCMsg -> RTtoBCMsg;
+    properties
+      Dispatch_Protocol       =>  Periodic;
+      Period                  =>  10 ms;
+      Compute_Execution_Time  =>  0 ms .. 3 ms;
+      Priority                =>  20;
+      POSIX_Scheduling_Policy =>  SCHED_FIFO;
+  end M2RemoteTerminal.impl;
+  
+  process M2RemoteTerminalMgr
+    features
+      RTtoBCMsg : out data port Messages::BusMessage;
+  end M2RemoteTerminalMgr;
+  
+  process implementation M2RemoteTerminalMgr.impl
+    subcomponents
+      M2RTINIT  : thread M2RemoteTerminalInitialization.impl;
+      M2RTMGR   : thread M2RemoteTerminal.impl;
+    connections
+      C0  : port M2RTINIT.InitComplete  ->  M2RTMGR.InitComplete;
+      C1  : port M2RTMGR.RTtoBCMsg      ->  RTtoBCMsg;
+  end M2RemoteTerminalMgr.impl;
+  
+end MissionBus2;

@@ -1,0 +1,18 @@
+package Messages
+public
+
+  data InitializationMsg
+    properties
+      Source_Language => (C);
+      Type_Source_Name => "initmsg";
+      Source_Text => ("MsgType");
+  end InitializationMsg;
+  
+  data BusMessage
+    properties
+      Source_Language => (C);
+      Type_Source_Name => "busmsg";
+      Source_Text => ("MsgType");
+  end BusMessage;
+      
+end Messages;

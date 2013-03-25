@@ -1,0 +1,75 @@
+package MissionBus0
+public
+  
+  with Messages;
+  
+  subprogram M0RTInit
+     features
+      InitComplete : out parameter Messages::InitializationMsg;
+    properties
+      Source_Language =>  (C);
+      Source_Name     =>  "m0rtinit";
+      Source_Text     =>  ("M0RTMgr.c");
+  end M0RTInit;
+  
+  subprogram M0RTManager
+    features
+      InitComplete : in parameter Messages::InitializationMsg;
+      RTtoBCMsg    : out parameter Messages::BusMessage;
+    properties
+      Source_Language =>  (C);
+      Source_Name     =>  "m0rtmgr";
+      Source_Text     =>  ("M0RTMgr.c");
+  end M0RTManager;
+  
+  thread M0RemoteTerminalInitialization
+    features
+      InitComplete : out data port Messages::InitializationMsg;
+  end M0RemoteTerminalInitialization;
+  
+  thread implementation M0RemoteTerminalInitialization.impl
+    calls
+      RTCALL0 : { M0RTCALL0  : subprogram M0RTInit;};
+    connections
+      C0  : parameter M0RTCALL0.InitComplete -> InitComplete;
+    properties
+      Dispatch_Protocol       =>  Background;
+      Priority                =>  30;
+      POSIX_Scheduling_Policy =>  SCHED_RR;
+  end M0RemoteTerminalInitialization.impl;
+  
+  thread M0RemoteTerminal
+    features
+      InitComplete  : in data port Messages::InitializationMsg;
+      RTtoBCMsg     : out data port Messages::BusMessage;
+  end M0RemoteTerminal;
+  
+  thread implementation M0RemoteTerminal.impl
+    calls
+      RTCALL0 : { M0RTCALL0  : subprogram M0RTManager;};
+    connections
+      C0  : parameter InitComplete        -> M0RTCALL0.InitComplete;
+      C1  : parameter M0RTCALL0.RTtoBCMsg -> RTtoBCMsg;
+    properties
+      Dispatch_Protocol       =>  Periodic;
+      Period                  =>  10 ms;
+      Compute_Execution_Time  =>  0 ms .. 3 ms;
+      Priority                =>  20;
+      POSIX_Scheduling_Policy =>  SCHED_FIFO;
+  end M0RemoteTerminal.impl;
+  
+  process M0RemoteTerminalMgr
+    features
+      RTtoBCMsg : out data port Messages::BusMessage;
+  end M0RemoteTerminalMgr;
+  
+  process implementation M0RemoteTerminalMgr.impl
+    subcomponents
+      M0RTINIT  : thread M0RemoteTerminalInitialization.impl;
+      M0RTMGR   : thread M0RemoteTerminal.impl;
+    connections
+      C0  : port M0RTINIT.InitComplete -> M0RTMGR.InitComplete;
+      C1  : port M0RTMGR.RTtoBCMsg -> RTtoBCMsg;
+  end M0RemoteTerminalMgr.impl;
+  
+end MissionBus0;

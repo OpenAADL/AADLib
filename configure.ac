@@ -88,6 +88,7 @@ AC_OUTPUT([
 	examples/memory/Makefile
 	examples/mixin/Makefile
         examples/mosart/Makefile
+        examples/multicore/Makefile
 	examples/pathfinder_system/Makefile
 	examples/perseus/Makefile
 	examples/producer_consumer/Makefile
