@@ -3,30 +3,30 @@ public
   with Deployment;
   with Processor_Properties;
   with Bus_Properties;
-  
+
   with EWBus;
   with MissionBus0;
   with MissionBus1;
   with MissionBus2;
   with Network;
-  
+
   -- System Definition
-    
+
   virtual processor logical
   end logical;
-  
+
   virtual processor implementation logical.core
     properties
-      Deployment::Execution_Platform            =>  LINUX64;
+      Deployment::Execution_Platform            =>  Native;
       Priority_Range                            =>  1 .. 255;
       Scheduling_Protocol                       => (RMS);
   end logical.core;
-  
+
   processor Intel
     features
       EBUS : requires bus access Network::Ethernet;
   end Intel;
-  
+
   processor implementation Intel.i7_3770
     subcomponents
       Cpu0  : virtual processor logical.core  {Processor_Properties::Core_Id => 0;};
@@ -40,7 +40,7 @@ public
       Processor_Properties::Processor_Frequency =>  3400 MHz;
       Deployment::Supported_Runtime             =>  PolyORB_HI_C;
   end Intel.i7_3770;
-  
+
   system AvionicsBusMgr
   end AvionicsBusMgr;
 
@@ -49,7 +49,7 @@ public
       CPU   : processor Intel.i7_3770;
       EWBC  : process EWBus::BusControllerMgr.impl;
       M0RT  : process MissionBus0::M0RemoteTerminalMgr.impl;
-      M1RT  : process MissionBus1::M1RemoteTerminalMgr.impl;  
+      M1RT  : process MissionBus1::M1RemoteTerminalMgr.impl;
       M2RT  : process MissionBus2::M2RemoteTerminalMgr.impl;
       EB    : bus Network::Ethernet.XPS8500;
       L0    : device Network::loopback.XPS8500 {Source_Text => ("devicesconf.c");};
@@ -69,11 +69,11 @@ public
      Actual_Processor_Binding => (reference(CPU.Cpu0)) applies to EWBC;
      Actual_Processor_Binding => (reference(CPU.Cpu1)) applies to M0RT;
      Actual_Processor_Binding => (reference(CPU.Cpu2)) applies to M1RT;
-     Actual_Processor_Binding => (reference(CPU.Cpu3)) applies to M2RT;       
-     Actual_Processor_Binding => (reference(CPU.Cpu0)) applies to L0; 
-     Actual_Processor_Binding => (reference(CPU.Cpu1)) applies to L1; 
-     Actual_Processor_Binding => (reference(CPU.Cpu2)) applies to L2; 
-     Actual_Processor_Binding => (reference(CPU.Cpu3)) applies to L3; 
+     Actual_Processor_Binding => (reference(CPU.Cpu3)) applies to M2RT;
+     Actual_Processor_Binding => (reference(CPU.Cpu0)) applies to L0;
+     Actual_Processor_Binding => (reference(CPU.Cpu1)) applies to L1;
+     Actual_Processor_Binding => (reference(CPU.Cpu2)) applies to L2;
+     Actual_Processor_Binding => (reference(CPU.Cpu3)) applies to L3;
   end AvionicsBusMgr.XPS8500;
-  
+
 end AvionicsBusManagers;
