@@ -4,10 +4,10 @@ public
   with Processor_Properties;
   with Bus_Properties;
 
-  with EWBus;
-  with MissionBus0;
-  with MissionBus1;
-  with MissionBus2;
+  with BusMgr0;
+  with RTBusMgr0;
+  with RTBusMgr1;
+  with RTBusMgr2;
   with Network;
 
   -- System Definition
@@ -47,10 +47,10 @@ public
   system implementation AvionicsBusMgr.XPS8500
     subcomponents
       CPU   : processor Intel.i7_3770;
-      EWBC  : process EWBus::BusControllerMgr.impl;
-      M0RT  : process MissionBus0::M0RemoteTerminalMgr.impl;
-      M1RT  : process MissionBus1::M1RemoteTerminalMgr.impl;
-      M2RT  : process MissionBus2::M2RemoteTerminalMgr.impl;
+      B0BC  : process BusMgr0::BusControllerMgr.impl     
+      M0RT  : process RTBusMgr0::M0RemoteTerminalMgr.impl 
+      M1RT  : process RTBusMgr1::M1RemoteTerminalMgr.impl   
+      M2RT  : process RTBusMgr2::M2RemoteTerminalMgr.impl 
       EB    : bus Network::Ethernet.XPS8500;
       L0    : device Network::loopback.XPS8500 {Source_Text => ("devicesconf.c");};
       L1    : device Network::loopback.XPS8500 {Source_Text => ("devicesconf.c");};
@@ -62,11 +62,11 @@ public
       SC2   : bus access EB <-> L2.EBUS;
       SC3   : bus access EB <-> L3.EBUS;
       SC4   : bus access EB <-> CPU.EBus;
-      SC5   : port  M0RT.RTtoBCMsg  ->  EWBC.M0RTtoBCMsg  {Actual_Connection_Binding => (reference(EB));};
-      SC6   : port  M1RT.RTtoBCMsg  ->  EWBC.M1RTtoBCMsg  {Actual_Connection_Binding => (reference(EB));};
-      SC7   : port  M2RT.RTtoBCMsg  ->  EWBC.M2RTtoBCMsg  {Actual_Connection_Binding => (reference(EB));};
+      SC5   : port  M0RT.RTtoBCMsg  ->  B0BC.M0RTtoBCMsg  {Actual_Connection_Binding => (reference(EB));};
+      SC6   : port  M1RT.RTtoBCMsg  ->  B0BC.M1RTtoBCMsg  {Actual_Connection_Binding => (reference(EB));};
+      SC7   : port  M2RT.RTtoBCMsg  ->  B0BC.M2RTtoBCMsg  {Actual_Connection_Binding => (reference(EB));};
     properties
-     Actual_Processor_Binding => (reference(CPU.Cpu0)) applies to EWBC;
+     Actual_Processor_Binding => (reference(CPU.Cpu0)) applies to B0BC;
      Actual_Processor_Binding => (reference(CPU.Cpu1)) applies to M0RT;
      Actual_Processor_Binding => (reference(CPU.Cpu2)) applies to M1RT;
      Actual_Processor_Binding => (reference(CPU.Cpu3)) applies to M2RT;
