@@ -18,12 +18,12 @@ void bcmgr(initmsg msg, busmsg M0RTtoBCMsg, busmsg M1RTtoBCMsg, busmsg M2RTtoBCM
 		}
 	}
 	if(M0RTtoBCMsg.MsgQueue[0].Msg[0] > 0){
-		printf("Message Received from RT0 (%d)\n",M0RTtoBCMsg.MsgQueue[0].Msg[1]);
+		printf("Message Received from RT Bus Mgr 0 (%d)\n",M0RTtoBCMsg.MsgQueue[0].Msg[1]);
 	}
 	if(M1RTtoBCMsg.MsgQueue[0].Msg[0] > 0){
-		printf("Message Received from RT1 (%d)\n",M1RTtoBCMsg.MsgQueue[0].Msg[1]);
+		printf("Message Received from RT Bus Mgr 1 (%d)\n",M1RTtoBCMsg.MsgQueue[0].Msg[1]);
 	}
 	if(M2RTtoBCMsg.MsgQueue[0].Msg[0] > 0){
-		printf("Message Received from RT2 (%d)\n",M2RTtoBCMsg.MsgQueue[0].Msg[1]);
+		printf("Message Received from RT Bus Mgr 2 (%d)\n",M2RTtoBCMsg.MsgQueue[0].Msg[1]);
 	}
 }
