@@ -1,4 +1,4 @@
-package MissionBus0
+package RTBusMgr0
 public
   
   with Messages;
@@ -72,4 +72,4 @@ public
       C1  : port M0RTMGR.RTtoBCMsg -> RTtoBCMsg;
   end M0RemoteTerminalMgr.impl;
   
-end MissionBus0;
+end RTBusMgr0;
