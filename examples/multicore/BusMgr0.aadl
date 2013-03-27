@@ -1,4 +1,4 @@
-package EWBus
+package BusMgr0
 public
 
   with Messages;
@@ -82,4 +82,4 @@ public
       C3  : port M2RTtoBCMsg          ->  BCMGR.M2RTtoBCMsg;
   end BusControllerMgr.impl;
   
-end EWBus;
+end BusMgr0;
