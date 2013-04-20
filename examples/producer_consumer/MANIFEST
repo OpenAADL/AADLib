@@ -1,7 +1,0 @@
-Cmd0: ocarina -x scenario.aadl
-Success0: yes
-Output0: scenario.aadl.out
-DiffSource0: pc_simple_native
-
-Keywords: po-hi-ada code generation producer consumer
-Description: Producer/Consumer example from PolyORB-HI-Ada
