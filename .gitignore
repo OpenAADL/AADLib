@@ -9,3 +9,4 @@ configure
 aclocal.m4
 ocarina_out
 private
+aadlib-*
