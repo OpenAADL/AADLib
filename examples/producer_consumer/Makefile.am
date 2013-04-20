@@ -1,8 +1,10 @@
 AADL_SOURCES = $(srcdir)/producer_consumer.aadl
 AADL_ROOT    = pc_simple.native
 
-OTHER_FILES =
-CLEANDIRS =
+OTHER_FILES = $(srcdir)/producer_consumer.adb	\
+	  $(srcdir)/producer_consumer.ads
+
+CLEANDIRS = pc_simple_native
 
 include $(srcdir)/../Makefile.common
 
