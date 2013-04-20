@@ -72,7 +72,7 @@ real:
 
 clean-local:
 	-rm -rf *~ *aadl_xml.xml *_cheddar.xml mast-model.txt $(CLEANFILES) \
-	    cheddar_bug.xml
+	    cheddar_bug.xml model.nd model.cami
 	if test ! "$(CLEANDIRS)" = "";  then \
 	   rm -rf $(CLEANDIRS); \
 	fi
