@@ -1,0 +1,38 @@
+package satellite_system
+public
+
+with satellite_software;
+with satellite_hardware;
+
+ -------------------------------------------------------------------------------
+  --  the system
+  -------------------------------------------------------------------------------
+
+  system OBMU
+  
+  end OBMU;
+
+  system implementation OBMU.Impl
+    subcomponents
+      OBSW: process satellite_software::SAT_APPLI.Impl;
+      ERC32: processor satellite_hardware::ERC32;
+      RAM: memory satellite_hardware::RAM;
+      AVB: bus satellite_hardware::bus_1553;
+      ICB: bus satellite_hardware::bus_1553;
+      PLB: bus satellite_hardware::bus_1553;
+         
+    connections
+      bus access AVB -> RAM.AVB_bus_connected;
+      bus access AVB -> ERC32.AVB_bus_connected;
+      bus access ICB -> RAM.ICB_bus_connected;
+      bus access ICB -> ERC32.ICB_bus_connected;
+      bus access PLB -> RAM.PLB_bus_connected;
+      bus access PLB -> ERC32.PLB_bus_connected;
+         
+    properties
+      Actual_Processor_Binding =>  (reference (erc32)) applies to OBSW;
+      Actual_Memory_Binding =>  (reference (ram)) applies to OBSW;
+      
+  end OBMU.Impl;
+
+end satellite_system;

@@ -1,0 +1,38 @@
+package satellite_hardware
+public
+
+with buses::mil1553;
+with memories;
+with processors;
+
+
+
+-------------------------------------------------------------------------------
+  --  the hardware
+  -------------------------------------------------------------------------------
+ bus bus_1553 extends buses::MIL1553::MIL1553
+ end bus_1553;
+
+  memory RAM extends memories::ROM
+    features
+	  AVB_bus_connected : requires bus access bus_1553;
+	  ICB_bus_connected : requires bus access bus_1553;
+	  PLB_bus_connected : requires bus access bus_1553;	  
+  end RAM;
+
+--  memory implementation RAM.Impl
+--    properties
+--      Memory_Protocol => read_write;
+--	  Word_Size => 32 Bits;
+--  end RAM.Impl;
+
+ processor ERC32 extends processors::cpu_rma
+     features
+	  AVB_bus_connected : requires bus access bus_1553;
+	  ICB_bus_connected : requires bus access bus_1553;
+	  PLB_bus_connected : requires bus access bus_1553;	  
+--	 properties
+--	  Cheddar_Properties::Scheduling_Protocol => POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL;
+ end ERC32;
+ 
+end satellite_hardware;
