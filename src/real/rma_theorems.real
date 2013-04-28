@@ -23,11 +23,10 @@ end rma_prop_def;
 theorem evaluate_utilization
   foreach e in Local_Set do
     var Period := get_property_value (e, "period");
-    var WCET := Last (get_property_value (e, "compute_execution_time"));
+    var WCET := last (get_property_value (e, "compute_execution_time"));
     var U := WCET/Period;
 
     return (MSum (U));
-
 end evaluate_utilization;
 
 --  Main RMA theorem starts here

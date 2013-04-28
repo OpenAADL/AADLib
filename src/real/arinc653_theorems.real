@@ -46,7 +46,7 @@ theorem partitions_execution
 
       check ((not property_exists (p, "ARINC653::Slots_Allocation")) or
              (cardinal (VP) = 0) or
-             (Is_In (list (VP), property (p, "ARINC653::Slots_Allocation"))));
+            (Is_In (list (VP), property (p, "ARINC653::Slots_Allocation"))));
 
 end partitions_execution;
 

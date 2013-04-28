@@ -1,11 +1,11 @@
--- Earliest deadline first (EDF) is a dynamic scheduling 
+-- Earliest deadline first (EDF) is a dynamic scheduling
 -- algorithm used in real-time operating systems
 
 -- This theorem is able to verify EDF schedulability
 -- on each processor designed in a system
 
 -- check_prop_def : verify existence of required properties
--- and then all threads are periodics
+-- and then all threads are periodic
 
 theorem edf_prop_def
 
@@ -33,19 +33,19 @@ return (MSum (Factor));
 
 end Utilization_Factor;
 
--- theorem edf use Utilization_Factor returned value
--- for checking EDF schedulability law.  
- 
+-- theorem EDF uses Utilization_Factor returned value
+-- for checking EDF schedulability law.
+
 theorem edf
 
-foreach e in processor_set do 
+foreach e in processor_set do
 
 Processes (e) := { x in process_set | Is_Bound_To (x, e)};
 Threads := { x in thread_Set | Is_Subcomponent_Of (x, processes)};
 
-var Sum_Utilizations := Compute Utilization_Factor(Threads);
+var Sum_Utilizations := compute Utilization_Factor(Threads);
 
-Check (Sum_Utilizations <= 1);
+check (Sum_Utilizations <= 1);
 
 end edf;
 

@@ -19,12 +19,10 @@ theorem check_scheduling
 -- This theorems check rma and edf schedulability hypothesis
 
 foreach e in local_set do
-	var t := 1 ;
-	requires(	
-				required_properties and 
-				shared_data and 
-				check_priority_rma
-				and scheduling);
+	requires(required_properties 
+		and shared_data				
+		and check_priority_rma			
+		and scheduling);
 				
 	check (1 <> 2);
 end check_scheduling;
@@ -91,8 +89,8 @@ foreach e in thread_set do
 
 var priority := Property (e, "priority");
 
-high_priority := {t in Thread_Set | Property (t, "priority") > priority};
-Equal_priority := {t in Thread_Set | Property (t, "priority") = priority};
+high_priority := {t in Thread_Set | Property (t, "priority") > priority };
+Equal_priority := {t in Thread_Set | Property (t, "priority") = priority };
 
 var period := Property (e, "Period");
 
@@ -172,7 +170,7 @@ foreach e in processor_set do
 
 Processes(e) := { x in process_set | Is_Bound_To (x,e)};
 threads	:= {x in thread_set | Is_Subcomponent_Of (x, processes)};
-var U := Compute Utilization_Factor(Threads);
+var U := compute Utilization_Factor(Threads);
 
 var get_protocol := Property(e,"Scheduling_Protocol");
 

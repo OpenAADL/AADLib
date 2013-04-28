@@ -91,8 +91,9 @@ end iteration1;
 theorem iteration2
 foreach e in local_set do
 
-var cet := Last (Property (e, "compute_execution_time"));
 var per := Property (e, "period");
+var cet := Last (Property (e, "compute_execution_time"));
+
 
 var quot := (wc1/per) + 0.4999;
 
