@@ -46,6 +46,9 @@ mast:
 	$(OCARINA) $(OCARINA_FLAGS) -g mast -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
+run_mast:
+	mast_analysis classic_rm mast-model.txt
+
 petri:
 	$(OCARINA) $(OCARINA_FLAGS) -g petri_nets -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
