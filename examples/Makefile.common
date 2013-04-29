@@ -46,8 +46,12 @@ mast:
 	$(OCARINA) $(OCARINA_FLAGS) -g mast -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
-run_mast:
-	mast_analysis classic_rm mast-model.txt
+run_mast: mast
+	@if [ ! -f mast_analysis ]; then \
+	echo "*** MAST not installed, skipping ***"; \
+	else \
+	mast_analysis classic_rm mast-model.txt ; \
+	fi
 
 petri:
 	$(OCARINA) $(OCARINA_FLAGS) -g petri_nets -r $(AADL_ROOT) \
@@ -75,7 +79,7 @@ real:
 
 clean-local:
 	-rm -rf *~ *aadl_xml.xml *_cheddar.xml mast-model.txt $(CLEANFILES) \
-	    cheddar_bug.xml model.nd model.cami instances imv
+	    mast_parser.lis cheddar_bug.xml model.nd model.cami instances imv
 	if test ! "$(CLEANDIRS)" = "";  then \
 	   rm -rf $(CLEANDIRS); \
 	fi
