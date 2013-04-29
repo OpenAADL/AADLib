@@ -40,18 +40,16 @@ arinc653_conf:
 cheddar:
 	$(OCARINA) $(OCARINA_FLAGS) -g cheddar -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
+
+run_cheddar:
 	-cheddarlite -request all -file ./*_cheddar.xml
 
 mast:
 	$(OCARINA) $(OCARINA_FLAGS) -g mast -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
-run_mast: mast
-	@if [ ! -f mast_analysis ]; then \
-	echo "*** MAST not installed, skipping ***"; \
-	else \
-	mast_analysis classic_rm mast-model.txt ; \
-	fi
+run_mast:
+	-mast_analysis holistic mast-model.txt
 
 petri:
 	$(OCARINA) $(OCARINA_FLAGS) -g petri_nets -r $(AADL_ROOT) \
