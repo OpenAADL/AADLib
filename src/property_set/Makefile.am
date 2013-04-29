@@ -17,7 +17,7 @@ install-data-local:
 
 uninstall-local:
 	for file in $(AADL_SOURCES); do \
-	rm -rf $(DESTDIR)$(datadir)/ocarina/AADLv2/$$file
+	rm -rf $(DESTDIR)$(datadir)/ocarina/AADLv2/$$file; \
 	done
 
 
