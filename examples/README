@@ -30,7 +30,6 @@ Here is a short description of each example
 * aocs: model of an Attitude Orbital Control System, derived from
  design document from
  http://control.ee.ethz.ch/~ceg/AocsFramework/index.html
- (XXX)	
 
 * ardupilot: models the ardupilot UAV platform, adapted from the POK
  project (see http://pok.safety-critical.eu)
@@ -42,33 +41,45 @@ Here is a short description of each example
 
 * behavior_annex: models from the Behavior annex language for AADLv2
 
+* car: case study from the chapter written by Emmanuel Grolleau,
+ Pascal Richard and Michaël Richard, Scheduling in Distributed
+ Real-Time Systems, Distributed Systems: Design and Algorithms,
+ chapt. 7, Serge Haddad, Fabrice Kordon, Laurent Pautet, Laure
+ Petrucci, ISTE, Wiley, 2011
+
 * data_modeling_annex: models from the Data Modeling annex document
  for AADLv2
 
 * fcs: models a naive Flight Control Systems, adapted from a lab on
- scheduling analysis tools developped by C. Pagetti from ONERA; and
+ scheduling analysis tools developed by C. Pagetti from ONERA; and
  adapted for AADL teaching classes by J. Hugues at ISAE.  Only the
- architecture is developped, to be analyzed with Cheddar.
+ architecture is developed, to be analyzed with Cheddar.
 
 * line_follower: a line follower robot for the Arduino platform, using
  some parts available from SparkFun Electronics.
-
-* mixin: this example demonstrates how to support multiple inheritace
- in AADLv2, using the mixin pattern defined in many object-oriented
- languages like Ada.
 
 * memory: this examples demonstrates how to define logical and
  hardware memory layout, and how to ensure they match. This example
  was build in collaboration between F. Singhoff and S. Rubini (UBO)
  and J. Hugues (ISAE)
 
+* mixin: this example demonstrates how to support multiple inheritance
+ in AADLv2, using the mixin pattern defined in many object-oriented
+ languages like Ada.
+
+* multicore: provides one solution for modeling multicore systems in
+  AADLv2, and performing code generation using Ocarina.
+
+* pathfinder_system: models the well known pathfinder probe, and
+  illustrates its priority inversion problem using Cheddar.
+
 * radar: a naive model of a radar system, made in collaboration with
  F. Singhoff from UBO, P. Disseaux from Ellidiss and Nader Khammassi
  from Virtualys and J. Hugues (ISAE). Adapted to AADLv2
 
 * rap: Ravenscar Avionics Platform, written by Olivier Gilles during
- his PhD. This models builds upon the Generic Avionics Platform.
- (XXX)	
+ his PhD. This models builds upon the Generic Avionics Platform from
+ SEI.
 
 * ravenscar: case study issued from the ``Guide for the use of the Ada
  Ravenscar Profile in high integrity systems'' written by Alan Burns,
