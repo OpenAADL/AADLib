@@ -1,125 +1,126 @@
 package pathfinder_hardware
 public
-with pathfinder_software;
-with Devices::ADXL;
-with buses::VME;
-with buses::mil1553;
-with memories;
-with processors;
-with Processor_Properties;
+  with pathfinder_software;
+  with Devices::ADXL;
+  with buses::VME;
+  with buses::mil1553;
+  with memories;
+  with processors;
+  with Processor_Properties;
 
-with deployment;
------------------------------------------------------------------
--------------------------devices---------------------------------
------------------------------------------------------------------
--- devices plugged on VME
-device camera
-	features
-	camera_control 	: in data port pathfinder_software::camera_control;
-	images_data 	: out data port pathfinder_software::images_data;
-	req_access_vme 	: requires bus access VME;
+  with deployment;
+  -----------------------------------------------------------------
+  -------------------------devices---------------------------------
+  -----------------------------------------------------------------
+  -- devices plugged on VME
+  device camera
+  features
+    camera_control 	: in data port pathfinder_software::camera_control;
+    images_data 	: out data port pathfinder_software::images_data;
+    req_access_vme 	: requires bus access VME;
 
-end camera;
+  end camera;
 
-device radio
-	features
-	emission_data 	: in data port pathfinder_software::emission_data;
-	reception_data 	: out data port pathfinder_software::reception_data;
-	req_access_vme 	: requires bus access VME;
+  device radio
+  features
+    emission_data 	: in data port pathfinder_software::emission_data;
+    reception_data 	: out data port pathfinder_software::reception_data;
+    req_access_vme 	: requires bus access VME;
 
-end radio;
-----------------------------------------------------------------------
--- devices plugged on 1553
+  end radio;
 
-
-device coupler extends pathfinder_software::bus_interface
-	-- comunication interface between pathfinder lander and rover sojourner
-	Features
-	req_access_1553 : requires bus access bus_1553;
-	
-end coupler;
-
-device thrusters
-	features
-	control_data : in data port pathfinder_software::control_data;
-	req_access_1553 : requires bus access bus_1553;
-
-end thrusters;
-
-device valves
-	features
-	control_data 	: in data port pathfinder_software::control_data;
-	req_access_1553 : requires bus access bus_1553;
-
-end valves;
-
-device sun_sensors
-	features
-	measured_data 	: out data port pathfinder_software::measured_data;
-	req_access_1553 : requires bus access bus_1553;
-
-end sun_sensors;
-
-device star_analyser
-	features
-	measured_data 	: out data port pathfinder_software::measured_data;
-	req_access_1553 : requires bus access bus_1553;
-
-end star_analyser;
-
-device altimeter
-	features
-	measured_data 	: out data port pathfinder_software::measured_data;
-	req_access_1553 : requires bus access bus_1553;
-end altimeter;
-
-device accelerometer extends Devices::ADXL::ADXL335
-	features
-	measured_data 	: out data port pathfinder_software::measured_data;
-	req_access_1553 : requires bus access bus_1553;
-
-end accelerometer;
-
-device meteorological
-	features
-	measured_data 	: out data port pathfinder_software::measured_data;
-	req_access_1553 : requires bus access bus_1553;
-
-end meteorological;
+  ----------------------------------------------------------------------
+  -- devices plugged on 1553
 
 
-------------------------------------------------------------------
------------------------buses--------------------------------------
-------------------------------------------------------------------
-bus VME extends buses::VME::VME end VME;
+  device coupler extends pathfinder_software::bus_interface
+    -- comunication interface between pathfinder lander and rover sojourner
+  Features
+    req_access_1553 : requires bus access bus_1553;
 
-bus bus_1553 extends buses::MIL1553::MIL1553 end bus_1553;
-------------------------------------------------------------------
------------------------memories-----------------------------------
-------------------------------------------------------------------
+  end coupler;
 
-memory memories extends memories::ROM
-features
-req_access_vme : requires bus access VME;
-end memories;
+  device thrusters
+  features
+    control_data : in data port pathfinder_software::control_data;
+    req_access_1553 : requires bus access bus_1553;
 
--------------------------------------------------------------------
-----------------------processor------------------------------------
--------------------------------------------------------------------
-processor rs_6000 extends processors::rs_6000
-	features
-	req_access_vme 	: requires bus access pathfinder_hardware::VME;
+  end thrusters;
 
-end rs_6000;
+  device valves
+  features
+    control_data 	: in data port pathfinder_software::control_data;
+    req_access_1553 : requires bus access bus_1553;
 
-processor implementation rs_6000.impl
-	properties
-	Deployment::Execution_Platform => VxWorks;
-	--scheduling_protocol => (RMS);
-	Processor_Properties::Max_Prio_First => high;
-	-- to analyse with
-	-- scheduling_protocol => (EDF) ;
+  end valves;
 
-end rs_6000.impl;
+  device sun_sensors
+  features
+    measured_data 	: out data port pathfinder_software::measured_data;
+    req_access_1553 : requires bus access bus_1553;
+
+  end sun_sensors;
+
+  device star_analyser
+  features
+    measured_data 	: out data port pathfinder_software::measured_data;
+    req_access_1553 : requires bus access bus_1553;
+
+  end star_analyser;
+
+  device altimeter
+  features
+    measured_data 	: out data port pathfinder_software::measured_data;
+    req_access_1553 : requires bus access bus_1553;
+  end altimeter;
+
+  device accelerometer extends Devices::ADXL::ADXL335
+  features
+    measured_data 	: out data port pathfinder_software::measured_data;
+    req_access_1553 : requires bus access bus_1553;
+
+  end accelerometer;
+
+  device meteorological
+  features
+    measured_data 	: out data port pathfinder_software::measured_data;
+    req_access_1553 : requires bus access bus_1553;
+
+  end meteorological;
+
+
+  ------------------------------------------------------------------
+  -----------------------buses--------------------------------------
+  ------------------------------------------------------------------
+
+  bus VME extends buses::VME::VME end VME;
+
+  bus bus_1553 extends buses::MIL1553::MIL1553 end bus_1553;
+
+  ------------------------------------------------------------------
+  -----------------------memories-----------------------------------
+  ------------------------------------------------------------------
+
+  memory memories extends memories::ROM
+  features
+    req_access_vme : requires bus access VME;
+  end memories;
+
+  -------------------------------------------------------------------
+  ----------------------processor------------------------------------
+  -------------------------------------------------------------------
+
+  processor rs_6000 extends processors::rs_6000
+  features
+    req_access_vme 	: requires bus access pathfinder_hardware::VME;
+
+  end rs_6000;
+
+  processor implementation rs_6000.impl
+  properties
+    Deployment::Execution_Platform => VxWorks;
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Processor_Properties::Max_Prio_First => high;
+  end rs_6000.impl;
 
 end pathfinder_hardware;

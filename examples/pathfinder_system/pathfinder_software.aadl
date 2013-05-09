@@ -1,182 +1,195 @@
 package pathfinder_software
 public
+  with Cheddar_Properties;
 
--------------------------------------------------------------------
------------------------processes-------------------------------------
--------------------------------------------------------------------
+  -------------------------------------------------------------------
+  -----------------------processes-------------------------------------
+  -------------------------------------------------------------------
 
-abstract bus_interface
-features
-	-- interface between VME bus and 1533 bus
-	camera_control 	: in out data port camera_control;
-	emission_data 	: in out data port emission_data;
-	control_data 	: in out data port control_data;
+  abstract bus_interface
+  features
+    -- interface between VME bus and 1533 bus
+    camera_control 	: in out data port camera_control;
+    emission_data 	: in out data port emission_data;
+    control_data 	: in out data port control_data;
 
-	reception_data 	: in out data port reception_data;
-	images_data 	: in out data port images_data;
-	measured_data 	: in out data port measured_data;
-	
-end bus_interface;
+    reception_data 	: in out data port reception_data;
+    images_data 	: in out data port images_data;
+    measured_data 	: in out data port measured_data;
+  end bus_interface;
 
-abstract implementation bus_interface.impl
-end bus_interface.impl;
+  abstract implementation bus_interface.impl
+  end bus_interface.impl;
 
-process prs_PSC extends bus_interface
-end prs_PSC;
+  process prs_PSC extends bus_interface
+  end prs_PSC;
 
-process implementation prs_PSC.impl extends bus_interface.impl
-	subcomponents
-	bus_scheduling 		: thread bus_scheduling;
-	data_distribution	: thread data_distribution;
-	control_task 		: thread control_task;
-	radio_task 			: thread radio_task;
-	camera_task 		: thread camera_task;
-	mesure_task 		: thread mesure_task;
-	meteo_task 			: thread meteo_task;
+  process implementation prs_PSC.impl extends bus_interface.impl
+  subcomponents
+    bus_scheduling 	: thread bus_scheduling;
+    data_distribution	: thread data_distribution;
+    control_task 	: thread control_task;
+    radio_task 		: thread radio_task;
+    camera_task 	: thread camera_task;
+    mesure_task 	: thread mesure_task;
+    meteo_task 		: thread meteo_task;
 
-	data_rw : data data_rw; -- critical ressource
-		
-connections
- --by default access is required for the duration of the thread execution
-	C1: data access data_rw <-> data_distribution.req_data_rw ;
-	C2: data access data_rw <-> control_task.req_data_rw;
-	C3: data access data_rw <-> mesure_task.req_data_rw;
-	C4: data access data_rw <-> meteo_task.req_data_rw;
+    data_rw : data data_rw; -- critical ressource
 
-	C5: port bus_scheduling.control_data -> control_data;
-	C6: port camera_task.camera_control -> camera_control;
-	C7: port radio_task.emission_data -> emission_data ;
+  connections
+    --by default access is required for the duration of the thread execution
+    C1: data access data_rw <-> data_distribution.req_data_rw ;
+    C2: data access data_rw <-> control_task.req_data_rw;
+    C3: data access data_rw <-> mesure_task.req_data_rw;
+    C4: data access data_rw <-> meteo_task.req_data_rw;
 
-	C8: port images_data -> camera_task.images_data;
-	C9: port reception_data -> radio_task.reception_data;
-	C10:port measured_data -> data_distribution.measured_data;
+    C5: port bus_scheduling.control_data -> control_data;
+    C6: port camera_task.camera_control -> camera_control;
+    C7: port radio_task.emission_data -> emission_data ;
 
-end prs_PSC.impl;
+    C8: port images_data -> camera_task.images_data;
+    C9: port reception_data -> radio_task.reception_data;
+    C10:port measured_data -> data_distribution.measured_data;
 
--------------------------------------------------------------------
------------------------threads-------------------------------------
--------------------------------------------------------------------
+  end prs_PSC.impl;
 
-thread bus_scheduling
-	-- bus control task
-	features
-	control_data : out data port control_data;
+  -------------------------------------------------------------------
+  -----------------------threads-------------------------------------
+  -------------------------------------------------------------------
 
-	properties
-	Dispatch_protocol => periodic;
-	period => 125 ms;
-	compute_execution_time => 0 ms .. 25 ms;
-	deadline => 125 ms;
-	priority => 7;
+  thread bus_scheduling
+    -- bus control task
+  features
+    control_data : out data port control_data;
 
-end bus_scheduling;
+  properties
+    Dispatch_protocol => periodic;
+    period => 5 ms;
+    compute_execution_time => 1 ms .. 1 ms;
+    deadline => 5 ms;
+    priority => 7;
+    Cheddar_Properties::POSIX_Scheduling_Policy
+       => Cheddar_Properties::SCHED_FIFO;
+  end bus_scheduling;
 
-thread data_distribution
-	-- 1553 bus control
-	features
-	req_data_rw : requires data access data_rw;
-	measured_data : in data port measured_data;
+  thread data_distribution
+    -- 1553 bus control
+  features
+    req_data_rw : requires data access data_rw;
+    measured_data : in data port measured_data;
 
-	properties
-	Dispatch_protocol => periodic;
-	period => 125 ms;
-	compute_execution_time => 0 ms .. 25 ms;
-	deadline => 125 ms;
-	priority => 6;
-end data_distribution;
+  properties
+    Dispatch_protocol => periodic;
+    period => 5 ms;
+    compute_execution_time => 1 ms .. 1 ms;
+    deadline => 5 ms;
+    priority => 6;
+    Cheddar_Properties::POSIX_Scheduling_Policy
+       => Cheddar_Properties::SCHED_FIFO;
+  end data_distribution;
 
-thread control_task
-	-- rover control task
-	features
-	req_data_rw : requires data access data_rw;
+  thread control_task
+    -- rover control task
+  features
+    req_data_rw : requires data access data_rw;
 
-	properties
-	Dispatch_protocol => periodic;
-	period => 250 ms;
-	compute_execution_time => 0 ms .. 25 ms;
-	deadline => 250 ms;
-	priority => 5;
-end control_task;
+  properties
+    Dispatch_protocol => periodic;
+    period => 10 ms;
+    compute_execution_time => 1 ms .. 1 ms;
+    deadline => 10 ms;
+    priority => 5;
+    Cheddar_Properties::POSIX_Scheduling_Policy
+       => Cheddar_Properties::SCHED_FIFO;
+  end control_task;
 
-thread radio_task
-	-- radio communication management task
-	features
-	reception_data : in data port reception_data;
-	emission_data : out data port emission_data;
+  thread radio_task
+    -- radio communication management task
+  features
+    reception_data : in data port reception_data;
+    emission_data : out data port emission_data;
 
-	properties
-	Dispatch_protocol => periodic;
-	period => 250 ms;
-	compute_execution_time => 0 ms .. 25 ms;
-	deadline => 250 ms;
-	priority => 4;
-end radio_task;
+  properties
+    Dispatch_protocol => periodic;
+    period => 10 ms;
+    compute_execution_time => 1 ms .. 1 ms;
+    deadline => 10 ms;
+    priority => 4;
+    Cheddar_Properties::POSIX_Scheduling_Policy
+       => Cheddar_Properties::SCHED_FIFO;
+  end radio_task;
 
-thread camera_task
-	-- camera control task
-	features
-	images_data : in data port images_data;
-	camera_control : out data port camera_control;
+  thread camera_task
+    -- camera control task
+  features
+    images_data : in data port images_data;
+    camera_control : out data port camera_control;
 
-	properties
-	Dispatch_protocol => periodic;
-	period => 250 ms;
-	compute_execution_time => 0 ms .. 25 ms;
-	deadline => 250 ms;
-	priority => 3;
-end camera_task;
+  properties
+    Dispatch_protocol => periodic;
+    period => 10 ms;
+    compute_execution_time => 1 ms .. 1 ms;
+    deadline => 10 ms;
+    priority => 3;
+    Cheddar_Properties::POSIX_Scheduling_Policy
+       => Cheddar_Properties::SCHED_FIFO;
+  end camera_task;
 
-thread mesure_task
-	-- mesurement task
-	features
-	req_data_rw : requires data access data_rw;
+  thread mesure_task
+    -- mesurement task
+  features
+    req_data_rw : requires data access data_rw;
 
-	properties
-	Dispatch_protocol => periodic;
-	period => 5000 ms;
-	compute_execution_time => 0 ms .. 50 ms;
-	deadline => 5000 ms;
-	priority => 2;
-end mesure_task;
+  properties
+    Dispatch_protocol => periodic;
+    period => 200 ms;
+    compute_execution_time => 2 ms .. 2 ms;
+    deadline => 200 ms;
+    priority => 2;
+    Cheddar_Properties::POSIX_Scheduling_Policy
+       => Cheddar_Properties::SCHED_FIFO;
+  end mesure_task;
 
-thread meteo_task
-	-- meteorological data task
-	features
-	req_data_rw : requires data access data_rw;
+  thread meteo_task
+    -- meteorological data task
+  features
+    req_data_rw : requires data access data_rw;
 
-	properties
-	Dispatch_protocol => periodic;
-	priority => 1;
-	period => 5000 ms;
-	deadline => 5000 ms;
-	compute_execution_time => 0 ms .. 50 ms;
-	--to analysis with
-	-- compute_execution_time => 0 ms .. 75 ms; -- depend on data communication size
+  properties
+    Cheddar_Properties::POSIX_Scheduling_Policy
+       => Cheddar_Properties::SCHED_FIFO;
+    Dispatch_protocol => periodic;
+    priority => 1;
+    period => 200 ms;
+    deadline => 200 ms;
+    compute_execution_time => 3 ms .. 3 ms;
 
-end meteo_task;
------------------------------------------------------------------
----------------------------datas---------------------------------
------------------------------------------------------------------
-data data_rw
--- critical resource
-properties
-Concurrency_Control_Protocol => None_Specified;
-Priority => 6;
--- to analysis with
--- Concurrency_Control_Protocol => Priority_Inheritance;
--- Concurrency_Control_Protocol => Priority_Ceiling;
-end data_rw;
+  end meteo_task;
 
-data control_data end control_data;
+  -----------------------------------------------------------------
+  ---------------------------datas---------------------------------
+  -----------------------------------------------------------------
 
-data images_data end images_data;
+  data data_rw
+    -- critical resource
+  properties
+    Concurrency_Control_Protocol => None_Specified;
+    Priority => 6;
+    -- to analysis with
+    -- Concurrency_Control_Protocol => Priority_Inheritance;
+    -- Concurrency_Control_Protocol => Priority_Ceiling;
+  end data_rw;
 
-data camera_control end camera_control;
+  data control_data end control_data;
 
-data reception_data end reception_data;
+  data images_data end images_data;
 
-data emission_data end emission_data;
+  data camera_control end camera_control;
 
-data measured_data end measured_data;
+  data reception_data end reception_data;
+
+  data emission_data end emission_data;
+
+  data measured_data end measured_data;
 
 end pathfinder_software;
