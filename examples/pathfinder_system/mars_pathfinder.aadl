@@ -69,6 +69,9 @@ public
 
   end sys_mars_pathfinder.impl;
 
+  --  This system extends the previous one, and add the required patch
+  --  to solve the priority issue
+
   system implementation sys_mars_pathfinder.correct extends sys_mars_pathfinder.impl
   properties
     Concurrency_Control_Protocol => Priority_Ceiling applies to prs_PSC.data_rw;
