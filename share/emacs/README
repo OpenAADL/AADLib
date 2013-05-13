@@ -1,0 +1,16 @@
+An AADL mode for emacs
+======================
+
+This mode provides support for
+
+syntax highlighting
+auto indentation of code
+
+Installation
+------------
+
+To load this emacs mode, you need to add the following line to your configuration file (usually located in ~/.emacs) :
+
+(load "/path/to/this/file.el")
+
+For more details on this mode, please refer to the emacs contextual help.
