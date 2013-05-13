@@ -1,0 +1,17 @@
+An AADL mode for vim
+
+AADLib provides an AADL mode for vim, located in the share/vim directory.
+
+The AADL mode for vim is made of two files aadl.vim: one for syntactic
+coloration, and the other for indentation. The file for indentation
+must be placed into ~/.vim/indent/ while the one for syntactic
+coloration must be placed into ~/.vim/syntax/
+
+To load the AADL mode whenever you edit AADL files, create a file
+named ~/.vim/filetype.vim, in which you write:
+
+ augroup filetypedetect
+         au BufNewFile,BufRead *.aadl    setf aadl
+ augroup END
+
+For more details, please read the documentation of vim.
