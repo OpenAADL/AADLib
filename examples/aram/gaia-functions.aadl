@@ -1,0 +1,157 @@
+-- This package models the functional design for the Gaia mission.
+--
+-- It inherits elements from the Mission_Criteria package to perform a
+-- refinement of the Gaia mission criteria and defines the functions
+-- break down of the system.
+
+package GAIA::Functions
+public
+
+  with ARAM_Properties;
+  with Physical_Properties;
+  with Processor_Properties;
+  with Bus_Properties;
+
+  with GAIA;
+  with Data_Types;
+
+  -----------------------
+  -- Mission functions --
+  -----------------------
+
+  -- These abstract component types define functional blocks. These
+  -- use the AADLv2 abstract component type, as these are to be later
+  -- refined as either software or hardware blocks. This is to be
+  -- decided at implementation time.
+
+  abstract fpa_data_get
+  features
+    dataout     : out data port Data_Types::fpa_data;
+    ctrlout     : out data port Data_Types::fpa_ctrl;
+  end fpa_data_get;
+
+  abstract fpa_control
+  features
+    ctrlin      : in data port Data_Types::fpa_ctrl;
+    ctrlout     : out data port Data_Types::fpa_ctrl;
+  end fpa_control;
+
+  abstract process_data
+  features
+    fpadata1    : in data port Data_Types::fpa_data;
+    fpadata2    : in data port Data_Types::fpa_data;
+    fpadata3    : in data port Data_Types::fpa_data;
+    fpadata4    : in data port Data_Types::fpa_data;
+    fpadata5    : in data port Data_Types::fpa_data;
+    fpadata6    : in data port Data_Types::fpa_data;
+    fpadata7    : in data port Data_Types::fpa_data;
+    output      : out data port Data_Types::processed_data;
+  end process_data;
+
+  abstract compress_data
+  features
+    input    : in data port Data_Types::processed_data;
+    output   : out data port Data_Types::compressed_data;
+  end compress_data;
+
+  abstract store_data
+  features
+    input    : in  data port Data_Types::compressed_data;
+    output   : out data port Data_Types::compressed_data;
+  properties
+    ARAM_Properties::Required_Memory => 800 MByte; -- XXX was 800 GByte
+  end store_data;
+
+  abstract manage_memory
+  features
+    input : in data port Data_Types::compressed_data;
+  properties
+    Processor_Properties::MIPS => 1;
+  end manage_memory;
+
+  -- Gaia functional design
+  --
+  -- In this model, we propose a model that supports the function view
+  -- of the Gaia mission.
+  --
+  -- The Gaia system component type extends Mission_Criteria::Gaia,
+  -- and thus inherits its requirements, and also the validation rules
+  -- to be performed.
+  --
+  -- The Gaia.Functionnal component implementation details how
+  -- functional blocks are to be used in this variant of the model.
+
+  system Gaia extends GAIA::Gaia
+  end Gaia;
+
+  system implementation Gaia.Functional
+  subcomponents
+    get1        :  abstract fpa_data_get;
+    get2        :  abstract fpa_data_get;
+    get3        :  abstract fpa_data_get;
+    get4        :  abstract fpa_data_get;
+    get5        :  abstract fpa_data_get;
+    get6        :  abstract fpa_data_get;
+    get7        :  abstract fpa_data_get;
+
+    ctrl1       :  abstract fpa_control;
+    ctrl2       :  abstract fpa_control;
+    ctrl3       :  abstract fpa_control;
+    ctrl4       :  abstract fpa_control;
+    ctrl5       :  abstract fpa_control;
+    ctrl6       :  abstract fpa_control;
+    ctrl7       :  abstract fpa_control;
+
+    prs_data    :  abstract process_data;
+    compress    :  abstract compress_data;
+    store       :  abstract store_data;
+
+    mem         :  abstract manage_memory;
+
+  connections
+    port get1.ctrlout -> ctrl1.ctrlin
+    {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
+    port get2.ctrlout -> ctrl2.ctrlin
+    {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
+    port get3.ctrlout -> ctrl3.ctrlin
+    {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
+    port get4.ctrlout -> ctrl4.ctrlin
+    {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
+    port get5.ctrlout -> ctrl5.ctrlin
+    {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
+    port get6.ctrlout -> ctrl6.ctrlin
+    {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
+    port get7.ctrlout -> ctrl7.ctrlin
+    {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
+
+    port get1.dataout -> prs_data.fpadata1
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
+    port get2.dataout -> prs_data.fpadata2
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
+    port get3.dataout -> prs_data.fpadata3
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
+    port get4.dataout -> prs_data.fpadata4
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
+    port get5.dataout -> prs_data.fpadata5
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
+    port get6.dataout -> prs_data.fpadata6
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
+    port get7.dataout -> prs_data.fpadata7
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
+
+    port prs_data.output -> compress.input
+    {Bus_Properties::Required_Bandwidth => 140_000_000 bitsps;};
+
+    port compress.output -> store.input
+    {Bus_Properties::Required_Bandwidth => 70_000_000 bitsps;};
+
+    port store.output -> mem.input;
+
+  properties
+    Period                    => 1 ms;
+    --  XXX What is the meaning of this period?
+
+    Physical_Properties::Mass => 40 Kg;
+  end Gaia.Functional;
+
+end GAIA::Functions;

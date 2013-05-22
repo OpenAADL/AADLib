@@ -74,6 +74,7 @@ AC_OUTPUT([
 	Makefile
 	examples/Makefile
 	examples/aocs/Makefile
+	examples/aram/Makefile
 	examples/ardupilot/Makefile
 	examples/arinc653_annex/Makefile
 	examples/arinc653_annex/example_1/Makefile

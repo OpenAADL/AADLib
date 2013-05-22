@@ -1,0 +1,29 @@
+property set ARAM_Properties is
+
+  Required_Memory : inherit Size applies to 
+    (system, abstract, device, processor);
+
+  Minimum_Size : inherit Size applies to (memory, abstract);
+  
+  Memory_Size : inherit Size applies to (memory, abstract);
+
+  Realizes : list of classifier (abstract, system) applies to 
+    (processor, bus, device, abstract, memory, process, system);
+  --  In our modeling patterns, we use AADLv2 abstract components to
+  --  model Java-like interfaces, i.e. a set of services to be
+  --  implemented. The Realizes functions indicates which interface is
+  --  implemented by a concrete component type
+
+  Actual_Function_Binding : inherit list of reference (abstract, system) 
+    applies to (processor, bus, device, abstract, memory, process);
+  --  Define the binding of abstract function to actual implementations. 
+
+  Required : aadlboolean applies to (system, abstract);
+  
+  Redundancy : list of enumeration (hot, warm, cold) applies to (system, abstract);
+ 
+  Priority : aadlinteger applies to (memory, bus, virtual bus);
+  
+  File_Type : enumeration (fixed, extensible, circular) applies to (memory);
+ 
+end ARAM_Properties;

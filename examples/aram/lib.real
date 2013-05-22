@@ -1,0 +1,114 @@
+--------------------------------------------------------------------------------
+--  Compute the mass of all elements:
+-------------------------------------
+
+-- sub-theorem used by check_mass: compute the total mass of a system
+-- per definition, it is the sum of the mass of all its system subcomponents 
+
+theorem compute_total_mass
+   foreach e in Local_Set do
+     subsystems := { s in System_Set | Is_Subcomponent_Of (s, e) };
+
+     var system_mass := 
+       if (cardinal (subsystems) > 0) then
+       	  sum (get_property_value 
+     	       (subsystems, "physical_properties::mass"))
+       else
+          0.0;
+
+   return (MSum (system_mass));
+end compute_total_mass;
+
+--------------------------------------------------------------------------------
+-- Check that the mass of the system passed as parameter is
+-- less than the maximum authorized mass
+
+theorem check_mass
+   foreach s in local_set do
+      var total_mass := compute compute_total_mass (s);
+      var system_max_mass := if (property_exists (s, "physical_properties::max_mass")) then
+            	  property (s, "physical_properties::max_mass") 
+	  else
+		0.0;
+
+      var mass_ok := if total_mass <= system_max_mass then
+	     	 0.0
+		 else 
+		 1.0;
+
+     return (MSum (mass_ok));
+end check_mass;
+
+--------------------------------------------------------------------------------
+--  Compute the power of all elements:
+-------------------------------------
+
+-- sub-theorem used by check_mass: compute the total mass of a system
+-- per definition, it is the sum of the power of all its system subcomponents 
+
+theorem compute_total_power_consume
+   foreach e in Local_Set do
+     subsystems := { s in System_Set | Is_Subcomponent_Of (s, e) };
+
+     var system_power_consume := 
+       if (cardinal (subsystems) > 0) then
+       	  sum (get_property_value 
+     	       (subsystems, "physical_properties::power_consume"))
+       else
+          0.0;
+
+   return (MSum (system_power_consume));
+end compute_total_power_consume;
+
+--------------------------------------------------------------------------------
+-- Check that the power_consume of the system passed as parameter is
+-- less than the maximum authorized power
+
+theorem check_power_consume
+   foreach s in local_set do
+      var total_power_consume := compute compute_total_power_consume (s);
+      var system_total_power := if (property_exists (s, "physical_properties::total_power")) then
+            	  property (s, "physical_properties::total_power") 
+	  else
+		0.0;
+
+      var power_ok := if total_power_consume <= system_total_power then
+	     	 0.0
+		 else 
+		 1.0;
+
+     return (MSum (power_ok));
+end check_power_consume;
+
+--------------------------------------------------------------------------------
+-- This theorem checks that all devices realize at least one function,
+-- and are bound to at least one function.
+--
+-- Say otherwise, we compute
+--
+-- * the set "devices_implementing_functions" that is defined as the
+--   set of all devices for which the properties
+--   ARAM_Properties::Realizes and ARAM_Properties::Actual_Function_Binding 
+--   are defined;
+-- * the difference of this set and the set of devices
+--   (default set Device_Set) in dev_no_impl;
+--
+-- and finally we check that
+-- * the resulting set is empty
+
+theorem check_devices
+   foreach s in System_Set do
+      devices_implementing_functions := 
+      	{ d in Device_Set |
+      	    Property_Exists (d, "ARAM_Properties::Realizes")
+      	and Property_Exists (d, "ARAM_Properties::Actual_Function_Binding")
+	and Size (Get_Property_Value 
+	    (d, "ARAM_Properties::Actual_Function_Binding")) >= 1
+	};
+
+     dev_no_impl := { d in Device_Set - devices_implementing_functions | 1 = 1};
+     var card_dev_no_impl := cardinal (dev_no_impl);
+
+      check ( card_dev_no_impl = 0 );
+end check_devices;
+

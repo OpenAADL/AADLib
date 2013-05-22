@@ -1,0 +1,52 @@
+-- This package models mission criteria for the Gaia mission.
+
+package GAIA
+public
+
+  with Mission_Properties;
+  with Physical_Properties;
+  
+  -- Root system for the Gaia mission
+  --
+  -- This system defines the Gaia mission requirements to be
+  -- fullfilled by each variant of the models that support the GAIA
+  -- mission design. 
+  --
+  -- For a first (public) description of Gaia, see
+  --  http://sci.esa.int/science-e/www/area/index.cfm?fareaid=26
+  --
+  -- This system is split in two parts:
+  -- 1) requirements are defined as AADLv2 properties, in the
+  -- "properties" subclause of the system;
+  --
+  -- 2) validation of these requirements is performed by REAL
+  -- specifications, in the "real_specification" annex subclause.
+
+  system Gaia
+  properties
+    Mission_Properties::Bandwidth_To_Earth => 10 Mbytesps;
+    Physical_Properties::Total_Power       => 350 W;
+    Physical_Properties::Max_Mass          => 40 Kg;
+
+  annex real_specification {**
+    theorem check_all
+    foreach s in Root_System_Set do
+      system := { sys in Root_System_Set | 1 = 1 };
+
+      var verif_mass := compute check_mass (system);
+      var verif_power := compute check_power_consume (system);
+      -- requires (check_mass
+      --       and check_power_consume
+      --           and check_devices
+      -- );
+      --check (1 = 1);
+      check (verif_mass = 0.0
+         and verif_power = 0.0);
+
+
+      check (1 = 1);
+  end check_all;
+  **};
+  end Gaia;
+  
+end GAIA;

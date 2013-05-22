@@ -1,0 +1,76 @@
+-- This package models a set of generic reusable elements, outside of
+-- the space domain.
+
+-- XXX to be extended/corrected so that these elements match actual
+-- hardware/software elements.
+
+package Library
+public
+  with Bus_Properties;
+
+  -----------
+  -- Buses --
+  -----------
+
+  bus generic
+  end generic;
+  
+  bus genericbus extends generic
+  end genericbus;
+  
+  --  SpaceWire bus
+
+  bus spacewire extends genericbus
+  end spacewire;
+  
+  bus implementation spacewire.i
+  properties
+    Bus_Properties::Bus_Type     => ptp;
+    Bus_Properties::Bandwidth    => 100_000_000 bitsps;
+    Bus_Properties::Max_Latency  => 100 ms;
+  end spacewire.i;
+
+  --  MIL-STD 1553 bus
+
+  bus mil1553 extends genericbus
+  properties
+    Bus_Properties::Bus_Type     => mtp;
+    Bus_Properties::Bandwidth    => 1_000_000 bitsps;
+    Bus_Properties::Max_Latency  => 100 ms;
+  end mil1553;
+  
+  bus implementation mil1553.i
+  end mil1553.i;
+
+  --  CAN Bus
+  
+  bus can extends genericbus
+  properties
+    Bus_Properties::Bus_Type     => mtp;
+    Bus_Properties::Bandwidth    => 600_000 bitsps;
+    Bus_Properties::Max_Latency  => 100 ms;
+  end can;
+  
+  bus implementation can.i
+  end can.i;
+  
+  --  Ethernet
+
+  bus ethernet extends genericbus
+  end ethernet;
+  
+  bus implementation ethernet.highspeed
+  properties
+    Bus_Properties::Bus_Type     => mtp;
+    Bus_Properties::Bandwidth    => 100_000_000 bitsps;
+    Bus_Properties::Max_Latency  => 100 ms;
+  end ethernet.highspeed;
+  
+  bus implementation ethernet.lowspeed
+  properties
+    Bus_Properties::Bus_Type     => mtp;
+    Bus_Properties::Bandwidth    => 10_000_000 bitsps;
+    Bus_Properties::Max_Latency  => 100 ms;
+  end ethernet.lowspeed;
+
+end Library;

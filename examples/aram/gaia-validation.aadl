@@ -1,0 +1,88 @@
+-- This package models the validation part of the Gaia mission.
+
+package GAIA::Validation
+public
+  with ARAM_Properties;
+
+  with GAIA;
+  with GAIA::Functions;
+  with GAIA::Implementations;
+
+  -- Gaia validation design 
+  --
+  -- In this model, we bind the functional model to one of the
+  -- proposed implementation solution.
+  --
+  -- Each function is bound to an implementation blocks. This allows
+  -- to ensure function coverage.
+
+  system Gaia extends GAIA::Gaia
+  end Gaia;
+
+  system implementation Gaia.Validation
+  subcomponents
+    Functional : system GAIA::Functions::Gaia.Functional;
+    Impl       : system GAIA::Implementations::Gaia.First_Architecture;
+
+  properties
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.get1)) applies to Impl.U1_1.datapart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.get2)) applies to Impl.U1_2.datapart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.get3)) applies to Impl.U1_3.datapart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.get4)) applies to Impl.U1_4.datapart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.get5)) applies to Impl.U1_5.datapart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.get6)) applies to Impl.U1_6.datapart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.get7)) applies to Impl.U1_7.datapart;
+      -- XXX what about Impl.U1_8 ??? There is no Functional.get8 to match
+      -- This unit comes from the redundancy pattern applied. it is an
+      -- additional requirement being defined ..
+
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.ctrl1)) applies to Impl.U1_1.ctrlpart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.ctrl2)) applies to Impl.U1_2.ctrlpart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.ctrl3)) applies to Impl.U1_3.ctrlpart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.ctrl4)) applies to Impl.U1_4.ctrlpart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.ctrl5)) applies to Impl.U1_5.ctrlpart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.ctrl6)) applies to Impl.U1_6.ctrlpart;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.ctrl7)) applies to Impl.U1_7.ctrlpart;
+      --   XXX what about Impl.U1_8 ??? There is no Functional.get8 to match
+
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.prs_data)) applies to Impl.U2_1.computer1;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.prs_data)) applies to Impl.U2_1.computer2;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.prs_data)) applies to Impl.U2_2.computer1;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.prs_data)) applies to Impl.U2_2.computer2;
+
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.compress)) applies to Impl.U2_1.computer1;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.compress)) applies to Impl.U2_1.computer2;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.compress)) applies to Impl.U2_2.computer1;
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.compress)) applies to Impl.U2_2.computer2;
+
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.store)) applies to Impl.U3_1.runtime;
+
+    ARAM_Properties::Actual_Function_Binding => 
+      (reference (Functional.mem)) applies to Impl.U3_1.mm;
+
+  end Gaia.Validation;
+
+end GAIA::Validation;

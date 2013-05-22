@@ -1,0 +1,320 @@
+-- This package models reusable functional blocks for space missions.
+
+package Blocks
+public
+
+  with ARAM_Properties;
+  with Physical_Properties;
+  with Bus_Properties;
+
+  with Library;
+  with GAIA::Functions;
+  with Data_Types;
+
+  ---------
+  -- FPA --
+  ---------
+
+  device FPA
+    --  The FPA (Focal Plane Arrays) camera device corresponds to a
+    --  device that acquires/captures images of stars.
+
+  features
+    dataout : out data port Data_Types::FPA_data;
+    ctrlout : out data port Data_Types::FPA_ctrl;
+  properties
+    ARAM_Properties::Realizes => (classifier (GAIA::Functions::FPA_data_get));
+  end FPA;
+
+  device implementation FPA.i
+  end FPA.i;
+
+  -----------------
+  -- FPA_Control --
+  -----------------
+
+  device FPA_control
+    --  The FPA_control device corresponds to the device that controls
+    --  the camera itself (take picture, etc..)
+
+  features
+    ctrlin      : in data port Data_Types::FPA_ctrl;
+    ctrlout     : out data port Data_Types::FPA_ctrl;
+  properties
+    ARAM_Properties::Realizes => (classifier (GAIA::Functions::FPA_control));
+  end FPA_control;
+
+  device implementation FPA_control.i
+  end FPA_control.i;
+
+  ---------------
+  -- FPA_block --
+  ---------------
+
+  system FPA_block
+  --  The FPA_block component assembles both main FPA
+  --  functions: image acquisition and FPA device control.
+  features
+    bus_access : requires bus access Library::genericbus;
+  end FPA_block;
+
+  -------------------------------
+  -- FPA_block_without_runtime --
+  -------------------------------
+
+  system FPA_block_without_runtime extends FPA_block
+  -- FPA_block_without_runtime contains the FPA device for image
+  -- acquisition. It sends RAW (uncompressed) data to the obc that
+  -- compresses the pictures.  This component is used for deployment 1.
+  features
+    dataout : out data port Data_Types::FPA_data;
+  end FPA_block_without_runtime;
+
+  system implementation FPA_block_without_runtime.i
+  subcomponents
+    datapart    : device FPA.i;
+    ctrlpart    : device FPA_control.i;
+
+  connections
+    port datapart.dataout -> dataout;
+    port datapart.ctrlout -> ctrlpart.ctrlin
+    {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
+
+  properties
+    Physical_Properties::Mass => 2 Kg;
+    Physical_Properties::Power_Consume => 20 W;
+  end FPA_block_without_runtime.i;
+
+  ----------------------------
+  -- FPA_block_with_runtime --
+  ----------------------------
+
+  system FPA_block_with_runtime extends FPA_block
+  -- FPA_block_with_runtime contains the FPA device for image
+  -- acquisition, the FPA_control to control the FPA device as well as
+  -- a runtime that compress the raw data from the FPA device. Then,
+  -- the runtime sends directly the compressed data to the mass memory
+  -- subsystem.  This component is used for deployment 2.
+
+  features
+    output : out data port Data_Types::compressed_data;
+  end FPA_block_with_runtime;
+
+  system implementation FPA_block_with_runtime.i
+  subcomponents
+    datapart    : device FPA.i;
+    ctrlpart    : device FPA_control.i;
+    processing  : processor compress_runtime_lc.i;
+
+  connections
+    port datapart.dataout -> processing.raw;
+    port datapart.ctrlout -> ctrlpart.ctrlin
+    {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
+
+    bus access bus_access -> processing.bus_access;
+
+  properties
+    Physical_Properties::Mass => 3 Kg;
+    Physical_Properties::Power_Consume => 35 W;
+  end FPA_block_with_runtime.i;
+
+  ----------------------
+  -- Compress_Runtime --
+  ----------------------
+
+  processor compress_runtime
+    --  The compress_runtime component is the processor used to
+    --  compress the incoming raw data from the FPA device.
+
+  features
+    bus_access : requires bus access Library::genericbus;
+
+  properties
+    ARAM_Properties::Realizes =>
+    (classifier (GAIA::Functions::compress_data),
+     classifier (GAIA::Functions::process_data));
+  end compress_runtime;
+
+  processor compress_runtime_hc extends compress_runtime
+    -- compress_runtime_hc means "High Capacity": it has a high
+    -- computation capacity to compress incoming raw data from all FPA
+    -- devices.  It is used in deployment 1 as a processor in the obc
+    -- subsystem.
+  --
+  features
+    FPAdata1       : in data port Data_Types::FPA_data;
+    FPAdata2       : in data port Data_Types::FPA_data;
+    FPAdata3       : in data port Data_Types::FPA_data;
+    FPAdata4       : in data port Data_Types::FPA_data;
+    FPAdata5       : in data port Data_Types::FPA_data;
+    FPAdata6       : in data port Data_Types::FPA_data;
+    FPAdata7       : in data port Data_Types::FPA_data;
+    compressed     : out data port Data_Types::compressed_data;
+  end compress_runtime_hc;
+
+  processor implementation compress_runtime_hc.i
+  end compress_runtime_hc.i;
+
+  processor compress_runtime_lc extends compress_runtime
+    -- compress_runtime_lc means "Low Capacity": it has a low
+    -- computation capacity and is embedded in the
+    -- FPA_block_with_runtime subsystem. It has a lower computation
+    -- capacity because it compresses only one picture at the same
+    -- time whereas the High Capacity version must compress 8 pictures
+    -- with the same deadline.  This version is used in deployment 2.
+
+  features
+    raw        : in data port Data_Types::FPA_data;
+    compressed : out data port Data_Types::compressed_data;
+  end compress_runtime_lc;
+
+  processor implementation compress_runtime_lc.i
+  end compress_runtime_lc.i;
+
+  ---------
+  -- OBC --
+  ---------
+
+  system obc
+  --  The obc subsystem corresponds to the computer that compresses
+  --  the incoming raw data from the 8 FPA devices. Its implementation
+  --  contains a high capacity processing resources, able to compress
+  --  all pictures with a tight timing constraint (1ms).  Two
+  --  processor are used to introduce redundancy.
+  --
+  --  This subsystem is used in deployment 1.
+  features
+    bus_access  : requires bus access Library::genericbus;
+    rawdata1    : in data port Data_Types::FPA_data;
+    rawdata2    : in data port Data_Types::FPA_data;
+    rawdata3    : in data port Data_Types::FPA_data;
+    rawdata4    : in data port Data_Types::FPA_data;
+    rawdata5    : in data port Data_Types::FPA_data;
+    rawdata6    : in data port Data_Types::FPA_data;
+    rawdata7    : in data port Data_Types::FPA_data;
+    rawdata8    : in data port Data_Types::FPA_data;
+    compressed  : out data port Data_Types::compressed_data ;
+  end obc;
+
+  system implementation obc.i
+  subcomponents
+    computer1 : processor compress_runtime_hc.i;
+    computer2 : processor compress_runtime_hc.i;
+
+  connections
+    bus access bus_access -> computer1.bus_access;
+    bus access bus_access -> computer2.bus_access;
+
+  properties
+    Physical_Properties::Mass => 9 Kg;
+    Physical_Properties::Power_Consume => 40 W;
+  end obc.i;
+
+  -----------------
+  -- Mass_Memory --
+  -----------------
+
+  memory mass_memory
+  --  The mass_memory component corresponds to the memory device used
+  --  to store and retrieve pictures. It is the memory device that
+  --  contains all the compressed data produced by either the on board
+  --  computer or the FPA subsystem block.
+
+  features
+    bus_access : requires bus access Library::genericbus;
+  end mass_memory;
+
+  memory implementation mass_memory.i
+  properties
+    ARAM_Properties::Realizes => (classifier (GAIA::Functions::manage_memory));
+  end mass_memory.i;
+
+  --------------------
+  -- Memory_Runtime --
+  --------------------
+
+  processor memory_runtime
+  --  The memory_runtime processor is used on the memory subsystem to
+  --  allocate memory and organize the memory organization of the
+  --  hardware part of the memory.
+
+  features
+    bus_access  : requires bus access Library::genericbus;
+    input       : in data port Data_Types::compressed_data;
+  properties
+    ARAM_Properties::Realizes => (classifier (GAIA::Functions::store_data));
+  end memory_runtime;
+
+  processor implementation memory_runtime.i
+  end memory_runtime.i;
+
+  -----------------------
+  -- Memory_Management --
+  -----------------------
+
+  system memory_management
+  --  The memory_management component gathers all components required
+  --  for the implementation of the memory subsystem.  It contains the
+  --  hardware part of the memory itself the mass_memory memory
+  --  component as well as the runtime that controls it - the
+  --  memory_runtime component).
+  --
+  --  In deployment 1, it is connected to the obc that sends processed
+  --  and compressed data.
+  --
+  --  In deployment 2, it is connected to FPA subsystems that sends
+  --  directly compressed data. For communication purposes, this
+  --  subsystem requires a connection to a bus.
+
+  features
+    bus_access  : requires bus access Library::genericbus;
+    to_cdmu     : out data port Data_Types::compressed_data;
+
+  properties
+    ARAM_Properties::Required_Memory => 800 MByte; -- XXX was 800 GByte
+  end memory_management;
+
+  system memory_management_two_links extends memory_management
+  features
+    link1 : in data port Data_Types::compressed_data;
+    link2 : in data port Data_Types::compressed_data;
+  end memory_management_two_links;
+
+  system memory_management_eight_links extends memory_management
+  features
+    link1 : in data port Data_Types::compressed_data;
+    link2 : in data port Data_Types::compressed_data;
+    link3 : in data port Data_Types::compressed_data;
+    link4 : in data port Data_Types::compressed_data;
+    link5 : in data port Data_Types::compressed_data;
+    link6 : in data port Data_Types::compressed_data;
+    link7 : in data port Data_Types::compressed_data;
+    link8 : in data port Data_Types::compressed_data;
+  end memory_management_eight_links;
+
+  system implementation memory_management_two_links.i
+  subcomponents
+    mm      : memory mass_memory.i;
+    runtime : processor memory_runtime.i;
+
+  connections
+    bus access bus_access -> runtime.bus_access;
+
+  properties
+    Physical_Properties::Mass => 15 Kg;
+    Physical_Properties::Power_Consume => 45 W;
+  end memory_management_two_links.i;
+
+  system implementation memory_management_eight_links.i
+  subcomponents
+    mm      : memory mass_memory.i;
+    runtime : processor memory_runtime.i;
+
+  connections
+    bus access bus_access -> runtime.bus_access;
+  properties
+    Physical_Properties::Mass => 15 Kg;
+    Physical_Properties::Power_Consume => 45 W;
+  end memory_management_eight_links.i;
+
+end Blocks;
