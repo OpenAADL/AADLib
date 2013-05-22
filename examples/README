@@ -25,47 +25,47 @@ In addition, the following target is always available:
 
  - "make check"      : run all available targets, for regression testing
 
-Here is a short description of each example
+Here is a short description of available examples
 
 * aocs: model of an Attitude Orbital Control System, derived from
- design document from
- http://control.ee.ethz.ch/~ceg/AocsFramework/index.html
+  design document from
+  http://control.ee.ethz.ch/~ceg/AocsFramework/index.html
 
 * ardupilot: models the ardupilot UAV platform, adapted from the POK
- project (see http://pok.safety-critical.eu)
+  project (see http://pok.safety-critical.eu)
 
 * arinc653_annex: models from the ARINC653 annex document for AADLv2
 
 * asl: work in progress REAL theorems in preparation for the ASL annex
- as part of SAE AS2/C committee work
+  as part of SAE AS2/C committee work
 
 * behavior_annex: models from the Behavior annex language for AADLv2
 
 * car: case study from the chapter written by Emmanuel Grolleau,
- Pascal Richard and Michaël Richard, Scheduling in Distributed
- Real-Time Systems, Distributed Systems: Design and Algorithms,
- chapt. 7, Serge Haddad, Fabrice Kordon, Laurent Pautet, Laure
- Petrucci, ISTE, Wiley, 2011
+  Pascal Richard and Michaël Richard, Scheduling in Distributed
+  Real-Time Systems, Distributed Systems: Design and Algorithms,
+  chapt. 7, Serge Haddad, Fabrice Kordon, Laurent Pautet, Laure
+  Petrucci, ISTE, Wiley, 2011
 
 * data_modeling_annex: models from the Data Modeling annex document
- for AADLv2
+  for AADLv2
 
 * fcs: models a naive Flight Control Systems, adapted from a lab on
- scheduling analysis tools developed by C. Pagetti from ONERA; and
- adapted for AADL teaching classes by J. Hugues at ISAE.  Only the
- architecture is developed, to be analyzed with Cheddar.
+  scheduling analysis tools developed by C. Pagetti from ONERA; and
+  adapted for AADL teaching classes by J. Hugues at ISAE.  Only the
+  architecture is developed, to be analyzed with Cheddar.
 
 * line_follower: a line follower robot for the Arduino platform, using
  some parts available from SparkFun Electronics.
 
 * memory: this examples demonstrates how to define logical and
- hardware memory layout, and how to ensure they match. This example
- was build in collaboration between F. Singhoff and S. Rubini (UBO)
- and J. Hugues (ISAE)
+  hardware memory layout, and how to ensure they match. This example
+  was build in collaboration between F. Singhoff and S. Rubini (UBO)
+  and J. Hugues (ISAE)
 
 * mixin: this example demonstrates how to support multiple inheritance
- in AADLv2, using the mixin pattern defined in many object-oriented
- languages like Ada.
+  in AADLv2, using the mixin pattern defined in many object-oriented
+  languages like Ada.
 
 * multicore: provides one solution for modeling multicore systems in
   AADLv2, and performing code generation using Ocarina.
@@ -74,26 +74,26 @@ Here is a short description of each example
   illustrates its priority inversion problem using Cheddar.
 
 * radar: a naive model of a radar system, made in collaboration with
- F. Singhoff from UBO, P. Disseaux from Ellidiss and Nader Khammassi
- from Virtualys and J. Hugues (ISAE). Adapted to AADLv2
+  F. Singhoff from UBO, P. Disseaux from Ellidiss and Nader Khammassi
+  from Virtualys and J. Hugues (ISAE). Adapted to AADLv2
 
 * rap: Ravenscar Avionics Platform, written by Olivier Gilles during
- his PhD. This models builds upon the Generic Avionics Platform from
- SEI.
+  his PhD. This models builds upon the Generic Avionics Platform from
+  SEI.
 
 * ravenscar: case study issued from the ``Guide for the use of the Ada
- Ravenscar Profile in high integrity systems'' written by Alan Burns,
- Brian Dobbing and Tullio Vardanega; adapted to AADLv1 by Bechir
- Zalila duing his PhD. This models has been translated to AADLv2, and
- extended to include REAL theorems to check Ravenscar patterns.
+  Ravenscar Profile in high integrity systems'' written by Alan Burns,
+  Brian Dobbing and Tullio Vardanega; adapted to AADLv1 by Bechir
+  Zalila duing his PhD. This models has been translated to AADLv2, and
+  extended to include REAL theorems to check Ravenscar patterns.
 
 * rma: two tasks with different period on the same node, can be
- checked by Cheddar, or can generate code for either PolyORB-HI/C or
- Ada.
+  checked by Cheddar, or can generate code for either PolyORB-HI/C or
+  Ada.
 
 * time_triggered: shows how to implement a time-triggered architecture
- using delayed connections.
+  using delayed connections.
 
 * uxv: models a series of UAV and UGV from ISAE DMIA lab. Initial
- models were build by Cedric Chedaleux, Fabrice Cotdeloup and Sladana
- Yousri-Stojkovic while students at ISAE.
+  models were build by Cedric Chedaleux, Fabrice Cotdeloup and Sladana
+  Yousri-Stojkovic while students at ISAE.
