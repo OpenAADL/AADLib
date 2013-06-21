@@ -26,6 +26,7 @@ public
   properties
     Source_Language => (Ada95);
     Source_Name     => "Producer_Consumer.Produce_Spg";
+    Source_Text     => ("producer_consumer.adb");
   end Produce_Spg;
 
   subprogram Consume_Spg
@@ -34,6 +35,7 @@ public
   properties
     Source_Language => (Ada95);
     Source_Name     => "Producer_Consumer.Consume_Spg";
+    Source_Text     => ("producer_consumer.adb");
   end Consume_Spg;
 
   -------------
