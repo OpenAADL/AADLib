@@ -97,23 +97,23 @@ public
     cpu	   : processor cpu.impl;
   properties
     Actual_Processor_Binding => (reference (cpu)) applies to node_a;
-    
-    annex real_specification {**
-     
+
+  annex real_specification {**
+
      theorem check_scheduling
       foreach e in system_set do
       requires(check_scheduling);
       check(1=1);
       end check_scheduling;
-      
+
       theorem check_wcrt
       foreach s in local_set do
       requires(wcrt);
       check(1=1);
       end check_wcrt;
-     
+
     **};
-    
+
   end rma.impl;
 
 end RMAAadl;
