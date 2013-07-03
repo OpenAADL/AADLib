@@ -60,13 +60,16 @@
 	   '("abstract" "access" "and" "applies" "binding" "calls" "classifier"
 	     "connection" "connections" "constant" "delta" "data" "enumeration"
 	     "event" "feature" "features" "flow" "flows" "group" "in" "inherit"
-	     "initial" "inverse" "is" "list" "mode" "modes" "not" "out"
+	     "inverse" "is" "list" "mode" "modes" "not" "out"
 	     "parameter" "path" "port" "private" "process" "processor"
 	     "prototypes" "properties" "with" "renames" "of" "compute"
 	     "property" "provides" "public" "range" "reference" "refined"
 	     "refines" "requires" "server" "set" "sink" "source" "record"
 	     "subcomponents" "system" "thread" "to" "type" "units" "value"
-	     "virtual") t)
+	     "virtual"
+             "initial" "states" "transition" "complete" "final" "state"
+             "transitions" "on" "dispatch"
+             ) t)
 	  "\\>")
 	 '(1 font-lock-keyword-face))
 
@@ -112,7 +115,7 @@
 	  (regexp-opt
 	   '("abstract" "annex" "bus" "data" "device" "end" "extends" "memory"
 	     "package" "parameter" "process" "processor" "property" "port"
-	     "subprogram" "system" "thread" "with") t)
+	     "renames" "subprogram" "system" "thread" "with") t)
  	  "\\>[ \t]*"
  	  "\\(\\sw+\\(\\(\\.\\|::\\)\\sw*\\)*\\)?")
  	 '(1 font-lock-keyword-face)
@@ -157,7 +160,7 @@
    ((looking-at "^[ \t]*\\<\\(bus\\|data\\|port\\)\\>[ \t]+\\<\\(access\\|port\\|group\\)\\>")
     (aadl-indent-end-statement))
 
-   ((looking-at "^[ \t]*\\<\\(virtual\\|data\\|thread\\|subprogram\\|process\\|bus\\|processor\\|device\\|memory\\|system\\|port[ \t]+group\\)\\([ \t]+implementation\\)?\\>[ \t]+\\sw+")
+   ((looking-at "^[ \t]*\\<\\(abstract\\|virtual\\|data\\|thread\\|subprogram\\|process\\|bus\\|processor\\|device\\|memory\\|system\\|port[ \t]+group\\)\\([ \t]+implementation\\)?\\>[ \t]+\\sw+")
     (current-indentation))
 
    ((bobp) 0)
