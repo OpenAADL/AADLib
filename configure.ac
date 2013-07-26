@@ -85,6 +85,7 @@ AC_OUTPUT([
 	examples/data_modeling_annex/Makefile
 	examples/fcs/Makefile
 	examples/flow_analysis/Makefile
+	examples/isr/Makefile
 	examples/line_follower/Makefile
 	examples/memory/Makefile
 	examples/mixin/Makefile

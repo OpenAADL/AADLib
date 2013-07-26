@@ -1,0 +1,96 @@
+--  This model illustrates various mechanisms to attach an ISR to a device
+
+package ISR
+public
+  with Processors;
+
+  --  RTC models a Real-Time Clock (RTC), that is a device that
+  --  periodically emits an interrupt
+
+  device RTC
+  features
+    ISR_Out : out event port;
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 10 ms;
+
+    Device_Driver => classifier (RTC_Driver.impl);
+    --  Here, this property alone would be sufficient to attach a
+    --  device driver, but .. if one wants to relate device features
+    --  (port, provides suprogram access, etc) to driver components,
+    --  one need to duplicate this information in the device
+    --  implementation, see below.
+  end RTC;
+
+  device implementation RTC.Impl
+  subcomponents
+    Driver : abstract RTC_Driver.impl;
+  connections
+    C1 : port Driver.ISR_out -> ISR_Out;
+  end RTC.Impl;
+
+  --  RTC_Driver is the device driver associated to the RTC device. It
+  --  is made of an aperiodic thread that propagates the received
+  --  interrupt.
+
+  thread RTC_ISR
+  features
+    ISR_Out : out event port;
+  properties
+    Dispatch_Protocol => Aperiodic;
+  end RTC_ISR;
+
+  abstract RTC_Driver
+  features
+    ISR_Out : out event port;
+  end RTC_Driver;
+
+  abstract implementation RTC_Driver.impl
+  subcomponents
+    ISR : thread RTC_ISR;
+  connections
+    port ISR.ISR_Out -> ISR_Out;
+  end RTC_Driver.impl;
+
+  --  This process is a dumb application that simply displays the
+  --  current time, based from interrupts received from RTC component
+
+  thread Printer
+  features
+    Top : in event port;
+  properties
+    Dispatch_Protocol => Sporadic;
+    Period            => 1 ms;
+  end Printer;
+
+  process Ticker
+  features
+    ISR_In: in event port;
+  end Ticker;
+
+  process implementation Ticker.impl
+  subcomponents
+    Ticker_Printer : thread Printer;
+  connections
+    port ISR_In -> Ticker_Printer.Top;
+  end Ticker.impl;
+
+  --  System that binds them all
+
+  system Ticker_System
+  end Ticker_System;
+
+  system implementation Ticker_System.impl
+  subcomponents
+    CPU : processor Processors::Generic_CPU;
+
+    Ticker_Display : process Ticker.impl;
+    Clock_Device : device RTC;
+  connections
+    port  Clock_Device.ISR_Out -> Ticker_Display.ISR_In;
+  properties
+    Actual_Processor_Binding => (reference (CPU)) applies to Ticker_Display;
+    Actual_Processor_Binding => (reference (CPU)) applies to Clock_Device;
+  end Ticker_System.impl;
+
+end ISR;
