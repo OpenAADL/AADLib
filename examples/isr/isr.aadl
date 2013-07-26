@@ -18,7 +18,7 @@ public
     --  Here, this property alone would be sufficient to attach a
     --  device driver, but .. if one wants to relate device features
     --  (port, provides suprogram access, etc) to driver components,
-    --  one need to duplicate this information in the device
+    --  one needs to duplicate this information in the device
     --  implementation, see below.
   end RTC;
 
@@ -71,6 +71,7 @@ public
   process implementation Ticker.impl
   subcomponents
     Ticker_Printer : thread Printer;
+
   connections
     port ISR_In -> Ticker_Printer.Top;
   end Ticker.impl;
@@ -85,9 +86,11 @@ public
     CPU : processor Processors::Generic_CPU;
 
     Ticker_Display : process Ticker.impl;
-    Clock_Device : device RTC;
+    Clock_Device   : device  RTC.impl;
+
   connections
     port  Clock_Device.ISR_Out -> Ticker_Display.ISR_In;
+
   properties
     Actual_Processor_Binding => (reference (CPU)) applies to Ticker_Display;
     Actual_Processor_Binding => (reference (CPU)) applies to Clock_Device;
