@@ -6,7 +6,7 @@ SUBDIRS = src examples
 DIST_SUBDIRS = $(SUBDIRS)
 
 clean-local:
-	-rm -f *~
+	-rm -rf *~ ocarina_out
 
 EXTRA_DIST = $(srcdir)/README
 
