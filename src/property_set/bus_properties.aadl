@@ -8,8 +8,19 @@ property set Bus_Properties is
 
    Available_Bandwidth : list of Data_Volume applies to (bus);
 
+  Required_Bandwidth : Data_Volume applies to 
+    (abstract, system, device, bus access, connection);
+
    Channel_Type : enumeration (Simplex, Half_Duplex, Full_Duplex) 
       applies to (bus);
+
+  Bus_Type : enumeration (mtp, ptp) applies to (bus, system, abstract);
+  --  mtp: multi-point bus
+  --  ptp: point-to-point bus
+
+  Expected_Latency : Time_Range applies to (bus, bus access, abstract);
+
+  Max_Latency : Time applies to (bus, bus access, abstract);
 
 end Bus_Properties;
 

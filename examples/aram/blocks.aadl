@@ -81,8 +81,8 @@ public
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
 
   properties
-    Physical_Properties::Mass => 2 Kg;
-    Physical_Properties::Power_Consume => 20 W;
+    Physical_Properties::Mass => 2.0 Kg;
+    Physical_Properties::Power_Consume => 20.0 W;
   end FPA_block_without_runtime.i;
 
   ----------------------------
@@ -114,8 +114,8 @@ public
     bus access bus_access -> processing.bus_access;
 
   properties
-    Physical_Properties::Mass => 3 Kg;
-    Physical_Properties::Power_Consume => 35 W;
+    Physical_Properties::Mass => 3.0 Kg;
+    Physical_Properties::Power_Consume => 35.0 W;
   end FPA_block_with_runtime.i;
 
   ----------------------
@@ -206,8 +206,8 @@ public
     bus access bus_access -> computer2.bus_access;
 
   properties
-    Physical_Properties::Mass => 9 Kg;
-    Physical_Properties::Power_Consume => 40 W;
+    Physical_Properties::Mass => 9.0 Kg;
+    Physical_Properties::Power_Consume => 40.0 W;
   end obc.i;
 
   -----------------
@@ -301,8 +301,8 @@ public
     bus access bus_access -> runtime.bus_access;
 
   properties
-    Physical_Properties::Mass => 15 Kg;
-    Physical_Properties::Power_Consume => 45 W;
+    Physical_Properties::Mass => 15.0 Kg;
+    Physical_Properties::Power_Consume => 45.0 W;
   end memory_management_two_links.i;
 
   system implementation memory_management_eight_links.i
@@ -313,8 +313,8 @@ public
   connections
     bus access bus_access -> runtime.bus_access;
   properties
-    Physical_Properties::Mass => 15 Kg;
-    Physical_Properties::Power_Consume => 45 W;
+    Physical_Properties::Mass => 15.0 Kg;
+    Physical_Properties::Power_Consume => 45.0 W;
   end memory_management_eight_links.i;
 
 end Blocks;

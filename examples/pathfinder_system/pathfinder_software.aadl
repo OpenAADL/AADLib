@@ -68,8 +68,7 @@ public
     compute_execution_time => 1 ms .. 1 ms;
     deadline => 5 ms;
     priority => 7;
-    Cheddar_Properties::POSIX_Scheduling_Policy
-       => Cheddar_Properties::SCHED_FIFO;
+    POSIX_Scheduling_Policy => SCHED_FIFO;
   end bus_scheduling;
 
   thread data_distribution
@@ -84,8 +83,7 @@ public
     compute_execution_time => 1 ms .. 1 ms;
     deadline => 5 ms;
     priority => 6;
-    Cheddar_Properties::POSIX_Scheduling_Policy
-       => Cheddar_Properties::SCHED_FIFO;
+    POSIX_Scheduling_Policy => SCHED_FIFO;
   end data_distribution;
 
   thread control_task
@@ -99,8 +97,7 @@ public
     compute_execution_time => 1 ms .. 1 ms;
     deadline => 10 ms;
     priority => 5;
-    Cheddar_Properties::POSIX_Scheduling_Policy
-       => Cheddar_Properties::SCHED_FIFO;
+    POSIX_Scheduling_Policy => SCHED_FIFO;
   end control_task;
 
   thread radio_task
@@ -115,8 +112,7 @@ public
     compute_execution_time => 1 ms .. 1 ms;
     deadline => 10 ms;
     priority => 4;
-    Cheddar_Properties::POSIX_Scheduling_Policy
-       => Cheddar_Properties::SCHED_FIFO;
+    POSIX_Scheduling_Policy => SCHED_FIFO;
   end radio_task;
 
   thread camera_task
@@ -131,8 +127,7 @@ public
     compute_execution_time => 1 ms .. 1 ms;
     deadline => 10 ms;
     priority => 3;
-    Cheddar_Properties::POSIX_Scheduling_Policy
-       => Cheddar_Properties::SCHED_FIFO;
+    POSIX_Scheduling_Policy => SCHED_FIFO;
   end camera_task;
 
   thread mesure_task
@@ -146,8 +141,7 @@ public
     compute_execution_time => 2 ms .. 2 ms;
     deadline => 200 ms;
     priority => 2;
-    Cheddar_Properties::POSIX_Scheduling_Policy
-       => Cheddar_Properties::SCHED_FIFO;
+    POSIX_Scheduling_Policy => SCHED_FIFO;
   end mesure_task;
 
   thread meteo_task
@@ -156,8 +150,7 @@ public
     req_data_rw : requires data access data_rw;
 
   properties
-    Cheddar_Properties::POSIX_Scheduling_Policy
-       => Cheddar_Properties::SCHED_FIFO;
+    POSIX_Scheduling_Policy => SCHED_FIFO;
     Dispatch_protocol => periodic;
     priority => 1;
     period => 200 ms;

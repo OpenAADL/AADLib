@@ -6,11 +6,7 @@ OTHER_FILES = $(srcdir)/blocks.aadl $(srcdir)/gaia-validation.aadl	\
 	   $(srcdir)/gaia-functions.aadl $(srcdir)/library.aadl		\
 	   $(srcdir)/gaia-implementations.aadl $(srcdir)/lib.real	\
 	   $(srcdir)/aram_properties.aadl				\
-	   $(srcdir)/mission_properties.aadl				\
-	   $(srcdir)/processor_properties.aadl				\
-	   $(srcdir)/bus_properties.aadl				\
-	   $(srcdir)/physical_properties.aadl
-
+	   $(srcdir)/mission_properties.aadl
 
 CLEANDIRS = gaia_first_architecture gaia_second_architecture gaia_validation
 CLEANFILES =
@@ -24,7 +20,7 @@ AVAILABLE_TARGETS= mission-parse functional-parse blocks-parse		\
 	  check-real-functional check-real-first-impl			\
 	  check-real-second-impl check-real-validation check-real
 
-OCARINA_FLAGS=-aadlv2 -y -I$(srcdir)
+OCARINA_FLAGS=-aadlv2 -y -I$(srcdir) -I$(top_srcdir)/src/property_set
 REAL_FLAGS=-g real_theorem -real_lib ./lib.real
 
 MISSION=gaia.aadl

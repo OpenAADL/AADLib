@@ -151,7 +151,7 @@ public
     Period                    => 1 ms;
     --  XXX What is the meaning of this period?
 
-    Physical_Properties::Mass => 40 Kg;
+    Physical_Properties::Mass => 40.0 Kg;
   end Gaia.Functional;
 
 end GAIA::Functions;

@@ -3,7 +3,7 @@
 -- component specifications are encompassed within a same package to
 -- offer an Object-Oriented Class style.
 
-package BA_example5 
+package BA_example5
 public
   with Base_Types;
 
@@ -18,7 +18,7 @@ public
     elems : data Base_Types::Integer [100];
     sp : data Base_Types::Integer;
   end stack.default;
-  
+
   subprogram push
   features
     v : in parameter Base_Types::Integer;
@@ -32,7 +32,7 @@ public
     this : requires data access stack.default;
     underflow : out event port;
   end pop;
-  
+
   subprogram implementation push.default
     annex behavior_specification {**
     states
@@ -43,7 +43,7 @@ public
     s0 -[ sp > 100 ]-> s0 { overflow! };
     **};
   end push.default;
-  
+
   subprogram implementation pop.default
     annex behavior_specification {**
     states
@@ -54,5 +54,5 @@ public
     s0 -[ sp = 0 ]-> s0 { underflow! };
     **};
   end pop.default;
-  
+
 end BA_example5;

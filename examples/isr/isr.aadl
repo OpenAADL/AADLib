@@ -17,7 +17,7 @@ public
     Device_Driver => classifier (RTC_Driver.impl);
     --  Here, this property alone would be sufficient to attach a
     --  device driver, but .. if one wants to relate device features
-    --  (port, provides suprogram access, etc) to driver components,
+    --  (port, provides subprogram access, etc) to driver components,
     --  one needs to duplicate this information in the device
     --  implementation, see below.
   end RTC;

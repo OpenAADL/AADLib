@@ -14,9 +14,10 @@ property set Physical_Properties is
   Max_Power: constant aadlinteger units Physical_Properties::Power_Units => 2#1#e32 W;
   Power : type aadlreal 0.0 W .. Physical_Properties::Max_Power units Physical_Properties::Power_Units;
   Power_Consume : Physical_Properties::Power 
-     applies to (processor, device, memory);
+     applies to (processor, device, memory, system);
   Power_Provide : Physical_Properties::Power applies to (device);
-  
+  Total_Power   : Physical_Properties::Power applies to (system);
+ 
   ---------
   -- EMC --
   ---------
@@ -41,8 +42,10 @@ property set Physical_Properties is
   ----------------
 
   Mass_Units: type units (g, Kg  => g  * 1000, T   => Kg * 1000);
-  Max_Mass: constant aadlinteger units Physical_Properties::Mass_Units => 2#1#e32 g;
-  Mass_Type : type aadlreal 0.0 g .. Physical_Properties::Max_Mass units Physical_Properties::Mass_Units;
-  Mass : Physical_Properties::Mass_Type applies to (processor, device, memory);
+  Maximum_Mass: constant aadlinteger units Physical_Properties::Mass_Units => 2#1#e32 g;
+  Mass_Type : type aadlreal 0.0 g .. Physical_Properties::Maximum_Mass units Physical_Properties::Mass_Units;
+  Mass : Physical_Properties::Mass_Type applies to (processor, device, memory, system);
+  Max_Mass : Physical_Properties::Mass_Type
+     applies to (processor, device, memory, system);
 
 end Physical_Properties;

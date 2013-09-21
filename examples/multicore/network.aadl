@@ -54,7 +54,7 @@ public
   device implementation loopback.XPS8500
     properties
       Deployment::Driver_Name =>  "sockets";
-      Device_Driver =>  classifier(sockets_impl.i);
+      Device_Driver =>  classifier (sockets_impl.i);
       Initialize_Entrypoint =>  classifier(spg_sockets_init);
       Provided_Virtual_Bus_Class  =>  (classifier(pohi.c));
   end loopback.XPS8500;

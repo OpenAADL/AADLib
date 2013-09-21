@@ -6,7 +6,7 @@
 package BA_example7
 public
   with Base_Types;
-  with Behavior_Properties; -- JH
+--  with Behavior_Properties; -- JH
 
   process client_server
   end client_server;
@@ -39,10 +39,10 @@ public
 
   thread a_server
   features
-    long : provides subprogram access long_computation
-    { Behavior_Properties::Subprogram_Call_Protocol => LSER; };
-    short : provides subprogram access send_result
-    { Behavior_Properties::Subprogram_Call_Protocol => HSER; };
+    long : provides subprogram access long_computation;
+--    { Behavior_Properties::Subprogram_Call_Protocol => LSER; };
+    short : provides subprogram access send_result;
+--    { Behavior_Properties::Subprogram_Call_Protocol => HSER; };
   properties
     Dispatch_Protocol => Sporadic;
   end a_server;
@@ -51,7 +51,7 @@ public
   subcomponents
     local_result : data result_type.i;
 -- XXX
---  connections
+-- connections
 --     T3:subprogram access local_result -> long;
 --     T4:subprogram access local_result -> short;
   annex behavior_specification {**

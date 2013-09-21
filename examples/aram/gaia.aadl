@@ -25,8 +25,8 @@ public
   system Gaia
   properties
     Mission_Properties::Bandwidth_To_Earth => 10 Mbytesps;
-    Physical_Properties::Total_Power       => 350 W;
-    Physical_Properties::Max_Mass          => 40 Kg;
+    Physical_Properties::Total_Power       => 350.0 W;
+    Physical_Properties::Max_Mass          => 40.0 Kg;
 
   annex real_specification {**
     theorem check_all
