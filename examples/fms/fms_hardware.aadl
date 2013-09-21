@@ -1,0 +1,171 @@
+package fms_hardware
+public
+with m1_software;
+with m3_software;
+with m4_software;
+with m7_software;
+
+with AFDX_Properties;
+with ARINC653;
+with Buses;
+with memories;
+with processors;
+with Buses::CAN;
+
+------------------------------------------------------------------
+-----------------------buses--------------------------------------
+------------------------------------------------------------------
+bus can_keyboard extends Buses::CAN::CAN
+end can_keyboard;
+
+bus can_display extends buses::generic_bus
+end can_display;
+
+virtual bus VL 
+	properties
+	AFDX_properties::Allowed_Message_Size => 512 bytes .. 12144 bytes;
+	AFDX_properties::Jitter_Max => 500 us; 
+end VL;
+
+virtual bus implementation VL.vl1 
+	properties
+	AFDX_properties::Bandwidth_Allocation_Gap => 32 ms; 
+	AFDX_properties::Latency_Constraint => 1 ms;
+end VL.vl1;
+
+virtual bus implementation VL.vl3 
+	properties
+	AFDX_properties::Bandwidth_Allocation_Gap => 8 ms; 
+	AFDX_properties::Latency_Constraint => 1 ms;
+end VL.vl3;
+
+virtual bus implementation VL.vl4 
+	properties
+	AFDX_properties::Bandwidth_Allocation_Gap => 16 ms; 
+	AFDX_properties::Latency_Constraint => 1 ms;
+end VL.vl4;
+
+virtual bus implementation VL.vl7 
+	properties
+	AFDX_properties::Bandwidth_Allocation_Gap => 64 ms; 
+	AFDX_properties::Latency_Constraint => 1 ms;
+end VL.vl7;
+
+virtual bus implementation VL.vl9 
+	properties
+	AFDX_properties::Bandwidth_Allocation_Gap => 32 ms; 
+	AFDX_properties::Latency_Constraint => 1 ms;
+end VL.vl9;
+
+virtual bus implementation VL.vl11 
+	properties
+	AFDX_properties::Bandwidth_Allocation_Gap => 32 ms; 
+	AFDX_properties::Latency_Constraint => 1 ms;
+end VL.vl11;
+
+bus physical_afdx_link
+	properties
+	AFDX_properties::Channel_Type => Full_Duplex; 
+	AFDX_properties::Bandwidth => 100 MBytesps;
+end physical_afdx_link;
+
+bus implementation physical_afdx_link.impl
+	subcomponents
+	VL1: virtual bus VL.vl1;
+	VL3: virtual bus VL.vl3;
+	VL4: virtual bus VL.vl4;
+	VL7: virtual bus VL.vl7;
+	VL9: virtual bus VL.vl9;
+	VL11: virtual bus VL.vl11;
+end physical_afdx_link.impl;
+
+device afdx_switch
+features
+	afdx_access  : requires bus access physical_afdx_link;
+	properties
+	AFDX_properties::Switching_Delay => 140us;	
+	-- internal memorie size 
+end afdx_switch;
+
+------------------------------------------------------------------
+-----------------------memories-----------------------------------
+------------------------------------------------------------------
+
+memory mainmemory extends memories::ROM 
+end mainmemory;
+
+memory memchunk extends memories::ROM 
+end memchunk;
+
+-------------------------------------------------------------------
+----------------------processor------------------------------------
+-------------------------------------------------------------------
+
+virtual processor partition_runtime
+	properties
+	Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+end partition_runtime;
+
+processor arinckernel extends processors::Generic_CPU
+end arinckernel;
+
+processor implementation arinckernel.m1
+	subcomponents
+	partition_KU1 : virtual processor partition_runtime;
+	partition_MFD1 : virtual processor partition_runtime;
+	properties
+	ARINC653::Module_Major_Frame => 50ms;
+	ARINC653::Partition_Slots => (25ms, 25ms);
+	ARINC653::Slots_Allocation => ( reference (partition_KU1), 
+									reference (partition_MFD1));
+end arinckernel.m1;
+
+processor implementation arinckernel.m3
+	subcomponents
+	partition_FM1 : virtual processor partition_runtime;
+	properties
+	ARINC653::Module_Major_Frame => 60ms;
+	ARINC653::Partition_Slots => (30ms, 30ms);
+	ARINC653::Slots_Allocation => (reference (partition_FM1));
+end arinckernel.m3;
+
+processor implementation arinckernel.m4
+	subcomponents
+	partition_ADIRU1 : virtual processor partition_runtime;
+	properties
+	ARINC653::Module_Major_Frame => 60ms;
+	ARINC653::Partition_Slots => (30ms, 30ms);
+	ARINC653::Slots_Allocation => (reference (partition_ADIRU1));
+end arinckernel.m4;
+
+processor implementation arinckernel.m7
+	subcomponents
+	partition_NDB : virtual processor partition_runtime;
+	properties
+	ARINC653::Module_Major_Frame => 100ms;
+	ARINC653::Partition_Slots => (20ms,80ms);
+	ARINC653::Slots_Allocation => (reference (partition_NDB));
+end arinckernel.m7;
+
+memory implementation mainmemory.m1
+	subcomponents
+	mem_ku1 : memory memchunk;
+	mem_mfd1 : memory memchunk;
+end mainmemory.m1;
+
+memory implementation mainmemory.m3
+	subcomponents
+	mem_fm1 : memory memchunk;
+end mainmemory.m3;
+
+memory implementation mainmemory.m4
+	subcomponents
+	mem_adiru1 : memory memchunk;
+end mainmemory.m4;
+
+memory implementation mainmemory.m7
+	subcomponents
+	mem_ndb : memory memchunk;
+end mainmemory.m7;
+
+end fms_hardware;

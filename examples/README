@@ -55,6 +55,12 @@ Here is a short description of available examples
   adapted for AADL teaching classes by J. Hugues at ISAE.  Only the
   architecture is developed, to be analyzed with Cheddar.
 
+* fms: models a Flignt Management System, demonstrates coupling
+  between ARINC653 annex and capability to models AFDX. Example
+  contributed by G. Brau.
+
+* isr: models an Interrupt Service Routine
+
 * line_follower: a line follower robot for the Arduino platform, using
  some parts available from SparkFun Electronics.
 

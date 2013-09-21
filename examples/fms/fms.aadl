@@ -1,0 +1,90 @@
+package fms
+public
+
+with subsystem;
+with fms_hardware;
+
+system fms end fms;
+
+system implementation fms.impl
+	subcomponents
+	bus_can_keyboard : bus fms_hardware::can_keyboard;
+	bus_can_display : bus fms_hardware::can_display;
+	afdx_network : bus fms_hardware::physical_afdx_link.impl;
+
+	module1 : system subsystem::m1_system.impl;
+	module3 : system subsystem::m3_system.impl;
+	module4 : system subsystem::m4_system.impl;
+	module7 : system subsystem::m7_system.impl;
+
+	keyboard : device subsystem::keyboard;
+	display : device subsystem::display;
+	rdc1 : device subsystem::RDC;
+
+	sw1 : device fms_hardware::afdx_switch;
+	sw2 : device fms_hardware::afdx_switch;
+	sw3 : device fms_hardware::afdx_switch;
+	sw4 : device fms_hardware::afdx_switch;
+	sw5 : device fms_hardware::afdx_switch;
+
+	connections
+	nt_request : port keyboard.ph_req -> module1.ph_req1;
+	nt_wpId : port module1.ph_wpId1 -> module3.ph_wpId1;
+	nt_query : port module3.ph_query1 -> module7.ph_query1;
+	nt_answer : port module7.ph_answer1 -> module3.ph_answer1;
+	nt_wpInfo : port module3.ph_wpInfo1 -> module1.ph_wpInfo1;
+	nt_disp : port module1.ph_disp1 -> display.ph_disp;
+	nt_pres : port rdc1.ph_pres -> module4.ph_pres1;
+	nt_speed : port module4.ph_speed1 -> module3.ph_speed1;
+	nt_ETA : port module3.ph_ETA1 -> module1.ph_ETA1;
+
+	-- Utilité?
+	keyboard_canAccess : bus access bus_can_keyboard -> keyboard.can_access;
+	module1_canKeyboardAccess : bus access bus_can_keyboard -> module1.can_keyboard_access;
+	module1_canDisplayAccess : bus access bus_can_display -> module1.can_display_access;
+	module1_afdxAccess : bus access afdx_network -> module1.afdx_access;
+	module3_afdxaccess : bus access afdx_network -> module3.afdx_access;
+	module4_afdxAccess : bus access afdx_network -> module4.afdx_access;
+	module7_afdxaccess : bus access afdx_network -> module7.afdx_access;
+
+	flows
+	endToEndLatency : end to end flow
+		keyboard.req_src -> nt_request ->
+		module1.req_m1_wpId -> nt_wpId ->
+		module3.wpId_m3_query -> nt_query ->
+		module7.query_m7_answer -> nt_answer ->
+		module3.answer_m3_wpInfo -> nt_wpInfo ->
+		module1.wpInfo_m1_disp -> nt_disp -> display.disp_sink;
+
+	properties
+	Actual_connection_binding => (reference (bus_can_keyboard)) applies to  nt_request;
+	Actual_connection_binding => (reference (bus_can_display)) applies to  nt_disp;
+	Actual_connection_binding => (reference (afdx_network.VL1)) applies to  nt_wpId;
+	Actual_connection_binding => (reference (afdx_network.VL3)) applies to  nt_wpInfo;
+	Actual_connection_binding => (reference (afdx_network.VL3)) applies to nt_ETA;
+	Actual_connection_binding => (reference (afdx_network.VL4)) applies to  nt_query;
+	Actual_connection_binding => (reference (afdx_network.VL7)) applies to  nt_answer;
+	Actual_connection_binding => (reference (afdx_network.VL9)) applies to  nt_pres;
+	Actual_connection_binding => (reference (afdx_network.VL11)) applies to  nt_speed;
+
+	Actual_connection_binding => (reference (sw1), reference (sw2)) applies to afdx_network.VL1;
+	Actual_connection_binding => (reference (sw2), reference (sw1)) applies to afdx_network.VL3;
+	Actual_connection_binding => (reference (sw2), reference (sw1)) applies to afdx_network.VL4;
+	Actual_connection_binding => (reference (sw1), reference (sw2)) applies to afdx_network.VL7;
+	Actual_connection_binding => (reference (sw4)) applies to afdx_network.VL9;
+	Actual_connection_binding => (reference (sw4), reference (sw1), reference (sw2)) applies to afdx_network.VL11;
+
+	annex paths_specification {**
+
+	VL1 => sw1, sw2;
+	VL3 => sw2, sw1;
+	VL4 => sw2, sw1;
+	VL7 => sw1, sw2;
+	VL9 => sw4;
+	VL11 => sw4, sw1, sw2;
+
+    **};
+
+end fms.impl;
+
+end fms;

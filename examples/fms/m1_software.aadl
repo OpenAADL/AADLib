@@ -1,0 +1,83 @@
+package m1_software
+public
+
+with dataType;
+
+-------------------------------------------------------------------
+-----------------------processes-------------------------------------
+-------------------------------------------------------------------
+
+process prs_KU1
+	features
+	req1_apex : in event data port dataType::request_pilot;
+	wpId1_apex : out event data port dataType::waypoint_identifier;
+	flows
+		fromReqtoId : flow path req1_apex -> wpId1_apex;
+end prs_KU1;
+
+process implementation prs_KU1.impl
+	subcomponents
+		KU1 : thread th_KU1;
+	connections
+		req1ApexToFunct : port req1_apex -> KU1.th_req1;
+		wpId1FunctToApex : port KU1.th_wpId1 -> wpId1_apex;
+	flows
+		fromReqtoId : flow path req1_apex -> req1ApexToFunct -> KU1.keyboard_request_computation -> wpId1FunctToApex -> wpId1_apex;		
+end prs_KU1.impl;
+
+process prs_MFD1
+	features
+		wpInfo1_apex : in event data port dataType::waypoint_info;
+		ETA1_apex : in event data port dataType::time;
+		disp1_apex : out event data port dataType::display;
+	flows
+		fromInfoToDisp : flow path wpInfo1_apex -> disp1_apex ;
+end prs_MFD1;
+
+process implementation prs_MFD1.impl
+	subcomponents
+		MFD1 : thread th_MFD1;
+	connections
+		wpInfo1ApexToFunct : port wpInfo1_apex -> MFD1.th_wpInfo1;
+		ETA1ApexToFunct : port ETA1_apex -> MFD1.th_ETA1;
+		disp1FunctToApex : port MFD1.th_disp1 -> disp1_apex;
+	flows
+		fromInfoToDisp : flow path wpInfo1_apex -> wpInfo1ApexToFunct -> MFD1.static_data_toDisplay -> disp1FunctToApex -> disp1_apex;
+end prs_MFD1.impl;
+
+-------------------------------------------------------------------
+-----------------------threads-------------------------------------
+-------------------------------------------------------------------
+
+thread th_KU1
+
+	features
+	th_req1 : in event data port dataType::request_pilot;
+	th_wpId1 : out event data port dataType::waypoint_identifier;
+	flows
+	keyboard_request_computation : flow path th_req1 -> th_wpId1;
+	properties
+	Dispatch_protocol => periodic;
+	period => 125 ms;
+	compute_execution_time => 0 ms .. 25 ms;
+	deadline => 125 ms;
+	priority => 7;
+end th_KU1;
+
+thread th_MFD1
+	features
+	th_wpInfo1 : in event data port dataType::waypoint_info;
+	th_ETA1 : in event data port dataType::time;
+	th_disp1 : out event data port dataType::display;
+	flows
+	static_data_toDisplay : flow path th_wpInfo1 -> th_disp1;
+	dynamic_data_DoDisplay : flow path th_ETA1 -> th_disp1;
+	properties
+	Dispatch_protocol => periodic;
+	period => 125 ms;
+	compute_execution_time => 0 ms .. 25 ms;
+	deadline => 125 ms;
+	priority => 6;
+end th_MFD1;
+
+end m1_software;

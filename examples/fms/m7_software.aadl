@@ -1,0 +1,53 @@
+package m7_software
+public
+
+with dataType;
+-------------------------------------------------------------------
+-----------------------processes-------------------------------------
+-------------------------------------------------------------------
+
+process prs_NDB
+	features
+	query1_apex : in event data port dataType::database_query;
+	answer1_apex : out event data port dataType::database_answer;
+--	query2_apex : in event data port dataType::database_query;
+--	answer2_apex : out event data port dataType::database_answer;
+	flows
+		fromQueryToAnswer : flow path query1_apex -> answer1_apex ;
+end prs_NDB;
+
+process implementation prs_NDB.impl
+	subcomponents
+		NDB : thread th_NDB;	
+	connections
+		query1ApexToFunct : port query1_apex -> NDB.th_query1;
+		answer1FunctToApex : port NDB.th_answer1 -> answer1_apex;
+--		query2ApexToFunct : port query2_apex -> function_NDB.query2;
+--		answer2FunctToApex : port function_NDB.answer2 -> answer2_apex;	
+	flows
+		fromQueryToAnswer : flow path query1_apex -> query1ApexToFunct -> NDB.request_computation -> answer1FunctToApex -> answer1_apex ;
+end prs_NDB.impl;
+
+-------------------------------------------------------------------
+-----------------------threads-------------------------------------
+-------------------------------------------------------------------
+
+thread th_NDB
+
+	features
+	th_query1 : in event data port dataType::database_query;
+	th_answer1 : out event data port dataType::database_answer;
+--	query2 : in event data port dataType::database_query;
+--	answer2 : out event data port dataType::database_answer;
+	flows
+	request_computation : flow path th_query1 -> th_answer1;
+	properties
+	Dispatch_protocol => periodic;
+	period => 125 ms;
+	compute_execution_time => 0 ms .. 25 ms;
+	deadline => 125 ms;
+	priority => 7;
+
+end th_NDB;
+
+end m7_software;

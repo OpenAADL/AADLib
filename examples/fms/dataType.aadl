@@ -1,0 +1,49 @@
+package dataType
+public
+
+data request_pilot 
+--	properties
+--	Source_Data_Size => 600 Bytes;
+end request_pilot;
+
+data display
+--	properties
+--	Source_Data_Size => 600 Bytes; 
+end display;
+
+data pression
+--	properties
+--	Source_Data_Size => 600 Bytes; 
+end pression;
+
+data waypoint_identifier 
+	properties
+	Source_Data_Size => 600 Bytes;
+end waypoint_identifier;
+
+data database_query
+	properties
+	Source_Data_Size => 1000 Bytes; 
+end database_query;
+
+data database_answer
+	properties
+	Source_Data_Size => 4000 Bytes; 
+end database_answer;
+
+data waypoint_info
+	properties
+	Source_Data_Size => 1000 Bytes; 
+end waypoint_info;
+
+data speed
+	properties
+	Source_Data_Size => 700 Bytes; 
+end speed;
+
+data time
+	properties
+	Source_Data_Size => 5000 Bytes; 
+end time;
+
+end dataType;

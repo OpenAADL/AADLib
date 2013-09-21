@@ -1,0 +1,23 @@
+property set AFDX_Properties is
+
+   Rate: type aadlinteger 0 bitsps .. 100 Gbytesps units Data_Volume_Units;
+
+   Bandwidth : AFDX_Properties::Rate applies to (bus);
+
+   --   Bandwidth_Range : type range of AFDX_Properties::Bandwidth;
+
+   Channel_Type : enumeration (Simplex, Half_Duplex, Full_Duplex)
+     applies to (bus);
+
+	Allowed_Message_Size: Size_Range
+		applies to (virtual bus);
+
+   Bandwidth_Allocation_Gap : Time applies to (virtual bus);
+
+   Jitter_Max : Time applies to (virtual bus);
+
+   Latency_Constraint : Time applies to (virtual bus);
+
+   Switching_Delay : Time applies to (device);
+
+end AFDX_Properties;

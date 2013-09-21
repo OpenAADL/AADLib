@@ -1,0 +1,48 @@
+package m4_software
+public
+
+with dataType;
+
+-------------------------------------------------------------------
+-----------------------processes-------------------------------------
+-------------------------------------------------------------------
+
+process prs_ADIRU1
+	features
+	pres1_apex : in event data port dataType::pression;
+	speed1_apex : out event data port dataType::speed;
+	flows
+		fromPresToSpeed : flow path pres1_apex -> speed1_apex ;
+end prs_ADIRU1;
+
+process implementation prs_ADIRU1.impl
+	subcomponents
+		ADIRU1 : thread th_ADIRU1;	
+	connections
+		pres1ApexToFunct : port pres1_apex -> ADIRU1.th_pres1;
+		speed1FunctToApex : port ADIRU1.th_speed1 -> speed1_apex;
+	flows
+		fromPresToSpeed : flow path pres1_apex -> pres1ApexToFunct -> ADIRU1.speed_computation-> speed1FunctToApex -> speed1_apex ;
+end prs_ADIRU1.impl;
+
+-------------------------------------------------------------------
+-----------------------threads-------------------------------------
+-------------------------------------------------------------------
+
+thread th_ADIRU1
+
+	features
+	th_pres1 : in event data port dataType::pression;
+	th_speed1 : out event data port dataType::speed;
+	flows
+	speed_computation : flow path th_pres1 -> th_speed1;	
+	properties
+	Dispatch_protocol => periodic;
+	period => 125 ms;
+	compute_execution_time => 0 ms .. 25 ms;
+	deadline => 125 ms;
+	priority => 7;
+
+end th_ADIRU1;
+
+end m4_software;
