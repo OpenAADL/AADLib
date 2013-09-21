@@ -107,9 +107,9 @@ public
 
   processor implementation ATMEGA168.impl extends ATMEGA8.impl
   properties
-    Byte_Count => 16_384 applies to Flash_Memory;
-    Byte_Count =>  1_024 applies to SRAM;
-    Byte_Count =>    512 applies to EEPROM;
+    Memory_Size => 16_384 Bytes applies to Flash_Memory;
+    Memory_Size =>  1_024 Bytes applies to SRAM;
+    Memory_Size =>    512 Bytes applies to EEPROM;
   end ATMEGA168.impl;
 
   ----------------
@@ -126,9 +126,9 @@ public
   processor implementation ATMEGA328p.impl extends ATMEGA8.impl
   properties
     Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
-    Byte_Count => 32_768 applies to Flash_Memory;
-    Byte_Count =>  2_048 applies to SRAM;
-    Byte_Count =>  1_024 applies to EEPROM;
+    Memory_Size => 32_768 Bytes applies to Flash_Memory;
+    Memory_Size =>  2_048 Bytes applies to SRAM;
+    Memory_Size =>  1_024 Bytes applies to EEPROM;
   end ATMEGA328p.impl;
   
   ----------------

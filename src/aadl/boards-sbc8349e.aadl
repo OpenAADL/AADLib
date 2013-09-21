@@ -27,14 +27,14 @@ public
   subcomponents
     PPC_Core : processor Processors::PPC::MPC8349E
     { Processor_Properties::Processor_Frequency => 400 Mhz; };
-    SDRAM    : memory    Memories::SRAM {Byte_Count => 256_000_000; };
+    SDRAM    : memory    Memories::SRAM {Memory_size => 256 MByte;};
 
     --  XXX check wether it is part of the micro or not
     Flash_Memory : memory Memories::Flash_Memory.impl
-    {Byte_Count => 8_000_000;};
+    {Memory_size => 8 MByte;};
 
     EEPROM       : memory Memories::EEPROM.impl
-    {Byte_Count => 8_000;};
+    {Memory_size => 8 MByte;};
 
   end SBC8349E.impl;
 

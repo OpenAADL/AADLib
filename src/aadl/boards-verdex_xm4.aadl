@@ -31,8 +31,8 @@ public
   subcomponents
     ARM_Core : processor Processors::ARM::Xscale_PXA270
     {Processor_Properties::Processor_Frequency => 400 MHz;};
-    SRAM     : memory    Memories::SRAM {Byte_Count => 64_000_000;};
-    Flash    : memory    Memories::Flash_Memory {Byte_Count => 16_000_000;};
+    SRAM     : memory    Memories::SRAM {Memory_size => 64 MByte;};
+    Flash    : memory    Memories::Flash_Memory {Memory_size => 16 MByte;};
   end Verdex_XM4.i;
 
 end Boards::Verdex_XM4;

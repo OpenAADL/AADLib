@@ -28,7 +28,7 @@ public
   system implementation GR_CPCI_X4CV.impl
   subcomponents
     LEON_Core : processor Processors::SPARC::LEON2;
-    SRAM      : memory    Memories::SRAM {Byte_Count => 64_000_000;};
+    SRAM      : memory    Memories::SRAM {Memory_size => 64 MByte;};
   end GR_CPCI_X4CV.impl;
 
 end Boards::GR_CPCI_X4CV;

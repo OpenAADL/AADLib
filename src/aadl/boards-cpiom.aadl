@@ -25,8 +25,8 @@ public
   system implementation CPIOM.impl
   subcomponents
     --  Memory elements
-    NVRAM  : memory    Memories::NVRAM {Byte_Count => 64_000_000;};
-    RAM    : memory    Memories::RAM {Byte_Count => 64_000_000;}; 
+    NVRAM  : memory    Memories::NVRAM {Memory_Size => 64 MByte;};
+    RAM    : memory    Memories::RAM {Memory_Size => 64 MByte;}; 
     Flash  : memory    Memories::Flash_Memory;
 
     -- Processor

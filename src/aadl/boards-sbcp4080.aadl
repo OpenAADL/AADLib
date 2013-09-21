@@ -33,16 +33,16 @@ public
     P4080 : processor Processors::PPC::P4080.impl
     { Processor_Properties::Processor_Frequency => 1_500 Mhz; };
 
-    SDRAM_1 : memory Memories::SRAM {Byte_Count => 2_000_000_000; };
-    SDRAM_2 : memory Memories::SRAM {Byte_Count => 2_000_000_000; };
+    SDRAM_1 : memory Memories::SRAM {Memory_size => 2 GByte;};
+    SDRAM_2 : memory Memories::SRAM {Memory_size => 2 GByte;};
 
     --  XXX check wether it is part of the micro or not
     Flash_Memory : memory Memories::Flash_Memory.impl
-    {Byte_Count => 1_000_000_000;};
+    {Memory_size => 1 GByte;};
 
     EEPROM       : memory Memories::EEPROM.impl
-    {Byte_Count => 8_000;};
-
+    {Memory_size => 8 KByte;};
+    
   end SBCP4080E.impl;
 
 end Boards::SBCP4080E;

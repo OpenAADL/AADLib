@@ -44,10 +44,10 @@ with Data_Sheet, Memories, Deployment, Processor_Properties;
   	Processor_Properties::FPU_Present      => False;
   	Processor_Properties::MIPS => 24; 
   	Processor_Properties::Processor_Frequency => 16 Mhz;
-  	
- 	Byte_Count => 4_096 applies to Flash_Memory;
-    Byte_Count => 256   applies to SRAM;
-    Byte_Count => 256   applies to EEPROM;
+
+    Memory_Size => 4_096 Bytes applies to Flash_Memory;
+    Memory_Size =>   256 Bytes applies to SRAM;
+    Memory_Size =>   256 Bytes applies to EEPROM;
   end ATtiny45.impl;
 
 end Processors::ATtiny;
