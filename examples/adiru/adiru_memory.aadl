@@ -1,0 +1,57 @@
+package ADIRU_memory
+public
+
+with POK;
+with ARINC653;
+
+memory partition_memory
+
+end partition_memory;
+
+memory implementation partition_memory.acc_impl
+properties
+   --Base_Address => 0;
+   Memory_Size =>300000 Bytes;
+   ARINC653::Memory_Type => (Code_Memory);
+   ARINC653::Access_Type => (read);
+end partition_memory.acc_impl;
+
+memory implementation partition_memory.acc_hm_impl
+properties
+   --Base_Address => 0;
+   Memory_Size =>300000 Bytes;
+   ARINC653::Memory_Type => (Code_Memory);
+   ARINC653::Access_Type => (read);
+end partition_memory.acc_hm_impl;
+
+memory implementation partition_memory.ADIRUp_impl
+properties
+   --Base_Address => 0;
+   Memory_Size =>300000 Bytes;
+   ARINC653::Memory_Type => (Code_Memory);
+   ARINC653::Access_Type => (read);
+end partition_memory.ADIRUp_impl;
+
+memory implementation partition_memory.SHM_impl
+properties
+   --Base_Address => 0;
+   Memory_Size =>300000 Bytes;
+   ARINC653::Memory_Type => (Code_Memory);
+   ARINC653::Access_Type => (read);
+end partition_memory.SHM_impl;
+---------------------------------------------------------------------------------
+memory main_memory
+
+end main_memory;
+
+memory implementation main_memory.impl
+subcomponents
+   accMem: memory partition_memory.acc_impl;
+   acc_hmMem: memory partition_memory.acc_hm_impl;
+   ADIRUpMem: memory partition_memory.ADIRUp_impl;
+   SHMMem: memory partition_memory.SHM_impl;
+   --acc4Mem: memory acc_partition_memory.impl;
+   
+end main_memory.impl;
+
+end ADIRU_memory;

@@ -1,0 +1,264 @@
+package partitions
+public
+
+with POK;
+with ARINC653;
+with threads;
+with SHM_DataType;
+
+
+virtual processor acc_partition
+properties
+  --Scheduling_Protocol => (FixedTimeline);
+  POK::Additional_Features => (console);
+end acc_partition;
+
+virtual processor implementation acc_partition.impl
+end acc_partition.impl;
+-------------------------------------------------------------------------------------------------------------------------------
+virtual processor acc_hm_partition
+properties
+  --Scheduling_Protocol => (FixedTimeline);
+  POK::Additional_Features => (console);
+end acc_hm_partition;
+
+virtual processor implementation acc_hm_partition.impl
+end acc_hm_partition.impl;
+-------------------------------------------------------------------------------------------------------------------------------
+virtual processor ADIRUp_partition
+properties
+  --Scheduling_Protocol => (FixedTimeline);
+  POK::Additional_Features => (console);
+end ADIRUp_partition;
+
+virtual processor implementation ADIRUp_partition.impl
+end ADIRUp_partition.impl;
+-------------------------------------------------------------------------------------------------------------------------------
+virtual processor SHM_partition
+properties
+  --Scheduling_Protocol => (FixedTimeline);
+  POK::Additional_Features => (console);
+end SHM_partition;
+
+virtual processor implementation SHM_partition.impl
+end SHM_partition.impl;
+
+----------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------
+process acc_hm_process
+features
+   acc1_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc2_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc3_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc4_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc5_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc6_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+
+   v_acc1_dataout: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   v_acc2_dataout: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   v_acc3_dataout: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   v_acc4_dataout: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   v_acc5_dataout: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   v_acc6_dataout: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+
+   acc_error_out: out event data port SHM_DataType::errorData;
+   acc_error_action: in event data port SHM_DataType::actionData;
+
+   event2acc1: out event data port SHM_DataType::actionData;
+   event2acc2: out event data port SHM_DataType::actionData;
+   event2acc3: out event data port SHM_DataType::actionData;
+   event2acc4: out event data port SHM_DataType::actionData;
+   event2acc5: out event data port SHM_DataType::actionData;
+   event2acc6: out event data port SHM_DataType::actionData;
+end acc_hm_process;
+
+process implementation acc_hm_process.impl
+subcomponents
+   acc_HM: thread threads::acc_HM.impl;
+connections
+   
+   port acc_HM.acc1_validated_dataout->v_acc1_dataout;
+   port acc_HM.acc2_validated_dataout->v_acc2_dataout;
+   port acc_HM.acc3_validated_dataout->v_acc3_dataout;
+   port acc_HM.acc4_validated_dataout->v_acc4_dataout;
+   port acc_HM.acc5_validated_dataout->v_acc5_dataout;
+   port acc_HM.acc6_validated_dataout->v_acc6_dataout;
+
+   port acc_HM.event_to_acc1->event2acc1;
+   port acc_HM.event_to_acc2->event2acc2;
+   port acc_HM.event_to_acc3->event2acc3;
+   port acc_HM.event_to_acc4->event2acc4;
+   port acc_HM.event_to_acc5->event2acc5;
+   port acc_HM.event_to_acc6->event2acc6;
+
+   port acc1_input->acc_HM.acc1_data_monitor; --{Timing=>Delayed;};
+   port acc2_input->acc_HM.acc2_data_monitor;
+   port acc3_input->acc_HM.acc3_data_monitor; --{Timing=>Delayed;};
+   port acc4_input->acc_HM.acc4_data_monitor;
+   port acc5_input->acc_HM.acc5_data_monitor; --{Timing=>Delayed;};
+   port acc6_input->acc_HM.acc6_data_monitor;
+  
+   port acc_HM.acc_error_out->acc_error_out;
+   port acc_error_action->acc_HM.acc_error_action;
+   
+end acc_hm_process.impl;
+----------------------------------------------------------------------------------------------------------------------------------
+process acc_process
+features
+   acc1_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc2_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc3_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc4_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc5_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+   acc6_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+  
+   acc1_event_in: in event data port SHM_DataType::actionData;
+   acc2_event_in: in event data port SHM_DataType::actionData;
+   acc3_event_in: in event data port SHM_DataType::actionData;
+   acc4_event_in: in event data port SHM_DataType::actionData;
+   acc5_event_in: in event data port SHM_DataType::actionData;
+   acc6_event_in: in event data port SHM_DataType::actionData;
+end acc_process;
+
+process implementation acc_process.impl
+subcomponents
+   acc1: thread threads::acc1_dataOutput.impl;
+   acc2: thread threads::acc2_dataOutput.impl;
+   acc3: thread threads::acc3_dataOutput.impl;
+   acc4: thread threads::acc4_dataOutput.impl;
+   acc5: thread threads::acc5_dataOutput.impl;
+   acc6: thread threads::acc6_dataOutput.impl;
+connections
+   
+   port acc1_event_in->acc1.acc1_command_in;
+   port acc2_event_in->acc2.acc2_command_in;
+   port acc3_event_in->acc3.acc_command_in;
+   port acc4_event_in->acc4.acc_command_in;
+   port acc5_event_in->acc5.acc_command_in;
+   port acc6_event_in->acc6.acc_command_in;
+   
+   port acc1.acc1out->acc1_output; --{Timing=>Delayed;};
+   port acc2.acc2out->acc2_output;
+   port acc3.accout->acc3_output;
+   port acc4.accout->acc4_output; --{Timing=>Delayed;};
+   port acc5.accout->acc5_output;
+   port acc6.accout->acc6_output;
+end acc_process.impl;
+----------------------------------------------------------------------------------------------------------------------------------
+process ADIRUp_process
+features
+   acc1_input: in data port SHM_DataType::accData;
+   acc2_input: in data port SHM_DataType::accData;
+   acc3_input: in data port SHM_DataType::accData;
+   acc4_input: in data port SHM_DataType::accData;
+   acc5_input: in data port SHM_DataType::accData;
+   acc6_input: in data port SHM_DataType::accData;
+   --ADIRUp_output: out data port SHM_DataType::accData;
+   ADIRUp_error_out: out event data port SHM_DataType::errorData;
+   ADIRUp_error_action: in event data port SHM_DataType::actionData;
+end ADIRUp_process;
+
+process implementation ADIRUp_process.impl
+subcomponents
+   solve_th1: thread threads::ADIRUp_solve.impl;
+   --solve_th2: thread threads::ADIRUp_solve.impl;
+   HM_th: thread threads::ADIRUp_HM.impl;
+connections
+   port acc1_input->HM_th.accData_in1;-- {Timing=>Delayed;};
+   port acc2_input->HM_th.accData_in2;-- {Timing=>Delayed;};
+   port acc3_input->HM_th.accData_in3;-- {Timing=>Delayed;};
+   port acc4_input->HM_th.accData_in4;-- {Timing=>Delayed;};
+   port acc5_input->HM_th.accData_in5;-- {Timing=>Delayed;};
+   port acc6_input->HM_th.accData_in6;-- {Timing=>Delayed;};
+   
+   port HM_th.accData_out1->solve_th1.solver_in1;-- {Timing=>Delayed;};
+   port HM_th.accData_out2->solve_th1.solver_in2;
+   port HM_th.accData_out3->solve_th1.solver_in3;-- {Timing=>Delayed;};
+   port HM_th.accData_out4->solve_th1.solver_in4;-- {Timing=>Delayed;};
+   port HM_th.accData_out5->solve_th1.solver_in5;-- {Timing=>Delayed;};
+   port HM_th.accData_out6->solve_th1.solver_in6;-- {Timing=>Delayed;};
+  
+   --port solve_th.ADIRUpout->ADIRUp_output;
+   
+   port ADIRUp_error_action->HM_th.adirup_error_action;
+   port HM_th.adirup_error_out->ADIRUp_error_out;
+end ADIRUp_process.impl;
+-----------------------------------------------------------------------------------------------------------------------------------------
+process systemHM_process
+features
+   arlarm_acc_in: in event data  port SHM_DataType::errorData;
+   arlarm_adirup_in: in event data  port SHM_DataType::errorData;
+-- systemHM_acc1_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_acc1_action: out event data  port SHM_DataType::actionData;
+-- systemHM_acc2_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_acc2_action: out event data  port SHM_DataType::actionData;
+-- systemHM_acc3_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_acc3_action: out event data  port SHM_DataType::actionData;
+-- systemHM_acc4_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_acc4_action: out event data  port SHM_DataType::actionData;
+-- systemHM_acc5_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_acc5_action: out event data  port SHM_DataType::actionData;
+-- systemHM_acc6_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_acc6_action: out event data  port SHM_DataType::actionData;
+-- 
+-- systemHM_ADIRUp1_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_ADIRUp1_action: out event data  port SHM_DataType::actionData;
+-- systemHM_ADIRUp2_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_ADIRUp2_action: out event data  port SHM_DataType::actionData;
+-- systemHM_ADIRUp3_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_ADIRUp3_action: out event data  port SHM_DataType::actionData;
+-- systemHM_ADIRUp4_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_ADIRUp4_action: out event data  port SHM_DataType::actionData;
+-- 
+-- systemHM_VDl_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_VDl_action: out event data  port SHM_DataType::actionData;
+-- systemHM_VDc_error: in event data  port SHM_DataType::errorData;
+-- --systemHM_VDc_action: out event data  port SHM_DataType::actionData;
+-- systemHM_VDr_error: in event data  port SHM_DataType::errorData;
+ 
+ systemHM_action: out event data  port SHM_DataType::actionData;
+end systemHM_process;
+
+process implementation systemHM_process.impl
+subcomponents
+   alarmAggregator: thread threads::alarmAggregator.impl;
+   diagnosisEngine: thread threads::diagnosisEngine.impl;
+   mitigationActor: thread threads::mitigationActor_th.impl;
+connections
+     port arlarm_acc_in<->alarmAggregator.arlarm_acc_in;
+     port arlarm_adirup_in<->alarmAggregator.arlarm_adirup_in;
+--   port systemHM_acc1_error->alarmAggregator.acc1_error;
+--   port systemHM_acc2_error->alarmAggregator.acc2_error;
+--   port systemHM_acc3_error->alarmAggregator.acc3_error;
+--   port systemHM_acc4_error->alarmAggregator.acc4_error;
+--   port systemHM_acc5_error->alarmAggregator.acc5_error;
+--   port systemHM_acc6_error->alarmAggregator.acc6_error;
+--   
+--   port systemHM_ADIRUp1_error->alarmAggregator.ADIRUp1_error;
+--   port systemHM_ADIRUp2_error->alarmAggregator.ADIRUp2_error;
+--   port systemHM_ADIRUp3_error->alarmAggregator.ADIRUp3_error;
+--   port systemHM_ADIRUp4_error->alarmAggregator.ADIRUp4_error;
+--   
+--   port systemHM_VDl_error->alarmAggregator.VDl_error;
+--   port systemHM_VDc_error->alarmAggregator.VDc_error;
+--   port systemHM_VDr_error->alarmAggregator.VDr_error;
+   
+   port  mitigationActor.mitigation_command-> systemHM_action;
+--   port systemHMEngine.acc2_action-> systemHM_acc2_action;
+--   port systemHMEngine.acc3_action-> systemHM_acc3_action;
+--   port systemHMEngine.acc4_action-> systemHM_acc4_action;
+--   port systemHMEngine.acc5_action-> systemHM_acc5_action;
+--   port systemHMEngine.acc6_action-> systemHM_acc6_action;
+--   port systemHMEngine.ADIRUp1_action-> systemHM_ADIRUp1_action;
+--   port systemHMEngine.ADIRUp2_action-> systemHM_ADIRUp2_action;
+--   port systemHMEngine.ADIRUp3_action-> systemHM_ADIRUp3_action;
+--   port systemHMEngine.ADIRUp4_action-> systemHM_ADIRUp4_action;
+--   port systemHMEngine.VDl_action-> systemHM_VDl_action;
+--   port systemHMEngine.VDc_action-> systemHM_VDc_action;
+--   port systemHMEngine.VDr_action-> systemHM_VDr_action;
+   
+   port alarmAggregator.alarmAggregator_out->diagnosisEngine.diagnosis_in;
+   port diagnosisEngine.diagnosis_out-> mitigationActor.mitigation_in;
+  
+end systemHM_process.impl;
+end partitions;

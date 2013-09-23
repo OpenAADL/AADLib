@@ -73,6 +73,7 @@ dnl some entries.
 AC_OUTPUT([
 	Makefile
 	examples/Makefile
+	examples/adiru/Makefile
 	examples/aocs/Makefile
 	examples/aram/Makefile
 	examples/ardupilot/Makefile
