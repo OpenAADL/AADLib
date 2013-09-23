@@ -70,7 +70,7 @@ int pt2=7;
 //output data from 0 to 9, then 9 to 0 periodicly.
 void acc1dataoutput (int* p,int event_in)
 {
- printf ("%d> Accelerometer 1 oputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++);
+ printf ("%d> Accelerometer 1 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++);
  printf ("\n");   
    
 switch (event_in) {
@@ -112,7 +112,7 @@ switch (event_in) {
 
 void acc2dataoutput (int* p,int event_in)
 {
-  printf ("%d> Accelerometer 2 oputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
+  printf ("%d> Accelerometer 2 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
   printf ("\n"); 
    if (event_in==23) {
     printf ("acc2 receive Reset command %d\n", event_in);
@@ -149,7 +149,7 @@ void acc2dataoutput (int* p,int event_in)
 
 void acc3dataoutput (int* p,int event_in)
 {
-  printf ("%d> Accelerometer 3 oputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
+  printf ("%d> Accelerometer 3 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
   printf ("\n"); 
 
    if (event_in==33) {
@@ -187,7 +187,7 @@ void acc3dataoutput (int* p,int event_in)
 
 void acc4dataoutput (int* p,int event_in)
 {
-  printf ("%d> Accelerometer 4 oputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
+  printf ("%d> Accelerometer 4 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
   printf ("\n"); 
    if (event_in==43) {
     printf ("acc4 receive Reset command %d\n", event_in);
@@ -223,7 +223,7 @@ void acc4dataoutput (int* p,int event_in)
 
 void acc5dataoutput (int* p,int event_in)
 {
- printf ("%d> Accelerometer 5 oputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
+ printf ("%d> Accelerometer 5 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
  printf ("\n"); 
    if (event_in==53) {
     printf ("  |-> Accelerometer 5 receives reset command:->%d\n", event_in);
@@ -262,7 +262,7 @@ void acc5dataoutput (int* p,int event_in)
 
 void acc6dataoutput (int* p,int event_in)
 {
- printf ("%d> Accelerometer 6 oputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
+ printf ("%d> Accelerometer 6 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
  printf ("\n"); 
  pt1=pt1+4;
    if (event_in==63) {
