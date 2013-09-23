@@ -30,6 +30,7 @@ property set Deployment is
     bench,                    -- Benchmark platform (native with instrumentation).
     LEON_RTEMS,               -- LEON2 board or tsim-leon (RTEMS)
     LEON_RTEMS_POSIX,         -- LEON2 board or tsim-leon (RTEMS)
+    LEON3_SCOC3,              -- LEON3 with RTEMS for SCOC3
     LEON3_XTRATUM,            -- LEON3 with Xtratum
     LEON3_XM3,                -- RTEMS for XTRATUM/LEON3
     LEON_ORK,                 -- LEON2 board or tsim-leon (ORK)
@@ -47,6 +48,7 @@ property set Deployment is
     X86_RTEMS_POSIX,          -- x86 under RTEMS with POSIX layer
     X86_LINUXTASTE,           -- TASTE-specific linux distribution
     MARTE_OS,                 -- MaRTE OS
+    WIN32,                    -- WIN32
     VXWORKS                   -- VXWORKS
     );
   --  Supported platforms
@@ -86,8 +88,8 @@ property set Deployment is
   Version : aadlstring applies to (all);
 
   Configuration_Type : classifier (data) applies to (all);
-  
-  -- added on 06/01/2012, for emaxxv2_power_distrib package property 
+
+  -- added on 06/01/2012, for emaxxv2_power_distrib package property
   Power_Level : aadlinteger applies to (device);
 
 end Deployment;
