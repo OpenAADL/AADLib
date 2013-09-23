@@ -21,11 +21,17 @@ For each example:
  - "make arinc653_conf" : generate ARINC653 XML descriptor from AADLv2 model
  - "make clean"         : remove generated files
 
+Similarly, from OSATE2 workspace, you may right-click on the root
+system, and trigger the equivalent mapping.
+
 In addition, the following target is always available:
 
  - "make check"      : run all available targets, for regression testing
 
 Here is a short description of available examples
+
+* adiru: model of an ADIRU subsystem, contributed by GONG Huawei (MS
+  EMS student at ISAE in 2013-2014).
 
 * aocs: model of an Attitude Orbital Control System, derived from
   design document from
@@ -57,7 +63,7 @@ Here is a short description of available examples
 
 * fms: models a Flignt Management System, demonstrates coupling
   between ARINC653 annex and capability to models AFDX. Example
-  contributed by G. Brau.
+  contributed by G. Brau (PhD Student Univ. Luxembourg).
 
 * isr: models an Interrupt Service Routine
 
