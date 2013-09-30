@@ -38,10 +38,12 @@ system implementation fms.impl
 	nt_speed : port module4.ph_speed1 -> module3.ph_speed1;
 	nt_ETA : port module3.ph_ETA1 -> module1.ph_ETA1;
 
-	-- Utilité?
+	-- Utilitï¿½?
 	keyboard_canAccess : bus access bus_can_keyboard -> keyboard.can_access;
 	module1_canKeyboardAccess : bus access bus_can_keyboard -> module1.can_keyboard_access;
 	module1_canDisplayAccess : bus access bus_can_display -> module1.can_display_access;
+	display_canAccess  : bus access bus_can_display -> display.can_access;
+	rdc1_afdxAccess    : bus access afdx_network -> rdc1.afdx_access;
 	module1_afdxAccess : bus access afdx_network -> module1.afdx_access;
 	module3_afdxaccess : bus access afdx_network -> module3.afdx_access;
 	module4_afdxAccess : bus access afdx_network -> module4.afdx_access;
