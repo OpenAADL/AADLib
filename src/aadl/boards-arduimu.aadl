@@ -1,6 +1,5 @@
 --  This package models the ArduIMU platform, an AVR-based derivative
---  of the Arduino.  For more details, see
---  http://code.google.com/p/ardu-imu/
+--  of the Arduino.  For more details, see http://code.google.com/p/ardu-imu/
 
 package Boards::ArduImu
 public
@@ -9,12 +8,12 @@ public
   with Processor_Properties;
 
   with Buses::I2C;
-  with Devices::SPI;
   with Buses::UART;
 
   with Devices::ADXL;
   with Devices::LPR530AL;
   with Devices::LY530ALH;
+  with Devices::SPI;
 
   with Processors::ATMEGA;
 
