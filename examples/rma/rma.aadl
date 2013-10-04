@@ -6,7 +6,7 @@
 
 package RMAAadl
 public
-  with processors;
+  with Processors;
 
   -----------------
   -- Subprograms --
@@ -68,7 +68,7 @@ public
 
   processor implementation cpu.impl extends processors::cpu_rma.impl
   Properties
-  scheduling_protocol => (RMS);
+    Scheduling_Protocol => (RMS);
   end cpu.impl;
 
   ---------------
