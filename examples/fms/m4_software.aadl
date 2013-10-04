@@ -2,47 +2,52 @@ package m4_software
 public
 
 with dataType;
-
 -------------------------------------------------------------------
 -----------------------processes-------------------------------------
 -------------------------------------------------------------------
 
-process prs_ADIRU1
+process prs_NDB
 	features
-	pres1_apex : in event data port dataType::pression;
-	speed1_apex : out event data port dataType::speed;
+	query1_apex : in event data port dataType::database_query;
+	answer1_apex : out event data port dataType::database_answer;
+--	query2_apex : in event data port dataType::database_query;
+--	answer2_apex : out event data port dataType::database_answer;
 	flows
-		fromPresToSpeed : flow path pres1_apex -> speed1_apex ;
-end prs_ADIRU1;
+		fromQueryToAnswer : flow path query1_apex -> answer1_apex ;
+end prs_NDB;
 
-process implementation prs_ADIRU1.impl
+process implementation prs_NDB.impl
 	subcomponents
-		ADIRU1 : thread th_ADIRU1;	
+		NDB : thread th_NDB;	
 	connections
-		pres1ApexToFunct : port pres1_apex -> ADIRU1.th_pres1;
-		speed1FunctToApex : port ADIRU1.th_speed1 -> speed1_apex;
+		query1ApexToFunct : port query1_apex -> NDB.th_query1;
+		answer1FunctToApex : port NDB.th_answer1 -> answer1_apex;
+--		query2ApexToFunct : port query2_apex -> function_NDB.query2;
+--		answer2FunctToApex : port function_NDB.answer2 -> answer2_apex;	
 	flows
-		fromPresToSpeed : flow path pres1_apex -> pres1ApexToFunct -> ADIRU1.speed_computation-> speed1FunctToApex -> speed1_apex ;
-end prs_ADIRU1.impl;
+		fromQueryToAnswer : flow path query1_apex -> query1ApexToFunct -> NDB.request_computation -> answer1FunctToApex -> answer1_apex ;
+end prs_NDB.impl;
 
 -------------------------------------------------------------------
 -----------------------threads-------------------------------------
 -------------------------------------------------------------------
 
-thread th_ADIRU1
+thread th_NDB
 
 	features
-	th_pres1 : in event data port dataType::pression;
-	th_speed1 : out event data port dataType::speed;
+	th_query1 : in event data port dataType::database_query;
+	th_answer1 : out event data port dataType::database_answer;
+--	query2 : in event data port dataType::database_query;
+--	answer2 : out event data port dataType::database_answer;
 	flows
-	speed_computation : flow path th_pres1 -> th_speed1;	
+	request_computation : flow path th_query1 -> th_answer1;
 	properties
 	Dispatch_protocol => periodic;
-	period => 125 ms;
-	compute_execution_time => 0 ms .. 25 ms;
-	deadline => 125 ms;
-	priority => 7;
+	period => 100 ms;
+	compute_execution_time => 0 ms .. 20 ms;
+	deadline => 100 ms;
+--	priority => 7;
 
-end th_ADIRU1;
+end th_NDB;
 
 end m4_software;

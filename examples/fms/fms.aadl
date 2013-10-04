@@ -4,86 +4,106 @@ public
 with subsystem;
 with fms_hardware;
 
-system fms end fms;
+system fms 
+end fms;
 
 system implementation fms.impl
 	subcomponents
-	bus_can_keyboard : bus fms_hardware::can_keyboard;
-	bus_can_display : bus fms_hardware::can_display;
+	-- keyboard, display, modules, and switches 
+	bus_can : bus fms_hardware::can;
+		
 	afdx_network : bus fms_hardware::physical_afdx_link.impl;
-
+		
 	module1 : system subsystem::m1_system.impl;
+	module2 : system subsystem::m2_system.impl;
 	module3 : system subsystem::m3_system.impl;
 	module4 : system subsystem::m4_system.impl;
-	module7 : system subsystem::m7_system.impl;
 
 	keyboard : device subsystem::keyboard;
 	display : device subsystem::display;
-	rdc1 : device subsystem::RDC;
+	sensor_rdc : device subsystem::RDC;
 
 	sw1 : device fms_hardware::afdx_switch;
 	sw2 : device fms_hardware::afdx_switch;
 	sw3 : device fms_hardware::afdx_switch;
-	sw4 : device fms_hardware::afdx_switch;
-	sw5 : device fms_hardware::afdx_switch;
+--	sw4 : device fms_hardware::afdx_switch;
+--	sw5 : device fms_hardware::afdx_switch;
 
 	connections
 	nt_request : port keyboard.ph_req -> module1.ph_req1;
-	nt_wpId : port module1.ph_wpId1 -> module3.ph_wpId1;
-	nt_query : port module3.ph_query1 -> module7.ph_query1;
-	nt_answer : port module7.ph_answer1 -> module3.ph_answer1;
-	nt_wpInfo : port module3.ph_wpInfo1 -> module1.ph_wpInfo1;
-	nt_disp : port module1.ph_disp1 -> display.ph_disp;
-	nt_pres : port rdc1.ph_pres -> module4.ph_pres1;
-	nt_speed : port module4.ph_speed1 -> module3.ph_speed1;
-	nt_ETA : port module3.ph_ETA1 -> module1.ph_ETA1;
+	nt_wpId : port module1.ph_wpId1 -> module2.ph_wpId1;		--
+	nt_query : port module2.ph_query1 -> module4.ph_query1;		--
+	nt_answer : port module4.ph_answer1 -> module2.ph_answer1;	--
+	nt_disp : port module1.ph_disp1 -> display.ph_disp;			--
+	nt_pres : port sensor_rdc.ph_pres -> module3.ph_pres1;			--
+	nt_speed : port module3.ph_speed1 -> module2.ph_speed1;		--
+	nt_ETA : port module2.ph_ETA1 -> module1.ph_ETA1;			--
+	nt_wpInfo : port module2.ph_wpInfo1 -> module1.ph_wpInfo1;	--
 
-	-- Utilit�?
-	keyboard_canAccess : bus access bus_can_keyboard -> keyboard.can_access;
-	module1_canKeyboardAccess : bus access bus_can_keyboard -> module1.can_keyboard_access;
-	module1_canDisplayAccess : bus access bus_can_display -> module1.can_display_access;
-	display_canAccess  : bus access bus_can_display -> display.can_access;
-	rdc1_afdxAccess    : bus access afdx_network -> rdc1.afdx_access;
+	-- busses accesses
+	keyboard_canAccess : bus access bus_can -> keyboard.can_access;
+	display_canAccess : bus access bus_can -> display.can_access;
+	module1_canKeyboardAccess : bus access bus_can -> module1.can_keyboard_access;
+	module1_canDisplayAccess : bus access bus_can -> module1.can_display_access;
 	module1_afdxAccess : bus access afdx_network -> module1.afdx_access;
-	module3_afdxaccess : bus access afdx_network -> module3.afdx_access;
-	module4_afdxAccess : bus access afdx_network -> module4.afdx_access;
-	module7_afdxaccess : bus access afdx_network -> module7.afdx_access;
+	module2_afdxaccess : bus access afdx_network -> module2.afdx_access;
+	module3_afdxAccess : bus access afdx_network -> module3.afdx_access;
+	module4_afdxaccess : bus access afdx_network -> module4.afdx_access;
+	sensor_rdc_afdxAccess : bus access afdx_network -> sensor_rdc.afdx_access;
+	sw1_afdxAcces : bus access afdx_network -> sw1.afdx_access; 
+	sw2_afdxAcces : bus access afdx_network -> sw2.afdx_access;
+	sw3_afdxAcces : bus access afdx_network -> sw3.afdx_access; 
 
 	flows
-	endToEndLatency : end to end flow
+	wpId_fl : end to end flow module1.wpId_src -> nt_wpId -> module2.wpId_sink ;
+	wpInfo_fl : end to end flow module2.wpInfo_src -> nt_wpInfo -> module1.wpInfo_sink ;
+	query_fl : end to end flow module2.query_src -> nt_query -> module4.query_sink ;	
+	answer_fl : end to end flow module4.answer_src -> nt_answer -> module2.answer_sink ;	
+	speed_fl : end to end flow module3.speed_src -> nt_speed -> module2.speed_sink;
+	
+	endToEnd_fl : end to end flow
 		keyboard.req_src -> nt_request ->
 		module1.req_m1_wpId -> nt_wpId ->
-		module3.wpId_m3_query -> nt_query ->
-		module7.query_m7_answer -> nt_answer ->
-		module3.answer_m3_wpInfo -> nt_wpInfo ->
+		module2.wpId_m2_query -> nt_query ->
+		module4.query_m4_answer -> nt_answer ->
+		module2.answer_m2_wpInfo -> nt_wpInfo ->
 		module1.wpInfo_m1_disp -> nt_disp -> display.disp_sink;
 
 	properties
-	Actual_connection_binding => (reference (bus_can_keyboard)) applies to  nt_request;
-	Actual_connection_binding => (reference (bus_can_display)) applies to  nt_disp;
+	Latency => 0ms .. 15 ms applies to wpId_fl;
+	Latency => 0ms .. 10 ms applies to wpInfo_fl ;
+	Latency => 0ms .. 10 ms applies to query_fl;	
+	Latency => 0ms .. 35 ms applies to answer_fl;	
+	Latency => 0ms .. 20 ms applies to speed_fl;
+	Actual_connection_binding => (reference (bus_can)) applies to  nt_request;
+	Actual_connection_binding => (reference (bus_can)) applies to  nt_disp;
 	Actual_connection_binding => (reference (afdx_network.VL1)) applies to  nt_wpId;
-	Actual_connection_binding => (reference (afdx_network.VL3)) applies to  nt_wpInfo;
-	Actual_connection_binding => (reference (afdx_network.VL3)) applies to nt_ETA;
-	Actual_connection_binding => (reference (afdx_network.VL4)) applies to  nt_query;
-	Actual_connection_binding => (reference (afdx_network.VL7)) applies to  nt_answer;
-	Actual_connection_binding => (reference (afdx_network.VL9)) applies to  nt_pres;
-	Actual_connection_binding => (reference (afdx_network.VL11)) applies to  nt_speed;
+	Actual_connection_binding => (reference (afdx_network.VL2)) applies to  nt_wpInfo;
+	Actual_connection_binding => (reference (afdx_network.VL2)) applies to nt_ETA;
+	Actual_connection_binding => (reference (afdx_network.VL3)) applies to  nt_query;
+	Actual_connection_binding => (reference (afdx_network.VL4)) applies to  nt_answer;
+	Actual_connection_binding => (reference (afdx_network.VL5)) applies to  nt_speed;
+	Actual_connection_binding => (reference (afdx_network.VL6)) applies to  nt_pres;
+
+-- first route possibility 
 
 	Actual_connection_binding => (reference (sw1), reference (sw2)) applies to afdx_network.VL1;
+	Actual_connection_binding => (reference (sw2), reference (sw1)) applies to afdx_network.VL2;
 	Actual_connection_binding => (reference (sw2), reference (sw1)) applies to afdx_network.VL3;
-	Actual_connection_binding => (reference (sw2), reference (sw1)) applies to afdx_network.VL4;
-	Actual_connection_binding => (reference (sw1), reference (sw2)) applies to afdx_network.VL7;
-	Actual_connection_binding => (reference (sw4)) applies to afdx_network.VL9;
-	Actual_connection_binding => (reference (sw4), reference (sw1), reference (sw2)) applies to afdx_network.VL11;
+	Actual_connection_binding => (reference (sw1), reference (sw2)) applies to afdx_network.VL4;
+	Actual_connection_binding => (reference (sw3)) applies to afdx_network.VL6;
+	Actual_connection_binding => (reference (sw3), reference (sw1), reference (sw2)) applies to afdx_network.VL5;
+
+-- second route possibility 
 
 	annex paths_specification {**
 
 	VL1 => sw1, sw2;
+	VL2 => sw2, sw1;
 	VL3 => sw2, sw1;
-	VL4 => sw2, sw1;
-	VL7 => sw1, sw2;
-	VL9 => sw4;
-	VL11 => sw4, sw1, sw2;
+	VL4 => sw1, sw2;
+	VL5 => sw4, sw1, sw2;
+	VL6 => sw4;
 
     **};
 

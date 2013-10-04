@@ -2,64 +2,47 @@ package m3_software
 public
 
 with dataType;
+
 -------------------------------------------------------------------
 -----------------------processes-------------------------------------
 -------------------------------------------------------------------
 
-process prs_FM1
+process prs_ADIRU1
 	features
-	wpId1_apex : in event data port dataType::waypoint_identifier;
-	query1_apex : out event data port dataType::database_query;
-	answer1_apex : in event data port dataType::database_answer;
-	wpInfo1_apex : out event data port dataType::waypoint_Info;
-	speed1_apex: in event data port dataType::speed;
-	ETA1_apex: out event data port dataType::Time;
+	pres1_apex : in event data port dataType::pression;
+	speed1_apex : out event data port dataType::speed;
 	flows
-	fromIdToQuery : flow path wpId1_apex -> query1_apex;
-	fromAnswerToInfo : flow path answer1_apex -> wpInfo1_apex;
-	fromSpeedToETA : flow path speed1_apex -> ETA1_apex;
-end prs_FM1;
+		fromPresToSpeed : flow path pres1_apex -> speed1_apex ;
+end prs_ADIRU1;
 
-process implementation prs_FM1.impl
+process implementation prs_ADIRU1.impl
 	subcomponents
-		FM1 : thread th_FM1;	
+		ADIRU1 : thread th_ADIRU1;	
 	connections
-		wpId1ApexToFunct : port wpId1_apex -> FM1.th_wpId1;
-		query1FunctToApex : port FM1.th_query1 -> query1_apex;
-		answer1ApexToFunct : port answer1_apex -> FM1.th_answer1;
-		wpInfo1FunctToApex : port FM1.th_wpInfo1 -> wpInfo1_apex;
-		speed1ApexToFunct : port speed1_apex -> FM1.th_speed1;
-		ETA1FunctToApex : port FM1.th_ETA1 -> ETA1_apex;
+		pres1ApexToFunct : port pres1_apex -> ADIRU1.th_pres1;
+		speed1FunctToApex : port ADIRU1.th_speed1 -> speed1_apex;
 	flows
-	fromIdToQuery : flow path wpId1_apex -> wpId1ApexToFunct -> FM1.waypoint_query-> query1FunctToApex -> query1_apex;
-	fromAnswerToInfo : flow path answer1_apex -> answer1ApexToFunct -> FM1.waypoint_answer-> wpInfo1FunctToApex -> wpInfo1_apex;
-	fromSpeedToETA : flow path speed1_apex -> speed1ApexToFunct ->FM1.ETA_calculation-> ETA1FunctToApex -> ETA1_apex;	
-end prs_FM1.impl;
+		fromPresToSpeed : flow path pres1_apex -> pres1ApexToFunct -> ADIRU1.speed_computation-> speed1FunctToApex -> speed1_apex ;
+end prs_ADIRU1.impl;
 
 -------------------------------------------------------------------
 -----------------------threads-------------------------------------
 -------------------------------------------------------------------
 
-thread th_FM1
+thread th_ADIRU1
 
 	features
-	th_wpId1 : in event data port dataType::waypoint_identifier;
-	th_query1 : out event data port dataType::database_query;
-	th_answer1 : in event data port dataType::database_answer;
-	th_wpInfo1 : out event data port dataType::waypoint_Info;
-	th_speed1 : in event data port dataType::speed;
-	th_ETA1: out event data port dataType::Time;
+	th_pres1 : in event data port dataType::pression;
+	th_speed1 : out event data port dataType::speed;
 	flows
-	waypoint_query : flow path th_wpId1 -> th_query1;	
-	waypoint_answer : flow path th_answer1 -> th_wpInfo1;
-	ETA_calculation : flow path th_speed1 -> th_ETA1;
+	speed_computation : flow path th_pres1 -> th_speed1;	
 	properties
 	Dispatch_protocol => periodic;
-	period => 125 ms;
-	compute_execution_time => 0 ms .. 25 ms;
-	deadline => 125 ms;
-	priority => 7;
+	period => 60 ms;
+	compute_execution_time => 0 ms .. 30 ms;
+	deadline => 60 ms;
+--	priority => 7;
 
-end th_FM1;
+end th_ADIRU1;
 
 end m3_software;

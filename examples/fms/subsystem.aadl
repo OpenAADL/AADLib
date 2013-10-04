@@ -3,9 +3,9 @@ public
 
 with fms_hardware;
 with m1_software;
+with m2_software;
 with m3_software;
 with m4_software;
-with m7_software;
 with dataType;
 
 -----------------------------------------------------------------
@@ -16,7 +16,7 @@ device keyboard
 	-- software interface
 	ph_req : out event data port dataType::request_pilot;
 	-- hardware interface
-	can_access : requires bus access fms_hardware::can_keyboard;
+	can_access : requires bus access fms_hardware::can;
 	flows
 	req_src : flow source ph_req;
 end keyboard;
@@ -26,7 +26,7 @@ device display
 	-- software interface
 	ph_disp : in event data port dataType::display;
 	-- hardware interface
-	can_access  : requires bus access fms_hardware::can_display;
+	can_access  : requires bus access fms_hardware::can;
 	flows
 	disp_sink : flow sink ph_disp;
 end display;
@@ -50,12 +50,14 @@ system m1_system
 	ph_wpId1 : out event data port dataType::waypoint_identifier;
 	ph_disp1 : out event data port dataType::display;
 	-- hardware interface
-	can_keyboard_access : requires bus access fms_hardware::can_keyboard; 
-	can_display_access : requires bus access fms_hardware::can_display; 
+	can_keyboard_access : requires bus access fms_hardware::can; 
+	can_display_access : requires bus access fms_hardware::can; 
 	afdx_access  : requires bus access fms_hardware::physical_afdx_link.impl;
 	flows
 	req_m1_wpId : flow path ph_req1 -> ph_wpId1;
 	wpInfo_m1_disp : flow path ph_wpInfo1 -> ph_disp1;
+	wpId_src :flow source ph_wpId1;
+	wpInfo_sink :flow sink ph_wpInfo1;
 end m1_system;
 
 system implementation m1_system.impl
@@ -85,7 +87,7 @@ system implementation m1_system.impl
 	Actual_Memory_Binding => (reference (mainmemory.mem_mfd1)) applies to mfd1;
 end m1_system.impl;
 
-system m3_system
+system m2_system
 	features
 	-- software interface
 	ph_wpId1 : in event data port dataType::waypoint_identifier;
@@ -97,17 +99,22 @@ system m3_system
 	-- hardware interface
 	afdx_access  : requires bus access fms_hardware::physical_afdx_link.impl;
 	flows
-	wpId_m3_query : flow path ph_wpId1 -> ph_query1;
-	answer_m3_wpInfo : flow path ph_answer1 -> ph_wpInfo1;
-	speed_m3_ETA : flow path ph_speed1 -> ph_ETA1;
-end m3_system;
+	wpId_m2_query : flow path ph_wpId1 -> ph_query1;
+	answer_m2_wpInfo : flow path ph_answer1 -> ph_wpInfo1;
+	speed_m2_ETA : flow path ph_speed1 -> ph_ETA1;
+	wpId_sink :flow sink ph_wpId1;
+	query_src :flow source ph_query1;
+	answer_sink :flow sink ph_answer1;
+	wpInfo_src :flow source ph_wpInfo1;
+	speed_sink :flow sink ph_speed1;
+end m2_system;
 
-system implementation m3_system.impl
+system implementation m2_system.impl
 
 	subcomponents
-	mainmemory : memory fms_hardware::mainmemory.m3;
-	cpu : processor fms_hardware::arinckernel.m3;
-	fm1 : process m3_software::prs_FM1.impl;
+	mainmemory : memory fms_hardware::mainmemory.m2;
+	cpu : processor fms_hardware::arinckernel.m2;
+	fm1 : process m2_software::prs_FM1.impl;
 	
 	connections
 	conn_wpId : port ph_wpId1 -> fm1.wpId1_apex;
@@ -118,17 +125,17 @@ system implementation m3_system.impl
 	conn_ETA : port fm1.ETA1_apex -> ph_ETA1;
 	
 	flows
-	wpId_m3_query : flow path ph_wpId1 -> conn_wpId-> fm1.fromIdtoQuery -> conn_query -> ph_query1;
-	answer_m3_wpInfo : flow path ph_answer1 -> conn_answer-> fm1.fromAnswerToInfo -> conn_wpInfo -> ph_wpInfo1;
-	speed_m3_ETA : flow path ph_speed1 -> conn_speed-> fm1.fromSpeedToETA -> conn_ETA -> ph_ETA1;
+	wpId_m2_query : flow path ph_wpId1 -> conn_wpId-> fm1.fromIdtoQuery -> conn_query -> ph_query1;
+	answer_m2_wpInfo : flow path ph_answer1 -> conn_answer-> fm1.fromAnswerToInfo -> conn_wpInfo -> ph_wpInfo1;
+	speed_m2_ETA : flow path ph_speed1 -> conn_speed-> fm1.fromSpeedToETA -> conn_ETA -> ph_ETA1;
 		
 	properties
 	Actual_Processor_Binding => (reference (cpu.partition_FM1)) applies to fm1;
 	
 	Actual_Memory_Binding => (reference (mainmemory.mem_fm1)) applies to fm1;
-end m3_system.impl;
+end m2_system.impl;
 
-system m4_system
+system m3_system
 	features
 	-- software interface
 	ph_pres1 : in event data port dataType::pression;
@@ -136,30 +143,31 @@ system m4_system
 	-- hardware interface
 	afdx_access  : requires bus access fms_hardware::physical_afdx_link.impl;
 	flows
-	pres_m4_speed : flow path ph_pres1 -> ph_speed1;
-end m4_system;
+	pres_m3_speed : flow path ph_pres1 -> ph_speed1;
+ 	speed_src :flow source ph_speed1;
+end m3_system;
 
-system implementation m4_system.impl
+system implementation m3_system.impl
 
 	subcomponents
-	mainmemory : memory fms_hardware::mainmemory.m4;
-	cpu : processor fms_hardware::arinckernel.m4;
-	adiru1 : process m4_software::prs_ADIRU1.impl;
+	mainmemory : memory fms_hardware::mainmemory.m3;
+	cpu : processor fms_hardware::arinckernel.m3;
+	adiru1 : process m3_software::prs_ADIRU1.impl;
 	
 	connections
 	ph_pres : port ph_pres1 -> adiru1.pres1_apex;	
 	ph_speed : port  adiru1.speed1_apex -> ph_speed1;
 
 	flows
-	pres_m4_speed : flow path ph_pres1 -> ph_pres -> adiru1.fromPresToSpeed -> ph_speed -> ph_speed1;
+	pres_m3_speed : flow path ph_pres1 -> ph_pres -> adiru1.fromPresToSpeed -> ph_speed -> ph_speed1;
 
 	properties
 	Actual_Processor_Binding => (reference (cpu.partition_ADIRU1)) applies to adiru1;
 	
 	Actual_Memory_Binding => (reference (mainmemory.mem_adiru1)) applies to adiru1;
-end m4_system.impl;
+end m3_system.impl;
 
-system m7_system
+system m4_system
 	features
 	-- software interface
 	ph_query1 : in event data port dataType::database_query;
@@ -167,27 +175,29 @@ system m7_system
 	-- hardware interface
 	afdx_access  : requires bus access fms_hardware::physical_afdx_link.impl;
 	flows
-	query_m7_answer : flow path ph_query1 -> ph_answer1;
-end m7_system;
+	query_m4_answer : flow path ph_query1 -> ph_answer1;
+	query_sink :flow sink ph_query1;
+	answer_src :flow source ph_answer1;
+end m4_system;
 
-system implementation m7_system.impl
+system implementation m4_system.impl
 
 	subcomponents
-	mainmemory : memory fms_hardware::mainmemory.m7;
-	cpu : processor fms_hardware::arinckernel.m7;
-	ndb : process m7_software::prs_NDB.impl;
+	mainmemory : memory fms_hardware::mainmemory.m4;
+	cpu : processor fms_hardware::arinckernel.m4;
+	ndb : process m4_software::prs_NDB.impl;
 
 	connections
 	conn_query : port ph_query1 -> ndb.query1_apex;	
 	conn_answer : port  ndb.answer1_apex -> ph_answer1;
 	
 	flows
-	query_m7_answer : flow path ph_query1 -> conn_query -> ndb.fromQueryToAnswer -> conn_answer -> ph_answer1;
+	query_m4_answer : flow path ph_query1 -> conn_query -> ndb.fromQueryToAnswer -> conn_answer -> ph_answer1;
 		
 	properties
 	Actual_Processor_Binding => (reference (cpu.partition_NDB)) applies to ndb;
 	
 	Actual_Memory_Binding => (reference (mainmemory.mem_ndb)) applies to ndb;
-end m7_system.impl;
+end m4_system.impl;
 
 end subsystem;
