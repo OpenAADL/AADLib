@@ -14,7 +14,7 @@ foreach s in system_set do
          and scheduling_major_frame       -- respect slot allocation
          and partitions_execution
 	);
-   check (1=1);	 
+   check (1=1);
 end check_arinc653_restrictions;
 
 -------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ end check_partitions_criticality;
 theorem scheduling_major_frame
     foreach cpu in processor_set do
     check ((not property_exists (cpu, "ARINC653::Module_Major_Frame"))
-    or (float (property (cpu, "ARINC653::Module_Major_Frame")) >= 
+    or (float (property (cpu, "ARINC653::Module_Major_Frame")) >=
            sum (property (cpu, "ARINC653::Partition_Slots"))));
 end scheduling_major_frame;
 
@@ -43,6 +43,7 @@ end scheduling_major_frame;
 theorem partitions_execution
     foreach p in Processor_Set do
       VP := { x in Virtual_Processor_Set | Is_Subcomponent_Of (x, p)};
+      var toto := get_property_value (p, "ARINC653::Slots_Allocation");
 
       check ((not property_exists (p, "ARINC653::Slots_Allocation")) or
              (cardinal (VP) = 0) or
@@ -52,59 +53,69 @@ end partitions_execution;
 
 -------------------------------------------------------------------------------
 theorem check_processor_hm_validity
-
    foreach mycpu in processor_set do
 
-      var allowed_module_errors  := list ("Module_Config", "Module_Init", "Module_Scheduling");
-      var allowed_module_actions := list ("Nothing", "Module_Stop", "Module_Restart");
+      var allowed_module_errors
+         := list ("Module_Config", "Module_Init", "Module_Scheduling");
+      var allowed_module_actions
+         := list ("Nothing", "Module_Stop", "Module_Restart");
 
       var module_actions :=  (property (mycpu, "ARINC653::HM_Actions"));
       var module_errors  :=  (property (mycpu, "ARINC653::HM_Errors"));
 
       check ((property_exists (mycpu, "ARINC653::HM_Actions")) and
              (property_exists (mycpu, "ARINC653::HM_Errors")) and
-             ( is_in (module_actions, allowed_module_actions)) and 
+             ( is_in (module_actions, allowed_module_actions)) and
              ( is_in (module_errors, allowed_module_errors)));
 
 end check_processor_hm_validity;
 
 -------------------------------------------------------------------------------
 theorem check_virtual_processor_hm_validity
-
    foreach vp in virtual_processor_set do
 
-      var allowed_module_errors  := list ("Partition_Config", "Partition_Init", "Partition_Scheduling", "Partition_Handler");
-      var allowed_module_actions := list ("Nothing", "Partition_Stop", "Partition_Restart");
+      var allowed_module_errors
+         := list ("Partition_Config", "Partition_Init",
+                  "Partition_Scheduling", "Partition_Handler");
+      var allowed_module_actions
+         := list ("Nothing", "Partition_Stop", "Partition_Restart");
 
       var module_actions :=  (property (vp, "ARINC653::HM_Actions"));
       var module_errors  :=  (property (vp, "ARINC653::HM_Errors"));
 
       check ((property_exists (vp, "ARINC653::HM_Actions")) and
              (property_exists (vp, "ARINC653::HM_Errors")) and
-             ( is_in (module_actions, allowed_module_actions)) and 
+             ( is_in (module_actions, allowed_module_actions)) and
              ( is_in (module_errors, allowed_module_errors)));
 
 end check_virtual_processor_hm_validity;
 
 -------------------------------------------------------------------------------
 theorem check_thread_hm_validity
-
    foreach thr in thread_set do
 
-      var allowed_module_errors  := list ("Deadline_Miss", "Application_Error", "Numeric_Error", "Illegal_Request", "Stack_Overflow", "Memory_Violation", "Hardware_Fault", "Power_Fail");
-      var allowed_module_actions := list ("Ignore", "Confirm", "Process_Stop", "Process_Stop_And_Start_Another", "Process_Restart", "Partition_Stop", "Partition_Restart");
+      var allowed_module_errors
+         := list ("Deadline_Miss", "Application_Error", "Numeric_Error",
+         "Illegal_Request", "Stack_Overflow", "Memory_Violation",
+         "Hardware_Fault", "Power_Fail");
+
+      var allowed_module_actions
+         := list ("Ignore", "Confirm", "Process_Stop",
+         "Process_Stop_And_Start_Another", "Process_Restart", "Partition_Stop",
+         "Partition_Restart");
 
       var module_actions :=  (property (thr, "ARINC653::HM_Actions"));
       var module_errors  :=  (property (thr, "ARINC653::HM_Errors"));
 
       check ((property_exists (thr, "ARINC653::HM_Actions")) and
              (property_exists (thr, "ARINC653::HM_Errors")) and
-             ( is_in (module_actions, allowed_module_actions)) and 
+             ( is_in (module_actions, allowed_module_actions)) and
              ( is_in (module_errors, allowed_module_errors)));
+
 end check_thread_hm_validity;
 
+-------------------------------------------------------------------------------
 theorem check_error_coverage
-
    foreach thr in thread_set do
 
       Prs := {x in Process_Set | is_subcomponent_of (thr, x)};
@@ -113,13 +124,18 @@ theorem check_error_coverage
 
       CPU := {x in Processor_Set | is_subcomponent_of (VP, x)};
 
-      var errors := list ("Module_Config", "Module_Init", "Module_Scheduling",
-                          "Partition_Scheduling", "Partition_Config", "Partition_Handler", "Partition_Init",
-                          "Deadline_Miss", "Application_Error", "Numeric_Error", "Illegal_Request", "Stack_Overflow", "Memory_Violation", "Hardware_Fault", "Power_Fail");
+      var errors
+         := list ("Module_Config", "Module_Init", "Module_Scheduling",
+                  "Partition_Scheduling", "Partition_Config",
+                  "Partition_Handler", "Partition_Init", "Deadline_Miss",
+                  "Application_Error", "Numeric_Error", "Illegal_Request",
+                  "Stack_Overflow", "Memory_Violation", "Hardware_Fault",
+                  "Power_Fail");
 
       var actual_errors := (property (CPU, "ARINC653::HM_Errors") +
-                            property (VP, "ARINC653::HM_Errors") + 
+                            property (VP, "ARINC653::HM_Errors") +
                             property (thr, "ARINC653::HM_Errors"));
 
       check (is_in (errors, actual_errors) and is_in (actual_errors, errors));
+
 end check_error_coverage;
