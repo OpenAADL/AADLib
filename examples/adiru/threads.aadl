@@ -32,8 +32,8 @@ calls
 sub1: { spg: subprogram subprograms::acc1_dataOutput_spg;};
 
 connections
- parameter spg.acc1DataOut->acc1out;
- parameter acc1_command_in->spg.event_in;
+ C1: parameter spg.acc1DataOut->acc1out;
+ C2: parameter acc1_command_in->spg.event_in;
 end  acc1_dataOutput.impl;
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 thread  acc2_dataOutput
@@ -62,8 +62,8 @@ calls
 sub1: { spg: subprogram subprograms::acc2_dataOutput_spg;};
 
 connections
- parameter spg.acc2DataOut->acc2out;
- parameter acc2_command_in->spg.event_in;
+ C1: parameter spg.acc2DataOut->acc2out;
+ C2: parameter acc2_command_in->spg.event_in;
 end  acc2_dataOutput.impl;
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 thread  acc3_dataOutput
@@ -92,8 +92,8 @@ calls
 sub1: { spg: subprogram subprograms::acc3_dataOutput_spg;};
 
 connections
- parameter spg.accDataOut->accout;
- parameter acc_command_in->spg.event_in;
+ C1: parameter spg.accDataOut->accout;
+ C2: parameter acc_command_in->spg.event_in;
 end  acc3_dataOutput.impl;
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 thread  acc4_dataOutput
@@ -122,8 +122,8 @@ calls
 sub1: { spg: subprogram subprograms::acc4_dataOutput_spg;};
 
 connections
- parameter spg.accDataOut->accout;
- parameter acc_command_in->spg.event_in;
+ C1: parameter spg.accDataOut->accout;
+ C2: parameter acc_command_in->spg.event_in;
 end  acc4_dataOutput.impl;
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 thread  acc5_dataOutput
@@ -152,8 +152,8 @@ calls
 sub1: { spg: subprogram subprograms::acc5_dataOutput_spg;};
 
 connections
- parameter spg.accDataOut->accout;
- parameter acc_command_in->spg.event_in;
+    C1: parameter spg.accDataOut->accout;
+    C2: parameter acc_command_in->spg.event_in;
 end  acc5_dataOutput.impl;
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 thread  acc6_dataOutput
@@ -182,8 +182,8 @@ calls
 sub1: { spg: subprogram subprograms::acc6_dataOutput_spg;};
 
 connections
- parameter spg.accDataOut->accout;
- parameter acc_command_in->spg.event_in;
+    C1: parameter spg.accDataOut->accout;
+    C2: parameter acc_command_in->spg.event_in;
 end  acc6_dataOutput.impl;
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 thread  acc_HM
@@ -231,29 +231,29 @@ calls
 sub1: { spg: subprogram subprograms::acc_HM_spg;};
 
 connections
- parameter acc1_data_monitor->spg.in_para1;
- parameter acc2_data_monitor->spg.in_para2;
- parameter acc3_data_monitor->spg.in_para3;
- parameter acc4_data_monitor->spg.in_para4;
- parameter acc5_data_monitor->spg.in_para5;
- parameter acc6_data_monitor->spg.in_para6;
+ C1: parameter acc1_data_monitor->spg.in_para1;
+ C2: parameter acc2_data_monitor->spg.in_para2;
+ C3: parameter acc3_data_monitor->spg.in_para3;
+ C4: parameter acc4_data_monitor->spg.in_para4;
+ C5: parameter acc5_data_monitor->spg.in_para5;
+ C6: parameter acc6_data_monitor->spg.in_para6;
 
- parameter spg.out_para1->acc1_validated_dataout;
- parameter spg.out_para2->acc2_validated_dataout;
- parameter spg.out_para3->acc3_validated_dataout;
- parameter spg.out_para4->acc4_validated_dataout;
- parameter spg.out_para5->acc5_validated_dataout;
- parameter spg.out_para6->acc6_validated_dataout;
+ C7: parameter spg.out_para1->acc1_validated_dataout;
+ C8: parameter spg.out_para2->acc2_validated_dataout;
+ C9: parameter spg.out_para3->acc3_validated_dataout;
+ C10: parameter spg.out_para4->acc4_validated_dataout;
+ C11: parameter spg.out_para5->acc5_validated_dataout;
+ C12: parameter spg.out_para6->acc6_validated_dataout;
 
- parameter spg.event_to_acc1->event_to_acc1;
- parameter spg.event_to_acc2->event_to_acc2;
- parameter spg.event_to_acc3->event_to_acc3;
- parameter spg.event_to_acc4->event_to_acc4;
- parameter spg.event_to_acc5->event_to_acc5;
- parameter spg.event_to_acc6->event_to_acc6;
+ C13: parameter spg.event_to_acc1->event_to_acc1;
+ C14: parameter spg.event_to_acc2->event_to_acc2;
+ C15: parameter spg.event_to_acc3->event_to_acc3;
+ C16: parameter spg.event_to_acc4->event_to_acc4;
+ C17: parameter spg.event_to_acc5->event_to_acc5;
+ C18: parameter spg.event_to_acc6->event_to_acc6;
 
- parameter acc_error_action->spg.in_action_command;
- parameter spg.out_error_data->acc_error_out;
+ C19: parameter acc_error_action->spg.in_action_command;
+ C20: parameter spg.out_error_data->acc_error_out;
  
 end  acc_HM.impl;
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -288,12 +288,12 @@ sub1: {
 };
 
 connections
- parameter solver_in1->ADIRUp_solve.inData_para1;
- parameter solver_in2->ADIRUp_solve.inData_para2;
- parameter solver_in3->ADIRUp_solve.inData_para3;
- parameter solver_in4->ADIRUp_solve.inData_para4;
- parameter solver_in5->ADIRUp_solve.inData_para5;
- parameter solver_in6->ADIRUp_solve.inData_para6;
+ C1: parameter solver_in1->ADIRUp_solve.inData_para1;
+ C2: parameter solver_in2->ADIRUp_solve.inData_para2;
+ C3: parameter solver_in3->ADIRUp_solve.inData_para3;
+ C4: parameter solver_in4->ADIRUp_solve.inData_para4;
+ C5: parameter solver_in5->ADIRUp_solve.inData_para5;
+ C6: parameter solver_in6->ADIRUp_solve.inData_para6;
  
  --parameter ADIRUp_solve.outdata_para-> ADIRUpout;
 end    ADIRUp_solve.impl;
@@ -335,22 +335,22 @@ sub1: {
 };
 
 connections
- parameter accData_in1->ADIRUp_HM.inData_para1;
- parameter accData_in2->ADIRUp_HM.inData_para2;
- parameter accData_in3->ADIRUp_HM.inData_para3;
- parameter accData_in4->ADIRUp_HM.inData_para4;
- parameter accData_in5->ADIRUp_HM.inData_para5;
- parameter accData_in6->ADIRUp_HM.inData_para6;
+ C1: parameter accData_in1->ADIRUp_HM.inData_para1;
+ C2: parameter accData_in2->ADIRUp_HM.inData_para2;
+ C3: parameter accData_in3->ADIRUp_HM.inData_para3;
+ C4: parameter accData_in4->ADIRUp_HM.inData_para4;
+ C5: parameter accData_in5->ADIRUp_HM.inData_para5;
+ C6: parameter accData_in6->ADIRUp_HM.inData_para6;
  
- parameter ADIRUp_HM.outdata_para1->accData_out1;
- parameter ADIRUp_HM.outdata_para2->accData_out2;
- parameter ADIRUp_HM.outdata_para3->accData_out3;
- parameter ADIRUp_HM.outdata_para4->accData_out4;
- parameter ADIRUp_HM.outdata_para5->accData_out5;
- parameter ADIRUp_HM.outdata_para6->accData_out6;
+ C7: parameter ADIRUp_HM.outdata_para1->accData_out1;
+ C8: parameter ADIRUp_HM.outdata_para2->accData_out2;
+ C9: parameter ADIRUp_HM.outdata_para3->accData_out3;
+ C10: parameter ADIRUp_HM.outdata_para4->accData_out4;
+ C11: parameter ADIRUp_HM.outdata_para5->accData_out5;
+ C12: parameter ADIRUp_HM.outdata_para6->accData_out6;
  
- parameter adirup_error_action->ADIRUp_HM.error_action_in;
- parameter  ADIRUp_HM.error_data_out->adirup_error_out;
+ C13: parameter adirup_error_action->ADIRUp_HM.error_action_in;
+ C14:parameter  ADIRUp_HM.error_data_out->adirup_error_out;
 end    ADIRUp_HM.impl;
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -396,9 +396,9 @@ sub1: {
 };
 
 connections
- parameter  arlarm_acc_in->alarmAggregator.inData_para1;
- parameter  arlarm_adirup_in->alarmAggregator.inData_para2;
- parameter  alarmAggregator.outData_para->alarmAggregator_out;
+ C1: parameter  arlarm_acc_in->alarmAggregator.inData_para1;
+ C2: parameter  arlarm_adirup_in->alarmAggregator.inData_para2;
+ C3: parameter  alarmAggregator.outData_para->alarmAggregator_out;
 end     alarmAggregator.impl;
 
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -427,8 +427,8 @@ sub1: {
 };
 
 connections
- parameter  diagnosis_in->diagnosisEngine.inData_para;
- parameter  diagnosisEngine.outData_para->diagnosis_out;
+ C1: parameter  diagnosis_in->diagnosisEngine.inData_para;
+ C2: parameter  diagnosisEngine.outData_para->diagnosis_out;
 end    diagnosisEngine.impl;
 ---------------------------------------------------------------------------------------------------------------------------------------
 
@@ -472,8 +472,8 @@ sub1: {
 };
 
 connections
- parameter  mitigation_in->mitigationActor.inData_para;
- parameter  mitigationActor.outData_para->mitigation_command;
+ C1: parameter  mitigation_in->mitigationActor.inData_para;
+ C2: parameter  mitigationActor.outData_para->mitigation_command;
 end  mitigationActor_th.impl;
 
 end threads;

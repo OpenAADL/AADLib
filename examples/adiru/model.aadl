@@ -23,32 +23,32 @@ subcomponents
    
    --acc_bus  :bus ADIRU_BUS::acc_bus;  
 connections
-   port acc_pr.acc1_output-> acc_hm_pr.acc1_input;
-   port acc_pr.acc2_output-> acc_hm_pr.acc2_input;
-   port acc_pr.acc3_output-> acc_hm_pr.acc3_input;
-   port acc_pr.acc4_output-> acc_hm_pr.acc4_input;
-   port acc_pr.acc5_output-> acc_hm_pr.acc5_input;
-   port acc_pr.acc6_output-> acc_hm_pr.acc6_input;
+   C1: port acc_pr.acc1_output-> acc_hm_pr.acc1_input;
+   C2: port acc_pr.acc2_output-> acc_hm_pr.acc2_input;
+   C3: port acc_pr.acc3_output-> acc_hm_pr.acc3_input;
+   C4: port acc_pr.acc4_output-> acc_hm_pr.acc4_input;
+   C5: port acc_pr.acc5_output-> acc_hm_pr.acc5_input;
+   C6: port acc_pr.acc6_output-> acc_hm_pr.acc6_input;
 
-   port acc_hm_pr.event2acc1->acc_pr.acc1_event_in;
-   port acc_hm_pr.event2acc2->acc_pr.acc2_event_in;
-   port acc_hm_pr.event2acc3->acc_pr.acc3_event_in;
-   port acc_hm_pr.event2acc4->acc_pr.acc4_event_in;
-   port acc_hm_pr.event2acc5->acc_pr.acc5_event_in;
-   port acc_hm_pr.event2acc6->acc_pr.acc6_event_in;
+   C7: port acc_hm_pr.event2acc1->acc_pr.acc1_event_in;
+   C8: port acc_hm_pr.event2acc2->acc_pr.acc2_event_in;
+   C9: port acc_hm_pr.event2acc3->acc_pr.acc3_event_in;
+   C10: port acc_hm_pr.event2acc4->acc_pr.acc4_event_in;
+   C11: port acc_hm_pr.event2acc5->acc_pr.acc5_event_in;
+   C12: port acc_hm_pr.event2acc6->acc_pr.acc6_event_in;
 
-   port acc_hm_pr.v_acc1_dataout->ADIRUp_pr.acc1_input;
-   port acc_hm_pr.v_acc2_dataout->ADIRUp_pr.acc2_input;
-   port acc_hm_pr.v_acc3_dataout->ADIRUp_pr.acc3_input;
-   port acc_hm_pr.v_acc4_dataout->ADIRUp_pr.acc4_input;
-   port acc_hm_pr.v_acc5_dataout->ADIRUp_pr.acc5_input;
-   port acc_hm_pr.v_acc6_dataout->ADIRUp_pr.acc6_input;
+   C13: port acc_hm_pr.v_acc1_dataout->ADIRUp_pr.acc1_input;
+   C14: port acc_hm_pr.v_acc2_dataout->ADIRUp_pr.acc2_input;
+   C15: port acc_hm_pr.v_acc3_dataout->ADIRUp_pr.acc3_input;
+   C16: port acc_hm_pr.v_acc4_dataout->ADIRUp_pr.acc4_input;
+   C17: port acc_hm_pr.v_acc5_dataout->ADIRUp_pr.acc5_input;
+   C18: port acc_hm_pr.v_acc6_dataout->ADIRUp_pr.acc6_input;
 
-   port acc_hm_pr.acc_error_out-> SHM_pr.arlarm_acc_in;
-   port SHM_pr.systemHM_action->acc_hm_pr.acc_error_action;
+   C19: port acc_hm_pr.acc_error_out-> SHM_pr.arlarm_acc_in;
+   C20: port SHM_pr.systemHM_action->acc_hm_pr.acc_error_action;
 
-   port ADIRUp_pr.ADIRUp_error_out->SHM_pr.arlarm_adirup_in;
-   port SHM_pr.systemHM_action->ADIRUp_pr.ADIRUp_error_action;
+   C21: port ADIRUp_pr.ADIRUp_error_out->SHM_pr.arlarm_adirup_in;
+   C22: port SHM_pr.systemHM_action->ADIRUp_pr.ADIRUp_error_action;
 properties
    --  bind partition process to their associated runtime (virtual processor)
 

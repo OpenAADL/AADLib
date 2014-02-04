@@ -109,43 +109,43 @@ public
     mem         :  abstract manage_memory;
 
   connections
-    port get1.ctrlout -> ctrl1.ctrlin
+  C1:  port get1.ctrlout -> ctrl1.ctrlin
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
-    port get2.ctrlout -> ctrl2.ctrlin
+  C2:  port get2.ctrlout -> ctrl2.ctrlin
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
-    port get3.ctrlout -> ctrl3.ctrlin
+  C3:  port get3.ctrlout -> ctrl3.ctrlin
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
-    port get4.ctrlout -> ctrl4.ctrlin
+  C4:  port get4.ctrlout -> ctrl4.ctrlin
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
-    port get5.ctrlout -> ctrl5.ctrlin
+  C5:  port get5.ctrlout -> ctrl5.ctrlin
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
-    port get6.ctrlout -> ctrl6.ctrlin
+  C6:  port get6.ctrlout -> ctrl6.ctrlin
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
-    port get7.ctrlout -> ctrl7.ctrlin
+  C7:  port get7.ctrlout -> ctrl7.ctrlin
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
 
-    port get1.dataout -> prs_data.fpadata1
+  C8:  port get1.dataout -> prs_data.fpadata1
     {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
-    port get2.dataout -> prs_data.fpadata2
+  C9:  port get2.dataout -> prs_data.fpadata2
     {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
-    port get3.dataout -> prs_data.fpadata3
+  C10:  port get3.dataout -> prs_data.fpadata3
     {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
-    port get4.dataout -> prs_data.fpadata4
+  C11:  port get4.dataout -> prs_data.fpadata4
     {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
-    port get5.dataout -> prs_data.fpadata5
+  C12:  port get5.dataout -> prs_data.fpadata5
     {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
-    port get6.dataout -> prs_data.fpadata6
+  C13:  port get6.dataout -> prs_data.fpadata6
     {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
-    port get7.dataout -> prs_data.fpadata7
+  C14:  port get7.dataout -> prs_data.fpadata7
     {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
 
-    port prs_data.output -> compress.input
+  C15:  port prs_data.output -> compress.input
     {Bus_Properties::Required_Bandwidth => 140_000_000 bitsps;};
 
-    port compress.output -> store.input
+  C16:  port compress.output -> store.input
     {Bus_Properties::Required_Bandwidth => 70_000_000 bitsps;};
 
-    port store.output -> mem.input;
+  C17:  port store.output -> mem.input;
 
   properties
     Period                    => 1 ms;

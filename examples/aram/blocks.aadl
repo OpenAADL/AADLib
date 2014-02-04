@@ -76,8 +76,8 @@ public
     ctrlpart    : device FPA_control.i;
 
   connections
-    port datapart.dataout -> dataout;
-    port datapart.ctrlout -> ctrlpart.ctrlin
+   C1: port datapart.dataout -> dataout;
+   C2: port datapart.ctrlout -> ctrlpart.ctrlin
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
 
   properties
@@ -107,11 +107,11 @@ public
     processing  : processor compress_runtime_lc.i;
 
   connections
-    port datapart.dataout -> processing.raw;
-    port datapart.ctrlout -> ctrlpart.ctrlin
+  C1:  port datapart.dataout -> processing.raw;
+  C2:  port datapart.ctrlout -> ctrlpart.ctrlin
     {Bus_Properties::Required_Bandwidth => 20_000_000 bitsps;};
 
-    bus access bus_access -> processing.bus_access;
+  C3:  bus access bus_access -> processing.bus_access;
 
   properties
     Physical_Properties::Mass => 3.0 Kg;
@@ -202,8 +202,8 @@ public
     computer2 : processor compress_runtime_hc.i;
 
   connections
-    bus access bus_access -> computer1.bus_access;
-    bus access bus_access -> computer2.bus_access;
+  C1:  bus access bus_access -> computer1.bus_access;
+  C2:  bus access bus_access -> computer2.bus_access;
 
   properties
     Physical_Properties::Mass => 9.0 Kg;
@@ -298,7 +298,7 @@ public
     runtime : processor memory_runtime.i;
 
   connections
-    bus access bus_access -> runtime.bus_access;
+  C1:  bus access bus_access -> runtime.bus_access;
 
   properties
     Physical_Properties::Mass => 15.0 Kg;
@@ -311,7 +311,7 @@ public
     runtime : processor memory_runtime.i;
 
   connections
-    bus access bus_access -> runtime.bus_access;
+ C1:  bus access bus_access -> runtime.bus_access;
   properties
     Physical_Properties::Mass => 15.0 Kg;
     Physical_Properties::Power_Consume => 45.0 W;

@@ -77,29 +77,29 @@ subcomponents
    acc_HM: thread threads::acc_HM.impl;
 connections
    
-   port acc_HM.acc1_validated_dataout->v_acc1_dataout;
-   port acc_HM.acc2_validated_dataout->v_acc2_dataout;
-   port acc_HM.acc3_validated_dataout->v_acc3_dataout;
-   port acc_HM.acc4_validated_dataout->v_acc4_dataout;
-   port acc_HM.acc5_validated_dataout->v_acc5_dataout;
-   port acc_HM.acc6_validated_dataout->v_acc6_dataout;
+   C1: port acc_HM.acc1_validated_dataout->v_acc1_dataout;
+   C2: port acc_HM.acc2_validated_dataout->v_acc2_dataout;
+   C3: port acc_HM.acc3_validated_dataout->v_acc3_dataout;
+   C4: port acc_HM.acc4_validated_dataout->v_acc4_dataout;
+   C5: port acc_HM.acc5_validated_dataout->v_acc5_dataout;
+   C6: port acc_HM.acc6_validated_dataout->v_acc6_dataout;
 
-   port acc_HM.event_to_acc1->event2acc1;
-   port acc_HM.event_to_acc2->event2acc2;
-   port acc_HM.event_to_acc3->event2acc3;
-   port acc_HM.event_to_acc4->event2acc4;
-   port acc_HM.event_to_acc5->event2acc5;
-   port acc_HM.event_to_acc6->event2acc6;
+   C7: port acc_HM.event_to_acc1->event2acc1;
+   C8: port acc_HM.event_to_acc2->event2acc2;
+   C9: port acc_HM.event_to_acc3->event2acc3;
+   C10: port acc_HM.event_to_acc4->event2acc4;
+   C11: port acc_HM.event_to_acc5->event2acc5;
+   C12: port acc_HM.event_to_acc6->event2acc6;
 
-   port acc1_input->acc_HM.acc1_data_monitor; --{Timing=>Delayed;};
-   port acc2_input->acc_HM.acc2_data_monitor;
-   port acc3_input->acc_HM.acc3_data_monitor; --{Timing=>Delayed;};
-   port acc4_input->acc_HM.acc4_data_monitor;
-   port acc5_input->acc_HM.acc5_data_monitor; --{Timing=>Delayed;};
-   port acc6_input->acc_HM.acc6_data_monitor;
+   C13: port acc1_input->acc_HM.acc1_data_monitor; --{Timing=>Delayed;};
+   C14: port acc2_input->acc_HM.acc2_data_monitor;
+   C15: port acc3_input->acc_HM.acc3_data_monitor; --{Timing=>Delayed;};
+   C16: port acc4_input->acc_HM.acc4_data_monitor;
+   C17: port acc5_input->acc_HM.acc5_data_monitor; --{Timing=>Delayed;};
+   C18: port acc6_input->acc_HM.acc6_data_monitor;
   
-   port acc_HM.acc_error_out->acc_error_out;
-   port acc_error_action->acc_HM.acc_error_action;
+   C19: port acc_HM.acc_error_out->acc_error_out;
+   C20: port acc_error_action->acc_HM.acc_error_action;
    
 end acc_hm_process.impl;
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -130,19 +130,19 @@ subcomponents
    acc6: thread threads::acc6_dataOutput.impl;
 connections
    
-   port acc1_event_in->acc1.acc1_command_in;
-   port acc2_event_in->acc2.acc2_command_in;
-   port acc3_event_in->acc3.acc_command_in;
-   port acc4_event_in->acc4.acc_command_in;
-   port acc5_event_in->acc5.acc_command_in;
-   port acc6_event_in->acc6.acc_command_in;
+   C1: port acc1_event_in->acc1.acc1_command_in;
+   C2: port acc2_event_in->acc2.acc2_command_in;
+   C3: port acc3_event_in->acc3.acc_command_in;
+   C4: port acc4_event_in->acc4.acc_command_in;
+   C5: port acc5_event_in->acc5.acc_command_in;
+   C6: port acc6_event_in->acc6.acc_command_in;
    
-   port acc1.acc1out->acc1_output; --{Timing=>Delayed;};
-   port acc2.acc2out->acc2_output;
-   port acc3.accout->acc3_output;
-   port acc4.accout->acc4_output; --{Timing=>Delayed;};
-   port acc5.accout->acc5_output;
-   port acc6.accout->acc6_output;
+   C7: port acc1.acc1out->acc1_output; --{Timing=>Delayed;};
+   C8: port acc2.acc2out->acc2_output;
+   C9: port acc3.accout->acc3_output;
+   C10: port acc4.accout->acc4_output; --{Timing=>Delayed;};
+   C11: port acc5.accout->acc5_output;
+   C12: port acc6.accout->acc6_output;
 end acc_process.impl;
 ----------------------------------------------------------------------------------------------------------------------------------
 process ADIRUp_process
@@ -164,24 +164,24 @@ subcomponents
    --solve_th2: thread threads::ADIRUp_solve.impl;
    HM_th: thread threads::ADIRUp_HM.impl;
 connections
-   port acc1_input->HM_th.accData_in1;-- {Timing=>Delayed;};
-   port acc2_input->HM_th.accData_in2;-- {Timing=>Delayed;};
-   port acc3_input->HM_th.accData_in3;-- {Timing=>Delayed;};
-   port acc4_input->HM_th.accData_in4;-- {Timing=>Delayed;};
-   port acc5_input->HM_th.accData_in5;-- {Timing=>Delayed;};
-   port acc6_input->HM_th.accData_in6;-- {Timing=>Delayed;};
+   C1: port acc1_input->HM_th.accData_in1;-- {Timing=>Delayed;};
+   C2: port acc2_input->HM_th.accData_in2;-- {Timing=>Delayed;};
+   C3: port acc3_input->HM_th.accData_in3;-- {Timing=>Delayed;};
+   C4: port acc4_input->HM_th.accData_in4;-- {Timing=>Delayed;};
+   C5: port acc5_input->HM_th.accData_in5;-- {Timing=>Delayed;};
+   C6: port acc6_input->HM_th.accData_in6;-- {Timing=>Delayed;};
    
-   port HM_th.accData_out1->solve_th1.solver_in1;-- {Timing=>Delayed;};
-   port HM_th.accData_out2->solve_th1.solver_in2;
-   port HM_th.accData_out3->solve_th1.solver_in3;-- {Timing=>Delayed;};
-   port HM_th.accData_out4->solve_th1.solver_in4;-- {Timing=>Delayed;};
-   port HM_th.accData_out5->solve_th1.solver_in5;-- {Timing=>Delayed;};
-   port HM_th.accData_out6->solve_th1.solver_in6;-- {Timing=>Delayed;};
+   C7: port HM_th.accData_out1->solve_th1.solver_in1;-- {Timing=>Delayed;};
+   C8: port HM_th.accData_out2->solve_th1.solver_in2;
+   C9: port HM_th.accData_out3->solve_th1.solver_in3;-- {Timing=>Delayed;};
+   C10: port HM_th.accData_out4->solve_th1.solver_in4;-- {Timing=>Delayed;};
+   C11: port HM_th.accData_out5->solve_th1.solver_in5;-- {Timing=>Delayed;};
+   C12: port HM_th.accData_out6->solve_th1.solver_in6;-- {Timing=>Delayed;};
   
    --port solve_th.ADIRUpout->ADIRUp_output;
    
-   port ADIRUp_error_action->HM_th.adirup_error_action;
-   port HM_th.adirup_error_out->ADIRUp_error_out;
+   C13: port ADIRUp_error_action->HM_th.adirup_error_action;
+   C14: port HM_th.adirup_error_out->ADIRUp_error_out;
 end ADIRUp_process.impl;
 -----------------------------------------------------------------------------------------------------------------------------------------
 process systemHM_process
@@ -225,8 +225,8 @@ subcomponents
    diagnosisEngine: thread threads::diagnosisEngine.impl;
    mitigationActor: thread threads::mitigationActor_th.impl;
 connections
-     port arlarm_acc_in<->alarmAggregator.arlarm_acc_in;
-     port arlarm_adirup_in<->alarmAggregator.arlarm_adirup_in;
+     C1: port arlarm_acc_in<->alarmAggregator.arlarm_acc_in;
+     C2: port arlarm_adirup_in<->alarmAggregator.arlarm_adirup_in;
 --   port systemHM_acc1_error->alarmAggregator.acc1_error;
 --   port systemHM_acc2_error->alarmAggregator.acc2_error;
 --   port systemHM_acc3_error->alarmAggregator.acc3_error;
@@ -243,7 +243,7 @@ connections
 --   port systemHM_VDc_error->alarmAggregator.VDc_error;
 --   port systemHM_VDr_error->alarmAggregator.VDr_error;
    
-   port  mitigationActor.mitigation_command-> systemHM_action;
+   C3: port  mitigationActor.mitigation_command-> systemHM_action;
 --   port systemHMEngine.acc2_action-> systemHM_acc2_action;
 --   port systemHMEngine.acc3_action-> systemHM_acc3_action;
 --   port systemHMEngine.acc4_action-> systemHM_acc4_action;
@@ -257,8 +257,8 @@ connections
 --   port systemHMEngine.VDc_action-> systemHM_VDc_action;
 --   port systemHMEngine.VDr_action-> systemHM_VDr_action;
    
-   port alarmAggregator.alarmAggregator_out->diagnosisEngine.diagnosis_in;
-   port diagnosisEngine.diagnosis_out-> mitigationActor.mitigation_in;
+   C4: port alarmAggregator.alarmAggregator_out->diagnosisEngine.diagnosis_in;
+   C5: port diagnosisEngine.diagnosis_out-> mitigationActor.mitigation_in;
   
 end systemHM_process.impl;
 end partitions;

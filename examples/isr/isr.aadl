@@ -49,7 +49,7 @@ public
   subcomponents
     ISR : thread RTC_ISR;
   connections
-    port ISR.ISR_Out -> ISR_Out;
+   C1: port ISR.ISR_Out -> ISR_Out;
   end RTC_Driver.impl;
 
   --  This process is a dumb application that simply displays the
@@ -73,7 +73,7 @@ public
     Ticker_Printer : thread Printer;
 
   connections
-    port ISR_In -> Ticker_Printer.Top;
+    C1: port ISR_In -> Ticker_Printer.Top;
   end Ticker.impl;
 
   --  System that binds them all
@@ -89,7 +89,7 @@ public
     Clock_Device   : device  RTC.impl;
 
   connections
-    port  Clock_Device.ISR_Out -> Ticker_Display.ISR_In;
+    C1: port  Clock_Device.ISR_Out -> Ticker_Display.ISR_In;
 
   properties
     Actual_Processor_Binding => (reference (CPU)) applies to Ticker_Display;
