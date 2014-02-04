@@ -9,7 +9,7 @@
 
 theorem check_ravenscar_profile
   foreach s in system_set do
-    requires ( 
+    requires (
             check_only_one_cpu       -- The system has just one processor
 	and check_scheduling_policy  -- the scheduling policy is FIFO/PRIORITY
         and all_tasks_cyclic         -- all tasks are cyclic
@@ -40,7 +40,7 @@ end check_only_one_cpu;
 theorem check_scheduling_policy
    foreach p in Processor_Set do
 
-   check (Property_Exists (p, "Scheduling_Protocol") and 
+   check (Property_Exists (p, "Scheduling_Protocol") and
              (Head (Get_Property_Value (p, "Scheduling_Protocol")) =
               "POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL")
 	      and (Size (Get_Property_Value (p, "Scheduling_Protocol")) = 1));
@@ -56,7 +56,7 @@ theorem check_pcp
    accessor_threads := {t in Thread_Set | Is_Accessing_To (t, d)};
 
    check (Cardinal (accessor_threads) <= 1 or
-          (Property_Exists (d, "Concurrency_Control_Protocol") and 
+          (Property_Exists (d, "Concurrency_Control_Protocol") and
              (Get_Property_Value (d, "Concurrency_Control_Protocol") =
               "Priority_Ceiling")));
 end check_pcp;
@@ -85,7 +85,7 @@ theorem check_pcp_correct
 
   check ((not Property_Exists (e, "Priority")) or
    (Get_Property_Value (e, "Priority") >=
-            Max (Get_Property_Value 
+            Max (Get_Property_Value
                   (accessor_threads, "Priority"))));
 
 end check_pcp_correct;
