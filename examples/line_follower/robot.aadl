@@ -54,7 +54,7 @@ public
 
     -- Connect the Arduino to one of the QRE1113 sensor
     
-    X9:port Power_5V   -> IR_1.VCC;
+    X9:port Power_5V    -> IR_1.VCC;
     X10:port GND        -> IR_1.GND;
     X11:port Analog_0   -> IR_1.Outp;
 
