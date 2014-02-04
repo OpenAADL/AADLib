@@ -28,7 +28,7 @@ public
 	  Average_Speed     : out parameter Speed_Value;
 	annex behavior_specification {**
 	  	states s : initial final state;
-        transitions t : s -[]-> s { Average_Speed := Distance_Traveled / Time_Elapsed; };
+        transitions t : s -[]-> s { Average_Speed := Distance_Traveled / Time_Elapsed };
 	  	
 	 **};
 	end Compute_Speed;
