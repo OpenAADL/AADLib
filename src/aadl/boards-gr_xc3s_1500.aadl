@@ -16,10 +16,10 @@ public
 
   system GR_XC3S_1500
   features
-    uart_core_1 : requires bus access Buses::UART::UART.impl;
-    uart_core_2 : requires bus access Buses::UART::UART.impl;
+    UART_Bus_0 : requires bus access Buses::UART::UART.impl;
+    UART_Bus_1 : requires bus access Buses::UART::UART.impl;
 
-    eth_1       : requires bus access Buses::Ethernet::Ethernet.impl;
+    Eth_Bus_0       : requires bus access Buses::Ethernet::Ethernet.impl;
 
   properties
     Data_Sheet::UUID => "http://www.gaisler.com/cms/index.php?option=com_content&task=view&id=187&Itemid=118";
@@ -30,12 +30,20 @@ public
   subcomponents
     LEON_Core : processor Processors::SPARC::LEON2;
     SRAM      : memory    Memories::SRAM {Memory_size => 64 MByte;};
+    Eth_0     : device    Buses::Ethernet::Generic_Ethernet;
+    UART_1    : device    Buses::UART::Generic_UART;
+    UART_2    : device    Buses::UART::Generic_UART;
   end GR_XC3S_1500.impl;
 
   system implementation GR_XC3S_1500.rtems extends GR_XC3S_1500.impl
   subcomponents
-    LEON_Core : refined to processor 
+    LEON_Core : refined to processor
     { Deployment::Execution_Platform => LEON_RTEMS;};
+  connections
+
+     C1 :  bus access UART_Bus_0 -> UART_1.UART;
+     C2 : bus access UART_Bus_1 -> UART_2.UART;
+     C3 : bus access Eth_Bus_0 -> Eth_0.Eth;
   end GR_XC3S_1500.rtems;
 
 end Boards::GR_XC3S_1500;
