@@ -13,4 +13,9 @@ public
   bus implementation Ethernet.impl
   end Ethernet.impl;
 
+  device Generic_Ethernet
+  features
+    Eth : requires bus access Ethernet.impl;
+  end Generic_Ethernet;
+
 end Buses::Ethernet;
