@@ -13,11 +13,16 @@ public
   bus UART
   properties
     Bus_Properties::Available_Bandwidth =>
-    (9_600 Bytesps, 19_200 Bytesps, 38_400 Bytesps, 57_600 Bytesps, 
+    (9_600 Bytesps, 19_200 Bytesps, 38_400 Bytesps, 57_600 Bytesps,
      115_200 Bytesps);
   end UART;
 
   bus implementation UART.impl
   end UART.impl;
+
+  device Generic_UART
+  features
+    UART : requires bus access UART.impl;
+  end Generic_UART;
 
 end Buses::UART;
