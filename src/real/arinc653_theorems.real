@@ -10,19 +10,24 @@
 
 theorem check_arinc653_restrictions
 foreach s in system_set do
-   requires (check_partitions_criticality -- All partitions define a DAL
-         and scheduling_major_frame       -- respect slot allocation
-         and partitions_execution
+   requires (check_partitions_criticality -- All partitions define a DAL and
+         and scheduling_major_frame       -- respect slot allocation and
+         and partitions_execution         -- are executed and
+         and partition_bindings           -- are bound
+         and main_memory_segments
+         and spatial_isolation
 	);
    check (1=1);
 end check_arinc653_restrictions;
 
 -------------------------------------------------------------------------------
---  All ARINC653 partitions must define a Design Assurance Level (DAL)
+-- All ARINC653 partitions must define a Design Assurance Level (DAL)
+-- or criticality
 
 theorem check_partitions_criticality
    foreach vp in virtual_processor_set do
-         check (property_exists (vp, "ARINC653::DAL"));
+         check (property_exists (vp, "ARINC653::DAL")
+                or property_exists (vp, "ARINC653::Criticality"));
 end check_partitions_criticality;
 
 -------------------------------------------------------------------------------
@@ -47,9 +52,45 @@ theorem partitions_execution
 
       check ((not property_exists (p, "ARINC653::Slots_Allocation")) or
              (cardinal (VP) = 0) or
-            (Is_In (list (VP), property (p, "ARINC653::Slots_Allocation"))));
+            (Is_In (list (VP), toto))); -- property (p, "ARINC653::Slots_Allocation"))));
 
 end partitions_execution;
+
+-------------------------------------------------------------------------------
+-- Check that for all process, this process is bound to one and only
+-- one virtual processor, and to a memory component.
+
+theorem partition_bindings
+   foreach p in process_set do
+     VP := { v in Virtual_Processor_Set | Is_Bound_To (p, v) };
+     Mem := { x in Memory_Set | Is_Bound_To (x,p)};
+
+     check (cardinal (VP) = 1
+             and cardinal (Mem) = 1);
+
+end partition_bindings;
+
+-------------------------------------------------------------------------------
+-- Check that each partition has its own memory space (aka. spatial isolation)
+
+theorem spatial_isolation
+  foreach m in Memory_Set do
+    p := { x in Process_Set | Is_Bound_To (m, x)};
+
+    check (cardinal (p) < 2);
+end spatial_isolation;
+
+-------------------------------------------------------------------------------
+-- Check that the main memory (RAM) is divided into different memory
+-- sub-components.
+
+theorem main_memory_segments
+  foreach s in system_set do
+    mem := { x in Memory_Set | Is_Subcomponent_Of (x, s)};
+    segments := { x in Memory_Set | Is_Subcomponent_Of (x, mem)};
+
+    check (cardinal (segments) > 0);
+end main_memory_segments;
 
 -------------------------------------------------------------------------------
 theorem check_processor_hm_validity
