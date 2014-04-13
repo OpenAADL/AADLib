@@ -1,80 +1,92 @@
 package ADIRU
 public
 
-with ARINC653;
-with POK;
-with ADIRU_memory;
-with partitions;
-with ADIRU_processor;
+  with ARINC653;
+  with POK;
+  with ADIRU_memory;
+  with partitions;
+  with ADIRU_processor;
 
-system ADIRU
+  system ADIRU
 
-end ADIRU;
+  end ADIRU;
 
-system implementation ADIRU.impl
-subcomponents
-   main_mem  : memory ADIRU_memory::main_memory.impl;
-   main_cpu  : processor ADIRU_processor::powerpc.impl;
-   acc_pr    : process partitions::acc_process.impl;
-   acc_hm_pr : process partitions::acc_hm_process.impl;
-   ADIRUp_pr : process partitions::ADIRUp_process.impl;
-   SHM_pr    : process partitions::systemHM_process.impl;
-   --acc4_pr  : process partitions::acc_process.impl;
-   
-   --acc_bus  :bus ADIRU_BUS::acc_bus;  
-connections
-   C1: port acc_pr.acc1_output-> acc_hm_pr.acc1_input;
-   C2: port acc_pr.acc2_output-> acc_hm_pr.acc2_input;
-   C3: port acc_pr.acc3_output-> acc_hm_pr.acc3_input;
-   C4: port acc_pr.acc4_output-> acc_hm_pr.acc4_input;
-   C5: port acc_pr.acc5_output-> acc_hm_pr.acc5_input;
-   C6: port acc_pr.acc6_output-> acc_hm_pr.acc6_input;
+  system implementation ADIRU.impl
+  subcomponents
+    main_mem  : memory ADIRU_memory::main_memory.impl;
+    main_cpu  : processor ADIRU_processor::powerpc.impl;
+    acc_pr    : process partitions::acc_process.impl;
+    acc_hm_pr : process partitions::acc_hm_process.impl;
+    ADIRUp_pr : process partitions::ADIRUp_process.impl;
+    SHM_pr    : process partitions::systemHM_process.impl;
+    --acc4_pr  : process partitions::acc_process.impl;
 
-   C7: port acc_hm_pr.event2acc1->acc_pr.acc1_event_in;
-   C8: port acc_hm_pr.event2acc2->acc_pr.acc2_event_in;
-   C9: port acc_hm_pr.event2acc3->acc_pr.acc3_event_in;
-   C10: port acc_hm_pr.event2acc4->acc_pr.acc4_event_in;
-   C11: port acc_hm_pr.event2acc5->acc_pr.acc5_event_in;
-   C12: port acc_hm_pr.event2acc6->acc_pr.acc6_event_in;
+    --acc_bus  :bus ADIRU_BUS::acc_bus;
+  connections
+    C1: port acc_pr.acc1_output-> acc_hm_pr.acc1_input;
+    C2: port acc_pr.acc2_output-> acc_hm_pr.acc2_input;
+    C3: port acc_pr.acc3_output-> acc_hm_pr.acc3_input;
+    C4: port acc_pr.acc4_output-> acc_hm_pr.acc4_input;
+    C5: port acc_pr.acc5_output-> acc_hm_pr.acc5_input;
+    C6: port acc_pr.acc6_output-> acc_hm_pr.acc6_input;
 
-   C13: port acc_hm_pr.v_acc1_dataout->ADIRUp_pr.acc1_input;
-   C14: port acc_hm_pr.v_acc2_dataout->ADIRUp_pr.acc2_input;
-   C15: port acc_hm_pr.v_acc3_dataout->ADIRUp_pr.acc3_input;
-   C16: port acc_hm_pr.v_acc4_dataout->ADIRUp_pr.acc4_input;
-   C17: port acc_hm_pr.v_acc5_dataout->ADIRUp_pr.acc5_input;
-   C18: port acc_hm_pr.v_acc6_dataout->ADIRUp_pr.acc6_input;
+    C7: port acc_hm_pr.event2acc1->acc_pr.acc1_event_in;
+    C8: port acc_hm_pr.event2acc2->acc_pr.acc2_event_in;
+    C9: port acc_hm_pr.event2acc3->acc_pr.acc3_event_in;
+    C10: port acc_hm_pr.event2acc4->acc_pr.acc4_event_in;
+    C11: port acc_hm_pr.event2acc5->acc_pr.acc5_event_in;
+    C12: port acc_hm_pr.event2acc6->acc_pr.acc6_event_in;
 
-   C19: port acc_hm_pr.acc_error_out-> SHM_pr.arlarm_acc_in;
-   C20: port SHM_pr.systemHM_action->acc_hm_pr.acc_error_action;
+    C13: port acc_hm_pr.v_acc1_dataout->ADIRUp_pr.acc1_input;
+    C14: port acc_hm_pr.v_acc2_dataout->ADIRUp_pr.acc2_input;
+    C15: port acc_hm_pr.v_acc3_dataout->ADIRUp_pr.acc3_input;
+    C16: port acc_hm_pr.v_acc4_dataout->ADIRUp_pr.acc4_input;
+    C17: port acc_hm_pr.v_acc5_dataout->ADIRUp_pr.acc5_input;
+    C18: port acc_hm_pr.v_acc6_dataout->ADIRUp_pr.acc6_input;
 
-   C21: port ADIRUp_pr.ADIRUp_error_out->SHM_pr.arlarm_adirup_in;
-   C22: port SHM_pr.systemHM_action->ADIRUp_pr.ADIRUp_error_action;
-properties
-   --  bind partition process to their associated runtime (virtual processor)
+    C19: port acc_hm_pr.acc_error_out-> SHM_pr.arlarm_acc_in;
+    C20: port SHM_pr.systemHM_action->acc_hm_pr.acc_error_action;
 
-   Actual_Processor_Binding => 
-      (reference (main_cpu.part1)) applies to acc_pr;
-   Actual_Processor_Binding =>
-      (reference (main_cpu.part2)) applies to acc_hm_pr;
-   Actual_Processor_Binding =>
-      (reference (main_cpu.part3)) applies to ADIRUp_pr;
-   Actual_Processor_Binding =>
-      (reference (main_cpu.part4)) applies to SHM_pr;
-   --Actual_Processor_Binding =>
-      --(reference (main_cpu.part4)) applies to acc4_pr;
-    
-   --  bind partition process to their address spaces  (memory components)
+    C21: port ADIRUp_pr.ADIRUp_error_out->SHM_pr.arlarm_adirup_in;
+    C22: port SHM_pr.systemHM_action->ADIRUp_pr.ADIRUp_error_action;
+  properties
+    --  bind partition process to their associated runtime (virtual processor)
+
+    Actual_Processor_Binding =>
+    (reference (main_cpu.part1)) applies to acc_pr;
+    Actual_Processor_Binding =>
+    (reference (main_cpu.part2)) applies to acc_hm_pr;
+    Actual_Processor_Binding =>
+    (reference (main_cpu.part3)) applies to ADIRUp_pr;
+    Actual_Processor_Binding =>
+    (reference (main_cpu.part4)) applies to SHM_pr;
+    --Actual_Processor_Binding =>
+    --(reference (main_cpu.part4)) applies to acc4_pr;
+
+    --  bind partition process to their address spaces  (memory components)
 
    Actual_Memory_Binding =>
-     (reference (main_mem.accMem)) applies to acc_pr;
+   (reference (main_mem.accMem)) applies to acc_pr;
    Actual_Memory_Binding =>
-     (reference (main_mem.acc_hmMem)) applies to acc_hm_pr;
+   (reference (main_mem.acc_hmMem)) applies to acc_hm_pr;
    Actual_Memory_Binding =>
-     (reference (main_mem.ADIRUpMem)) applies to ADIRUp_pr;
+   (reference (main_mem.ADIRUpMem)) applies to ADIRUp_pr;
    Actual_Memory_Binding =>
-     (reference (main_mem.SHMMem)) applies to SHM_pr;
+   (reference (main_mem.SHMMem)) applies to SHM_pr;
    --Actual_Memory_Binding =>
-     --(reference (main_mem.acc4Mem)) applies to acc4_pr;
-   
-end ADIRU.impl;
+   --(reference (main_mem.acc4Mem)) applies to acc4_pr;
+
+
+  annex real_specification {**
+  theorem check_model
+    foreach e in system_set do
+    requires (check_arinc653_restrictions);
+    check (1=1);
+  end check_model;
+
+
+
+  **};
+  end ADIRU.impl;
+
 end ADIRU;

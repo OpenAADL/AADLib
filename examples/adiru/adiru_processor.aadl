@@ -1,34 +1,34 @@
 package ADIRU_processor
 public
 
-with POK;
-with ARINC653;
-with partitions;
+  with POK;
+  with ARINC653;
+  with partitions;
 
-processor powerpc
-properties
- POK::Architecture => x86;
- POK::BSP => x86_qemu;
-end powerpc;
+  processor powerpc
+  properties
+    POK::Architecture => x86;
+    POK::BSP => x86_qemu;
+  end powerpc;
 
-processor implementation powerpc.impl
-subcomponents
+  processor implementation powerpc.impl
+  subcomponents
    part1:   virtual processor partitions::acc_partition.impl;
    part2:   virtual processor partitions::acc_hm_partition.impl;
    part3:   virtual processor partitions::ADIRUp_partition.impl;
    part4:   virtual processor partitions::SHM_partition.impl;
    --part4:   virtual processor partitions::acc_partition.impl;
-   
-properties
+
+  properties
    --ARINC653::Scheduling_Protocol=>Static;
    --SEI::MIPSCapacity=>0.65 MIPS;
    ARINC653::Module_Major_Frame => 15000 ms;
    ARINC653::Partition_Slots => (4000 ms, 4000 ms,4000 ms,3000 ms);
-   ARINC653::Slots_Allocation => 
+   ARINC653::Slots_Allocation =>
      (reference (part1), reference (part2), reference (part3),reference (part4));
    --ARINC653::Process_Swap_Execution_Time =>1 ms;
    --ARINC653::HM_Errors => (Power_Fail);
    --ARINC653::HM_Module_Recovery_Actions => (Reset);
-end powerpc.impl;
+  end powerpc.impl;
 
 end ADIRU_processor;
