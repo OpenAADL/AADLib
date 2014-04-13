@@ -1,4 +1,4 @@
-package hardware
+package hardware_aocs
 public
   with dataaocs;
   With buses::DMA;
@@ -7,17 +7,17 @@ public
   -----------------------------
   --     Device definition   --
   -----------------------------
-  
+
   bus DMA extends buses::DMA::DMA -- AOCS internal bus
   end DMA;
-  
+
   bus OBDH extends buses::OBDH::OBDH  -- Satellite bus
-  end OBDH; 
-  
+  end OBDH;
+
   -----------------------------
   --    Passive Sensors      --
   -----------------------------
-  
+
   device FSS
   features
     FSS_data : out data port dataaocs::FSS_data;
@@ -25,7 +25,7 @@ public
     reconfiguration : in data port dataaocs::reconfigure_sensor;
     DMA : requires bus access DMA;
   end FSS;
-  
+
   device CSS
   features
     CSS_data : out data port dataaocs::CSS_data;
@@ -33,7 +33,7 @@ public
     reconfiguration : in data port dataaocs::reconfigure_sensor;
     DMA : requires bus access DMA;
   end CSS;
-  
+
   device SPS
   features
     SPS_data : out data port dataaocs::SPS_data;
@@ -41,7 +41,7 @@ public
     reconfiguration : in data port dataaocs::reconfigure_sensor;
     DMA : requires bus access DMA;
   end SPS;
-  
+
   device ES
   features
     ES_data : out data port dataaocs::ES_data;
@@ -49,7 +49,7 @@ public
     reconfiguration : in data port dataaocs::reconfigure_sensor;
     DMA : requires bus access DMA;
   end ES;
-  
+
   device MGM
   features
     MGM_data : out data port dataaocs::MGM_data;
@@ -57,7 +57,7 @@ public
     reconfiguration : in data port dataaocs::reconfigure_sensor;
     DMA : requires bus access DMA;
   end MGM;
-  
+
   device GYR
   features
     GYR_data : out data port dataaocs::GYR_data;
@@ -65,11 +65,11 @@ public
     reconfiguration : in data port dataaocs::reconfigure_sensor;
     DMA : requires bus access DMA;
   end GYR;
-  
+
   -----------------------------
   --    Active Sensors      --
   -----------------------------
-  
+
   device STR
   features
     STR_data : out data port dataaocs::STR_data;
@@ -77,7 +77,7 @@ public
     reconfiguration : in data port dataaocs::reconfigure_sensor;
     DMA : requires bus access DMA;
   end STR;
-  
+
   device GPS
   features
     GPS_data : out data port dataaocs::GPS_data;
@@ -85,11 +85,11 @@ public
     reconfiguration : in data port dataaocs::reconfigure_sensor;
     DMA : requires bus access DMA;
   end GPS;
-  
+
   -----------------------------
   --        Actuators        --
   -----------------------------
-  
+
   device THU
   features
     THU_data : in data port dataaocs::THU_data;
@@ -97,7 +97,7 @@ public
     reconfiguration : in data port dataaocs::reconfigure_actuator;
     DMA : requires bus access DMA;
   end THU;
-  
+
   device RW
   features
     RW_data : in data port dataaocs::RW_data;
@@ -105,7 +105,7 @@ public
     reconfiguration : in data port dataaocs::reconfigure_actuator;
     DMA : requires bus access DMA;
   end RW;
-  
+
   device MGT
   features
     MGT_data : in data port dataaocs::MGT_data;
@@ -113,7 +113,7 @@ public
     reconfiguration : in data port dataaocs::reconfigure_actuator;
     DMA : requires bus access DMA;
   end MGT;
-  
+
   -----------------------------
   --    The watchdog         --
   -----------------------------
@@ -123,24 +123,23 @@ public
     watchdog_event : in event port;
     anomaly_detected : out event port;
   end watchdog;
-  
+
   -----------------------------
   --  Satellite Computers    --
   -----------------------------
-  
+
   device Satellite_Central_Computer
   features
     telecommand : out data port dataaocs::telecommand;
     telemetry : in data port dataaocs::telemetry;
     OBDH : requires bus access OBDH;
   end Satellite_Central_Computer;
-  
+
   device Other_Subsystem_Computer
   features
     telecommand : in data port dataaocs::telecommand;
     telemetry : out data port dataaocs::telemetry;
     OBDH : requires bus access OBDH;
   end Other_Subsystem_Computer;
-  
-end hardware;
-    
+
+end hardware_aocs;
