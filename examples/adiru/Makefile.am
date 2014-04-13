@@ -12,4 +12,4 @@ CLEANFILES =
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl
+AVAILABLE_TARGETS= parse-aadl real
