@@ -14,8 +14,9 @@ foreach s in system_set do
          and scheduling_major_frame       -- respect slot allocation and
          and partitions_execution         -- are executed and
          and partition_bindings           -- are bound
-         and main_memory_segments
-         and spatial_isolation
+
+         and main_memory_segments         -- Memory are made of separate segments
+         and spatial_isolation            -- allowing for spatial isolation
 	);
    check (1=1);
 end check_arinc653_restrictions;
@@ -48,11 +49,10 @@ end scheduling_major_frame;
 theorem partitions_execution
     foreach p in Processor_Set do
       VP := { x in Virtual_Processor_Set | Is_Subcomponent_Of (x, p)};
-      var toto := get_property_value (p, "ARINC653::Slots_Allocation");
 
       check ((not property_exists (p, "ARINC653::Slots_Allocation")) or
              (cardinal (VP) = 0) or
-            (Is_In (list (VP), toto))); -- property (p, "ARINC653::Slots_Allocation"))));
+            (Is_In (list (VP), property (p, "ARINC653::Slots_Allocation"))));
 
 end partitions_execution;
 
