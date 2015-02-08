@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
---  EMS412 -- AADL: fcs.aadl
+--  EM412 -- AADL: fcs.aadl
 --------------------------------------------------------------------------------
 --  This AADL package models the Flight Control System from this lab
 --  session, a set of periodic threads interacting with some devices.
@@ -169,6 +169,8 @@ features
   angle    : in  data port angle;
   position : in  data port position;
   acc      : in  data port acc;
+flows
+ f1 : flow path pos_c -> order { latency => 10 ms .. 20 ms;};
 end node_a;
 
 process implementation node_a.impl
@@ -206,6 +208,8 @@ device Operator
 features
   pos_c : out data port pos_c;
   i2c   : requires bus access i2c_bus;
+flows
+  f1 : flow source pos_c { latency => 10 ms .. 20 ms;};  
 end Operator;
 
 device GPS
@@ -225,6 +229,8 @@ device Platform
 features
   order : in data port order;
   i2c   : requires bus access i2c_bus;
+flows
+f1 : flow sink order { latency => 20 ms .. 20 ms;};
 end Platform;
 
 ---------
@@ -233,6 +239,9 @@ end Platform;
 
 bus I2C_bus extends buses::I2C::I2C 
   --  I2C bus
+  properties
+   Transmission_Time => [ Fixed => 0 ms .. 10ms;
+                          PerByte => 0 ms .. 10 ms; ];
 end I2C_bus;
 
 ------------
@@ -240,6 +249,7 @@ end I2C_bus;
 ------------
 
 system fcs 
+
 end fcs;
 
 system implementation fcs.impl
@@ -253,24 +263,32 @@ subcomponents
    i2c      : bus       i2c_bus;
 
 connections
-  V13:port operator.pos_c -> node_a.pos_c
-  { Actual_Connection_Binding => (reference (i2c));};
-  V14:port node_a.order   -> platform.order
-  { Actual_Connection_Binding => (reference (i2c));};
-  V15:port GPS.position   -> node_a.position
-  { Actual_Connection_Binding => (reference (i2c));};
-  V16:port IMU.angle      -> node_a.angle
-  { Actual_Connection_Binding => (reference (i2c));};
-  V17:port IMU.acc        -> node_a.acc
-  { Actual_Connection_Binding => (reference (i2c));};
+  V13:port operator.pos_c -> node_a.pos_c;
+--  { Actual_Connection_Binding => (reference (i2c));};
+  V14:port node_a.order   -> platform.order;
+--  { Actual_Connection_Binding => (reference (i2c));};
+  V15:port GPS.position   -> node_a.position;
+--  { Actual_Connection_Binding => (reference (i2c));};
+  V16:port IMU.angle      -> node_a.angle;
+ -- { Actual_Connection_Binding => (reference (i2c));};
+  V17:port IMU.acc        -> node_a.acc;
+--  { Actual_Connection_Binding => (reference (i2c));};
 
   V18:bus access i2c -> GPS.i2c;
   V19:bus access i2c -> IMU.i2c;
   V20:bus access i2c -> platform.i2c;
   V21:bus access i2c -> cpu_rm.i2c;
 
+flows
+etef1 : end to end flow operator.f1 -> V13 -> node_a.f1 -> V14 -> platform.f1 { latency => 40 ms .. 90 ms;}; 
+
 properties
    Actual_Processor_Binding => (reference (cpu_rm)) applies to node_a;
+   Actual_Connection_Binding => (reference (i2c)) applies to V13;
+   Actual_Connection_Binding => (reference (i2c)) applies to V14;
+   Actual_Connection_Binding => (reference (i2c)) applies to V15;
+   Actual_Connection_Binding => (reference (i2c)) applies to V16;
+   Actual_Connection_Binding => (reference (i2c)) applies to V17;
 end fcs.impl;
 
 end Flight_Control_System;
