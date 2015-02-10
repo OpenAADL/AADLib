@@ -1,4 +1,4 @@
-package Software
+package RAP
 public
   with Data_Model;
   with Deployment;
@@ -196,7 +196,7 @@ public
   data implementation Waypoint_Table_T.Impl
   properties
     Data_Model::Dimension => ( 16 );
-    Data_Model::Base_Type => (classifier (Software::Aircraft_Position_T.Impl));
+    Data_Model::Base_Type => (classifier (Aircraft_Position_T.Impl));
   end Waypoint_Table_T.Impl;
 
   --  Sent by the radar, it is capable of tracking 15 targets
@@ -209,7 +209,7 @@ public
   data implementation Contact_Table_T.Impl
   properties
     Data_Model::Dimension => ( 15 );
-    Data_Model::Base_Type => (classifier (Software::Offset_T.Impl));
+    Data_Model::Base_Type => (classifier (Offset_T.Impl));
   end Contact_Table_T.Impl;
 
   -----------------
@@ -2347,4 +2347,4 @@ properties
 
 end RAP.Native;
 
-end Software;
+end RAP;
