@@ -1,7 +1,7 @@
 --  This AADL model illustrates how to conduct schedulability analysis
 --  using Cheddar, and then code generation of periodic tasks.
 --
---  Two periodic tasks run in parrallel, without interaction. Tasks
+--  Two periodic tasks run in parallel, without interaction. Tasks
 --  parameters allows RMA analysis
 
 package RMAAadl
