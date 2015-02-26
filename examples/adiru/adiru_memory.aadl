@@ -13,7 +13,7 @@ properties
    --Base_Address => 0;
    Memory_Size =>300000 Bytes;
    ARINC653::Memory_Type => (Code_Memory);
-   ARINC653::Access_Type => (read);
+--   ARINC653::Access_Type => (read);
 end partition_memory.acc_impl;
 
 memory implementation partition_memory.acc_hm_impl
@@ -21,7 +21,7 @@ properties
    --Base_Address => 0;
    Memory_Size =>300000 Bytes;
    ARINC653::Memory_Type => (Code_Memory);
-   ARINC653::Access_Type => (read);
+--   ARINC653::Access_Type => (read);
 end partition_memory.acc_hm_impl;
 
 memory implementation partition_memory.ADIRUp_impl
@@ -29,7 +29,7 @@ properties
    --Base_Address => 0;
    Memory_Size =>300000 Bytes;
    ARINC653::Memory_Type => (Code_Memory);
-   ARINC653::Access_Type => (read);
+--   ARINC653::Access_Type => (read);
 end partition_memory.ADIRUp_impl;
 
 memory implementation partition_memory.SHM_impl
@@ -37,7 +37,7 @@ properties
    --Base_Address => 0;
    Memory_Size =>300000 Bytes;
    ARINC653::Memory_Type => (Code_Memory);
-   ARINC653::Access_Type => (read);
+--   Access_Right => read_only;
 end partition_memory.SHM_impl;
 ---------------------------------------------------------------------------------
 memory main_memory

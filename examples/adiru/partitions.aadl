@@ -8,10 +8,10 @@ public
 
 
   virtual processor acc_partition
-  properties
+  properties 
     --Scheduling_Protocol => (FixedTimeline);
     POK::Additional_Features => (console);
-    ARINC653::Criticality => Level_A; -- XXX Review value
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
   end acc_partition;
 
   virtual processor implementation acc_partition.impl
@@ -21,7 +21,7 @@ public
   properties
     --Scheduling_Protocol => (FixedTimeline);
     POK::Additional_Features => (console);
-    ARINC653::Criticality => Level_A; -- XXX Review value
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
   end acc_hm_partition;
 
   virtual processor implementation acc_hm_partition.impl
@@ -31,7 +31,7 @@ public
   properties
     --Scheduling_Protocol => (FixedTimeline);
     POK::Additional_Features => (console);
-    ARINC653::Criticality => Level_A; -- XXX Review value
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
   end ADIRUp_partition;
 
   virtual processor implementation ADIRUp_partition.impl
@@ -41,7 +41,7 @@ public
   properties
     --Scheduling_Protocol => (FixedTimeline);
     POK::Additional_Features => (console);
-    ARINC653::Criticality => Level_A; -- XXX Review value
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
   end SHM_partition;
 
   virtual processor implementation SHM_partition.impl
