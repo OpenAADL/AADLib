@@ -13,10 +13,22 @@ public
 
   processor implementation powerpc.impl
   subcomponents
-   part1:   virtual processor partitions::acc_partition.impl;
-   part2:   virtual processor partitions::acc_hm_partition.impl;
-   part3:   virtual processor partitions::ADIRUp_partition.impl;
-   part4:   virtual processor partitions::SHM_partition.impl;
+   part1:   virtual processor partitions::acc_partition.impl
+   		{ARINC653::Partition_Identifier => 1;
+   		 ARINC653::Partition_Name       => "acc";
+   		};
+   part2:   virtual processor partitions::acc_hm_partition.impl
+      	{ARINC653::Partition_Identifier => 1;
+   		 ARINC653::Partition_Name       => "acc_hm";
+   		};
+   part3:   virtual processor partitions::ADIRUp_partition.impl
+        {ARINC653::Partition_Identifier => 1;
+   		 ARINC653::Partition_Name       => "adirup";
+   		};
+   part4:   virtual processor partitions::SHM_partition.impl
+      	{ARINC653::Partition_Identifier => 1;
+   		 ARINC653::Partition_Name       => "shm";
+   		};
    --part4:   virtual processor partitions::acc_partition.impl;
 
   properties
