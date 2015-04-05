@@ -8,10 +8,10 @@ public
 
 
   virtual processor acc_partition
-  properties
+  properties 
     --Scheduling_Protocol => (FixedTimeline);
     POK::Additional_Features => (console);
-    ARINC653::Criticality => Level_A; -- XXX Review value
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
   end acc_partition;
 
   virtual processor implementation acc_partition.impl
@@ -21,7 +21,7 @@ public
   properties
     --Scheduling_Protocol => (FixedTimeline);
     POK::Additional_Features => (console);
-    ARINC653::Criticality => Level_A; -- XXX Review value
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
   end acc_hm_partition;
 
   virtual processor implementation acc_hm_partition.impl
@@ -31,7 +31,7 @@ public
   properties
     --Scheduling_Protocol => (FixedTimeline);
     POK::Additional_Features => (console);
-    ARINC653::Criticality => Level_A; -- XXX Review value
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
   end ADIRUp_partition;
 
   virtual processor implementation ADIRUp_partition.impl
@@ -41,7 +41,7 @@ public
   properties
     --Scheduling_Protocol => (FixedTimeline);
     POK::Additional_Features => (console);
-    ARINC653::Criticality => Level_A; -- XXX Review value
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
   end SHM_partition;
 
   virtual processor implementation SHM_partition.impl
@@ -65,7 +65,8 @@ public
     v_acc6_dataout: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
 
     acc_error_out: out event data port SHM_DataType::errorData;
-    acc_error_action: in event data port SHM_DataType::actionData;
+    acc_error_action: in event data port SHM_DataType::actionData
+    	{Compute_Deadline => 0 ms;};
 
     event2acc1: out event data port SHM_DataType::actionData;
     event2acc2: out event data port SHM_DataType::actionData;
@@ -115,12 +116,18 @@ public
     acc5_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
     acc6_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
 
-    acc1_event_in: in event data port SHM_DataType::actionData;
-    acc2_event_in: in event data port SHM_DataType::actionData;
-    acc3_event_in: in event data port SHM_DataType::actionData;
-    acc4_event_in: in event data port SHM_DataType::actionData;
-    acc5_event_in: in event data port SHM_DataType::actionData;
-    acc6_event_in: in event data port SHM_DataType::actionData;
+    acc1_event_in: in event data port SHM_DataType::actionData
+   		 {Compute_Deadline => 0 ms;};
+    acc2_event_in: in event data port SHM_DataType::actionData
+    	{Compute_Deadline => 0 ms;};
+    acc3_event_in: in event data port SHM_DataType::actionData
+    	{Compute_Deadline => 0 ms;};
+    acc4_event_in: in event data port SHM_DataType::actionData
+    	{Compute_Deadline => 0 ms;};
+    acc5_event_in: in event data port SHM_DataType::actionData
+    	{Compute_Deadline => 0 ms;};
+    acc6_event_in: in event data port SHM_DataType::actionData
+    	{Compute_Deadline => 0 ms;};
   end acc_process;
 
   process implementation acc_process.impl
@@ -150,15 +157,16 @@ public
 
   process ADIRUp_process
   features
-    acc1_input: in data port SHM_DataType::accData;
-    acc2_input: in data port SHM_DataType::accData;
-    acc3_input: in data port SHM_DataType::accData;
-    acc4_input: in data port SHM_DataType::accData;
-    acc5_input: in data port SHM_DataType::accData;
-    acc6_input: in data port SHM_DataType::accData;
+    acc1_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 1 ms;};
+    acc2_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 1 ms;};
+    acc3_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 1 ms;};
+    acc4_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 1 ms;};
+    acc5_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 1 ms;};
+    acc6_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 1 ms;};
     --ADIRUp_output: out data port SHM_DataType::accData;
     ADIRUp_error_out: out event data port SHM_DataType::errorData;
-    ADIRUp_error_action: in event data port SHM_DataType::actionData;
+    ADIRUp_error_action: in event data port SHM_DataType::actionData
+    	{Compute_Deadline => 0 ms;};
   end ADIRUp_process;
 
   process implementation ADIRUp_process.impl
@@ -190,8 +198,10 @@ public
 
   process systemHM_process
   features
-    arlarm_acc_in: in event data  port SHM_DataType::errorData;
-    arlarm_adirup_in: in event data  port SHM_DataType::errorData;
+    arlarm_acc_in: in event data  port SHM_DataType::errorData
+    	{Compute_Deadline => 0 ms;};
+    arlarm_adirup_in: in event data  port SHM_DataType::errorData
+    	{Compute_Deadline => 0 ms;};
     -- systemHM_acc1_error: in event data  port SHM_DataType::errorData;
     -- --systemHM_acc1_action: out event data  port SHM_DataType::actionData;
     -- systemHM_acc2_error: in event data  port SHM_DataType::errorData;

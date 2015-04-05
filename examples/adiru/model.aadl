@@ -12,7 +12,7 @@ public
   end ADIRU;
 
   system implementation ADIRU.impl
-  subcomponents
+  subcomponents 
     main_mem  : memory ADIRU_memory::main_memory.impl;
     main_cpu  : processor ADIRU_processor::powerpc.impl;
     acc_pr    : process partitions::acc_process.impl;
@@ -77,18 +77,43 @@ public
    --(reference (main_mem.acc4Mem)) applies to acc4_pr;
 
 
-  annex real_specification {**
-  theorem check_model
-    foreach e in system_set do
-    requires (check_arinc653_restrictions
-              and check_processor_hm_validity
-              and check_error_coverage);
-    check (1=1);
-  end check_model;
+--  annex real_specification {**
+--  theorem check_model
+--    foreach e in system_set do
+--    requires (check_arinc653_restrictions
+--              and check_processor_hm_validity
+--              and check_error_coverage);
+--    check (1=1);
+--  end check_model;
+--
+--
+--
+--  **};
 
+annex resolute {**
+	prove (check_arinc653_compliance(this))
+**}; 
+end ADIRU.impl;
 
+system implementation adiru.deos extends adiru.impl
+properties
+	Period => 4000 ms applies to main_cpu.part1;
+	Period => 4000 ms applies to main_cpu.part2;
+	Period => 4000 ms applies to main_cpu.part3;
+	Period => 3000 ms applies to main_cpu.part4;
+	Execution_Time => 4000 ms applies to main_cpu.part1;
+	Execution_Time => 4000 ms applies to main_cpu.part2;
+	Execution_Time => 4000 ms applies to main_cpu.part3;
+	Execution_Time => 3000 ms applies to main_cpu.part4; 
+annex resolute {**
+	prove (check_deos_compliance(this))
+**};
+end adiru.deos;
 
-  **};
-  end ADIRU.impl;
-
+system implementation adiru.vxworks653 extends adiru.impl
+annex resolute {**
+	prove (check_vxworks653_compliance(this))
+**}; 
+end adiru.vxworks653;
+ 
 end ADIRU;
