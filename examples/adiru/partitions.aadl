@@ -150,11 +150,11 @@ public
     C7: port acc1.acc1out->acc1_output; --{Timing=>Delayed;};
     C8: port acc2.acc2out->acc2_output;
     C9: port acc3.accout->acc3_output;
-    C10: port acc4.accout->acc4_output; --{Timing=>Delayed;};
+    C10: port acc4.accout->acc4_output; --{Timing=>Delayed;}; 
     C11: port acc5.accout->acc5_output;
     C12: port acc6.accout->acc6_output;
   end acc_process.impl;
-
+ 
   process ADIRUp_process
   features
     acc1_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 1 ms;};
@@ -230,7 +230,8 @@ public
     -- --systemHM_VDc_action: out event data  port SHM_DataType::actionData;
     -- systemHM_VDr_error: in event data  port SHM_DataType::errorData;
 
-    systemHM_action: out event data  port SHM_DataType::actionData;
+    systemHM_action_acc_hm: out event data  port SHM_DataType::actionData;
+    systemHM_action_adirup: out event data  port SHM_DataType::actionData;
   end systemHM_process;
 
   process implementation systemHM_process.impl
@@ -257,7 +258,8 @@ public
     --   port systemHM_VDc_error->alarmAggregator.VDc_error;
     --   port systemHM_VDr_error->alarmAggregator.VDr_error;
 
-    C3: port  mitigationActor.mitigation_command-> systemHM_action;
+    C31: port  mitigationActor.mitigation_command-> systemHM_action_acc_hm;
+    C32: port  mitigationActor.mitigation_command-> systemHM_action_adirup;
     --   port systemHMEngine.acc2_action-> systemHM_acc2_action;
     --   port systemHMEngine.acc3_action-> systemHM_acc3_action;
     --   port systemHMEngine.acc4_action-> systemHM_acc4_action;

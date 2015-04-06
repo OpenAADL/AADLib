@@ -1,7 +1,7 @@
-#include <types.h>
-#include <libc/stdio.h>
-#include <gtypes.h>
-#include <libm.h>
+
+#include "gtypes.h"
+
+#define __DEOS__
 
 int adirup_validated_data1=0;
 int adirup_validated_data2=0;
@@ -23,47 +23,109 @@ int pt=8;
 void adirup_hm (int in_data1, int in_data2,int in_data3, int in_data4,int in_data5, int in_data6,
                int* output1, int* output2,int* output3, int* output4,int* output5, int* output6,int recovery_action, int* error_msg)
 {
+#ifndef __DEOS__
  printf ("%d> ADIRU Processor Health Manager runs >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt++); 
  printf ("\n"); 
+#else
+     myprint_str_int ("%d> ADIRU Processor Health Manager runs >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt++);
+#endif
  pt=pt+9;
  int i=0;
   
  switch (recovery_action) {
-   case 211: printf ("ADIRU processor receive recovery action %d\n", recovery_action);
+   case 211:
+#ifndef __DEOS__
+	   printf ("ADIRU processor receive recovery action %d\n", recovery_action);
+#else
+	   myprint_str_int ("ADIRU processor receive recovery action %d\n", recovery_action);
+#endif
             adirup_validated_data1=0;
             *output1=adirup_validated_data1;
-            printf ("ADIRU processor dumps Acc1! \n");            
+#ifndef __DEOS__
+            printf ("ADIRU processor dumps Acc1! \n");
+#else
+            myprint_str ("ADIRU processor dumps Acc1! \n");
+
+#endif
             break;
-   case 221: printf ("ADIRU processor receive recovery action %d\n", recovery_action);
+   case 221:
+#ifndef __DEOS__
+	   printf ("ADIRU processor receive recovery action %d\n", recovery_action);
+#else
+	   myprint_str_int ("ADIRU processor receive recovery action %d\n", recovery_action);
+#endif
             adirup_validated_data2=0;
             *output2=adirup_validated_data2;
-            printf ("ADIRU processor dumps Acc2! \n");            
+#ifndef __DEOS__
+            printf ("ADIRU processor dumps Acc2! \n");
+#else
+     myprint_str_int ("ADIRU processor dumps Acc2! \n");
+#endif
             break;
-   case 231: printf ("ADIRU processor receive recovery action %d\n", recovery_action);
+   case 231:
+#ifndef __DEOS__
+	   printf ("ADIRU processor receive recovery action %d\n", recovery_action);
+#else
+     myprint_str_int ("ADIRU processor receive recovery action %d\n", recovery_action);
+#endif
             adirup_validated_data3=0;
             *output3=adirup_validated_data3;
-            printf ("ADIRU processor dumps Acc3! \n");            
+#ifndef __DEOS__
+            printf ("ADIRU processor dumps Acc3! \n");
+#else
+     myprint_str ("ADIRU processor dumps Acc3! \n");
+#endif
             break;
-   case 241: printf ("ADIRU processor receive recovery action %d\n", recovery_action);
+   case 241:
+#ifndef __DEOS__
+	   printf ("ADIRU processor receive recovery action %d\n", recovery_action);
+#else
+	     myprint_str_int ("ADIRU processor receive recovery action %d\n", recovery_action);
+#endif
             adirup_validated_data4=0;
             *output4=adirup_validated_data4;
-            printf ("ADIRU processor dumps Acc4! \n");            
+#ifndef __DEOS__
+            printf ("ADIRU processor dumps Acc4! \n");
+#else
+     myprint_str ("ADIRU processor dumps Acc4! \n");
+#endif
             break;
-   case 251: printf (" |->ADIRU processor receive recovery action:-> %d\n", recovery_action);
-            printf ("\n"); 
+   case 251:
+#ifndef __DEOS__
+printf (" |->ADIRU processor receive recovery action:-> %d\n", recovery_action);
+
+printf ("\n");
+#else
+myprint_str_int ("ADIRU processor receive recovery action %d\n", recovery_action);
+#endif
             adirup_health_status[4]=1;
             adirup_validated_data5=0;
             *output5=adirup_validated_data5;
+#ifndef __DEOS__
+
             printf (" |->ADIRU processor dumps Accelerometer 5!!!\n");
             printf ("\n"); 
+#else
+     myprint_str (" |->ADIRU processor dumps Accelerometer 5!!!\n");
+#endif
             break;
-   case 261: printf (" |->ADIRU processor receive recovery action:-> %d\n", recovery_action);
+   case 261:
+#ifndef __DEOS__
+	   	   printf (" |->ADIRU processor receive recovery action:-> %d\n", recovery_action);
             printf ("\n"); 
+#else
+            myprint_str_int ("ADIRU processor receive recovery action %d\n", recovery_action);
+#endif
             adirup_health_status[5]=1;
             adirup_validated_data6=0;
             *output6=adirup_validated_data6;
+#ifndef __DEOS__
+
             printf (" |->ADIRU processor dumps Accelerometer 6!!!\n"); 
-            printf ("\n");            
+            printf ("\n");
+#else
+     myprint_str (" |->ADIRU processor dumps Accelerometer 6!!!\n");
+#endif
             break;
    default: ;
            
@@ -72,15 +134,29 @@ void adirup_hm (int in_data1, int in_data2,int in_data3, int in_data4,int in_dat
 
 /*-----------------------------------------------------------------------------------------*/
 if (t1!=12) {
+#ifndef __DEOS__
    printf("  |->Current System Sensors Status:\n");
    printf ("\n"); 
+#else
+     myprint_str ("  |->Current System Sensors Status:\n");
+#endif
 	for (i=0;i<6;i++) {
 	     switch (adirup_health_status[i]) {
-		case 0: printf(" |->Accelerometer %d is working....\n",i+1);
+		case 0:
+#ifndef __DEOS__
+printf(" |->Accelerometer %d is working....\n",i+1);
                         printf ("\n"); 
+#else
+     myprint_str_int (" |->Accelerometer %d is working....\n",i+1);
+#endif
 		        break;
-		case 1: printf(" |->Accelerometer %d failed!!!\n",i+1);
+		case 1:
+#ifndef __DEOS__
+printf(" |->Accelerometer %d failed!!!\n",i+1);
                         printf ("\n"); 
+#else
+     myprint_str_int (" |->Accelerometer %d failed!!!\n",i+1);
+#endif
 		        break;
 		default: ;
 	     }
@@ -88,24 +164,42 @@ if (t1!=12) {
   
 }
 if (t1==2) {
+#ifndef __DEOS__
+
    printf(" |->ADIRU Processor unknown reset---->----->\n");
    printf ("\n"); 
-
+#else
+     myprint_str (" |->ADIRU Processor unknown reset---->----->\n");
+#endif
 }
 
 if (t1==12) {
-  
+#ifndef __DEOS__
+
    printf("  |->Current System Sensors Status:\n");
    printf ("\n");
+#else
+     myprint_str ("  |->Current System Sensors Status:\n");
+#endif
          adirup_health_status[4]=0;   
         
 	for (i=0;i<6;i++) {
 	     switch (adirup_health_status[i]) {
-		case 0: printf("  |->Accelerometer %d is working....\n",i+1);
-                        printf ("\n"); 
+		case 0:
+#ifndef __DEOS__
+			printf("  |->Accelerometer %d is working....\n",i+1);
+            printf ("\n");
+#else
+            myprint_str_int ("  |->Accelerometer %d is working....\n",i+1);
+#endif
 		        break;
-		case 1: printf("  |->Accelerometer %d failed!!!\n",i+1);
-                        printf ("\n"); 
+		case 1:
+#ifndef __DEOS__
+			printf("  |->Accelerometer %d failed!!!\n",i+1);
+			printf ("\n");
+#else
+			myprint_str_int ("  |->Accelerometer %d failed!!!\n",i+1);
+#endif
 		        break;
 		default: ;
 	     }
@@ -128,8 +222,12 @@ if (adirup_health_status[4]==0){
 	      x5++;
 	      if (x5>=3) {x5=3;acc5_x=0;}
              if (acc5_x!=0) {
+#ifndef __DEOS__
                   printf (" |->ADIRU Processor sends error msg to SHM:-> %d\n", acc5_error_msg_code);
                   printf ("\n"); 
+#else
+                  myprint_str_int (" |->ADIRU Processor sends error msg to SHM:-> %d\n", acc5_error_msg_code);
+#endif
              }
 	} 
 t2++;
