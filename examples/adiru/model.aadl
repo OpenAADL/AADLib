@@ -45,10 +45,10 @@ public
     C18: port acc_hm_pr.v_acc6_dataout->ADIRUp_pr.acc6_input;
 
     C19: port acc_hm_pr.acc_error_out-> SHM_pr.arlarm_acc_in;
-    C20: port SHM_pr.systemHM_action->acc_hm_pr.acc_error_action;
+    C20: port SHM_pr.systemHM_action_acc_hm->acc_hm_pr.acc_error_action;
 
     C21: port ADIRUp_pr.ADIRUp_error_out->SHM_pr.arlarm_adirup_in;
-    C22: port SHM_pr.systemHM_action->ADIRUp_pr.ADIRUp_error_action;
+    C22: port SHM_pr.systemHM_action_adirup->ADIRUp_pr.ADIRUp_error_action;
   properties
     --  bind partition process to their associated runtime (virtual processor)
 
@@ -90,30 +90,35 @@ public
 --
 --  **};
 
-annex resolute {**
-	prove (check_arinc653_compliance(this))
-**}; 
+--annex resolute {**
+--	prove (check_arinc653_compliance(this))
+--**}; 
 end ADIRU.impl;
 
 system implementation adiru.deos extends adiru.impl
 properties
-	Period => 4000 ms applies to main_cpu.part1;
-	Period => 4000 ms applies to main_cpu.part2;
-	Period => 4000 ms applies to main_cpu.part3;
-	Period => 3000 ms applies to main_cpu.part4;
+	Period => 15000 ms applies to main_cpu.part1;
+	Period => 15000 ms applies to main_cpu.part2;
+	Period => 15000 ms applies to main_cpu.part3;
+	Period => 15000 ms applies to main_cpu.part4;
 	Execution_Time => 4000 ms applies to main_cpu.part1;
 	Execution_Time => 4000 ms applies to main_cpu.part2;
 	Execution_Time => 4000 ms applies to main_cpu.part3;
 	Execution_Time => 3000 ms applies to main_cpu.part4; 
-annex resolute {**
-	prove (check_deos_compliance(this))
-**};
+	
+	Source_Name => "adiru-acc.exe" applies to main_cpu.part1;
+	Source_Name => "adiru-acc-hm.exe" applies to main_cpu.part2;
+	Source_Name => "adiru-p.exe" applies to main_cpu.part3;
+	Source_Name => "adiru-shm.exe" applies to main_cpu.part4;
+--annex resolute {**
+--	prove (check_deos_compliance(this))
+--**};
 end adiru.deos;
 
 system implementation adiru.vxworks653 extends adiru.impl
-annex resolute {**
-	prove (check_vxworks653_compliance(this))
-**}; 
+--annex resolute {**
+--	prove (check_vxworks653_compliance(this))
+--**}; 
 end adiru.vxworks653;
  
 end ADIRU;

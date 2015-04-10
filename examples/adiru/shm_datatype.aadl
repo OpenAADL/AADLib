@@ -7,17 +7,20 @@ with Data_Model;
 data accData
 properties
   Data_Model::Data_Representation => integer;
+  Data_Size => 4 bytes;
 end accData;
 
 data errorData
 properties
   Data_Model::Data_Representation => integer;
+  Data_Size => 4 bytes;
   --Data_Model::Dimension => (20);
 end  errorData;
 
 data actionData
 properties
   Data_Model::Data_Representation => integer;
+  Data_Size => 4 bytes;
   --Data_Model::Dimension => (20);
 end actionData;
 
