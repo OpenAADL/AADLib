@@ -97,22 +97,24 @@ end ADIRU.impl;
 
 system implementation adiru.deos extends adiru.impl
 properties
-	Period => 15000 ms applies to main_cpu.part1;
-	Period => 15000 ms applies to main_cpu.part2;
-	Period => 15000 ms applies to main_cpu.part3;
-	Period => 15000 ms applies to main_cpu.part4;
-	Execution_Time => 4000 ms applies to main_cpu.part1;
-	Execution_Time => 4000 ms applies to main_cpu.part2;
-	Execution_Time => 4000 ms applies to main_cpu.part3;
-	Execution_Time => 3000 ms applies to main_cpu.part4; 
+	Period => 150 ms applies to main_cpu.part1;
+	Period => 150 ms applies to main_cpu.part2;
+	Period => 150 ms applies to main_cpu.part3;
+	Period => 150 ms applies to main_cpu.part4;
+	Execution_Time => 4 ms applies to main_cpu.part1;
+	Execution_Time => 4 ms applies to main_cpu.part2; 
+	Execution_Time => 4 ms applies to main_cpu.part3;
+	Execution_Time => 3 ms applies to main_cpu.part4; 
 	
 	Source_Name => "adiru-acc.exe" applies to main_cpu.part1;
 	Source_Name => "adiru-acc-hm.exe" applies to main_cpu.part2;
 	Source_Name => "adiru-p.exe" applies to main_cpu.part3;
 	Source_Name => "adiru-shm.exe" applies to main_cpu.part4;
---annex resolute {**
---	prove (check_deos_compliance(this))
---**};
+	
+	Clock_Period => 150 ms applies to main_cpu;
+annex resolute {**
+	prove (check_deos_compliance(this))
+**};
 end adiru.deos;
 
 system implementation adiru.vxworks653 extends adiru.impl
