@@ -1,0 +1,8 @@
+TODO
+====
+ 1. uint32_t -> unsigned int
+ 2. memory configuration
+ 3. schedule configuration
+ 4. <subprograms.h> => "subprograms.h"
+ 5. check page size
+ 6. add macro for target

@@ -97,14 +97,14 @@ end ADIRU.impl;
 
 system implementation adiru.deos extends adiru.impl
 properties
-	Period => 150 ms applies to main_cpu.part1;
-	Period => 150 ms applies to main_cpu.part2;
-	Period => 150 ms applies to main_cpu.part3;
-	Period => 150 ms applies to main_cpu.part4;
-	Execution_Time => 4 ms applies to main_cpu.part1;
-	Execution_Time => 4 ms applies to main_cpu.part2; 
-	Execution_Time => 4 ms applies to main_cpu.part3;
-	Execution_Time => 3 ms applies to main_cpu.part4; 
+	Period => 25 ms applies to main_cpu.part1;
+	Period => 25 ms applies to main_cpu.part2;
+	Period => 25 ms applies to main_cpu.part3;
+	Period => 25 ms applies to main_cpu.part4;
+	Execution_Time => 1 ms applies to main_cpu.part1;
+	Execution_Time => 1 ms applies to main_cpu.part2; 
+	Execution_Time => 1 ms applies to main_cpu.part3;
+	Execution_Time => 1 ms applies to main_cpu.part4; 
 	
 	Source_Name => "adiru-acc.exe" applies to main_cpu.part1;
 	Source_Name => "adiru-acc-hm.exe" applies to main_cpu.part2;

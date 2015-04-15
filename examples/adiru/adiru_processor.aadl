@@ -37,16 +37,16 @@ public
    ARINC653::Module_Major_Frame => 150 ms;
    	ARINC653::Module_Schedule => 
 	    ( [Partition => reference (part1);
-	      Duration  => 40 ms;
+	      Duration  => 1 ms;
 	      Periodic_Processing_Start => true;],
 	      [Partition => reference (part2);
-	      Duration  => 40 ms;
+	      Duration  => 1 ms;
 	      Periodic_Processing_Start => true;],
 	      [Partition => reference (part3);
-	      Duration  => 40 ms;
+	      Duration  => 1 ms;
 	      Periodic_Processing_Start => true;],
 	      [Partition => reference (part4);
-	      Duration  => 30 ms;
+	      Duration  => 1 ms;
 	      Periodic_Processing_Start => true;]
 	    );
 	    
