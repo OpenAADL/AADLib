@@ -29,7 +29,7 @@ void alarm_aggregator (int acc_error_msg, int adirup_error_msg,int* errors)
 printf ("%d> alarm aggregator runs >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt++);
 printf ("\n");  
 #else
-     myprint_str_int ("%d> alarm aggregator runs >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt++);
+     myprint_str_int ("alarm aggregator runs id=",pt++);
 #endif
 
 //printf ("SHM receives error report from ADIRUp %d\n", adirup_error_msg);
@@ -42,7 +42,7 @@ printf ("\n");
      printf (" |->alarm aggregator receives error report:->%d\n", *errors);
      printf ("\n"); 
 #else
-     myprint_str_int (" |->alarm aggregator receives error report:->%d\n", *errors);
+     myprint_str_int (" |->alarm aggregator receives error report:-> error=", *errors);
 #endif
    }
    temp1=acc_error_msg;
@@ -64,7 +64,7 @@ void mitigation_actor (char error_msg , int* recovery_action)
 printf ("%d> mitigation actor runs >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt++); 
 printf ("\n"); 
 #else
-     myprint_str_int ("%d> mitigation actor runs >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt++);
+     myprint_str_int (" mitigation actor runs id=",pt++);
 #endif
 pt=pt+8;
  diagnosis_result=error_msg;
@@ -78,7 +78,7 @@ pt=pt+8;
 	    printf ("|->mitigation actor sends recovery action:-> %d\n", recovery_code[0]);
             printf ("\n");
 #else
-     myprint_str_int ("|->mitigation actor sends recovery action:-> %d\n", recovery_code[0]);
+     myprint_str_int ("|->mitigation actor sends recovery action:-> code=", recovery_code[0]);
 #endif
 	    } 
             if (acc1_error_t==1) {
@@ -90,9 +90,9 @@ pt=pt+8;
                acc1_error_t=-1;
                *recovery_action=adirup_action_code[0];
 #ifndef __DEOS__
-               printf ("|->mitigationActor sends imitigation command to ADIRU Procrssor %d\n", adirup_action_code[0]);
+               printf ("|->mitigationActor sends imitigation command to ADIRU Procerssor %d\n", adirup_action_code[0]);
 #else
-     myprint_str_int ("|->mitigationActor sends imitigation command to ADIRU Procrssor %d\n", adirup_action_code[0]);
+     myprint_str_int ("|->mitigationActor sends imitigation command to ADIRU CPU ", adirup_action_code[0]);
 #endif
             }
             acc1_error_t++;
@@ -105,7 +105,7 @@ pt=pt+8;
 #ifndef __DEOS__
 	    printf ("mitigationActor sends recovery action %d\n", recovery_code[1]);
 #else
-     myprint_str_int ("mitigationActor sends recovery action %d\n", recovery_code[1]);
+     myprint_str_int ("mitigationActor sends recovery action ", recovery_code[1]);
 #endif
 	    } 
             if (acc2_error_t==1) {
@@ -119,7 +119,7 @@ pt=pt+8;
 #ifndef __DEOS__
                printf ("mitigationActor sends imigation command to ADIRU Procrssor %d\n", adirup_action_code[1]);
 #else
-     myprint_str_int ("mitigationActor sends imigation command to ADIRU Procrssor %d\n", adirup_action_code[1]);
+     myprint_str_int ("mitigationActor sends imigation command to ADIRU CPU code=", adirup_action_code[1]);
 #endif
             }
             acc2_error_t++;
@@ -132,7 +132,7 @@ pt=pt+8;
 #ifndef __DEOS__
 	    printf ("mitigationActor sends recovery action %d\n", recovery_code[2]);
 #else
-     myprint_str_int ("mitigationActor sends recovery action %d\n", recovery_code[2]);
+     myprint_str_int ("mitigationActor sends recovery action code=", recovery_code[2]);
 #endif
 	    } 
             if (acc3_error_t==1) {
@@ -146,7 +146,7 @@ pt=pt+8;
 #ifndef __DEOS__
                printf ("mitigationActor sends imigation command to ADIRU Procrssor %d\n", adirup_action_code[2]);
 #else
-     myprint_str_int ("mitigationActor sends imigation command to ADIRU Procrssor %d\n", adirup_action_code[2]);
+     myprint_str_int ("mitigationActor sends imigation command to ADIRU CPU ", adirup_action_code[2]);
 #endif
             }
             acc3_error_t++;
@@ -159,7 +159,7 @@ pt=pt+8;
 #ifndef __DEOS__
 	    printf ("mitigationActor sends recovery action %d\n", recovery_code[3]);
 #else
-     myprint_str_int ("mitigationActor sends recovery action %d\n", recovery_code[3]);
+     myprint_str_int ("mitigationActor sends recovery action ", recovery_code[3]);
 #endif
 	    } 
             if (acc4_error_t==1) {
@@ -173,7 +173,7 @@ pt=pt+8;
 #ifndef __DEOS__
                printf ("mitigationActor sends imigation command to ADIRU Procrssor %d\n", adirup_action_code[3]);
 #else
-     myprint_str_int ("mitigationActor sends imigation command to ADIRU Procrssor %d\n", adirup_action_code[3]);
+     myprint_str_int ("mitigationActor sends imigation command to ADIRU CPU code=", adirup_action_code[3]);
 #endif
             }
             acc4_error_t++;
@@ -187,7 +187,7 @@ pt=pt+8;
 	    printf ("  |->mitigationActor sends recovery action:-> %d\n", recovery_code[4]);
             printf ("\n");
 #else
-     myprint_str_int ("  |->mitigationActor sends recovery action:-> %d\n", recovery_code[4]);
+     myprint_str_int ("  |->mitigationActor sends recovery action:-> code=", recovery_code[4]);
 #endif
 	    } 
             if (acc5_error_t==1) {
@@ -197,7 +197,7 @@ pt=pt+8;
 
                printf ("\n");
 #else
-     myprint_str ("  |->Accelerometer 5 failed!!!!\n");
+     myprint_str ("  |->Accelerometer 5 failed!!!!");
 #endif
                acc5_error_t=-1;
                *recovery_action=adirup_action_code[4];
@@ -205,7 +205,7 @@ pt=pt+8;
                printf ("  |->mitigationActor sends imigation command to ADIRU Procrssor:-> %d\n", adirup_action_code[4]);
                printf ("\n");
 #else
-     myprint_str_int ("  |->mitigationActor sends imigation command to ADIRU Procrssor:-> %d\n", adirup_action_code[4]);
+     myprint_str_int ("  |->mitigationActor sends imigation command to ADIRU CPU:-> code=", adirup_action_code[4]);
 #endif
             }
             acc5_error_t++;
@@ -219,7 +219,7 @@ pt=pt+8;
 	    printf ("  |->mitigationActor sends recovery action:-> %d\n", recovery_code[5]);
             printf ("\n");
 #else
-     myprint_str_int ("  |->mitigationActor sends recovery action:-> %d\n", recovery_code[5]);
+     myprint_str_int ("  |->mitigationActor sends recovery action:-> code=", recovery_code[5]);
 #endif
 	    } 
             if (acc6_error_t==1) {
@@ -228,7 +228,7 @@ pt=pt+8;
 
                printf ("\n");
 #else
-     myprint_str ("  |->Accelerometer 6 failed!!!!\n");
+     myprint_str ("  |->Accelerometer 6 failed!!!!");
 #endif
                acc6_error_t=-1;
                *recovery_action=adirup_action_code[5];
@@ -237,7 +237,7 @@ pt=pt+8;
 
             printf ("\n");
 #else
-     myprint_str_int ("  |->mitigationActor sends imigation command to ADIRU Procrssor:-> %d\n", adirup_action_code[5]);
+     myprint_str_int ("  |->mitigationActor sends imigation command to ADIRU CPU:-> code=", adirup_action_code[5]);
 #endif
             }
             acc6_error_t++;

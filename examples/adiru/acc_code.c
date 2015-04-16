@@ -74,7 +74,7 @@ void acc1dataoutput (int* p,int event_in)
  printf ("%d> Accelerometer 1 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++);
  printf ("\n");
 #else
- myprint_str_int ("Accelerometer 1 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++);
+ myprint_str_int ("Accelerometer 1 outputs data ",pt1++);
 #endif
    
 switch (event_in) {
@@ -84,7 +84,7 @@ switch (event_in) {
       printf ("acc1 receive reset command %d\n", event_in);
       printf ("\n");
 #else
-     myprint_str_int ("acc1 receive reset command %d\n", event_in);
+     myprint_str_int ("acc1 receive reset command ", event_in);
 #endif
       break;
    default: ;
@@ -101,7 +101,7 @@ switch (event_in) {
       printf ("  |-> Accelerometer 1 sends data Over Range:->%d\n", acc1_data_temp);
       printf ("\n"); 
 #else
-     myprint_str_int ("  |-> Accelerometer 1 sends data Over Range:->%d\n", acc1_data_temp);
+     myprint_str_int ("  |-> Accelerometer 1 sends data Over Range:-> ", acc1_data_temp);
 #endif
     }
   switch (local_health_status[0]) {
@@ -113,7 +113,7 @@ switch (event_in) {
 #ifndef __DEOS__
     printf ("acc1 is initialising...\n");
 #else
-     myprint_str ("acc1 is initialising...\n");
+     myprint_str ("acc1 is initialising...");
 #endif
     t1=0;
     local_health_status[0]=0;
@@ -122,7 +122,7 @@ switch (event_in) {
 #ifndef __DEOS__
     printf ("acc1 initialised!\n");
 #else
-     myprint_str ("acc1 initialised!\n");
+     myprint_str ("acc1 initialised!");
 #endif
     break;
    default: ;
@@ -136,13 +136,13 @@ void acc2dataoutput (int* p,int event_in)
   printf ("%d> Accelerometer 2 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
   printf ("\n"); 
 #else
-     myprint_str_int ("%d> Accelerometer 2 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++);
+     myprint_str_int ("%d> Accelerometer 2 outputs data ",pt1++);
 #endif
    if (event_in==23) {
 #ifndef __DEOS__
     printf ("acc2 receive Reset command %d\n", event_in);
 #else
-     myprint_str_int ("acc2 receive Reset command %d\n", event_in);
+     myprint_str_int ("acc2 receive Reset command ", event_in);
 #endif
     local_health_status[1]=2;
    }
@@ -158,7 +158,7 @@ void acc2dataoutput (int* p,int event_in)
       printf ("  |-> Accelerometer 2 sends data Over Range:->%d\n", acc2_data_temp);
       printf ("\n"); 
 #else
-     myprint_str_int ("  |-> Accelerometer 2 sends data Over Range:->%d\n", acc2_data_temp);
+     myprint_str_int ("  |-> Accelerometer 2 sends data Over Range:-> ", acc2_data_temp);
 #endif
     }
   switch (local_health_status[1]) {
@@ -193,14 +193,14 @@ void acc3dataoutput (int* p,int event_in)
   printf ("%d> Accelerometer 3 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
   printf ("\n");
 #else
-     myprint_str_int ("%d> Accelerometer 3 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++);
+     myprint_str_int ("Accelerometer 3 outputs data ",pt1++);
 #endif
 
    if (event_in==33) {
 #ifndef __DEOS__
     printf ("acc3 receive Reset command %d\n", event_in);
 #else
-     myprint_str_int ("acc3 receive Reset command %d\n", event_in);
+     myprint_str_int ("acc3 receive Reset command ", event_in);
 #endif
     local_health_status[2]=2;
    }
@@ -216,7 +216,7 @@ void acc3dataoutput (int* p,int event_in)
       printf ("  |-> Accelerometer 3 sends data Over Range:->%d\n", acc3_data_temp);
       printf ("\n"); 
 #else
-     myprint_str_int ("  |-> Accelerometer 3 sends data Over Range:->%d\n", acc3_data_temp);
+     myprint_str_int ("  |-> Accelerometer 3 sends data Over Range:-> ", acc3_data_temp);
 #endif
     }
   switch (local_health_status[2]) {
@@ -228,7 +228,7 @@ void acc3dataoutput (int* p,int event_in)
 #ifndef __DEOS__
     printf ("acc3 is initialising...\n");
 #else
-     myprint_str ("acc3 is initialising...\n");
+     myprint_str ("acc3 is initialising... ");
 #endif
     t4=0;
     local_health_status[2]=0;
@@ -237,7 +237,7 @@ void acc3dataoutput (int* p,int event_in)
 #ifndef __DEOS__
     printf ("acc3 initialised!\n");
 #else
-     myprint_str ("acc3 initialised!\n");
+     myprint_str ("acc3 initialised! ");
 #endif
     break;
    default: ;
@@ -251,13 +251,13 @@ void acc4dataoutput (int* p,int event_in)
   printf ("%d> Accelerometer 4 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
   printf ("\n"); 
 #else
-     myprint_str_int ("%d> Accelerometer 4 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++);
+     myprint_str_int ("> Accelerometer 4 outputs data ",pt1++);
 #endif
    if (event_in==43) {
 #ifndef __DEOS__
     printf ("acc4 receive Reset command %d\n", event_in);
 #else
-     myprint_str_int ("acc4 receive Reset command %d\n", event_in);
+     myprint_str_int ("acc4 receive Reset command ", event_in);
 #endif
     local_health_status[3]=2;
    }
@@ -273,7 +273,7 @@ void acc4dataoutput (int* p,int event_in)
       printf ("  |-> Accelerometer 4 sends data Over Range:->%d\n", acc4_data_temp);
       printf ("\n"); 
 #else
-     myprint_str_int ("  |-> Accelerometer 4 sends data Over Range:->%d\n", acc4_data_temp);
+     myprint_str_int ("  |-> Accelerometer 4 sends data Over Range:-> ", acc4_data_temp);
 #endif
     }
   switch (local_health_status[3]) {
@@ -285,7 +285,7 @@ void acc4dataoutput (int* p,int event_in)
 #ifndef __DEOS__
     printf ("acc4 is initialising...\n");
 #else
-     myprint_str ("acc4 is initialising...\n");
+     myprint_str ("acc4 is initialising...");
 #endif
     t5=0;
     local_health_status[3]=0;
@@ -294,7 +294,7 @@ void acc4dataoutput (int* p,int event_in)
 #ifndef __DEOS__
     printf ("acc4 initialised!\n");
 #else
-     myprint_str ("acc4 initialised!\n");
+     myprint_str ("acc4 initialised!");
 #endif
     break;
    default: ;
@@ -307,14 +307,14 @@ void acc5dataoutput (int* p,int event_in)
  printf ("%d> Accelerometer 5 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
  printf ("\n"); 
 #else
-     myprint_str_int ("%d> Accelerometer 5 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++);
+     myprint_str_int ("> Accelerometer 5 outputs data",pt1++);
 #endif
    if (event_in==53) {
 #ifndef __DEOS__
     printf ("  |-> Accelerometer 5 receives reset command:->%d\n", event_in);
     printf ("\n");
 #else
-     myprint_str_int ("  |-> Accelerometer 5 receives reset command:->%d\n", event_in);
+     myprint_str_int ("  |-> Accelerometer 5 receives reset command:-> ", event_in);
 #endif
     local_health_status[4]=2;
    }
@@ -330,7 +330,7 @@ void acc5dataoutput (int* p,int event_in)
       printf ("  |-> Accelerometer 5 sends data Over Range:->%d\n", acc5_data_temp);
       printf ("\n"); 
 #else
-     myprint_str_int ("  |-> Accelerometer 5 sends data Over Range:->%d\n", acc5_data_temp);
+     myprint_str_int ("  |-> Accelerometer 5 sends data Over Range:-> ", acc5_data_temp);
 #endif
     }
   switch (local_health_status[4]) {
@@ -343,7 +343,7 @@ void acc5dataoutput (int* p,int event_in)
     printf ("  |-> Accelerometer 5 is initialising......\n");
     printf ("\n"); 
 #else
-     myprint_str ("  |-> Accelerometer 5 is initialising......\n");
+     myprint_str ("  |-> Accelerometer 5 is initialising......");
 #endif
     t6=13;
     local_health_status[4]=0;
@@ -353,7 +353,7 @@ void acc5dataoutput (int* p,int event_in)
     printf ("  |-> Accelerometer 5 initialised!\n");
     printf ("\n"); 
 #else
-     myprint_str ("  |-> Accelerometer 5 initialised!\n");
+     myprint_str ("  |-> Accelerometer 5 initialised!");
 #endif
     break;
    default: ;
@@ -366,7 +366,7 @@ void acc6dataoutput (int* p,int event_in)
  printf ("%d> Accelerometer 6 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++); 
  printf ("\n"); 
 #else
-     myprint_str_int ("%d> Accelerometer 6 outputs data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt1++);
+     myprint_str_int ("> Accelerometer 6 outputs data ",pt1++);
 #endif
  pt1=pt1+4;
    if (event_in==63) {
@@ -374,7 +374,7 @@ void acc6dataoutput (int* p,int event_in)
     printf ("  |-> Accelerometer 6 receives reset command:->%d\n", event_in);
     printf ("\n"); 
 #else
-     myprint_str_int ("  |-> Accelerometer 6 receives reset command:->%d\n", event_in);
+     myprint_str_int ("  |-> Accelerometer 6 receives reset command:-> ", event_in);
 #endif
     local_health_status[5]=2;
    }
@@ -390,7 +390,7 @@ void acc6dataoutput (int* p,int event_in)
       printf ("  |-> Accelerometer 6 sends data Over Range:->%d\n", acc6_data_temp);
       printf ("\n"); 
 #else
-     myprint_str_int ("  |-> Accelerometer 6 sends data Over Range:->%d\n", acc6_data_temp);
+     myprint_str_int ("  |-> Accelerometer 6 sends data Over Range:-> ", acc6_data_temp);
 #endif
     }
   switch (local_health_status[5]) {
@@ -403,7 +403,7 @@ void acc6dataoutput (int* p,int event_in)
     printf ("  |-> Accelerometer 6 is initialising......\n");
     printf ("\n"); 
 #else
-     myprint_str ("  |-> Accelerometer 6 is initialising......\n");
+     myprint_str ("  |-> Accelerometer 6 is initialising......");
 #endif
     t7=3;
     local_health_status[5]=0;
@@ -413,7 +413,7 @@ void acc6dataoutput (int* p,int event_in)
     printf ("  |-> Accelerometer 6 initialised!\n");
     printf ("\n"); 
 #else
-    myprint_str ("  |-> Accelerometer 6 initialised!\n");
+    myprint_str ("  |-> Accelerometer 6 initialised!");
 
 #endif
     break;
@@ -429,7 +429,7 @@ void acchm_monitor (int in_data1,int in_data2,int in_data3,int in_data4,int in_d
  printf ("%d> Accelerometer health manager runs >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt2++); 
  printf ("\n"); 
 #else
-     myprint_str_int ("%d> Accelerometer health manager runs >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n",pt2++);
+     myprint_str_int ("> Accelerometer health manager runs ",pt2++);
 #endif
  pt2=pt2+9;
 //printf ("ACC_HM receive data from acc4 %d\n", in_data4);
@@ -440,7 +440,7 @@ switch (recovery_action) {
 #ifndef __DEOS__
 	   printf ("ACC_HM receive recovery action %d\n", recovery_action);
 #else
-     myprint_str_int ("ACC_HM receive recovery action %d\n", recovery_action);
+     myprint_str_int ("ACC_HM receive recovery action ", recovery_action);
 #endif
             acc1_error_action_code=13;
             *p3=acc1_error_action_code;
@@ -449,7 +449,7 @@ switch (recovery_action) {
 #ifndef __DEOS__
 	   printf ("ACC_HM receive recovery action %d\n", recovery_action);
 #else
-     myprint_str_int ("ACC_HM receive recovery action %d\n", recovery_action);
+     myprint_str_int ("ACC_HM receive recovery action ", recovery_action);
 #endif
             acc2_error_action_code=23;
             *p5=acc2_error_action_code;
@@ -458,7 +458,7 @@ switch (recovery_action) {
 #ifndef __DEOS__
 	   printf ("ACC_HM receive recovery action %d\n", recovery_action);
 #else
-     myprint_str_int ("ACC_HM receive recovery action %d\n", recovery_action);
+     myprint_str_int ("ACC_HM receive recovery action ", recovery_action);
 #endif
             acc3_error_action_code=33;
             *p10=acc3_error_action_code;
@@ -467,7 +467,7 @@ switch (recovery_action) {
 #ifndef __DEOS__
 	   printf ("ACC_HM receive recovery action %d\n", recovery_action);
 #else
-	     myprint_str_int ("ACC_HM receive recovery action %d\n", recovery_action);
+	     myprint_str_int ("ACC_HM receive recovery action ", recovery_action);
 #endif
             acc4_error_action_code=43;
             *p11=acc4_error_action_code;
@@ -478,7 +478,7 @@ switch (recovery_action) {
 
             printf ("\n"); 
 #else
-     myprint_str_int ("  |->Accelerometer Health Manager receives recovery action:-> %d\n", recovery_action);
+     myprint_str_int ("  |->Accelerometer Health Manager receives recovery action:-> ", recovery_action);
 #endif
             acc5_error_action_code=53;
             *p12=acc5_error_action_code;
@@ -488,7 +488,7 @@ switch (recovery_action) {
 	   printf ("  |->Accelerometer Health Manager receives recovery action:-> %d\n", recovery_action);
             printf ("\n"); 
 #else
-     myprint_str_int ("  |->Accelerometer Health Manager receives recovery action:-> %d\n", recovery_action);
+     myprint_str_int ("  |->Accelerometer Health Manager receives recovery action:-> ", recovery_action);
 #endif
             acc6_error_action_code=63;
             *p13=acc6_error_action_code;
@@ -521,7 +521,7 @@ switch (recovery_action) {
 #ifndef __DEOS__
      printf ("ACC_HM send error msg to SHM %d\n", acc1_error_msg_code);
 #else
-     myprint_str_int ("ACC_HM send error msg to SHM %d\n", acc1_error_msg_code);
+     myprint_str_int ("ACC_HM send error msg to SHM ", acc1_error_msg_code);
 #endif
   }
   
@@ -541,7 +541,7 @@ switch (recovery_action) {
 #ifndef __DEOS__
      printf ("ACC_HM send error msg to SHM %d\n", acc2_error_msg_code);
 #else
-     myprint_str_int ("ACC_HM send error msg to SHM %d\n", acc2_error_msg_code);
+     myprint_str_int ("ACC_HM send error msg to SHM ", acc2_error_msg_code);
 #endif
   } 
 
@@ -560,7 +560,7 @@ switch (recovery_action) {
 #ifndef __DEOS__
      printf ("ACC_HM send error msg to SHM %d\n", acc3_error_msg_code);
 #else
-     myprint_str_int ("ACC_HM send error msg to SHM %d\n", acc3_error_msg_code);
+     myprint_str_int ("ACC_HM send error msg to SHM ", acc3_error_msg_code);
 #endif
   } 
   
@@ -578,7 +578,7 @@ switch (recovery_action) {
 #ifndef __DEOS__
      printf ("ACC_HM send error msg to SHM %d\n", acc4_error_msg_code);
 #else
-     myprint_str_int ("ACC_HM send error msg to SHM %d\n", acc4_error_msg_code);
+     myprint_str_int ("ACC_HM send error msg to SHM ", acc4_error_msg_code);
 #endif
   } 
   
@@ -602,7 +602,7 @@ switch (recovery_action) {
         printf ("  |->Accelerometer Health Manager sends error msg to SHM:-> %d\n", acc5_error_msg_code);
         printf ("\n"); 
 #else
-     myprint_str_int ("  |->Accelerometer Health Manager sends error msg to SHM:-> %d\n", acc5_error_msg_code);
+     myprint_str_int ("  |->Accelerometer Health Manager sends error msg to SHM:-> ", acc5_error_msg_code);
 #endif
      }  
      
@@ -628,7 +628,7 @@ switch (recovery_action) {
         printf ("  |->Accelerometer Health Manager sends error msg to SHM:-> %d\n", acc6_error_msg_code);
         printf ("\n"); 
 #else
-     myprint_str_int ("  |->Accelerometer Health Manager sends error msg to SHM:-> %d\n", acc6_error_msg_code);
+     myprint_str_int ("  |->Acc HM sends error msg to SHM:-> ", acc6_error_msg_code);
 #endif
      }
   } 
