@@ -1,7 +1,6 @@
 
 #include "gtypes.h"
 
-#define __DEOS__
 
 int temp1=0;
 int temp2=0;
@@ -21,7 +20,6 @@ int acc6_error_t=0;
 int recovery_normal_p=0;
 int pt=9;
 
-//extern int local_health_status[6];
 
 void alarm_aggregator (int acc_error_msg, int adirup_error_msg,int* errors)
 {
@@ -32,7 +30,6 @@ printf ("\n");
      myprint_str_int ("alarm aggregator runs id=",pt++);
 #endif
 
-//printf ("SHM receives error report from ADIRUp %d\n", adirup_error_msg);
    *errors=acc_error_msg;
    if (adirup_error_msg==251) {
        *errors=error_msg_code2[4];
@@ -46,16 +43,12 @@ printf ("\n");
 #endif
    }
    temp1=acc_error_msg;
-  //printf ("Aggregator sends error msg to diagnosisEngine %d\n", temp1);
 }
 
 void diagnosis_engine (int error_msg , int* diagnosed_error)
 {
-//printf ("diagnosis_engine is runing -------------------------------------------\n");
-//printf ("diagnosisEngine receives error msg from Aggregator %d\n", error_msg);
  *diagnosed_error=error_msg;
  temp2=error_msg;
- //printf ("diagnosisEngine sends error msg to mitigationActor %d\n", temp2);
 }
 
 void mitigation_actor (char error_msg , int* recovery_action)
@@ -68,7 +61,6 @@ printf ("\n");
 #endif
 pt=pt+8;
  diagnosis_result=error_msg;
- //printf ("mitigation_actor get diagnosis result %d\n",diagnosis_result);
  switch (diagnosis_result) {
     case 11:
 	  if (system_health_status[0]==0) {  
@@ -179,8 +171,7 @@ pt=pt+8;
             acc4_error_t++;
           }
             break;
-   case 51:
-	  //if (system_health_status[4]==0) {  
+   case 51: 
             if (acc5_error_t<1) {
 	    *recovery_action=recovery_code[4];
 #ifndef __DEOS__
@@ -209,7 +200,7 @@ pt=pt+8;
 #endif
             }
             acc5_error_t++;
-          //}
+         
             break;
    case 61:
 	  if (system_health_status[5]==0) {  

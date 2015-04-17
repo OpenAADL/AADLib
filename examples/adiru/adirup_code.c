@@ -1,7 +1,6 @@
 
 #include "gtypes.h"
 
-#define __DEOS__
 
 int adirup_validated_data1=0;
 int adirup_validated_data2=0;
@@ -209,13 +208,12 @@ void adirup_hm (int in_data1, int in_data2,int in_data3, int in_data4,int in_dat
 
 	t1++;
 
-	/*-----------------acc5 monitor-------------------------*/
 	if (adirup_health_status[4]==0){
 		if (acc5_data_store[t2]>9) {
 			acc5_error_msg_code=251;
-			adirup_health_status[4]=1;//acc3 failed.
+			adirup_health_status[4]=1;
 			if (x5<3) {
-				*error_msg=acc5_error_msg_code; //send error message out.
+				*error_msg=acc5_error_msg_code; 
 
 			}
 			acc5_x=1;
@@ -236,13 +234,10 @@ void adirup_hm (int in_data1, int in_data2,int in_data3, int in_data4,int in_dat
 
 	adirup_validated_data1=in_data1;
 
-	//printf ("ADIRUp_HM send validated data %d\n", validated_data);
-	//printf ("ADIRUp_HM send error msg to SHM %d\n", error_code);
-
 }
 
 void solve (int in_data1,int in_data2)
 {
-	//printf ("ADIRUp_solve receive data from ADIRUp_HM %d\n", in_data1);
+	printf ("ADIRUp_solve receive data from ADIRUp_HM %d\n", in_data1);
 
 }
