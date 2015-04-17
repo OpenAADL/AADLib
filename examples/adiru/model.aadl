@@ -118,6 +118,11 @@ annex resolute {**
 end adiru.deos;
 
 system implementation adiru.vxworks653 extends adiru.impl
+properties
+	Source_Name => "adiru_acc" applies to main_cpu.part1;
+	Source_Name => "adiru_acc_hm" applies to main_cpu.part2;
+	Source_Name => "adiru_p" applies to main_cpu.part3;
+	Source_Name => "adiru_shm" applies to main_cpu.part4;
 --annex resolute {**
 --	prove (check_vxworks653_compliance(this))
 --**}; 
