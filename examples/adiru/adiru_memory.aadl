@@ -8,37 +8,14 @@ memory partition_memory
 
 end partition_memory;
 
-memory implementation partition_memory.acc_impl
+memory implementation partition_memory.i
 properties
    Base_Address => 0;
-   Memory_Size =>300000 Bytes;
+   Memory_Size =>102400 Bytes;
    ARINC653::Memory_Type => (Code_Memory);
 --   ARINC653::Access_Type => (read);
-end partition_memory.acc_impl;
+end partition_memory.i;
 
-memory implementation partition_memory.acc_hm_impl
-properties
-   Base_Address => 0;
-   Memory_Size =>300000 Bytes;
-   ARINC653::Memory_Type => (Code_Memory);
---   ARINC653::Access_Type => (read);
-end partition_memory.acc_hm_impl;
-
-memory implementation partition_memory.ADIRUp_impl
-properties
-   Base_Address => 0;
-   Memory_Size =>300000 Bytes;
-   ARINC653::Memory_Type => (Code_Memory);
---   ARINC653::Access_Type => (read);
-end partition_memory.ADIRUp_impl;
-
-memory implementation partition_memory.SHM_impl
-properties
-   Base_Address => 0;
-   Memory_Size =>300000 Bytes;
-   ARINC653::Memory_Type => (Code_Memory);
---   Access_Right => read_only;
-end partition_memory.SHM_impl;
 ---------------------------------------------------------------------------------
 memory main_memory
 
@@ -46,10 +23,10 @@ end main_memory;
 
 memory implementation main_memory.impl
 subcomponents
-   accMem: memory partition_memory.acc_impl;
-   acc_hmMem: memory partition_memory.acc_hm_impl;
-   ADIRUpMem: memory partition_memory.ADIRUp_impl;
-   SHMMem: memory partition_memory.SHM_impl;
+   accMem: memory partition_memory.i;
+   acc_hmMem: memory partition_memory.i;
+   ADIRUpMem: memory partition_memory.i;
+   SHMMem: memory partition_memory.i;
    --acc4Mem: memory acc_partition_memory.impl;
    
 end main_memory.impl;
