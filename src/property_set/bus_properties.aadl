@@ -1,17 +1,17 @@
 property set Bus_Properties is
 
-   Bandwidth : Data_Volume applies to (bus);
+  Bandwidth : Data_Volume applies to (bus);
 
-   Bandwidth_Range : type range of Data_Volume;
+  Bandwidth_Range : type range of Data_Volume;
 
-   Bandwidth_Scale : Bus_Properties::Bandwidth_Range applies to (bus);
+  Bandwidth_Scale : Bus_Properties::Bandwidth_Range applies to (bus);
 
-   Available_Bandwidth : list of Data_Volume applies to (bus);
+  Available_Bandwidth : list of Data_Volume applies to (bus);
 
-  Required_Bandwidth : Data_Volume applies to 
+  Required_Bandwidth : Data_Volume applies to
     (abstract, system, device, bus access, connection);
 
-   Channel_Type : enumeration (Simplex, Half_Duplex, Full_Duplex) 
+   Channel_Type : enumeration (Simplex, Half_Duplex, Full_Duplex)
       applies to (bus);
 
   Bus_Type : enumeration (mtp, ptp) applies to (bus, system, abstract);
@@ -22,6 +22,8 @@ property set Bus_Properties is
 
   Max_Latency : Time applies to (bus, bus access, abstract);
 
+  Message_Priority : aadlinteger applies to (connection);
+  --  Priority of a message being sent through a connection, e.g. when
+  --  bound to a priority-aware bus like CAN.
+
 end Bus_Properties;
-
-
