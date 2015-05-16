@@ -6,28 +6,28 @@ public
   -------------------------------------------------------------------------------
   process SAT_APPLI
   end SAT_APPLI;
-  
+
     process implementation SAT_APPLI.Impl
     subcomponents
 	  -- System Management Tasks
-      APPLI_SYS_CYCL: thread SYS_CYCL;	     
+      APPLI_SYS_CYCL: thread SYS_CYCL;
       -- AOCS Tasks
       APPLI_AOCS_CYCL: thread AOCS_CYCL;
       APPLI_AOCS_CONF: thread AOCS_CONF;
-      APPLI_AOCS_MAN: thread AOCS_MAN; 
+      APPLI_AOCS_MAN: thread AOCS_MAN;
       -- Platform Tasks
       APPLI_PF_CYCL: thread PF_CYCL;
-      APPLI_PF_CONF: thread PF_CONF; 
+      APPLI_PF_CONF: thread PF_CONF;
       -- Payload Tasks
       APPLI_PL_CYCL: thread PL_CYCL;
-      APPLI_PL_CONF: thread PL_CONF; 
+      APPLI_PL_CONF: thread PL_CONF;
       -- Data Handling System Tasks
       APPLI_RTC_HDLR: thread RTC_HDLR;
-      APPLI_TC_HDLR: thread TC_HDLR;      
+      APPLI_TC_HDLR: thread TC_HDLR;
       APPLI_RTM_HDLR: thread RTM_HDLR;
       APPLI_PLB_HDLR: thread PLB_HDLR;
       APPLI_AVB_HDLR: thread AVB_HDLR;
- 	  APPLI_ICB_HDLR: thread ICB_HDLR; 
+ 	  APPLI_ICB_HDLR: thread ICB_HDLR;
       -- Synchronizations with buses
       APPLI_AVB_AOCS_ACQ : data AVB_AOCS_ACQ;
       APPLI_ICB_AOCS_ACQ : data ICB_AOCS_ACQ;
@@ -35,37 +35,37 @@ public
       APPLI_ICB_PF_ACQ : data ICB_PF_ACQ;
       APPLI_PLB_PF_ACQ : data PLB_PF_ACQ;
       APPLI_PLB_PL_ACQ : data PLB_PL_ACQ;
-      
+
 	connections
-   ------------------ (RTC_HDLR) -------------- 
-      C1: port APPLI_RTC_HDLR.SYS_RTC -> APPLI_SYS_CYCL.RTC;  
+   ------------------ (RTC_HDLR) --------------
+      C1: port APPLI_RTC_HDLR.SYS_RTC -> APPLI_SYS_CYCL.RTC;
       C2: port APPLI_RTC_HDLR.AOCS_RTC -> APPLI_AOCS_CYCL.RTC;
       C3: port APPLI_RTC_HDLR.PF_RTC -> APPLI_PF_CYCL.RTC;
       C4: port APPLI_RTC_HDLR.PL_RTC -> APPLI_PL_CYCL.RTC;
    ------------------ (TC_HDLR) --------------
       C5: port APPLI_TC_HDLR.SYS_TC -> APPLI_SYS_CYCL.TC;
-      C6: port APPLI_TC_HDLR.AOCS_TC -> APPLI_AOCS_CYCL.TC;           	
+      C6: port APPLI_TC_HDLR.AOCS_TC -> APPLI_AOCS_CYCL.TC;
       C7: port APPLI_TC_HDLR.PF_TC -> APPLI_PF_CYCL.TC;
       C8: port APPLI_TC_HDLR.PL_TC -> APPLI_PL_CYCL.TC;
-  ------------------ (RTTM_HDLR) -------------- 
-      C9: port APPLI_SYS_CYCL.RTM -> APPLI_RTM_HDLR.SYS_RTM; 
+  ------------------ (RTTM_HDLR) --------------
+      C9: port APPLI_SYS_CYCL.RTM -> APPLI_RTM_HDLR.SYS_RTM;
       C10: port APPLI_AOCS_CYCL.RTM -> APPLI_RTM_HDLR.AOCS_RTM;
-      C11: port APPLI_PF_CYCL.RTM -> APPLI_RTM_HDLR.PF_RTM;      
+      C11: port APPLI_PF_CYCL.RTM -> APPLI_RTM_HDLR.PF_RTM;
       C12: port APPLI_PL_CYCL.RTM -> APPLI_RTM_HDLR.PL_RTM;
     ------------------ (AVB_HDLR) --------------
     	-- ACQ
       C13: data access APPLI_AVB_AOCS_ACQ -> APPLI_AVB_HDLR.AVB_AOCS_ACQ_features;
-      C14: data access APPLI_AVB_AOCS_ACQ -> APPLI_AOCS_CYCL.AVB_AOCS_ACQ_features; 
+      C14: data access APPLI_AVB_AOCS_ACQ -> APPLI_AOCS_CYCL.AVB_AOCS_ACQ_features;
       -- AVB event
       C15: port APPLI_AVB_HDLR.AOCS_AVB -> APPLI_AOCS_CYCL.AVB;
      ------------------ (ICB_HDLR) --------------
     	-- ACQs
    	  C16: data access APPLI_ICB_SYS_ACQ -> APPLI_ICB_HDLR.ICB_SYS_ACQ_features;
-      C17: data access APPLI_ICB_SYS_ACQ -> APPLI_SYS_CYCL.ICB_SYS_ACQ_features; 
-      C18: data access APPLI_ICB_AOCS_ACQ -> APPLI_ICB_HDLR.ICB_AOCS_ACQ_features;   
-      C19: data access APPLI_ICB_AOCS_ACQ -> APPLI_AOCS_CYCL.ICB_AOCS_ACQ_features; 
+      C17: data access APPLI_ICB_SYS_ACQ -> APPLI_SYS_CYCL.ICB_SYS_ACQ_features;
+      C18: data access APPLI_ICB_AOCS_ACQ -> APPLI_ICB_HDLR.ICB_AOCS_ACQ_features;
+      C19: data access APPLI_ICB_AOCS_ACQ -> APPLI_AOCS_CYCL.ICB_AOCS_ACQ_features;
       C20: data access APPLI_ICB_PF_ACQ -> APPLI_PF_CYCL.ICB_PF_ACQ_features;
-      C21: data access APPLI_ICB_PF_ACQ -> APPLI_ICB_HDLR.ICB_PF_ACQ_features; 
+      C21: data access APPLI_ICB_PF_ACQ -> APPLI_ICB_HDLR.ICB_PF_ACQ_features;
 		-- ICB events
       C22: port APPLI_ICB_HDLR.SYS_ICB -> APPLI_SYS_CYCL.ICB;
 	  C23: port APPLI_ICB_HDLR.AOCS_ICB -> APPLI_AOCS_CYCL.ICB;
@@ -73,12 +73,12 @@ public
       ------------------ (PLB_HDLR) --------------
     	-- ACQ
       C25: data access APPLI_PLB_PF_ACQ -> APPLI_PF_CYCL.PLB_PF_ACQ_features;
-      C26: data access APPLI_PLB_PF_ACQ -> APPLI_PLB_HDLR.PLB_PF_ACQ_features;      	      
+      C26: data access APPLI_PLB_PF_ACQ -> APPLI_PLB_HDLR.PLB_PF_ACQ_features;
       C27: data access APPLI_PLB_PL_ACQ -> APPLI_PL_CYCL.PLB_PL_ACQ_features;
       C28: data access APPLI_PLB_PL_ACQ -> APPLI_PLB_HDLR.PLB_PL_ACQ_features;
       	-- events
       C29: port APPLI_PLB_HDLR.PF_PLB -> APPLI_PF_CYCL.PLB;
-      C30: port APPLI_PLB_HDLR.PL_PLB -> APPLI_PL_CYCL.PLB; 
+      C30: port APPLI_PLB_HDLR.PL_PLB -> APPLI_PL_CYCL.PLB;
       ------ (trigger asynchronous AOCS tasks) -------
       C31: port APPLI_AOCS_CYCL.CONF_ENABLE -> APPLI_AOCS_CONF.ENABLE;
       C32: port APPLI_AOCS_CYCL.MAN_ENABLE -> APPLI_AOCS_MAN.ENABLE;
@@ -87,17 +87,17 @@ public
       ------ (trigger asynchronous Payload tasks) -----
       C34: port APPLI_PL_CYCL.CONF_ENABLE -> APPLI_PL_CONF.ENABLE;
       -------------- (system management) ----------------------
-      C35: port APPLI_AOCS_CYCL.SYS -> APPLI_SYS_CYCL.AOCS; 
-      C36: port APPLI_PF_CYCL.SYS -> APPLI_SYS_CYCL.PF;    
-      C37: port APPLI_PL_CYCL.SYS -> APPLI_SYS_CYCL.PL;  
-             	         	
+      C35: port APPLI_AOCS_CYCL.SYS -> APPLI_SYS_CYCL.AOCS;
+      C36: port APPLI_PF_CYCL.SYS -> APPLI_SYS_CYCL.PF;
+      C37: port APPLI_PL_CYCL.SYS -> APPLI_SYS_CYCL.PL;
+
   end SAT_APPLI.Impl;
 
   -----------------------------------------------------------
   -- SYSTEM MANAGEMENT function                            --
   -----------------------------------------------------------
 
-  thread SYS_CYCL 
+  thread SYS_CYCL
     features
       -- Synchronizations with bus
 	  ICB_SYS_ACQ_features : requires data access ICB_SYS_ACQ;
@@ -126,7 +126,7 @@ public
   -----------------------------------------------------------
   -- DHS tasks
   -----------------------------------------------------------
-  thread RTC_HDLR 
+  thread RTC_HDLR
      features
      AOCS_RTC : out event port;
      PF_RTC : out event port;
@@ -137,9 +137,9 @@ public
       Period => 250 ms;
       Deadline => 250 ms;
 	 Compute_Execution_Time => 1 ms..1 ms ;
-	 Priority => 255;   
-  end RTC_HDLR;   
-   
+	 Priority => 255;
+  end RTC_HDLR;
+
   thread TC_HDLR
   	features
   	AOCS_TC : out event data port default_type;
@@ -153,7 +153,7 @@ public
 	Compute_Execution_Time => 2 ms..2 ms ;
 	Priority => 254;
   end TC_HDLR;
-     
+
   thread RTM_HDLR
   	features
   	AOCS_RTM : in event data port default_type;
@@ -166,13 +166,13 @@ public
     Deadline => 250 ms;
 	Compute_Execution_Time => 3 ms..4 ms ;
 	Priority => 250;
-  end RTM_HDLR;     
-     
+  end RTM_HDLR;
+
   thread AVB_HDLR
     features
       -- Synchronizations
       AVB_AOCS_ACQ_features : requires data access AVB_AOCS_ACQ;
-      AOCS_AVB : out event port; 
+      AOCS_AVB : out event port;
     properties
       Dispatch_Protocol => Periodic;
       Period => 125 ms;
@@ -185,10 +185,10 @@ public
     features
 	  ICB_AOCS_ACQ_features : requires data access ICB_AOCS_ACQ;
 	  ICB_PF_ACQ_features : requires data access ICB_PF_ACQ;
-	  ICB_SYS_ACQ_features : requires data access ICB_SYS_ACQ;		  
+	  ICB_SYS_ACQ_features : requires data access ICB_SYS_ACQ;
       AOCS_ICB : out event port;
-      PF_ICB : out event port; 
-      SYS_ICB : out event port;       
+      PF_ICB : out event port;
+      SYS_ICB : out event port;
     properties
       Dispatch_Protocol => Periodic;
       Period => 125 ms;
@@ -200,9 +200,9 @@ public
   thread PLB_HDLR
     features
 	  PLB_PF_ACQ_features : requires data access PLB_PF_ACQ;
-	  PLB_PL_ACQ_features : requires data access PLB_PL_ACQ;	  
-      PF_PLB : out event port; 
-      PL_PLB : out event port;       
+	  PLB_PL_ACQ_features : requires data access PLB_PL_ACQ;
+      PF_PLB : out event port;
+      PL_PLB : out event port;
     properties
       Dispatch_Protocol => Periodic;
       Period => 125 ms;
@@ -214,8 +214,8 @@ public
   -----------------------------------------------------------
   -- AOCS function                                         --
   -----------------------------------------------------------
-  
-  thread AOCS_CYCL 
+
+  thread AOCS_CYCL
     features
       -- Synchronizations with bus
 	  AVB_AOCS_ACQ_features : requires data access AVB_AOCS_ACQ;
@@ -254,7 +254,7 @@ public
       Compute_Execution_Time => 11 ms..60 ms ;
       Priority => 245;
   end AOCS_CONF;
-  
+
   thread AOCS_MAN
     features
       ENABLE: in event port;
@@ -271,7 +271,7 @@ public
   -- PLATFORM functions                                    --
   -----------------------------------------------------------
 
-  thread PF_CYCL 
+  thread PF_CYCL
     features
       -- Synchronizations with bus
 	  ICB_PF_ACQ_features : requires data access ICB_PF_ACQ;
@@ -309,12 +309,12 @@ public
       Compute_Execution_Time => 8 ms..8 ms ;
       Priority => 243;
   end PF_CONF;
-  
+
   -----------------------------------------------------------
   -- PAYLOAD functions                                    --
-  -----------------------------------------------------------  
-  
-  thread PL_CYCL 
+  -----------------------------------------------------------
+
+  thread PL_CYCL
     features
       -- Synchronizations with bus
 	  PLB_PL_ACQ_features : requires data access PLB_PL_ACQ;
@@ -349,7 +349,7 @@ public
       Compute_Execution_Time => 8 ms..8 ms ;
      Priority => 242;
   end PL_CONF;
-  
+
 --------------------------------------------
 ------ DATA
 -------------------------------------------
@@ -357,32 +357,32 @@ public
 
 	data AVB_AOCS_ACQ
 	properties
-	  Source_Data_Size => 620 Bits;
+	  Data_Size => 620 Bits;
 	end AVB_AOCS_ACQ;
-	
+
 	data ICB_AOCS_ACQ
 	properties
-	  Source_Data_Size => 620 Bits;
+	  Data_Size => 620 Bits;
 	end ICB_AOCS_ACQ;
-	
+
 	data ICB_SYS_ACQ
 	properties
-	  Source_Data_Size => 620 Bits;
+	  Data_Size => 620 Bits;
 	end ICB_SYS_ACQ;
-	
+
 	data ICB_PF_ACQ
 	properties
-	  Source_Data_Size => 620 Bits;
+	  Data_Size => 620 Bits;
 	end ICB_PF_ACQ;
-	
+
 	data PLB_PF_ACQ
 	properties
-	  Source_Data_Size => 620 Bits;
+	  Data_Size => 620 Bits;
 	end PLB_PF_ACQ;
-	
+
 	data PLB_PL_ACQ
 	properties
-	  Source_Data_Size => 620 Bits;
+	  Data_Size => 620 Bits;
 	end PLB_PL_ACQ;
-	   
+
 end satellite_software;

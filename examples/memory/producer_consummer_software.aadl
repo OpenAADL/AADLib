@@ -55,8 +55,8 @@ public
     Compute_Execution_Time => 0 ms .. 3 ms;
     Deadline               => 1000 ms;
     Priority               => 100;
-    Source_Stack_Size      => 5000 Bytes;
-    Source_Code_Size       => 678 Bytes;
+    Stack_Size      => 5000 Bytes;
+    Code_Size       => 678 Bytes;
   end Init.impl;
   
   thread implementation Producer.impl
@@ -70,8 +70,8 @@ public
     Compute_Execution_Time => 0 ms .. 3 ms;
     Deadline               => 1000 ms;
     Priority               => 101;
-    Source_Stack_Size	   => 5000 Bytes;
-    Source_Code_Size 	   => 678 Bytes;
+    Stack_Size	   => 5000 Bytes;
+    Code_Size 	   => 678 Bytes;
   end Producer.impl;
   
   thread implementation Consumer.impl
@@ -85,8 +85,8 @@ public
     Compute_Execution_Time => 0 ms .. 3 ms;
     Deadline               => 1000 ms;
     Priority               => 101;
-    Source_Stack_Size      => 5000 Bytes;
-    Source_Code_Size       => 678 Bytes;
+    Stack_Size      => 5000 Bytes;
+    Code_Size       => 678 Bytes;
   end Consumer.impl;
 
   ---------------

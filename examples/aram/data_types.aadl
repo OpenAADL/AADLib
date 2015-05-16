@@ -13,7 +13,7 @@ public
   data fpa_data
     --  fpa_data represents the data manipulated by the FPA sensor
   properties
-    Source_Data_Size => 7 MByte;
+    Data_Size => 7 MByte;
   end fpa_data;
   
   data fpa_ctrl
