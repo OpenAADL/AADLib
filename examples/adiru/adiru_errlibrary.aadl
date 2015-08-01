@@ -1,0 +1,39 @@
+--  This package provides the error library for the ADIRU model
+
+package ADIRU_errLibrary
+public
+
+annex EMV2 {**
+   error types
+      -- ACC error types, those type of error can 
+      -- propagate through the whole system
+      ValueError: type;
+      ValueErroneous : type extends ValueError;
+      ValueStuck : type extends ValueError;
+      ValueStuckHigh : type extends ValueStuck;
+      ValueStuckLow : type extends ValueError;
+      ValueChangeTooFast : type extends ValueError;
+      NoValue : type;
+   end types;
+    
+   -- Simple error state machine
+   error behavior simple
+   events
+     op : error event;
+     failure : error event;
+   states
+     Operational : initial state;
+     Failed : state;
+   transitions
+     t1 : operational -[failure]-> failed;
+     t2 : failed -[op]-> operational;
+   end behavior;
+    
+   -- Voter and Display module error state machine
+   error behavior display_simple
+   states
+      operational : initial state;
+      displayErroneousValue : state;
+   end behavior;
+**};
+end ADIRU_errLibrary;

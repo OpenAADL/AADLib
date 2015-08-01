@@ -1,176 +1,185 @@
+--  This package models ADIRU subprograms
+
 package subprograms
 public
 
-with POK;
-with ARINC653;
-with SHM_DataType;
+  with ARINC653;
+  with SHM_DataType;
 
-subprogram  acc1_dataOutput_spg
-features
- acc1DataOut: out parameter SHM_DataType::accData; 
- event_in:   in parameter SHM_DataType::actionData; 
-properties
- Source_Language => (C);
- Source_Name=>"acc1dataoutput";
- Source_Text => ("../../../acc_code.o");
- 
-end   acc1_dataOutput_spg;
-----------------------------------------------------------------------------------------
-subprogram  acc2_dataOutput_spg
-features
- acc2DataOut: out parameter SHM_DataType::accData; 
- event_in:   in parameter SHM_DataType::actionData; 
-properties
- Source_Language => (C);
- Source_Name=>"acc2dataoutput";
- Source_Text => ("../../../acc_code.o");
- 
-end   acc2_dataOutput_spg;
-----------------------------------------------------------------------------------------
-subprogram  acc3_dataOutput_spg
-features
- accDataOut: out parameter SHM_DataType::accData; 
- event_in:   in parameter SHM_DataType::actionData; 
-properties
- Source_Language => (C);
- Source_Name=>"acc3dataoutput";
- Source_Text => ("../../../acc_code.o");
- 
-end   acc3_dataOutput_spg;
-----------------------------------------------------------------------------------------
-subprogram  acc4_dataOutput_spg
-features
- accDataOut: out parameter SHM_DataType::accData; 
- event_in:   in parameter SHM_DataType::actionData; 
-properties
- Source_Language => (C);
- Source_Name=>"acc4dataoutput";
- Source_Text => ("../../../acc_code.o");
- 
-end   acc4_dataOutput_spg;
-----------------------------------------------------------------------------------------
-subprogram  acc5_dataOutput_spg
-features
- accDataOut: out parameter SHM_DataType::accData; 
- event_in:   in parameter SHM_DataType::actionData; 
-properties
- Source_Language => (C);
- Source_Name=>"acc5dataoutput";
- Source_Text => ("../../../acc_code.o");
- 
-end   acc5_dataOutput_spg;
-----------------------------------------------------------------------------------------
-subprogram  acc6_dataOutput_spg
-features
- accDataOut: out parameter SHM_DataType::accData; 
- event_in:   in parameter SHM_DataType::actionData; 
-properties
- Source_Language => (C);
- Source_Name=>"acc6dataoutput";
- Source_Text => ("../../../acc_code.o");
- 
-end   acc6_dataOutput_spg;
-----------------------------------------------------------------------------------------
-subprogram  acc_HM_spg
-features
- in_para1: in parameter SHM_DataType::accData;
- in_para2: in parameter SHM_DataType::accData;
- in_para3: in parameter SHM_DataType::accData;
- in_para4: in parameter SHM_DataType::accData;
- in_para5: in parameter SHM_DataType::accData;
- in_para6: in parameter SHM_DataType::accData;
+  --  For each subprogram, we model
+  --  * its parameters
+  --  * its actual implementation, listing the implementation language
+  --    (Source_Language property), name of the corresponding C function
+  --    (Source_Name) and location in an object file (Source_Text).
 
- out_para1: out parameter SHM_DataType::accData;
- out_para2: out parameter SHM_DataType::accData;
- out_para3: out parameter SHM_DataType::accData;
- out_para4: out parameter SHM_DataType::accData;
- out_para5: out parameter SHM_DataType::accData;
- out_para6: out parameter SHM_DataType::accData;
- 
- in_action_command: in parameter SHM_DataType::actionData;
- out_error_data: out parameter SHM_DataType::errorData;
+  subprogram acc1_dataOutput_spg
+  features
+    acc1DataOut: out parameter SHM_DataType::accData;
+    event_in:   in parameter SHM_DataType::actionData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"acc1dataoutput";
+    Source_Text => ("../../../acc_code.o");
+  end acc1_dataOutput_spg;
 
- event_to_acc1: out parameter SHM_DataType::actionData;
- event_to_acc2: out parameter SHM_DataType::actionData;
- event_to_acc3: out parameter SHM_DataType::actionData;
- event_to_acc4: out parameter SHM_DataType::actionData;
- event_to_acc5: out parameter SHM_DataType::actionData;
- event_to_acc6: out parameter SHM_DataType::actionData;
-properties
- Source_Language => (C);
- Source_Name=> "acchm_monitor";
- Source_Text =>("../../../acc_code.o");
-end  acc_HM_spg;
-------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------
-subprogram  ADIRUp_solve_spg
-features
- inData_para1: in parameter SHM_DataType::accData;
- inData_para2: in parameter SHM_DataType::accData;
- inData_para3: in parameter SHM_DataType::accData;
- inData_para4: in parameter SHM_DataType::accData;
- inData_para5: in parameter SHM_DataType::accData;
- inData_para6: in parameter SHM_DataType::accData;
- --outdata_para: out parameter SHM_DataType::accData;
-properties
- Source_Language => (C);
- Source_Name=>"solve";
- Source_Text => ("../../../adirup_code.o");
-end   ADIRUp_solve_spg;
---------------------------------------------------------------------------------------------
-subprogram  ADIRUp_HM_spg
-features
- inData_para1: in parameter SHM_DataType::accData;
- inData_para2: in parameter SHM_DataType::accData;
- inData_para3: in parameter SHM_DataType::accData;
- inData_para4: in parameter SHM_DataType::accData;
- inData_para5: in parameter SHM_DataType::accData;
- inData_para6: in parameter SHM_DataType::accData;
- outdata_para1: out parameter SHM_DataType::accData;
- outdata_para2: out parameter SHM_DataType::accData;
- outdata_para3: out parameter SHM_DataType::accData;
- outdata_para4: out parameter SHM_DataType::accData;
- outdata_para5: out parameter SHM_DataType::accData;
- outdata_para6: out parameter SHM_DataType::accData;
- error_action_in: in parameter SHM_DataType::actionData;
- error_data_out: out parameter SHM_DataType::errorData;
-properties
- Source_Language => (C);
- Source_Name=>"adirup_hm";
- Source_Text => ("../../../adirup_code.o");
-end    ADIRUp_HM_spg;
-------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------
-subprogram  alarmAggregator_spg
-features
- inData_para1: in parameter SHM_DataType::errorData;
- inData_para2: in parameter SHM_DataType::errorData;
- outdata_para: out parameter SHM_DataType::errorData;
-properties
- Source_Language => (C);
- Source_Name=>"alarm_aggregator";
- Source_Text => ("../../../shm_code.o");
-end         alarmAggregator_spg;
----------------------------------------------------------------------------------------------
-subprogram  diagnosisEngine_spg
-features
- inData_para: in parameter SHM_DataType::errorData;
- outdata_para: out parameter SHM_DataType::errorData;
-properties
- Source_Language => (C);
- Source_Name=>"diagnosis_engine";
- Source_Text => ("../../../shm_code.o");
-end         diagnosisEngine_spg;
----------------------------------------------------------------------------------------------
-subprogram  mitigationActor_spg
-features
- inData_para: in parameter SHM_DataType::errorData;
- outdata_para: out parameter SHM_DataType::actionData;
-properties
- Source_Language => (C);
- Source_Name=>"mitigation_actor";
- Source_Text => ("../../../shm_code.o");
-end        mitigationActor_spg;
-------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------
+  ----------------------------------------------------------------------------------------
+  subprogram acc2_dataOutput_spg
+  features
+    acc2DataOut: out parameter SHM_DataType::accData;
+    event_in:   in parameter SHM_DataType::actionData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"acc2dataoutput";
+    Source_Text => ("../../../acc_code.o");
+  end acc2_dataOutput_spg;
+
+  ----------------------------------------------------------------------------------------
+  subprogram acc3_dataOutput_spg
+  features
+    accDataOut: out parameter SHM_DataType::accData;
+    event_in:   in parameter SHM_DataType::actionData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"acc3dataoutput";
+    Source_Text => ("../../../acc_code.o");
+  end acc3_dataOutput_spg;
+
+  ----------------------------------------------------------------------------------------
+  subprogram acc4_dataOutput_spg
+  features
+    accDataOut: out parameter SHM_DataType::accData;
+    event_in:   in parameter SHM_DataType::actionData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"acc4dataoutput";
+    Source_Text => ("../../../acc_code.o");
+  end acc4_dataOutput_spg;
+
+  ----------------------------------------------------------------------------------------
+  subprogram acc5_dataOutput_spg
+  features
+    accDataOut: out parameter SHM_DataType::accData;
+    event_in:   in parameter SHM_DataType::actionData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"acc5dataoutput";
+    Source_Text => ("../../../acc_code.o");
+  end  acc5_dataOutput_spg;
+
+  ----------------------------------------------------------------------------------------
+  subprogram acc6_dataOutput_spg
+  features
+    accDataOut: out parameter SHM_DataType::accData;
+    event_in:   in parameter SHM_DataType::actionData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"acc6dataoutput";
+    Source_Text => ("../../../acc_code.o");
+  end  acc6_dataOutput_spg;
+
+  ----------------------------------------------------------------------------------------
+  subprogram  acc_HM_spg
+  features
+    in_para1: in parameter SHM_DataType::accData;
+    in_para2: in parameter SHM_DataType::accData;
+    in_para3: in parameter SHM_DataType::accData;
+    in_para4: in parameter SHM_DataType::accData;
+    in_para5: in parameter SHM_DataType::accData;
+    in_para6: in parameter SHM_DataType::accData;
+
+    out_para1: out parameter SHM_DataType::accData;
+    out_para2: out parameter SHM_DataType::accData;
+    out_para3: out parameter SHM_DataType::accData;
+    out_para4: out parameter SHM_DataType::accData;
+    out_para5: out parameter SHM_DataType::accData;
+    out_para6: out parameter SHM_DataType::accData;
+
+    in_action_command: in parameter SHM_DataType::actionData;
+    out_error_data: out parameter SHM_DataType::errorData;
+
+    event_to_acc1: out parameter SHM_DataType::actionData;
+    event_to_acc2: out parameter SHM_DataType::actionData;
+    event_to_acc3: out parameter SHM_DataType::actionData;
+    event_to_acc4: out parameter SHM_DataType::actionData;
+    event_to_acc5: out parameter SHM_DataType::actionData;
+    event_to_acc6: out parameter SHM_DataType::actionData;
+  properties
+    Source_Language => (C);
+    Source_Name => "acchm_monitor";
+    Source_Text =>("../../../acc_code.o");
+  end acc_HM_spg;
+
+  ------------------------------------------------------------------------------------------
+  subprogram ADIRUp_solve_spg
+  features
+    inData_para1: in parameter SHM_DataType::accData;
+    inData_para2: in parameter SHM_DataType::accData;
+    inData_para3: in parameter SHM_DataType::accData;
+    inData_para4: in parameter SHM_DataType::accData;
+    inData_para5: in parameter SHM_DataType::accData;
+    inData_para6: in parameter SHM_DataType::accData;
+    --outdata_para: out parameter SHM_DataType::accData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"solve";
+    Source_Text => ("../../../adirup_code.o");
+  end ADIRUp_solve_spg;
+
+  --------------------------------------------------------------------------------------------
+  subprogram ADIRUp_HM_spg
+  features
+    inData_para1: in parameter SHM_DataType::accData;
+    inData_para2: in parameter SHM_DataType::accData;
+    inData_para3: in parameter SHM_DataType::accData;
+    inData_para4: in parameter SHM_DataType::accData;
+    inData_para5: in parameter SHM_DataType::accData;
+    inData_para6: in parameter SHM_DataType::accData;
+    outdata_para1: out parameter SHM_DataType::accData;
+    outdata_para2: out parameter SHM_DataType::accData;
+    outdata_para3: out parameter SHM_DataType::accData;
+    outdata_para4: out parameter SHM_DataType::accData;
+    outdata_para5: out parameter SHM_DataType::accData;
+    outdata_para6: out parameter SHM_DataType::accData;
+    error_action_in: in parameter SHM_DataType::actionData;
+    error_data_out: out parameter SHM_DataType::errorData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"adirup_hm";
+    Source_Text => ("../../../adirup_code.o");
+  end ADIRUp_HM_spg;
+
+  ------------------------------------------------------------------------------------------
+  subprogram alarmAggregator_spg
+  features
+    inData_para1: in parameter SHM_DataType::errorData;
+    inData_para2: in parameter SHM_DataType::errorData;
+    outdata_para: out parameter SHM_DataType::errorData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"alarm_aggregator";
+    Source_Text => ("../../../shm_code.o");
+  end alarmAggregator_spg;
+
+  ---------------------------------------------------------------------------------------------
+  subprogram diagnosisEngine_spg
+  features
+    inData_para: in parameter SHM_DataType::errorData;
+    outdata_para: out parameter SHM_DataType::errorData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"diagnosis_engine";
+    Source_Text => ("../../../shm_code.o");
+  end diagnosisEngine_spg;
+
+  ---------------------------------------------------------------------------------------------
+  subprogram mitigationActor_spg
+  features
+    inData_para: in parameter SHM_DataType::errorData;
+    outdata_para: out parameter SHM_DataType::actionData;
+  properties
+    Source_Language => (C);
+    Source_Name =>"mitigation_actor";
+    Source_Text => ("../../../shm_code.o");
+  end mitigationActor_spg;
+
 end subprograms;

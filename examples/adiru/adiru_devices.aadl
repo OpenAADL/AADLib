@@ -1,0 +1,28 @@
+package ADIRU_Devices
+public
+
+  with SHM_DataType;
+  with ADIRU_errLibrary;
+
+  -- ACC_DEVICE
+  -- Physical device that produces the acc data that is then
+  -- sent to ACC_HM. Its output port can propagate erroneous
+  -- values.
+  device acc_device
+  features
+    accData : out event data port SHM_DataType::accData;
+  end acc_device;
+
+  device implementation acc_device.impl
+  annex EMV2{**
+     use types ADIRU_errLibrary;
+     use behavior ADIRU_errLibrary::simple;
+
+     error propagations
+       accData : out propagation{ValueErroneous};
+     flows
+       f1 : error source accData{ValueErroneous} when failed;
+     end propagations; **};
+   end acc_device.impl;
+
+end ADIRU_Devices;

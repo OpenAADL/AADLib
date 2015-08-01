@@ -1,30 +1,29 @@
+--  This package defines data types to be manipulated by software elements.
+--  It follows the conventions from the Data Modeling Annex document.
+
 package SHM_DataType
-
 public
-with Data_Model;
+   with Data_Model;
 
+   data C_Unsigned_Long_Int
+     --  This data component defines a C unsigned long int type, with a
+     --  dual nature The first properties defines its representation in
+     --  memory, the two last its mapping in C.
+    properties
+     Data_Model::Data_Representation => integer;
+     Data_Model::Number_Representation => unsigned;
+     Data_Size => 4 bytes;
+     Source_Language => (C);
+     Type_Source_Name => "unsigned long int";
+   end C_Unsigned_Long_Int;
 
-data accData
-properties
-  Data_Model::Data_Representation => integer;
-  Data_Size => 4 bytes;
-  Type_Source_Name => "unsigned long int";
-end accData;
+   data accData extends C_Unsigned_Long_Int
+   end accData;
 
-data errorData
-properties
-  Data_Model::Data_Representation => integer;
-  Data_Size => 4 bytes;
-  Type_Source_Name => "unsigned long int";
-  --Data_Model::Dimension => (20);
-end  errorData;
+   data errorData extends C_Unsigned_Long_Int
+   end errorData;
 
-data actionData
-properties
-  Data_Model::Data_Representation => integer;
-  Data_Size => 4 bytes;
-  Type_Source_Name => "unsigned long int";
-  --Data_Model::Dimension => (20);
-end actionData;
+   data actionData extends C_Unsigned_Long_Int
+   end actionData;
 
 end SHM_DataType;

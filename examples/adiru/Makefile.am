@@ -12,4 +12,4 @@ CLEANFILES =
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl real deos_conf vxworks653_conf
+AVAILABLE_TARGETS= parse-aadl real deos_conf vxworks653_conf deos_code vxworks653_code

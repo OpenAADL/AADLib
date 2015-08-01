@@ -1,34 +1,34 @@
+--  This package models the memory components of the ADIRU system
+
 package ADIRU_memory
 public
 
-with POK;
-with ARINC653;
+   with ARINC653;
 
-memory partition_memory
+   memory partition_memory
+     --  This component defines a memory segment associated to a
+     --  partition
+   end partition_memory;
 
-end partition_memory;
+   memory implementation partition_memory.i
+   properties
+      Base_Address          => 0;
+      Memory_Size           => 102400 Bytes;
+      ARINC653::Memory_Type => (Code_Memory);
+   end partition_memory.i;
 
-memory implementation partition_memory.i
-properties
-   Base_Address => 0;
-   Memory_Size =>102400 Bytes;
-   ARINC653::Memory_Type => (Code_Memory);
---   ARINC653::Access_Type => (read);
-end partition_memory.i;
+   memory main_memory
+     --  This component represents the whole memory associated to a
+     --  processor
+   end main_memory;
 
----------------------------------------------------------------------------------
-memory main_memory
-
-end main_memory;
-
-memory implementation main_memory.impl
-subcomponents
-   accMem: memory partition_memory.i;
-   acc_hmMem: memory partition_memory.i;
-   ADIRUpMem: memory partition_memory.i;
-   SHMMem: memory partition_memory.i;
-   --acc4Mem: memory acc_partition_memory.impl;
-   
-end main_memory.impl;
+   memory implementation main_memory.impl
+   subcomponents
+      accMem    : memory partition_memory.i;
+      acc_hmMem : memory partition_memory.i;
+      ADIRUpMem : memory partition_memory.i;
+      SHMMem    : memory partition_memory.i;
+      --acc4Mem: memory acc_partition_memory.impl;
+   end main_memory.impl;
 
 end ADIRU_memory;

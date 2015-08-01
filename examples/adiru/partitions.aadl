@@ -1,52 +1,123 @@
 package partitions
 public
 
-  with POK;
   with ARINC653;
   with threads;
   with SHM_DataType;
 
+  -----------------------------------------------------------------------------
+  --  The acc_partition gathers inputs from all accelerometers
 
   virtual processor acc_partition
-  properties 
-    --Scheduling_Protocol => (FixedTimeline);
-    POK::Additional_Features => (console);
+  properties
     ARINC653::DAL => LEVEL_A; -- XXX Review value
   end acc_partition;
 
   virtual processor implementation acc_partition.impl
   end acc_partition.impl;
 
+  process acc_process
+    --  In this first variant, the acc_process emulates the device internally, 
+    --  for code generation purposes
+  features
+    acc1_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+    acc2_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+    acc3_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+    acc4_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+    acc5_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+    acc6_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+
+    acc1_event_in: in event data port SHM_DataType::actionData;
+    acc2_event_in: in event data port SHM_DataType::actionData;
+    acc3_event_in: in event data port SHM_DataType::actionData;
+    acc4_event_in: in event data port SHM_DataType::actionData;
+    acc5_event_in: in event data port SHM_DataType::actionData;
+    acc6_event_in: in event data port SHM_DataType::actionData;
+  end acc_process;
+
+  process implementation acc_process.impl
+  subcomponents
+    acc1: thread threads::acc1_dataOutput.impl;
+    acc2: thread threads::acc2_dataOutput.impl;
+    acc3: thread threads::acc3_dataOutput.impl;
+    acc4: thread threads::acc4_dataOutput.impl;
+    acc5: thread threads::acc5_dataOutput.impl;
+    acc6: thread threads::acc6_dataOutput.impl;
+
+  connections
+    C1: port acc1_event_in->acc1.acc1_command_in;
+    C2: port acc2_event_in->acc2.acc2_command_in;
+    C3: port acc3_event_in->acc3.acc_command_in;
+    C4: port acc4_event_in->acc4.acc_command_in;
+    C5: port acc5_event_in->acc5.acc_command_in;
+    C6: port acc6_event_in->acc6.acc_command_in;
+
+    C7: port acc1.acc1out->acc1_output;
+    C8: port acc2.acc2out->acc2_output;
+    C9: port acc3.accout->acc3_output;
+    C10: port acc4.accout->acc4_output;
+    C11: port acc5.accout->acc5_output;
+    C12: port acc6.accout->acc6_output;
+  end acc_process.impl;
+
+  process acc_process_emv2 extends acc_process
+  --  In this variant, we add incoming ports from actual accelerometer devices
+  
+  features
+    acc1_input: in event data port SHM_DataType::accData;
+    acc2_input: in data port SHM_DataType::accData;
+    acc3_input: in data port SHM_DataType::accData;
+    acc4_input: in data port SHM_DataType::accData;
+    acc5_input: in data port SHM_DataType::accData;
+    acc6_input: in data port SHM_DataType::accData;
+  end acc_process_emv2;
+
+  process implementation acc_process_emv2.impl extends acc_process.impl
+    --  We extend the initial implementation, and add error modeling elements.
+  connections
+    C21 : port acc1_input -> acc1_output;
+    C22 : port acc2_input -> acc2_output;
+    C23 : port acc3_input -> acc3_output;
+    C24 : port acc4_input -> acc4_output;
+    C25 : port acc5_input -> acc5_output;
+    C26 : port acc6_input -> acc6_output;
+     
+  annex EMV2{**
+    use types ADIRU_errLibrary;
+    use behavior ADIRU_errLibrary::simple;
+  
+    error propagations
+      acc1_input  : in  propagation{ValueErroneous};
+      acc1_output : out propagation{ValueErroneous};
+      acc2_input  : in  propagation{ValueErroneous};
+      acc2_output : out propagation{ValueErroneous};
+      acc3_input  : in  propagation{ValueErroneous};
+      acc3_output : out propagation{ValueErroneous};
+      acc4_input  : in  propagation{ValueErroneous};
+      acc4_output : out propagation{ValueErroneous};
+      acc5_input  : in  propagation{ValueErroneous};
+      acc5_output : out propagation{ValueErroneous};
+      acc6_input  : in  propagation{ValueErroneous};
+      acc6_output : out propagation{ValueErroneous};
+    flows
+      f1 : error path acc1_input{ValueErroneous} -> acc1_output{ValueErroneous};
+      f2 : error path acc2_input{ValueErroneous} -> acc2_output{ValueErroneous};
+      f3 : error path acc3_input{ValueErroneous} -> acc3_output{ValueErroneous};
+      f4 : error path acc4_input{ValueErroneous} -> acc4_output{ValueErroneous};
+      f5 : error path acc5_input{ValueErroneous} -> acc5_output{ValueErroneous};
+      f6 : error path acc6_input{ValueErroneous} -> acc6_output{ValueErroneous};
+    end propagations; **}; 
+ end acc_process_emv2.impl;
+
+  -----------------------------------------------------------------------------
+
   virtual processor acc_hm_partition
   properties
-    --Scheduling_Protocol => (FixedTimeline);
-    POK::Additional_Features => (console);
     ARINC653::DAL => LEVEL_A; -- XXX Review value
   end acc_hm_partition;
 
   virtual processor implementation acc_hm_partition.impl
   end acc_hm_partition.impl;
-
-  virtual processor ADIRUp_partition
-  properties
-    --Scheduling_Protocol => (FixedTimeline);
-    POK::Additional_Features => (console);
-    ARINC653::DAL => LEVEL_A; -- XXX Review value
-  end ADIRUp_partition;
-
-  virtual processor implementation ADIRUp_partition.impl
-  end ADIRUp_partition.impl;
-
-  virtual processor SHM_partition
-  properties
-    --Scheduling_Protocol => (FixedTimeline);
-    POK::Additional_Features => (console);
-    ARINC653::DAL => LEVEL_A; -- XXX Review value
-  end SHM_partition;
-
-  virtual processor implementation SHM_partition.impl
-  end SHM_partition.impl;
-
 
   process acc_hm_process
   features
@@ -65,8 +136,7 @@ public
     v_acc6_dataout: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
 
     acc_error_out: out event data port SHM_DataType::errorData;
-    acc_error_action: in event data port SHM_DataType::actionData
-    	{Compute_Deadline => 0 ms;};
+    acc_error_action: in event data port SHM_DataType::actionData;
 
     event2acc1: out event data port SHM_DataType::actionData;
     event2acc2: out event data port SHM_DataType::actionData;
@@ -95,66 +165,51 @@ public
     C11: port acc_HM.event_to_acc5->event2acc5;
     C12: port acc_HM.event_to_acc6->event2acc6;
 
-    C13: port acc1_input->acc_HM.acc1_data_monitor; --{Timing=>Delayed;};
+    C13: port acc1_input->acc_HM.acc1_data_monitor;
     C14: port acc2_input->acc_HM.acc2_data_monitor;
-    C15: port acc3_input->acc_HM.acc3_data_monitor; --{Timing=>Delayed;};
+    C15: port acc3_input->acc_HM.acc3_data_monitor;
     C16: port acc4_input->acc_HM.acc4_data_monitor;
-    C17: port acc5_input->acc_HM.acc5_data_monitor; --{Timing=>Delayed;};
+    C17: port acc5_input->acc_HM.acc5_data_monitor;
     C18: port acc6_input->acc_HM.acc6_data_monitor;
 
     C19: port acc_HM.acc_error_out->acc_error_out;
     C20: port acc_error_action->acc_HM.acc_error_action;
 
+   annex EMV2{**
+    use types ADIRU_errLibrary;
+    use behavior ADIRU_errLibrary::simple;
+
+    error propagations
+      acc1_input : in propagation{ValueErroneous};
+      acc2_input : in propagation{ValueErroneous};
+      acc3_input : in propagation{ValueErroneous};
+      acc4_input : in propagation{ValueErroneous};
+      acc5_input : in propagation{ValueErroneous};
+      acc6_input : in propagation{ValueErroneous};
+    end propagations;
+
+    component error behavior
+    detections
+       operational -[1 ormore(acc1_input{ValueErroneous})]-> acc_error_out!;
+       operational -[1 ormore(acc2_input{ValueErroneous})]-> acc_error_out!;
+       operational -[1 ormore(acc3_input{ValueErroneous})]-> acc_error_out!;
+       operational -[1 ormore(acc4_input{ValueErroneous})]-> acc_error_out!;
+       operational -[1 ormore(acc5_input{ValueErroneous})]-> acc_error_out!;
+       operational -[1 ormore(acc6_input{ValueErroneous})]-> acc_error_out!;
+    end component;
+  **};
   end acc_hm_process.impl;
 
-  process acc_process
-  features
-    acc1_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
-    acc2_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
-    acc3_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
-    acc4_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
-    acc5_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
-    acc6_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
+  -----------------------------------------------------------------------------
 
-    acc1_event_in: in event data port SHM_DataType::actionData
-   		 {Compute_Deadline => 0 ms;};
-    acc2_event_in: in event data port SHM_DataType::actionData
-    	{Compute_Deadline => 0 ms;};
-    acc3_event_in: in event data port SHM_DataType::actionData
-    	{Compute_Deadline => 0 ms;};
-    acc4_event_in: in event data port SHM_DataType::actionData
-    	{Compute_Deadline => 0 ms;};
-    acc5_event_in: in event data port SHM_DataType::actionData
-    	{Compute_Deadline => 0 ms;};
-    acc6_event_in: in event data port SHM_DataType::actionData
-    	{Compute_Deadline => 0 ms;};
-  end acc_process;
+  virtual processor ADIRUp_partition
+  properties
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
+  end ADIRUp_partition;
 
-  process implementation acc_process.impl
-  subcomponents
-    acc1: thread threads::acc1_dataOutput.impl;
-    acc2: thread threads::acc2_dataOutput.impl;
-    acc3: thread threads::acc3_dataOutput.impl;
-    acc4: thread threads::acc4_dataOutput.impl;
-    acc5: thread threads::acc5_dataOutput.impl;
-    acc6: thread threads::acc6_dataOutput.impl;
+  virtual processor implementation ADIRUp_partition.impl
+  end ADIRUp_partition.impl;
 
-  connections
-    C1: port acc1_event_in->acc1.acc1_command_in;
-    C2: port acc2_event_in->acc2.acc2_command_in;
-    C3: port acc3_event_in->acc3.acc_command_in;
-    C4: port acc4_event_in->acc4.acc_command_in;
-    C5: port acc5_event_in->acc5.acc_command_in;
-    C6: port acc6_event_in->acc6.acc_command_in;
-
-    C7: port acc1.acc1out->acc1_output; --{Timing=>Delayed;};
-    C8: port acc2.acc2out->acc2_output;
-    C9: port acc3.accout->acc3_output;
-    C10: port acc4.accout->acc4_output; --{Timing=>Delayed;}; 
-    C11: port acc5.accout->acc5_output;
-    C12: port acc6.accout->acc6_output;
-  end acc_process.impl;
- 
   process ADIRUp_process
   features
     acc1_input: in data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 1 ms;};
@@ -176,25 +231,64 @@ public
     HM_th: thread threads::ADIRUp_HM.impl;
 
   connections
-    C1: port acc1_input->HM_th.accData_in1;-- {Timing=>Delayed;};
-    C2: port acc2_input->HM_th.accData_in2;-- {Timing=>Delayed;};
-    C3: port acc3_input->HM_th.accData_in3;-- {Timing=>Delayed;};
-    C4: port acc4_input->HM_th.accData_in4;-- {Timing=>Delayed;};
-    C5: port acc5_input->HM_th.accData_in5;-- {Timing=>Delayed;};
-    C6: port acc6_input->HM_th.accData_in6;-- {Timing=>Delayed;};
+    C1: port acc1_input->HM_th.accData_in1;
+    C2: port acc2_input->HM_th.accData_in2;
+    C3: port acc3_input->HM_th.accData_in3;
+    C4: port acc4_input->HM_th.accData_in4;
+    C5: port acc5_input->HM_th.accData_in5;
+    C6: port acc6_input->HM_th.accData_in6;
 
-    C7: port HM_th.accData_out1->solve_th1.solver_in1;-- {Timing=>Delayed;};
+    C7: port HM_th.accData_out1->solve_th1.solver_in1;
     C8: port HM_th.accData_out2->solve_th1.solver_in2;
-    C9: port HM_th.accData_out3->solve_th1.solver_in3;-- {Timing=>Delayed;};
-    C10: port HM_th.accData_out4->solve_th1.solver_in4;-- {Timing=>Delayed;};
-    C11: port HM_th.accData_out5->solve_th1.solver_in5;-- {Timing=>Delayed;};
-    C12: port HM_th.accData_out6->solve_th1.solver_in6;-- {Timing=>Delayed;};
+    C9: port HM_th.accData_out3->solve_th1.solver_in3;
+    C10: port HM_th.accData_out4->solve_th1.solver_in4;
+    C11: port HM_th.accData_out5->solve_th1.solver_in5;
+    C12: port HM_th.accData_out6->solve_th1.solver_in6;
 
     --port solve_th.ADIRUpout->ADIRUp_output;
 
     C13: port ADIRUp_error_action->HM_th.adirup_error_action;
     C14: port HM_th.adirup_error_out->ADIRUp_error_out;
+ 
+   annex EMV2 {**
+ 	 use types ADIRU_errLibrary;
+     use behavior ADIRU_errLibrary::display_simple;
+    
+     error propagations
+       acc1_input: in propagation{ValueErroneous};
+       acc2_input: in propagation{ValueErroneous};
+       acc3_input: in propagation{ValueErroneous};
+       acc4_input: in propagation{ValueErroneous};
+       acc5_input: in propagation{ValueErroneous};
+       acc6_input: in propagation{ValueErroneous};
+    flows
+      f1 : error sink acc1_input{ValueErroneous};
+      f2 : error sink acc2_input{ValueErroneous};
+      f3 : error sink acc3_input{ValueErroneous};
+      f4 : error sink acc4_input{ValueErroneous};
+      f5 : error sink acc5_input{ValueErroneous};
+      f6 : error sink acc6_input{ValueErroneous};
+    end propagations;
+
+    component error behavior
+    transitions
+      t1 : operational -[ (acc1_input{ValueErroneous} and acc2_input{ValueErroneous} and acc3_input{ValueErroneous}) or
+                          (acc1_input{ValueErroneous} and acc2_input{ValueErroneous} and acc4_input{ValueErroneous}) or
+                          (acc1_input{ValueErroneous} and acc3_input{ValueErroneous} and acc4_input{ValueErroneous}) or
+                          (acc2_input{ValueErroneous} and acc3_input{ValueErroneous} and acc4_input{ValueErroneous})
+                        ]-> displayErroneousValue;
+    end component; **};
   end ADIRUp_process.impl;
+
+  -----------------------------------------------------------------------------
+
+  virtual processor SHM_partition
+  properties
+    ARINC653::DAL => LEVEL_A; -- XXX Review value
+  end SHM_partition;
+
+  virtual processor implementation SHM_partition.impl
+  end SHM_partition.impl;
 
   process systemHM_process
   features
