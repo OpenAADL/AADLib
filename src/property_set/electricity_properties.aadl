@@ -63,4 +63,6 @@ property set Electricity_Properties is
   Output_Voltage : Electricity_Properties::Voltage applies to (Device, Processor, Port);
   Input_Voltage : Electricity_Properties::Voltage applies to (Device, Processor, Port);
 
+  Power_Level : aadlinteger applies to (device);
+
 end Electricity_Properties;
