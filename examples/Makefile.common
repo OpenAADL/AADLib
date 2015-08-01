@@ -10,6 +10,9 @@ help:
 parse-aadl:
 	$(OCARINA) $(OCARINA_FLAGS) $(AADL_SOURCES)
 
+instantiate:
+	$(OCARINA) $(OCARINA_FLAGS) -i -r $(AADL_ROOT) $(AADL_SOURCES)
+
 aadl_xml:
 	$(OCARINA) $(OCARINA_FLAGS) -g aadl_xml -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
@@ -59,8 +62,15 @@ petri:
 	$(OCARINA) $(OCARINA_FLAGS) -g petri_nets -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
+deos_code:
+	$(OCARINA) $(OCARINA_FLAGS) -g pok_c -k deos -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
 deos_conf:
 	$(OCARINA) $(OCARINA_FLAGS) -g deos_conf -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
+vxworks653_code:
+	$(OCARINA) $(OCARINA_FLAGS) -g pok_c -k vxworks653 -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
 vxworks653_conf:
