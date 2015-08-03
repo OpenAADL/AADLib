@@ -201,6 +201,13 @@ public
       acc4_input : in propagation{ValueErroneous};
       acc5_input : in propagation{ValueErroneous};
       acc6_input : in propagation{ValueErroneous};
+    flows
+      f1 : error sink acc1_input{ValueErroneous};
+      f2 : error sink acc2_input{ValueErroneous};
+      f3 : error sink acc3_input{ValueErroneous};
+      f4 : error sink acc4_input{ValueErroneous};
+      f5 : error sink acc5_input{ValueErroneous};
+      f6 : error sink acc6_input{ValueErroneous};
     end propagations;
 
     component error behavior
