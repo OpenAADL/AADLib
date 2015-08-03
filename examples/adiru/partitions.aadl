@@ -17,7 +17,7 @@ public
   end acc_partition.impl;
 
   process acc_process
-    --  In this first variant, the acc_process emulates the device internally, 
+    --  In this first variant, the acc_process emulates the device internally,
     --  for code generation purposes
   features
     acc1_output: out data port SHM_DataType::accData {ARINC653::Sampling_Refresh_Period => 25 ms;};
@@ -61,10 +61,10 @@ public
   end acc_process.impl;
 
   process acc_process_emv2 extends acc_process
-  --  In this variant, we add incoming ports from actual accelerometer devices
-  
+    --  In this variant, we add incoming ports from actual accelerometer devices
+
   features
-    acc1_input: in event data port SHM_DataType::accData;
+    acc1_input: in data port SHM_DataType::accData;
     acc2_input: in data port SHM_DataType::accData;
     acc3_input: in data port SHM_DataType::accData;
     acc4_input: in data port SHM_DataType::accData;
@@ -73,19 +73,34 @@ public
   end acc_process_emv2;
 
   process implementation acc_process_emv2.impl extends acc_process.impl
+  subcomponents
     --  We extend the initial implementation, and add error modeling elements.
+
+    acc1: refined to thread threads::acc1_dataOutput_emv2.impl
+      { Classifier_Substitution_Rule => Type_Extension; };
+    acc2: refined to thread threads::acc2_dataOutput_emv2.impl
+      { Classifier_Substitution_Rule => Type_Extension; };
+    acc3: refined to thread threads::acc3_dataOutput_emv2.impl
+      { Classifier_Substitution_Rule => Type_Extension; };
+    acc4: refined to thread threads::acc4_dataOutput_emv2.impl
+      { Classifier_Substitution_Rule => Type_Extension; };
+    acc5: refined to thread threads::acc5_dataOutput_emv2.impl
+      { Classifier_Substitution_Rule => Type_Extension; };
+    acc6: refined to thread threads::acc6_dataOutput_emv2.impl
+      { Classifier_Substitution_Rule => Type_Extension; };
+
   connections
-    C21 : port acc1_input -> acc1_output;
-    C22 : port acc2_input -> acc2_output;
-    C23 : port acc3_input -> acc3_output;
-    C24 : port acc4_input -> acc4_output;
-    C25 : port acc5_input -> acc5_output;
-    C26 : port acc6_input -> acc6_output;
-     
+    C21 : port acc1_input -> acc1.acc1_input;
+    C22 : port acc2_input -> acc2.acc2_input;
+    C23 : port acc3_input -> acc3.acc3_input;
+    C24 : port acc4_input -> acc4.acc4_input;
+    C25 : port acc5_input -> acc5.acc5_input;
+    C26 : port acc6_input -> acc6.acc6_input;
+
   annex EMV2{**
     use types ADIRU_errLibrary;
     use behavior ADIRU_errLibrary::simple;
-  
+
     error propagations
       acc1_input  : in  propagation{ValueErroneous};
       acc1_output : out propagation{ValueErroneous};
@@ -106,7 +121,7 @@ public
       f4 : error path acc4_input{ValueErroneous} -> acc4_output{ValueErroneous};
       f5 : error path acc5_input{ValueErroneous} -> acc5_output{ValueErroneous};
       f6 : error path acc6_input{ValueErroneous} -> acc6_output{ValueErroneous};
-    end propagations; **}; 
+    end propagations; **};
  end acc_process_emv2.impl;
 
   -----------------------------------------------------------------------------
@@ -249,11 +264,11 @@ public
 
     C13: port ADIRUp_error_action->HM_th.adirup_error_action;
     C14: port HM_th.adirup_error_out->ADIRUp_error_out;
- 
+
    annex EMV2 {**
  	 use types ADIRU_errLibrary;
      use behavior ADIRU_errLibrary::display_simple;
-    
+
      error propagations
        acc1_input: in propagation{ValueErroneous};
        acc2_input: in propagation{ValueErroneous};

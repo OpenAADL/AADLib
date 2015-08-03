@@ -170,11 +170,7 @@ public
        { Classifier_Substitution_Rule => Type_Extension; };
 
   connections
-    D1 : port acc1.accData -> acc_pr.acc1_input; -- XXX
-    --  Instantiation error: connection from acc1.accData to
-    --  acc_pr.acc1_output has no valid direction. Connection instance
-    --  not created (!)
-
+    D1 : port acc1.accData -> acc_pr.acc1_input;
     D2 : port acc2.accData -> acc_pr.acc2_input;
     D3 : port acc3.accData -> acc_pr.acc3_input;
     D4 : port acc4.accData -> acc_pr.acc4_input;

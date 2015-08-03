@@ -28,13 +28,21 @@ public
     Deadline => 500 ms;
   end acc1_dataOutput;
 
-  thread implementation  acc1_dataOutput.impl
+  thread implementation acc1_dataOutput.impl
   calls
     sub1: { spg: subprogram subprograms::acc1_dataOutput_spg;};
   connections
     C1: parameter spg.acc1DataOut->acc1out;
     C2: parameter acc1_command_in->spg.event_in;
   end  acc1_dataOutput.impl;
+
+  thread acc1_dataOutput_emv2 extends acc1_dataOutput
+  features
+    acc1_input: in data port SHM_DataType::accData;
+  end acc1_dataOutput_emv2;
+
+  thread implementation acc1_dataOutput_emv2.impl extends acc1_dataOutput.impl
+  end acc1_dataOutput_emv2.impl;
 
   -----------------------------------------------------------------------------------------------
   thread  acc2_dataOutput
@@ -63,6 +71,14 @@ public
     C2: parameter acc2_command_in->spg.event_in;
   end  acc2_dataOutput.impl;
 
+  thread acc2_dataOutput_emv2 extends acc2_dataOutput
+  features
+    acc2_input: in data port SHM_DataType::accData;
+  end acc2_dataOutput_emv2;
+
+  thread implementation acc2_dataOutput_emv2.impl extends acc2_dataOutput.impl
+  end acc2_dataOutput_emv2.impl;
+
   -----------------------------------------------------------------------------------------------
   thread acc3_dataOutput
   features
@@ -89,6 +105,14 @@ public
     C1: parameter spg.accDataOut->accout;
     C2: parameter acc_command_in->spg.event_in;
   end  acc3_dataOutput.impl;
+
+  thread acc3_dataOutput_emv2 extends acc3_dataOutput
+  features
+    acc3_input: in data port SHM_DataType::accData;
+  end acc3_dataOutput_emv2;
+
+  thread implementation acc3_dataOutput_emv2.impl extends acc3_dataOutput.impl
+  end acc3_dataOutput_emv2.impl;
 
   -----------------------------------------------------------------------------------------------
   thread acc4_dataOutput
@@ -117,6 +141,14 @@ public
     C2: parameter acc_command_in->spg.event_in;
   end  acc4_dataOutput.impl;
 
+  thread acc4_dataOutput_emv2 extends acc4_dataOutput
+  features
+    acc4_input: in data port SHM_DataType::accData;
+  end acc4_dataOutput_emv2;
+
+  thread implementation acc4_dataOutput_emv2.impl extends acc4_dataOutput.impl
+  end acc4_dataOutput_emv2.impl;
+
   -----------------------------------------------------------------------------------------------
   thread acc5_dataOutput
   features
@@ -142,6 +174,14 @@ public
     C2: parameter acc_command_in->spg.event_in;
   end acc5_dataOutput.impl;
 
+  thread acc5_dataOutput_emv2 extends acc5_dataOutput
+  features
+    acc5_input: in data port SHM_DataType::accData;
+  end acc5_dataOutput_emv2;
+
+  thread implementation acc5_dataOutput_emv2.impl extends acc5_dataOutput.impl
+  end acc5_dataOutput_emv2.impl;
+
   -----------------------------------------------------------------------------------------------
   thread acc6_dataOutput
   features
@@ -166,6 +206,14 @@ public
     C1: parameter spg.accDataOut->accout;
     C2: parameter acc_command_in->spg.event_in;
   end acc6_dataOutput.impl;
+
+  thread acc6_dataOutput_emv2 extends acc6_dataOutput
+  features
+    acc6_input: in data port SHM_DataType::accData;
+  end acc6_dataOutput_emv2;
+
+  thread implementation acc6_dataOutput_emv2.impl extends acc6_dataOutput.impl
+  end acc6_dataOutput_emv2.impl;
 
   -----------------------------------------------------------------------------------------------
   thread acc_HM
