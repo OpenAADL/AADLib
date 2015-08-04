@@ -18,15 +18,9 @@ annex EMV2 {**
     
    -- Simple error state machine
    error behavior simple
-   events
-     op : error event;
-     failure : error event;
    states
      Operational : initial state;
      Failed : state;
-   transitions
-     t1 : operational -[failure]-> failed;
-     t2 : failed -[op]-> operational;
    end behavior;
     
    -- Voter and Display module error state machine

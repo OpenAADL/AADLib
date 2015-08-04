@@ -3,7 +3,8 @@ public
 
   with SHM_DataType;
   with ADIRU_errLibrary;
-
+  with emv2;
+  
   -- ACC_DEVICE
   -- Physical device that produces the acc data that is then
   -- sent to ACC_HM. Its output port can propagate erroneous
@@ -14,7 +15,8 @@ public
   end acc_device;
 
   device implementation acc_device.impl
-  annex EMV2{**
+  annex EMV2
+   {**
      use types ADIRU_errLibrary;
      use behavior ADIRU_errLibrary::simple;
 
@@ -22,7 +24,20 @@ public
        accData : out propagation{ValueErroneous};
      flows
        f1 : error source accData{ValueErroneous} when failed;
-     end propagations; **};
+     end propagations; 
+ 
+	  properties
+		emv2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Accelerometer value error";
+			phases => ("in flight");
+			description => "Accelerometer starts to send an erroneous value";
+			comment => "Can be critical if not detected by the health monitoring";
+		])
+		applies to accData.valueerroneous;
+		
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to accData.valueerroneous;     
+   **};
    end acc_device.impl;
 
 end ADIRU_Devices;

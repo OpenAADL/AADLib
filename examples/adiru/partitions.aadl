@@ -99,7 +99,7 @@ public
 
   annex EMV2{**
     use types ADIRU_errLibrary;
-    use behavior ADIRU_errLibrary::simple;
+    use behavior ADIRU_errLibrary::simple; 
 
     error propagations
       acc1_input  : in  propagation{ValueErroneous};
@@ -211,6 +211,13 @@ public
     end propagations;
 
     component error behavior
+    transitions
+    	t1 : operational -[acc1_input{ValueErroneous}]-> failed;
+    	t2 : operational -[acc2_input{ValueErroneous}]-> failed;
+    	t3 : operational -[acc3_input{ValueErroneous}]-> failed;
+    	t4 : operational -[acc4_input{ValueErroneous}]-> failed;
+    	t5 : operational -[acc5_input{ValueErroneous}]-> failed;
+    	t6 : operational -[acc6_input{ValueErroneous}]-> failed;
     detections
        operational -[1 ormore(acc1_input{ValueErroneous})]-> acc_error_out!;
        operational -[1 ormore(acc2_input{ValueErroneous})]-> acc_error_out!;

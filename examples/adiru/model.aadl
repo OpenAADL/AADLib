@@ -6,7 +6,7 @@
 package ADIRU
 public
 
-  with ARINC653;
+--  with ARINC653;
   with partitions;
   with ADIRU_devices;
   with ADIRU_memory;
@@ -176,6 +176,15 @@ public
     D4 : port acc4.accData -> acc_pr.acc4_input;
     D5 : port acc5.accData -> acc_pr.acc5_input;
     D6 : port acc6.accData -> acc_pr.acc6_input;
+   annex EMV2{**
+    use types ADIRU_errLibrary;
+    use behavior ADIRU_errLibrary::simple;
+
+    composite error behavior
+    states
+    	[acc_hm_pr.failed]-> failed;
+    end composite;
+  **};
   end ADIRU.EMV2;
 
 end ADIRU;
