@@ -6,7 +6,6 @@
 package ADIRU
 public
 
---  with ARINC653;
   with partitions;
   with ADIRU_devices;
   with ADIRU_memory;
