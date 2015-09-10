@@ -19,4 +19,4 @@ CLEANDIRS = case_study_leon_local
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS = parse-aadl real build_ada
+AVAILABLE_TARGETS = parse-aadl real ada
