@@ -101,6 +101,7 @@ AC_OUTPUT([
 	examples/ravenscar/Makefile
 	examples/rma/Makefile
 	examples/redundancy/Makefile
+        examples/robot/Makefile
 	examples/round_robin/Makefile
 	examples/satellite/Makefile
 	examples/time_triggered/Makefile
