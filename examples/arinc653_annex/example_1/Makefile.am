@@ -5,4 +5,4 @@ CLEANDIRS = generated-code
 
 include $(srcdir)/../../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl real arinc653_conf
+AVAILABLE_TARGETS= #parse-aadl real arinc653_conf
