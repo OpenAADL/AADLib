@@ -2,7 +2,7 @@ package Base_Types::Example_Types
 public
   with Data_Model, Base_Types;
 
-  data One_Dimension_Array 
+  data One_Dimension_Array
   properties
     Data_Model::Data_Representation => Array;
     Data_Model::Base_Type => (classifier (Base_Types::Integer));
@@ -22,7 +22,7 @@ public
   data A_Struct1
   properties
     Data_Model::Data_Representation => Struct;
-    Data_Model::Base_Type => (classifier (Base_Types::Float), 
+    Data_Model::Base_Type => (classifier (Base_Types::Float),
 			     classifier (Base_Types::Character));
     Data_Model::Element_Names => ("f1", "c2");
   end A_Struct1;
@@ -75,13 +75,13 @@ public
 
   data A_Kanji extends Base_types::Character
   properties
-    Data_Model::Code_Set => 16#30001#; 
+    Data_Model::Code_Set => 16#30001#;
     -- ISO code for Japanese characters
   end A_Kanji;
-  
+
   data Russian_Strings extends Base_Types::String
   properties
-    Data_Model::Code_Set => 16#15#; 
+    Data_Model::Code_Set => 16#15#;
     -- ISO code for Cyrillic characters
   end Russian_Strings;
 
@@ -90,7 +90,7 @@ public
     Data_Model::Dimension => (10);
   end Bounded_Strings;
 
-  -- Representation of a type defined in another modeling 
+  -- Representation of a type defined in another modeling
   -- notation, or programming language
 
   data ASN1_Type
@@ -98,13 +98,13 @@ public
     Source_Language => (ada95);
     Source_Text => ("ASN1_types.asn");
     Type_Source_Name => "the_type";
-  end ASN1_Type;  
+  end ASN1_Type;
 
   data C_Type
   properties
     Source_Language => (C);
     Source_Text => ("types.h");
     Type_Source_Name => "the_type";
-  end C_Type;  
+  end C_Type;
 
 end Base_Types::Example_Types;
