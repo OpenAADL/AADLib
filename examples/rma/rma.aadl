@@ -67,7 +67,7 @@ public
   end cpu;
 
   processor implementation cpu.impl extends processors::cpu_rma.impl
-  Properties
+  properties
     Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
   end cpu.impl;
 
