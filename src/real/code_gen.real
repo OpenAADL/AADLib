@@ -1,0 +1,27 @@
+--------------------------------------------------------------------------------
+-- This set of REAL theorems implements checks that are implicitely
+-- performed by Ocarina code generators
+
+theorem code_gen_master
+   foreach s in system_set do
+     requires (
+       check_thread_per_process
+     );
+   check (1 = 1);
+end code_gen_master;
+
+--------------------------------------------------------------------------------
+--  AADLv2.2 5.6 semantics indicates in the notes that: An AADL process
+--  represents only a virtual address space and requires at least one
+--  explicitly declared thread subcomponent in order to be
+--  executable.
+--
+--  This theorem checks that each process has at least one thread as
+--  subcomponent
+
+theorem check_thread_per_process
+   foreach p in process_set do
+     thread_subcomponents := { t in Thread_Set | Is_subcomponent_of (t, p)};
+
+     check (Cardinal (Thread_Subcomponents) > 0);
+end check_thread_per_process;
