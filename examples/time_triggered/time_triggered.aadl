@@ -4,7 +4,6 @@
 package Time_Triggered
 public
   with Data_Model;  -- Data modeling annex, AS5506/2
-  with Deployment;  -- Deployment properties, Ocarina
   with processors;
   
   ----------

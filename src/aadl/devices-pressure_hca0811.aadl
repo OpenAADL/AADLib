@@ -1,7 +1,6 @@
 package devices::pressure_hca0811
 public
   with types;
-  with buses;
   with buses::I2C;
   with Electricity_Properties;
   

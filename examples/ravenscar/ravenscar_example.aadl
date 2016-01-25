@@ -2,7 +2,6 @@ package Ravenscar_Example
 public
   with Data_Model;
   with Systems;
-  with deployment;
   with processors;
 
   data Workload

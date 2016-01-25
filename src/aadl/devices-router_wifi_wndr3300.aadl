@@ -1,7 +1,6 @@
 package devices::router_wifi_wndr3300
 public
 
-with types;
 with buses;
 with Buses::Ethernet;
 with Electricity_Properties;

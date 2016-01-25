@@ -146,12 +146,13 @@ public
     the_bus : bus Ethernet_Bus;
   connections
     Z5:bus access the_bus -> CPU.ETH;
-    Z6:port pr_A.Alpha -> pr_B.Beta
-    {Actual_Connection_Binding => (reference (the_bus));};
+    Z6:port pr_A.Alpha -> pr_B.Beta;
   properties
     Actual_Processor_Binding => (reference (CPU)) applies to pr_A;
     Actual_Processor_Binding => (reference (CPU)) applies to pr_B;
 
+    Actual_Connection_Binding => (reference (the_bus)) applies to Z6; 	
+    
  annex real_specification {**
    theorem flow_latency
       foreach s in system_set do

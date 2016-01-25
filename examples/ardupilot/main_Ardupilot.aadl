@@ -4,10 +4,8 @@ public
   with Ardupilot_Software;
   with Ardupilot_platform;
   with devices::EM406A;
-  with devices::MPXV7002DP;
   with devices::XYZ_IR;
   with shields::Ardupilot;
-  with Deployment;
   with data_sheet;
 
   ---------------

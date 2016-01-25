@@ -2,7 +2,6 @@ package devices::gps_lea4h
 public
 
   with types;
-  with buses;
   with Buses::UART;
   with Electricity_Properties;
 

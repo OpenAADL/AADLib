@@ -4,7 +4,6 @@
 package Boards::ArduImu
 public
   with Data_Sheet;
-  with Electricity_Properties;
   with Processor_Properties;
 
   with Buses::I2C;
@@ -13,7 +12,6 @@ public
   with Devices::ADXL;
   with Devices::LPR530AL;
   with Devices::LY530ALH;
-  with Devices::SPI;
 
   with Processors::ATMEGA;
 

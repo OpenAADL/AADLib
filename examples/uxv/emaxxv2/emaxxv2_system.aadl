@@ -12,8 +12,6 @@ public
   with devices::ultrasound_sfr08;
   with devices::odometer_refx;
   with devices::receiver_smc16;
-  with devices::motor_tm550;
-  with devices::variator_evx;
   
   with devices::inertial_gps_ig500n;
   with devices::telemeter_utm30lx;
@@ -21,12 +19,7 @@ public
   with devices::router_wifi_wndr3300;
   
   with emaxxv2_sw;
-  
-  with devices::battery_14v_4ah;
-  with devices::regulator_tsi10n;
-  with devices::regulator_ten40_4812;
-  with devices::regulator_reg113_33;
-  
+    
   ------------
   -- System --
   ------------

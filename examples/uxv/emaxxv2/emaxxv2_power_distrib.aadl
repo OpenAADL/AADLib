@@ -1,6 +1,5 @@
 package emaxxv2_power_distrib
 public
-    with Deployment;
     with Electricity_Properties;
 
     --with AT91SAM7A3;
@@ -17,8 +16,6 @@ public
     with devices::telemeter_utm30lx;
     with devices::camera_nc353l;
     with devices::router_wifi_wndr3300;
-
-    with emaxxv2_sw;
 
     with devices::battery_14v_4ah;
     with devices::regulator_tsi10n;

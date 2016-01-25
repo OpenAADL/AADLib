@@ -1,7 +1,6 @@
 package devices::battery_7v2_4a5h
 public
 
-with types;
 with buses;
 with Electricity_Properties;
 

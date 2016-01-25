@@ -3,7 +3,6 @@
 package subprograms
 public
 
-  with ARINC653;
   with SHM_DataType;
 
   --  For each subprogram, we model

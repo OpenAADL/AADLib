@@ -336,10 +336,10 @@ subcomponents
   compute2: process Pstep2.periodic 	{Deployment::port_number => 12005;};
   compute3: process Pstep3.periodic 	{Deployment::port_number => 12006;};
 connections
-  senseconn: port sense.outed -> compute1.ined 		{Actual_Connection_Binding => (reference (db));};
-  compute12: port compute1.outed -> compute2.ined 	{Actual_Connection_Binding => (reference (db));};
-  compute23: port compute2.outed -> compute3.ined 	{Actual_Connection_Binding => (reference (db));};
-  actuateconn: port compute3.outed -> actuate.ined {Actual_Connection_Binding => (reference (db));};
+  senseconn: port sense.outed -> compute1.ined;
+  compute12: port compute1.outed -> compute2.ined;
+  compute23: port compute2.outed -> compute3.ined;
+  actuateconn: port compute3.outed -> actuate.ined;
   --  for delayed connections in aadlv2, see the ined port in 
   --  Pstep1, Pstep2, Pstep3 and actuator which have the Timing
   --   property set to delayed.
@@ -352,6 +352,13 @@ properties
   Actual_Processor_Binding => (reference (cpu)) applies to compute1;
   Actual_Processor_Binding => (reference (cpu)) applies to compute2;
   Actual_Processor_Binding => (reference (cpu)) applies to compute3;
+  
+  Actual_Connection_Binding => (reference (db)) applies to senseconn;
+  Actual_Connection_Binding => (reference (db)) applies to compute12;
+  Actual_Connection_Binding => (reference (db)) applies to compute23;
+  Actual_Connection_Binding => (reference (db)) applies to actuateconn;
+  
+  
 end topsystem.distributedallperiodicdelayed;
 
 end Flowlatencydata;

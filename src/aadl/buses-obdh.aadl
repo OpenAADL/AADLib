@@ -3,8 +3,6 @@
 package buses::OBDH
 Public
 
-With Bus_Properties;
-
 bus OBDH
 -- Empty component, to define
 end OBDH;

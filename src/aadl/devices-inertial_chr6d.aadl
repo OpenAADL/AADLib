@@ -2,7 +2,6 @@ package devices::inertial_chr6d
 public
 
   with types;
-  with buses;
   with Buses::UART;
   with Electricity_Properties;
 

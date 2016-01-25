@@ -1,6 +1,5 @@
 package Buses::SPI
 public
-  with Bus_Properties;
 
   bus SPI
   end SPI;

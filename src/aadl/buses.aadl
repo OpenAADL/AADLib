@@ -1,6 +1,5 @@
 package Buses
 public
-  with Bus_Properties;
   with Electricity_Properties;
 
   -----------

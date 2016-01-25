@@ -42,8 +42,6 @@
 
 package Flowlatencysampleddata
 public
-  with Data_Model;
-  with ARINC653;
   with processors;
   with buses;
   

@@ -1,7 +1,6 @@
 package devices::router_wifi_refxx
 public
 
-with types;
 with buses::ETHERNET;
 with Electricity_Properties;
 

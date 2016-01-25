@@ -4,13 +4,11 @@
 package GAIA::Implementations
 public
 
-  with ARAM_Properties;
   with Bus_Properties;
 
   with Blocks;
   with Library;
   with GAIA;
-  with GAIA::Functions;
   
   -- Gaia implementation design 
   --
@@ -77,61 +75,45 @@ public
     -- Each U1 unit is connected to the two U2 units
 
   C1:  port U1_1.dataout -> U2_1.rawdata1
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
   C2:  port U1_2.dataout -> U2_1.rawdata2
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; };
   C3:  port U1_3.dataout -> U2_1.rawdata3
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; };
   C4:  port U1_4.dataout -> U2_1.rawdata4
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; };
   C5:  port U1_5.dataout -> U2_1.rawdata5 
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; };
   C6:  port U1_6.dataout -> U2_1.rawdata6 
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; };
   C7:  port U1_7.dataout -> U2_1.rawdata7 
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; };
     -- port U1_8.dataout -> U2_1.rawdata8
     -- {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
     -- Actual_Connection_Binding => (reference (transportlayer));};
 
   C8:  port U1_1.dataout -> U2_2.rawdata1 
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
   C9:  port U1_2.dataout -> U2_2.rawdata2
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
   C10:  port U1_3.dataout -> U2_2.rawdata3
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
   C11:  port U1_4.dataout -> U2_2.rawdata4 
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
   C12:  port U1_5.dataout -> U2_2.rawdata5 
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
   C13:  port U1_6.dataout -> U2_2.rawdata6
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
   C14:  port U1_7.dataout -> U2_2.rawdata7
-    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps;};
     -- port U1_8.dataout -> U2_2.rawdata8
     -- {Bus_Properties::Required_Bandwidth => 50_000_000 bitsps; 
     -- Actual_Connection_Binding => (reference (transportlayer));};
     
   C15:  port U2_1.compressed -> U3_1.link1
-    {Bus_Properties::Required_Bandwidth  => 70_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth  => 70_000_000 bitsps;};
   C16:  port U2_2.compressed -> U3_1.link2
-    {Bus_Properties::Required_Bandwidth  => 70_000_000 bitsps; 
-    Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth  => 70_000_000 bitsps;};
     
   C17: bus access transportlayer -> U3_1.bus_access;
     
@@ -146,6 +128,25 @@ public
   C25:  bus access transportlayer -> U1_6.bus_access;
   C26:  bus access transportlayer -> U1_7.bus_access;
     -- bus access transportlayer -> U1_8.bus_access;
+  
+  	properties
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C1;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C2;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C3;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C4;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C5; 
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C6;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C7;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C8;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C9;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C10;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C11;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C12;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C13;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C14;
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C15; 
+    Actual_Connection_Binding => (reference (transportlayer)) applies to C16;
+        
   end gaia.first_architecture;
 
   -----------------------------------------------------------------------------
@@ -185,32 +186,21 @@ public
 
   connections
   C1:  port U1_1.output -> U2_1.link1
-    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps; 
-     Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps;};
   C2:  port U1_2.output -> U2_1.link2 
-    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps; 
-     Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps;};
   C3:  port U1_3.output -> U2_1.link3 
-    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps; 
-     Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps;};
   C4:  port U1_4.output -> U2_1.link4 
-    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps; 
-     Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps;};
   C5:  port U1_5.output -> U2_1.link5
-    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps;
-     Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps; };
   C6:  port U1_6.output -> U2_1.link6
-    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps;
-     Actual_Connection_Binding => (reference (transportlayer));};
-   C7: port U1_7.output -> U2_1.link7 
-    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps; 
-     Actual_Connection_Binding => (reference (transportlayer));};
-    -- port U1_8.output -> U2_1.link8
-    -- {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps;
-    --  Actual_Connection_Binding => (reference (transportlayer));};
+    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps; };
+  C7: port U1_7.output -> U2_1.link7 
+    {Bus_Properties::Required_Bandwidth  => 10_000_000 bitsps;};
     
-  C8:  bus access transportlayer -> U2_1.bus_access;
-    
+  C8:  bus access transportlayer -> U2_1.bus_access;  
   C9:  bus access transportlayer -> U1_1.bus_access;
   C10:  bus access transportlayer -> U1_2.bus_access;
   C11:  bus access transportlayer -> U1_3.bus_access;
@@ -218,7 +208,16 @@ public
   C13:  bus access transportlayer -> U1_5.bus_access;
   C14:  bus access transportlayer -> U1_6.bus_access;
   C15:  bus access transportlayer -> U1_7.bus_access;
-    -- bus access transportlayer -> U1_8.bus_access;
+    
+ properties 
+     Actual_Connection_Binding => (reference (transportlayer)) applies to C1;
+     Actual_Connection_Binding => (reference (transportlayer)) applies to C2;
+     Actual_Connection_Binding => (reference (transportlayer)) applies to C3;
+     Actual_Connection_Binding => (reference (transportlayer)) applies to C4;
+     Actual_Connection_Binding => (reference (transportlayer)) applies to C5;
+     Actual_Connection_Binding => (reference (transportlayer)) applies to C6;
+     Actual_Connection_Binding => (reference (transportlayer)) applies to C7;
+     
   end gaia.second_architecture;
 
 end GAIA::Implementations;

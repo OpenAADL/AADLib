@@ -1,7 +1,6 @@
 package devices::regulator_reg113_33
 public
 
-with types;
 with buses;
 with Electricity_Properties;
 

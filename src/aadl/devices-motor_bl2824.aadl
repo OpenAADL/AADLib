@@ -1,7 +1,6 @@
 package devices::motor_bl2824
 public
 
-with types;
 with buses;
 with Electricity_Properties;
 

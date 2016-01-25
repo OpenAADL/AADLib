@@ -1,9 +1,7 @@
   package memories_vxworks
   public
 
-  with Deployment;
   with Memory_Segment_Properties;
-  with ARINC653;
   with ARINC653_Extended;
 
   memory memory_segment

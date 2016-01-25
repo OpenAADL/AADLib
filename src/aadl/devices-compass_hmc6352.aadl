@@ -2,7 +2,6 @@ package devices::compass_hmc6352
 public
 
 with types;
-with buses;
 with Buses::I2C;
 with Electricity_Properties;
 

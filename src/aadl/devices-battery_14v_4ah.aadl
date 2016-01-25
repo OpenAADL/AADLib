@@ -1,7 +1,6 @@
 package devices::battery_14v_4ah
 public
 
-with types;
 with buses;
 with Electricity_Properties;
 

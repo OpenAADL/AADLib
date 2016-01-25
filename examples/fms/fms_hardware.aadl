@@ -1,13 +1,8 @@
 package fms_hardware
 public
-  with m1_software;
-  with m2_software;
-  with m3_software;
-  with m4_software;
-
+ 
   with AFDX_Properties;
   with ARINC653;
-  with Buses;
   with memories;
   with processors;
   with Buses::CAN;

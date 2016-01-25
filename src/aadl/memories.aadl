@@ -2,7 +2,6 @@
 
 package Memories
 public
-  with ARINC653;
 
   ------------
   -- EEPROM --

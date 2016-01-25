@@ -2,7 +2,6 @@ package Network
 public
 
   with Deployment;
-  with Processor_Properties;
   with Bus_Properties;
 
   data configuration_type_ip

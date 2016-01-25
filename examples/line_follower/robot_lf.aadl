@@ -1,4 +1,4 @@
-package Robot
+package Robot_LF
 public
   with Boards::Arduino;
   with Shields::Ardumoto, Shields::XBee;
@@ -69,4 +69,4 @@ public
 
   end Line_Follower_Robot.i;
 
-end Robot;
+end Robot_LF;

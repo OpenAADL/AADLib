@@ -1,7 +1,7 @@
 package ardupilot_platform
 public
-  with Data_Sheet;
-
+ with Data_Sheet;
+ 
   -- Ardupilot devices to defin
   device GPS
   end GPS;
@@ -50,6 +50,6 @@ public
   pin : in event port;
   end Motor;
 
-  Properties
-  Data_sheet::UUID => "-atmel.com";	-- see doc0943
+  properties
+  Data_Sheet::UUID => "-atmel.com";	-- see doc0943
 end ardupilot_platform;

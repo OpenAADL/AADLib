@@ -2,7 +2,7 @@
 
 package Processors::SPARC
 public
-  with Processors, Processor_Properties, Data_Sheet;
+  with Processor_Properties, Data_Sheet;
 
   ------------------
   -- Generic_SPARC --

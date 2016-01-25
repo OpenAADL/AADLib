@@ -5,7 +5,6 @@ public
   with Processor_Properties;
   with Processors::ARM, Memories, Data_Sheet;
   with Buses::Ethernet, Buses::UART;
-  with Deployment;
 
   ----------------
   -- Verdex_XM4 --

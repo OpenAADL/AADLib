@@ -1,7 +1,6 @@
 package devices::regulator_tsi10n
 public
 
-with types;
 with buses;
 with Electricity_Properties;
 

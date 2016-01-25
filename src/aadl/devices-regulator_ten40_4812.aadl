@@ -1,7 +1,6 @@
 package devices::regulator_ten40_4812
 public
 
-with types;
 with buses;
 with Electricity_Properties;
 

@@ -4,7 +4,6 @@
 package Boards::CPIOM
 public
 
-  with ARINC653;
   with Buses::ARINC_429;
   with Buses::AFDX;
   with Devices::AFDX;
@@ -19,7 +18,7 @@ public
   features
     ARINC429 : requires bus access Buses::ARINC_429::ARINC_429;
     AFDX     : requires bus access Buses::AFDX::AFDX;
-    --  XXX discret?
+    --  XXX discrete?
   end CPIOM;
 
   system implementation CPIOM.impl

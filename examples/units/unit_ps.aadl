@@ -52,37 +52,37 @@ property set Unit_PS is
     Candela_Cardinality  => 0;
   ];
 
---   Meter : constant Unit_PS::Dimension_Type =>
---   [ Symbol => "m";
---     Meter_Cardinality    => 1;
---     Kilogram_Cardinality => 0;
---     Second_Cardinality   => 0;
---     Ampere_Cardinality   => 0;
---     Kelvin_Cardinality   => 0;
---     Mole_Cardinality     => 0;
---     Candela_Cardinality  => 0;
---   ];
+  Meter : constant Unit_PS::Dimension_Type =>
+   [ Symbol => "m";
+     Meter_Cardinality    => 1;
+     Kilogram_Cardinality => 0;
+     Second_Cardinality   => 0;
+     Ampere_Cardinality   => 0;
+     Kelvin_Cardinality   => 0;
+     Mole_Cardinality     => 0;
+     Candela_Cardinality  => 0;
+   ];
 
---   Speed : constant Unit_PS::Dimension_Type =>
---   [ Symbol => "m/s";
---     Meter_Cardinality    => 1;
---     Kilogram_Cardinality => 0;
---     Second_Cardinality   => -1;
---     Ampere_Cardinality   => 0;
---     Kelvin_Cardinality   => 0;
---     Mole_Cardinality     => 0;
---     Candela_Cardinality  => 0;
---   ];
+   Speed : constant Unit_PS::Dimension_Type =>
+   [ Symbol => "m/s";
+     Meter_Cardinality    => 1;
+     Kilogram_Cardinality => 0;
+     Second_Cardinality   => -1;
+     Ampere_Cardinality   => 0;
+     Kelvin_Cardinality   => 0;
+     Mole_Cardinality     => 0;
+     Candela_Cardinality  => 0;
+   ];
 
---   Acceleration : constant Unit_PS::Dimension_Type =>
---   [ Symbol => "m/s^2";
---     Meter_Cardinality    => 1;
---     Kilogram_Cardinality => 0;
---     Second_Cardinality   => -2;
---     Ampere_Cardinality   => 0;
---     Kelvin_Cardinality   => 0;
---     Mole_Cardinality     => 0;
---     Candela_Cardinality  => 0;
---   ];
+   Acceleration : constant Unit_PS::Dimension_Type =>
+   [ Symbol => "m/s^2";
+     Meter_Cardinality    => 1;
+     Kilogram_Cardinality => 0;
+     Second_Cardinality   => -2;
+     Ampere_Cardinality   => 0;
+     Kelvin_Cardinality   => 0;
+     Mole_Cardinality     => 0;
+     Candela_Cardinality  => 0;
+   ];
 
 end Unit_PS;

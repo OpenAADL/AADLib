@@ -60,22 +60,13 @@ public
       --   XXX what about Impl.U1_8 ??? There is no Functional.get8 to match
 
     ARAM_Properties::Actual_Function_Binding => 
-      (reference (Functional.prs_data)) applies to Impl.U2_1.computer1;
+      (reference (Functional.prs_data), reference (Functional.compress)) applies to Impl.U2_1.computer1;
     ARAM_Properties::Actual_Function_Binding => 
-      (reference (Functional.prs_data)) applies to Impl.U2_1.computer2;
+      (reference (Functional.prs_data), reference (Functional.compress)) applies to Impl.U2_1.computer2;
     ARAM_Properties::Actual_Function_Binding => 
-      (reference (Functional.prs_data)) applies to Impl.U2_2.computer1;
+      (reference (Functional.prs_data), reference (Functional.compress)) applies to Impl.U2_2.computer1;
     ARAM_Properties::Actual_Function_Binding => 
-      (reference (Functional.prs_data)) applies to Impl.U2_2.computer2;
-
-    ARAM_Properties::Actual_Function_Binding => 
-      (reference (Functional.compress)) applies to Impl.U2_1.computer1;
-    ARAM_Properties::Actual_Function_Binding => 
-      (reference (Functional.compress)) applies to Impl.U2_1.computer2;
-    ARAM_Properties::Actual_Function_Binding => 
-      (reference (Functional.compress)) applies to Impl.U2_2.computer1;
-    ARAM_Properties::Actual_Function_Binding => 
-      (reference (Functional.compress)) applies to Impl.U2_2.computer2;
+      (reference (Functional.prs_data), reference (Functional.compress)) applies to Impl.U2_2.computer2;
 
     ARAM_Properties::Actual_Function_Binding => 
       (reference (Functional.store)) applies to Impl.U3_1.runtime;

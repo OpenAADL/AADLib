@@ -2,7 +2,6 @@
 
 package Buses::AFDX
 public
-  with Bus_Properties;
   with Buses::Ethernet;
 
   bus AFDX extends Buses::Ethernet::Ethernet

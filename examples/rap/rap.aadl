@@ -2070,189 +2070,121 @@ connections
   --  Weapons to displays
 
   c0 : port soft_weapons.Delivery_Mode_Selected ->
-       soft_main.Delivery_Mode_Selected
-      {Actual_Connection_Binding => (reference (the_bus));};
+       soft_main.Delivery_Mode_Selected;
+
   c1 : port soft_weapons.Interval_Selected ->
-       soft_main.Interval_Selected
-      {Actual_Connection_Binding => (reference (the_bus));};
+       soft_main.Interval_Selected;
   c2 : port soft_weapons.Quantity_Selected ->
-       soft_main.Quantity_Selected
-      {Actual_Connection_Binding => (reference (the_bus));};
+       soft_main.Quantity_Selected;
   c3 : port soft_weapons.Weapon_Selected ->
-       soft_main.Weapon_Selected
-      {Actual_Connection_Binding => (reference (the_bus));};
+       soft_main.Weapon_Selected;
   c4 : port soft_weapons.Time_To_Go_To_Release ->
-       soft_main.Time_To_Go_To_Release
-      {Actual_Connection_Binding => (reference (the_bus));};
+       soft_main.Time_To_Go_To_Release;
 
   --  Displays to weapons
 
   c5 : port soft_main.Interval_Select_Request ->
-       soft_weapons.Interval_Select_Request
-      {Actual_Connection_Binding => (reference (the_bus));};
+       soft_weapons.Interval_Select_Request;
   c6 : port soft_main.Quantity_Select_Request ->
-       soft_weapons.Quantity_Select_Request
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c7 : port soft_main.Auto_CCIP_Toggle -> soft_weapons.Auto_CCIP_Toggle
-      {Actual_Connection_Binding => (reference (the_bus));};
+       soft_weapons.Quantity_Select_Request;
+  c7 : port soft_main.Auto_CCIP_Toggle -> soft_weapons.Auto_CCIP_Toggle;
   c8 : port soft_main.Manual_Weapon_Release ->
-       soft_weapons.Manual_Weapon_Release
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c9 : port soft_main.Bomb_Button -> soft_weapons.Bomb_Button_Depressed
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c10 : port soft_main.Target_Location   -> soft_weapons.Target_Location
-      {Actual_Connection_Binding => (reference (the_bus));};
+       soft_weapons.Manual_Weapon_Release;
+  c9 : port soft_main.Bomb_Button -> soft_weapons.Bomb_Button_Depressed;
+  c10 : port soft_main.Target_Location   -> soft_weapons.Target_Location;
   c11 : port soft_main.Weapon_Select_Request
-       -> soft_weapons.Weapon_Select_Request
-      {Actual_Connection_Binding => (reference (the_bus));};
+       -> soft_weapons.Weapon_Select_Request;
 
   --  Navigation to weapons
 
-  c12 : port soft_navi.Body_Rates -> soft_weapons.Body_Rates
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c13 : port soft_navi.Aircraft_Position -> soft_weapons.Aircraft_Position
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c14 : port soft_navi.Attitude -> soft_weapons.Attitude
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c15 : port soft_navi.Wind -> soft_weapons.Wind
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c16 : port soft_navi.Velocity -> soft_weapons.Aircraft_Velocity
-      {Actual_Connection_Binding => (reference (the_bus));};
+  c12 : port soft_navi.Body_Rates -> soft_weapons.Body_Rates;
+  c13 : port soft_navi.Aircraft_Position -> soft_weapons.Aircraft_Position;
+  c14 : port soft_navi.Attitude -> soft_weapons.Attitude;
+  c15 : port soft_navi.Wind -> soft_weapons.Wind;
+  c16 : port soft_navi.Velocity -> soft_weapons.Aircraft_Velocity;
 
   --  hardware to weapons
 
   c17 : port hardware.Ballistic_Coefficients ->
-       soft_weapons.Ballistic_Coefficients
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c18 : port hardware.Angle_Of_Attack ->  soft_weapons.Angle_Of_Attack
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c19 : port hardware.Mach_Number -> soft_weapons.Mach_Number
-      {Actual_Connection_Binding => (reference (the_bus));};
-  c20 : port hardware.Barometric_Altitude -> soft_weapons.Barometric_Altitude
-      {Actual_Connection_Binding => (reference (the_bus));};
+       soft_weapons.Ballistic_Coefficients;
+  c18 : port hardware.Angle_Of_Attack ->  soft_weapons.Angle_Of_Attack;
+  c19 : port hardware.Mach_Number -> soft_weapons.Mach_Number;
+  c20 : port hardware.Barometric_Altitude -> soft_weapons.Barometric_Altitude;
 
   --  weapons to hardware
 
-  C21 : port soft_weapons.Interval_Selected -> hardware.Interval_Selected
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C22 : port soft_weapons.Quantity_Selected -> hardware.Quantity_Selected
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C23 : port soft_weapons.Weapon_Selected -> hardware.Weapon_Selected
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C24 : port soft_weapons.Release_Signal -> hardware.Release_Signal
-      {Actual_Connection_Binding => (reference (the_bus));};
+  C21 : port soft_weapons.Interval_Selected -> hardware.Interval_Selected;
+  C22 : port soft_weapons.Quantity_Selected -> hardware.Quantity_Selected;
+  C23 : port soft_weapons.Weapon_Selected -> hardware.Weapon_Selected;
+  C24 : port soft_weapons.Release_Signal -> hardware.Release_Signal;
   C25 : port soft_weapons.Weapon_Down_Range_Travel
-       -> hardware.Weapon_Down_Range_Travel
-      {Actual_Connection_Binding => (reference (the_bus));};
+       -> hardware.Weapon_Down_Range_Travel;
   C26 : port soft_weapons.Weapon_Cross_Range_Travel
-       -> hardware.Weapon_Cross_Range_Travel
-      {Actual_Connection_Binding => (reference (the_bus));};
+       -> hardware.Weapon_Cross_Range_Travel;
   C27 : port soft_weapons.Time_to_go_to_Release
-       -> hardware.Time_to_go_to_Release
-      {Actual_Connection_Binding => (reference (the_bus));};
+       -> hardware.Time_to_go_to_Release;
 
   --  hardware to navigation
 
-  C28 : port hardware.Radar_Altitude -> soft_navi.Radar_Altitude
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C29 : port hardware.Acceleration -> soft_navi.Acceleration_in
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C30 : port hardware.Velocity -> soft_navi.Velocity_in
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C31 : port hardware.Body_Rates -> soft_navi.Body_Rates_In
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C32 : port hardware.True_Airspeed -> soft_navi.True_Airspeed_In
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C33 : port hardware.Present_Position -> soft_navi.Present_Position
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C34 : port hardware.Barometric_Altitude -> soft_navi.Barometric_Altitude
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C35 : port hardware.Angle_Of_Attack -> soft_navi.Angle_Of_Attack_In
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C36 : port hardware.Mach_Number -> soft_navi.Mach_Number
-      {Actual_Connection_Binding => (reference (the_bus));};
+  C28 : port hardware.Radar_Altitude -> soft_navi.Radar_Altitude;
+  C29 : port hardware.Acceleration -> soft_navi.Acceleration_in;
+  C30 : port hardware.Velocity -> soft_navi.Velocity_in;
+  C31 : port hardware.Body_Rates -> soft_navi.Body_Rates_In;
+  C32 : port hardware.True_Airspeed -> soft_navi.True_Airspeed_In;
+  C33 : port hardware.Present_Position -> soft_navi.Present_Position;
+  C34 : port hardware.Barometric_Altitude -> soft_navi.Barometric_Altitude;
+  C35 : port hardware.Angle_Of_Attack -> soft_navi.Angle_Of_Attack_In;
+  C36 : port hardware.Mach_Number -> soft_navi.Mach_Number;
 
   --  Navigation to hardware
 
-  C37 : port soft_navi.Acceleration -> hardware.Acceleration
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C38 : port soft_navi.Reference_Velocity -> hardware.Reference_Velocity
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C39 : port soft_navi.Rate_of_Change_Airspeed -> hardware.Rate_of_Change_Airspeed
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C40 : port soft_navi.Altitude -> hardware.Altitude
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C41 : port soft_navi.Ground_Speed -> hardware.Ground_Speed
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C42 : port soft_navi.Flight_Path_Angle -> hardware.Flight_Path_Angle
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C43 : port soft_navi.Ground_Track_Angle -> hardware.Ground_Track_Angle
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C44 : port soft_navi.Body_to_Earth_Transform -> hardware.Body_to_Earth_Transform
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C45 : port soft_navi.Body_to_Horizon_Transform -> hardware.Body_to_Horizon_Transform
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C46 : port soft_navi.Radar_to_Body_Transform -> hardware.Radar_to_Body_Transform
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C47 : port soft_navi.Radar_to_Earth_Transform -> hardware.Radar_to_Earth_Transform
-    {Actual_Connection_Binding => (reference (the_bus));};
+  C37 : port soft_navi.Acceleration -> hardware.Acceleration;
+  C38 : port soft_navi.Reference_Velocity -> hardware.Reference_Velocity;
+  C39 : port soft_navi.Rate_of_Change_Airspeed -> hardware.Rate_of_Change_Airspeed;
+  C40 : port soft_navi.Altitude -> hardware.Altitude;
+  C41 : port soft_navi.Ground_Speed -> hardware.Ground_Speed;
+  C42 : port soft_navi.Flight_Path_Angle -> hardware.Flight_Path_Angle;
+  C43 : port soft_navi.Ground_Track_Angle -> hardware.Ground_Track_Angle;
+  C44 : port soft_navi.Body_to_Earth_Transform -> hardware.Body_to_Earth_Transform;
+  C45 : port soft_navi.Body_to_Horizon_Transform -> hardware.Body_to_Horizon_Transform;
+  C46 : port soft_navi.Radar_to_Body_Transform -> hardware.Radar_to_Body_Transform;
+  C47 : port soft_navi.Radar_to_Earth_Transform -> hardware.Radar_to_Earth_Transform;
 
   --  Navigation to displays
 
-  C48 : port soft_navi.Attitude -> soft_main.Attitude
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C49 : port soft_navi.Angle_Of_Attack -> soft_main.Angle_Of_Attack
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C50 : port soft_navi.Body_Rates -> soft_main.Body_Rates
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C51 : port soft_navi.Velocity -> soft_main.Velocity
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C52 : port soft_navi.True_Airspeed -> soft_main.Airspeed
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C53 : port soft_navi.Aircraft_Position -> soft_main.Aircraft_Position
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C54 : port soft_navi.Magnetic_Variation -> soft_main.Magnetic_Variation
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C55 : port soft_navi.Steer_to_Point -> soft_main.Steer_to_Point
-      {Actual_Connection_Binding => (reference (the_bus));};
+  C48 : port soft_navi.Attitude -> soft_main.Attitude;
+  C49 : port soft_navi.Angle_Of_Attack -> soft_main.Angle_Of_Attack;
+  C50 : port soft_navi.Body_Rates -> soft_main.Body_Rates;
+  C51 : port soft_navi.Velocity -> soft_main.Velocity;
+  C52 : port soft_navi.True_Airspeed -> soft_main.Airspeed;
+  C53 : port soft_navi.Aircraft_Position -> soft_main.Aircraft_Position;
+  C54 : port soft_navi.Magnetic_Variation -> soft_main.Magnetic_Variation;
+  C55 : port soft_navi.Steer_to_Point -> soft_main.Steer_to_Point;
 
   --  Displays to navigation
 
-  C56 : port soft_main.Target_Location   -> soft_navi.Target_Location
-      {Actual_Connection_Binding => (reference (the_bus));};
-  C57 : port soft_main.Waypoint_Table -> soft_navi.Waypoint_Table
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C58 : port soft_main.Waypoint_Offset -> soft_navi.Offset
-    {Actual_Connection_Binding => (reference (the_bus));};
+  C56 : port soft_main.Target_Location   -> soft_navi.Target_Location;
+  C57 : port soft_main.Waypoint_Table -> soft_navi.Waypoint_Table;
+  C58 : port soft_main.Waypoint_Offset -> soft_navi.Offset;
   C59 : port soft_main.Waypoint_Steering_Selected
-       -> soft_navi.Waypoint_Steering_Selected
-    {Actual_Connection_Binding => (reference (the_bus));};
+       -> soft_navi.Waypoint_Steering_Selected;
 
   --  hardware to displays
 
-  C60 : port hardware.Keymap_Image -> soft_main.Keymap_Image
-    {Actual_Connection_Binding => (reference (the_bus));};
+  C60 : port hardware.Keymap_Image -> soft_main.Keymap_Image;
 
   --  Others (displays to hardware)
 
-  C61 : port soft_main.Contact_Number_to_Track -> hardware.Contact_Number_to_Track
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C62 : port soft_main.Radar_Mode              -> hardware.Radar_Mode
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C63 : port hardware.Contact_Table           -> soft_main.Contact_Table
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C64 : port hardware.Target_Position         -> soft_main.Target_Position
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C65 : port soft_main.Status                  -> hardware.Status
-    {Actual_Connection_Binding => (reference (the_bus));};
+  C61 : port soft_main.Contact_Number_to_Track -> hardware.Contact_Number_to_Track;
+  C62 : port soft_main.Radar_Mode              -> hardware.Radar_Mode;
+  C63 : port hardware.Contact_Table           -> soft_main.Contact_Table;
+  C64 : port hardware.Target_Position         -> soft_main.Target_Position;
+  C65 : port soft_main.Status                  -> hardware.Status;
   C66 : port soft_main.Threat_Radar_Frequency_Message
-        -> hardware.Threat_Radar_Frequency_Message
-    {Actual_Connection_Binding => (reference (the_bus));};
+        -> hardware.Threat_Radar_Frequency_Message;
   C67 : port soft_main.Threat_Search_Sector_Message
-        -> hardware.Threat_Search_Sector_Message
-    {Actual_Connection_Binding => (reference (the_bus));};
-  C68 : port soft_main.Target_Velocity_Out -> hardware.Target_Velocity
-    {Actual_Connection_Binding => (reference (the_bus));};
+        -> hardware.Threat_Search_Sector_Message;
+  C68 : port soft_main.Target_Velocity_Out -> hardware.Target_Velocity;
 
 properties
   Actual_Processor_Binding => (reference (s_cpu)) applies to soft_weapons;
@@ -2263,6 +2195,82 @@ properties
   Actual_Memory_Binding => (reference (mem_1)) applies to soft_navi;
   Actual_Memory_Binding => (reference (mem_2)) applies to soft_main;
   Actual_Memory_Binding => (reference (mem_3)) applies to soft_weapons;
+
+  Actual_Connection_Binding => (reference (the_bus)) applies to c0;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c1;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c2;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c3;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c4;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c5;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c6;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c7;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c8;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c9;
+
+  Actual_Connection_Binding => (reference (the_bus)) applies to c10;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c11;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c12;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c13;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c14;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c15;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c16;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c17;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c18;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c19;
+
+  Actual_Connection_Binding => (reference (the_bus)) applies to c20;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c21;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c22;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c23;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c24;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c25;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c26;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c27;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c28;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c29;
+
+  Actual_Connection_Binding => (reference (the_bus)) applies to c30;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c31;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c32;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c33;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c34;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c35;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c36;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c37;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c38;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c39;
+
+  Actual_Connection_Binding => (reference (the_bus)) applies to c40;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c41;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c42;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c43;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c44;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c45;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c46;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c47;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c48;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c49;
+
+  Actual_Connection_Binding => (reference (the_bus)) applies to c50;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c51;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c52;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c53;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c54;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c55;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c56;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c57;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c58;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c59;
+
+  Actual_Connection_Binding => (reference (the_bus)) applies to c60;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c61;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c62;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c63;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c64;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c65;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c66;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c67;
+  Actual_Connection_Binding => (reference (the_bus)) applies to c68;
 
 annex real_specification {**
 

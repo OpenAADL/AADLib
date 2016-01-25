@@ -35,10 +35,10 @@ public
     Component_1 : abstract Replicable_Component; -- Replica #1
     Component_2 : abstract Replicable_Component; -- Replica #2
 
-  annex behavior_specification {**
+  -- annex behavior_specification {**
   -- Should define here semantics for this policy
   -- e.g. on error from #1, activate #2
-  **};
+  -- **};
   end Cold.i;
 
   -----------------------------------------------------------------------------

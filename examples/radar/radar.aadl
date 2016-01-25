@@ -48,7 +48,6 @@
 package radar_system
 public
   with radar_types;
-  with deployment;
   with processors;
   with buses::VME;
   with memories;

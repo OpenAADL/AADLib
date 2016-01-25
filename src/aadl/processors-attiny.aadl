@@ -5,7 +5,7 @@
 package Processors::ATtiny
 public
 
-with Data_Sheet, Memories, Deployment, Processor_Properties;
+  with Data_Sheet, Memories, Processor_Properties;
   with Processors, ARINC653_Extended;
  
  ----------------
