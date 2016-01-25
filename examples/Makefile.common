@@ -77,6 +77,14 @@ vxworks653_conf:
 	$(OCARINA) $(OCARINA_FLAGS) -g vxworks653_conf -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
+stats:
+	$(OCARINA) $(OCARINA_FLAGS) -g stats -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
+subprograms:
+	$(OCARINA) $(OCARINA_FLAGS) -g subprograms -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
 real:
 	$(OCARINA) $(OCARINA_FLAGS) -g real_theorem \
                 -real_continue_eval \
