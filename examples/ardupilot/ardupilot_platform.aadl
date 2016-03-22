@@ -1,8 +1,6 @@
 package ardupilot_platform
 public
- with Data_Sheet;
  
-  -- Ardupilot devices to defin
   device GPS
   end GPS;
 
