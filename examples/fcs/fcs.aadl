@@ -7,288 +7,283 @@
 
 package Flight_Control_System
 public
-with processors;
-with buses::I2C;
-----------
--- Data --
-----------
+  with processors;
+  with buses::I2C;
 
-data pos_c 
-  --  Required Position
-end pos_c;
+  ----------
+  -- Data --
+  ----------
 
-data pos_o 
-  --  Observed Position
-end pos_o;
+  data pos_c
+    --  Required Position
+  end pos_c;
 
-data acc_c
-  --  Required Acceleration
-end acc_c;
+  data pos_o
+    --  Observed Position
+  end pos_o;
 
-data acc_o
-  --  Observed Acceleration
-end acc_o;
+  data acc_c
+    --  Required Acceleration
+  end acc_c;
 
-data angle_c
-  --  Required Angle
-end angle_c;
+  data acc_o
+    --  Observed Acceleration
+  end acc_o;
 
-data angle_o
-  --  Observed angle
-end angle_o;
+  data angle_c
+    --  Required Angle
+  end angle_c;
 
-data order end order;
-data angle end angle;
-data position end position;
+  data angle_o
+    --  Observed angle
+  end angle_o;
 
-data acc
-  --  Acceleration
-end acc;
+  data order end order;
+  data angle end angle;
+  data position end position;
 
-data acc_i end acc_i;
-data pos_i end pos_i;
+  data acc
+    --  Acceleration
+  end acc;
 
--------------
--- Threads --
--------------
+  data acc_i end acc_i;
+  data pos_i end pos_i;
 
-thread NL
-  --  Navigation Law
-features
-  pos_c : in  data port pos_c;
-  pos_o : in  data port pos_o;
-  acc_c : out data port acc_c;
-properties
-  Dispatch_Protocol      => Periodic;
-  Period                 => 120 ms;
-  Compute_Execution_Time => 0 ms .. 20 ms;
-  Deadline               => 120 ms;
-  Priority               => 2;
-end NL;
+  -------------
+  -- Threads --
+  -------------
 
-thread NF
-  --  Navigation Filter
-features
-  pos_i : in  data port pos_i;
-  pos_o : out data port pos_o;
-properties
-  Dispatch_Protocol      => Periodic;
-  Period                 => 120 ms;
-  Compute_Execution_Time => 0 ms .. 10 ms;
-  Deadline               => 120 ms;
-  Priority               => 1;
-end NF;
-
-thread PL
-  --  Piloting Law
-features
-  acc_c   : in  data port acc_c;
-  acc_o   : in  data port acc_o;
-  angle_c : out data port angle_c;
-properties
-  Dispatch_Protocol      => Periodic;
-  Period                 => 40 ms;
-  Compute_Execution_Time => 0 ms .. 5 ms;
-  Deadline               => 40 ms;
-  Priority               => 4;
-end PL;
-
-thread PF
-  --  Piloting Filter
-features
-  acc_i : in  data port acc_i;
-  acc_o : out data port acc_o;
-properties
-  Dispatch_Protocol      => Periodic;
-  Period                 => 40 ms;
-  Compute_Execution_Time => 0 ms .. 5 ms;
-  Deadline               => 40 ms;
-  Priority               => 3;
-end PF;
-
-thread FL
-  --  Feddback Law
-features
-  angle_c : in  data port angle_c;
-  angle_o : in  data port angle_o;
-  order   : out data port order;
-properties
-  Dispatch_Protocol      => Periodic;
-  Period                 => 10 ms;
-  Compute_Execution_Time => 0 ms .. 2 ms;
-  Deadline               => 10 ms;
-  Priority               => 7;
-end FL;
-
-thread FF
-  --  Feedback Filter
-features
-  angle   : in  data port angle;
-  angle_o : out data port angle_o;
-properties
-  Dispatch_Protocol      => Periodic;
-  Period                 => 10 ms;
-  Compute_Execution_Time => 0 ms .. 1 ms;
-  Deadline               => 10 ms;
-  Priority               => 6;
-end FF;
-
-thread AP
-  --  Acceleration Position Acquisition
-features
-  position : in  data port position;
-  acc      : in  data port acc;
-  acc_i    : out data port acc_i;
-  pos_i    : out data port pos_i;
-properties
-  Dispatch_Protocol      => Periodic;
-  Period                 => 10 ms;
-  Compute_Execution_Time => 0 ms .. 1 ms;
-  Deadline               => 10 ms;
-  Priority               => 5;
-end AP;
-
----------------
--- Processor --
----------------
-
-processor cpu extends processors::cpu_rma
-features
-  i2c   : requires bus access i2c_bus;
-
-end cpu;
-
----------------
--- Processes --
----------------
-
-process node_a
-features
-  pos_c    : in  data port pos_c;
-  order    : out data port order;
-  angle    : in  data port angle;
-  position : in  data port position;
-  acc      : in  data port acc;
-flows
- f1 : flow path pos_c -> order { latency => 10 ms .. 20 ms;};
-end node_a;
-
-process implementation node_a.impl
-subcomponents
-  FF : thread FF;
-  NL : thread NL;
-  NF : thread NF;
-  PL : thread PL;
-  PF : thread PF;
-  FL : thread FL;
-  AP : thread AP;
-connections
-  --  Inter-thread communication
-  V1:port NL.acc_c   -> PL.acc_c;
-  V2:port PL.angle_c -> FL.angle_c;
-  V3:port NF.pos_o   -> NL.pos_o;
-  V4:port PF.acc_o   -> PL.acc_o;
-  V5:port FF.angle_o -> FL.angle_o;
-  V6:port AP.acc_i   -> PF.acc_i;
-  V7:port AP.pos_i   -> NF.pos_i;
-
-  -- Process/thread communication
-  V8:port pos_c     -> NL.pos_c;
-  V9:port FL.order -> order;
-  V10:port angle    -> FF.angle;
-  V11:port position -> AP.position;
-  V12:port acc       -> AP.acc;
-end node_a.impl;
-
--------------
--- Devices --
--------------
-
-device Operator
-features
-  pos_c : out data port pos_c;
-  i2c   : requires bus access i2c_bus;
-flows
-  f1 : flow source pos_c { latency => 10 ms .. 20 ms;};  
-end Operator;
-
-device GPS
-features
-  position : out data port position;
-  i2c   : requires bus access i2c_bus;
-end GPS;
-
-device IMU
-features
-  angle : out data port angle;
-  acc   : out data port acc;
-  i2c   : requires bus access i2c_bus;
-end IMU;
-
-device Platform
-features
-  order : in data port order;
-  i2c   : requires bus access i2c_bus;
-flows
-f1 : flow sink order { latency => 20 ms .. 20 ms;};
-end Platform;
-
----------
--- Bus --
----------
-
-bus I2C_bus extends buses::I2C::I2C 
-  --  I2C bus
+  thread NL
+    --  Navigation Law
+  features
+    pos_c : in  data port pos_c;
+    pos_o : in  data port pos_o;
+    acc_c : out data port acc_c;
   properties
-   Transmission_Time => [ Fixed => 0 ms .. 10ms;
-                          PerByte => 0 ms .. 10 ms; ];
-end I2C_bus;
+    Dispatch_Protocol      => Periodic;
+    Period                 => 120 ms;
+    Compute_Execution_Time => 0 ms .. 20 ms;
+    Deadline               => 120 ms;
+    Priority               => 2;
+  end NL;
 
-------------
--- System --
-------------
+  thread NF
+    --  Navigation Filter
+  features
+    pos_i : in  data port pos_i;
+    pos_o : out data port pos_o;
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 120 ms;
+    Compute_Execution_Time => 0 ms .. 10 ms;
+    Deadline               => 120 ms;
+    Priority               => 1;
+  end NF;
 
-system fcs 
+  thread PL
+    --  Piloting Law
+  features
+    acc_c   : in  data port acc_c;
+    acc_o   : in  data port acc_o;
+    angle_c : out data port angle_c;
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 40 ms;
+    Compute_Execution_Time => 0 ms .. 5 ms;
+    Deadline               => 40 ms;
+    Priority               => 4;
+  end PL;
 
-end fcs;
+  thread PF
+    --  Piloting Filter
+  features
+    acc_i : in  data port acc_i;
+    acc_o : out data port acc_o;
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 40 ms;
+    Compute_Execution_Time => 0 ms .. 5 ms;
+    Deadline               => 40 ms;
+    Priority               => 3;
+  end PF;
 
-system implementation fcs.impl
-subcomponents
-   node_a   : process   node_a.impl;
-   cpu_rm   : processor cpu;
-   operator : device    Operator;
-   GPS      : device    GPS;
-   IMU      : device    IMU;
-   platform : device    Platform;
-   i2c      : bus       i2c_bus;
+  thread FL
+    --  Feddback Law
+  features
+    angle_c : in  data port angle_c;
+    angle_o : in  data port angle_o;
+    order   : out data port order;
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 10 ms;
+    Compute_Execution_Time => 0 ms .. 2 ms;
+    Deadline               => 10 ms;
+    Priority               => 7;
+  end FL;
 
-connections
-  V13:port operator.pos_c -> node_a.pos_c;
---  { Actual_Connection_Binding => (reference (i2c));};
-  V14:port node_a.order   -> platform.order;
---  { Actual_Connection_Binding => (reference (i2c));};
-  V15:port GPS.position   -> node_a.position;
---  { Actual_Connection_Binding => (reference (i2c));};
-  V16:port IMU.angle      -> node_a.angle;
- -- { Actual_Connection_Binding => (reference (i2c));};
-  V17:port IMU.acc        -> node_a.acc;
---  { Actual_Connection_Binding => (reference (i2c));};
+  thread FF
+    --  Feedback Filter
+  features
+    angle   : in  data port angle;
+    angle_o : out data port angle_o;
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 10 ms;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Deadline               => 10 ms;
+    Priority               => 6;
+  end FF;
 
-  V18:bus access i2c -> GPS.i2c;
-  V19:bus access i2c -> IMU.i2c;
-  V20:bus access i2c -> platform.i2c;
-  V21:bus access i2c -> cpu_rm.i2c;
+  thread AP
+    --  Acceleration Position Acquisition
+  features
+    position : in  data port position;
+    acc      : in  data port acc;
+    acc_i    : out data port acc_i;
+    pos_i    : out data port pos_i;
+  properties
+    Dispatch_Protocol      => Periodic;
+    Period                 => 10 ms;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Deadline               => 10 ms;
+    Priority               => 5;
+  end AP;
 
-flows
-etef1 : end to end flow operator.f1 -> V13 -> node_a.f1 -> V14 -> platform.f1 { latency => 40 ms .. 90 ms;}; 
+  ---------------
+  -- Processor --
+  ---------------
 
-properties
-   Actual_Processor_Binding => (reference (cpu_rm)) applies to node_a;
-   Actual_Connection_Binding => (reference (i2c)) applies to V13;
-   Actual_Connection_Binding => (reference (i2c)) applies to V14;
-   Actual_Connection_Binding => (reference (i2c)) applies to V15;
-   Actual_Connection_Binding => (reference (i2c)) applies to V16;
-   Actual_Connection_Binding => (reference (i2c)) applies to V17;
-end fcs.impl;
+  processor cpu extends processors::cpu_rma
+  features
+    i2c   : requires bus access i2c_bus;
+
+  end cpu;
+
+  ---------------
+  -- Processes --
+  ---------------
+
+  process node_a
+  features
+    pos_c    : in  data port pos_c;
+    order    : out data port order;
+    angle    : in  data port angle;
+    position : in  data port position;
+    acc      : in  data port acc;
+  flows
+    f1 : flow path pos_c -> order { latency => 10 ms .. 20 ms;};
+  end node_a;
+
+  process implementation node_a.impl
+  subcomponents
+    FF : thread FF;
+    NL : thread NL;
+    NF : thread NF;
+    PL : thread PL;
+    PF : thread PF;
+    FL : thread FL;
+    AP : thread AP;
+  connections
+    --  Inter-thread communication
+    V1:port NL.acc_c   -> PL.acc_c;
+    V2:port PL.angle_c -> FL.angle_c;
+    V3:port NF.pos_o   -> NL.pos_o;
+    V4:port PF.acc_o   -> PL.acc_o;
+    V5:port FF.angle_o -> FL.angle_o;
+    V6:port AP.acc_i   -> PF.acc_i;
+    V7:port AP.pos_i   -> NF.pos_i;
+
+    -- Process/thread communication
+    V8:port pos_c     -> NL.pos_c;
+    V9:port FL.order -> order;
+    V10:port angle    -> FF.angle;
+    V11:port position -> AP.position;
+    V12:port acc       -> AP.acc;
+  end node_a.impl;
+
+  -------------
+  -- Devices --
+  -------------
+
+  device Operator
+  features
+    pos_c : out data port pos_c;
+    i2c   : requires bus access i2c_bus;
+  flows
+    f1 : flow source pos_c { latency => 10 ms .. 20 ms;};
+  end Operator;
+
+  device GPS
+  features
+    position : out data port position;
+    i2c   : requires bus access i2c_bus;
+  end GPS;
+
+  device IMU
+  features
+    angle : out data port angle;
+    acc   : out data port acc;
+    i2c   : requires bus access i2c_bus;
+  end IMU;
+
+  device Platform
+  features
+    order : in data port order;
+    i2c   : requires bus access i2c_bus;
+  flows
+    f1 : flow sink order { latency => 20 ms .. 20 ms;};
+  end Platform;
+
+  ---------
+  -- Bus --
+  ---------
+
+  bus I2C_bus extends buses::I2C::I2C
+    --  I2C bus
+  properties
+    Transmission_Time => [ Fixed => 0 ms .. 10ms;
+    PerByte => 0 ms .. 10 ms; ];
+  end I2C_bus;
+
+  ------------
+  -- System --
+  ------------
+
+  system fcs
+  end fcs;
+
+  system implementation fcs.impl
+  subcomponents
+    node_a   : process   node_a.impl;
+    cpu_rm   : processor cpu;
+    operator : device    Operator;
+    GPS      : device    GPS;
+    IMU      : device    IMU;
+    platform : device    Platform;
+    i2c      : bus       i2c_bus;
+
+  connections
+    V13:port operator.pos_c -> node_a.pos_c;
+    V14:port node_a.order   -> platform.order;
+    V15:port GPS.position   -> node_a.position;
+    V16:port IMU.angle      -> node_a.angle;
+    V17:port IMU.acc        -> node_a.acc;
+
+    V18:bus access i2c -> GPS.i2c;
+    V19:bus access i2c -> IMU.i2c;
+    V20:bus access i2c -> platform.i2c;
+    V21:bus access i2c -> cpu_rm.i2c;
+
+  flows
+    etef1 : end to end flow operator.f1 -> V13 -> node_a.f1 -> V14 -> platform.f1 { latency => 40 ms .. 90 ms;};
+
+  properties
+    Actual_Processor_Binding => (reference (cpu_rm)) applies to node_a;
+    Actual_Connection_Binding => (reference (i2c)) applies to V13;
+    Actual_Connection_Binding => (reference (i2c)) applies to V14;
+    Actual_Connection_Binding => (reference (i2c)) applies to V15;
+    Actual_Connection_Binding => (reference (i2c)) applies to V16;
+    Actual_Connection_Binding => (reference (i2c)) applies to V17;
+  end fcs.impl;
 
 end Flight_Control_System;
