@@ -1,5 +1,6 @@
 package ardupilot_platform
 public
+  with Data_Sheet;
  
   device GPS
   end GPS;
