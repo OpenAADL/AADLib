@@ -1,0 +1,62 @@
+package mjpeg::platform
+public
+with SpaceStudio;
+
+
+	processor a9
+	features
+		socket : requires bus access AMBA;
+	end a9;
+
+	processor implementation a9.impl
+	properties
+		SpaceStudio::Subtype_component => armCortexA9;
+	end a9.impl;
+
+	processor ub
+	features
+		socket : requires bus access AMBA;
+	end ub;
+
+	processor implementation ub.impl
+	properties
+		SpaceStudio::Subtype_component => uBlaze;
+	end ub.impl;
+
+	bus AMBA
+	properties
+		SpaceStudio::Subtype_component => AMBA_AXIBus;
+	end AMBA;
+	
+	
+	memory BRAM
+	features
+		b0 : requires bus access AMBA;
+	properties
+	SpaceStudio::Subtype_component => XilinxBRAM;
+	end BRAM;
+
+	system platform
+	end platform;
+
+	system implementation platform.ubimpl
+	subcomponents
+		proc : processor ub.impl;
+		busAmba : bus AMBA;
+		mem : memory BRAM;
+	connections
+		b0 : bus access busAmba <-> proc.socket;
+		b1 : bus access busAmba <-> mem.b0;
+	end platform.ubimpl;
+
+	system implementation platform.a9impl
+	subcomponents
+		proc : processor a9.impl;
+		busAmba : bus AMBA;
+		mem : memory BRAM;
+	connections
+		b0 : bus access busAmba <-> proc.socket;
+		b1 : bus access busAmba <-> mem.b0;
+	end platform.a9impl;
+
+end mjpeg::platform;

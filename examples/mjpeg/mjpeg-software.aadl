@@ -1,0 +1,417 @@
+package mjpeg::software
+public
+  with Data_Model;
+  with mjpeg::platform;
+
+  data Uint_data
+  properties
+    Data_Model::Representation => ("unsigned int");
+  end Uint_data;
+
+  data SAshort_data
+  properties
+    Data_Model::Representation => ("SPACE_ALIGNED short");
+  end SAshort_data;
+
+  data SAUchar_data
+  properties
+    Data_Model::Representation => ("SPACE_ALIGNED unsigned char");
+  end SAUchar_data;
+
+  data VLD_data
+  properties
+    Data_Model::Representation => ("vld_metrics");
+  end VLD_data;
+
+  data Uint64_data
+  properties
+    Data_Model::Representation => ("Uint64_t");
+  end Uint64_data;
+
+  data int_data
+  properties
+    Data_Model::Representation => ("int");
+  end int_data;
+
+  subprogram Demux_Function
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("DEMUX.cpp");
+    Source_Name => "demux_funct";
+  end Demux_Function;
+
+  subprogram Demux_Before
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("DEMUX.cpp");
+    Source_Name => "before_demux";
+  end Demux_Before;
+
+  thread Demux
+  features
+    to_vld : out event data port Uint_data;
+    to_iqzz : out event data port Uint_data;
+    to_idct : out event data port Uint_data;
+    to_libu : out event data port Uint_data;
+  end Demux;
+
+  thread implementation Demux.impl
+  calls
+    loop : {code : subprogram Demux_Function;};
+    before : {code1 : subprogram Demux_Before;};
+  properties
+    Period => 50ms;
+    Dispatch_Protocol => Periodic;
+    Compute_Entrypoint => classifier (Demux_Function);
+  end Demux.impl;
+
+  process Demuxp
+  features
+    to_vld : out event data port Uint_data;
+    to_iqzz : out event data port Uint_data;
+    to_idct : out event data port Uint_data;
+    to_libu : out event data port Uint_data;
+  end Demuxp;
+
+  process implementation Demuxp.impl
+  subcomponents
+    P1 : thread Demux.impl;
+  connections
+    C_vld : port P1.to_vld -> to_vld;
+    C_iqzz : port P1.to_iqzz -> to_iqzz;
+    C_idct : port P1.to_idct -> to_idct;
+    c_libu : port P1.to_libu -> to_libu;
+  end Demuxp.impl;
+
+  subprogram VLD_Function
+  features
+    uiCommand : in parameter Uint_data;
+    nbQuant : in parameter Uint_data;
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("VLD.cpp");
+    Source_Name => "vld_funct";
+  end VLD_Function;
+
+  subprogram VLD_Before
+  features
+    nbQuant2 : in parameter Uint_data;
+    nbQuant : out parameter Uint_data;
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("VLD.cpp");
+    Source_Name => "before_vld";
+  end VLD_Before;
+
+  thread VLD
+  features
+    from_demux : in event data port Uint_data;
+    to_iqzz : out event data port SAshort_data;
+    to_block_metrics : out event data port VLD_Data;
+  end VLD;
+
+  thread implementation VLD.impl
+  calls
+    loop : {code : subprogram VLD_Function;};
+    before : {code1 : subprogram VLD_Before;};
+  connections
+    C1: parameter from_demux -> code1.nbQuant2;
+    C2 : parameter from_demux -> code.uiCommand;
+    Cs3 : parameter code1.nbQuant -> code.nbQuant;
+  properties
+    Period => 10ms;
+    Dispatch_Protocol => Periodic;
+    Compute_Entrypoint => classifier (VLD_Function);
+  end VLD.impl;
+
+  process VLDp
+  features
+    from_demux : in event data port Uint_data;
+    to_iqzz : out event data port SAshort_data;
+    to_block_metrics : out event data port VLD_Data;
+  end VLDp;
+
+  process implementation VLDp.impl
+  subcomponents
+    P2 : thread VLD.impl;
+  connections
+    c_demux : port from_demux -> P2.from_demux;
+    c_iqzz : port P2.to_iqzz -> to_iqzz;
+    c_block_metrics : port P2.to_block_metrics -> to_block_metrics;
+  end VLDp.impl;
+
+  subprogram IQZZ_Function
+  features
+    uiCommand : in parameter Uint_data;
+    nbQuant : in parameter Uint_data;
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("IQZZ.cpp");
+    Source_Name => "iqzz_funct";
+  end IQZZ_Function;
+
+  subprogram IQZZ_Before
+  features
+    nbQuant2 : in parameter Uint_data;
+    nbQuant : out parameter Uint_data;
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("IQZZ.cpp");
+    Source_Name => "before_iqzz";
+  end IQZZ_Before;
+
+  thread IQZZ
+  features
+    from_demux : in event data port Uint_data;
+    from_vld : in event data port SAshort_data;
+    to_idct : out event data port SAshort_data;
+  end IQZZ;
+
+  thread implementation IQZZ.impl
+  calls
+    loop : {code : subprogram IQZZ_Function;};
+    before : {code1 : subprogram IQZZ_Before;};
+  connections
+    C1 : parameter from_demux -> code1.nbQuant2;
+    C2 : parameter from_demux -> code.uiCommand;
+    C3 : parameter code1.nbQuant -> code.nbQuant;
+  properties
+    Period => 10ms;
+    Dispatch_Protocol => Periodic;
+    Compute_Entrypoint => classifier (IQZZ_Function);
+  end IQZZ.impl;
+
+  process IQZZp
+  features
+    from_demux : in event data port Uint_data;
+    from_vld : in event data port SAshort_data;
+    to_idct : out event data port SAshort_data;
+  end IQZZp;
+
+  process implementation IQZZp.impl
+  subcomponents
+    P3 : thread IQZZ.impl;
+  connections
+    c_demux : port from_demux -> P3.from_demux;
+    c_vld : port from_vld -> P3.from_vld;
+    c_idct : port P3.to_idct -> to_idct;
+  end IQZZp.impl;
+
+  subprogram IDCT_Function
+  features
+    uiCommand : in parameter Uint_data;
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("IDCT.cpp");
+    Source_Name => "idct_funct";
+  end IDCT_Function;
+
+  subprogram IDCT_Before
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("IDCT.cpp");
+    Source_Name => "before_idct";
+  end IDCT_Before;
+
+  thread IDCT
+  features
+    from_demux : in event data port Uint_data;
+    from_iqzz : in event data port SAshort_data;
+    to_libu : out event data port SAUchar_data;
+  end IDCT;
+
+  thread implementation IDCT.impl
+  calls
+    loop : {code : subprogram IDCT_Function;};
+    before : {code1 : subprogram IDCT_Before;};
+  connections
+    C1 : parameter from_demux -> code.uiCommand;
+  properties
+    Period => 10ms;
+    Dispatch_Protocol => Periodic;
+    Compute_Entrypoint => classifier (IDCT_Function);
+  end IDCT.impl;
+
+  process IDCTp
+  features
+    from_demux : in event data port Uint_data;
+    from_iqzz : in event data port SAshort_data;
+    to_libu : out event data port SAUchar_data;
+  end IDCTp;
+
+  process implementation IDCTp.impl
+  subcomponents
+    P4 : thread IDCT.impl;
+  connections
+    c_demux : port from_demux -> P4.from_demux;
+    c_iqzz : port from_iqzz -> P4.from_iqzz;
+    c_libu : port P4.to_libu -> to_libu;
+  end IDCTp.impl;
+
+  subprogram LIBU_Function
+  features
+    uiCommand : in parameter Uint_data;
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("LIBU.cpp");
+    Source_Name => "libu_funct";
+  end LIBU_Function;
+
+  subprogram LIBU_Before
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("LIBU.cpp");
+    Source_Name => "before_libu";
+  end LIBU_Before;
+
+  thread LIBU
+  features
+    from_demux : in event data port Uint_data;
+    from_idct : in event data port SAUchar_data;
+    from_vga : in event data port Uint_data;
+    to_vga : out event data port Uint_data;
+    to_block_metrics : out event data port Uint64_data;
+    to_color_metrics : out event data port int_data;
+  end LIBU;
+
+  thread implementation LIBU.impl
+  calls
+    loop : {code : subprogram LIBU_Function;};
+    before : {code1 : subprogram LIBU_Before;};
+  connections
+    C1 :parameter from_demux -> code.uiCommand;
+  properties
+    Period => 10ms;
+    Compute_Entrypoint => classifier (LIBU_Function);
+    Dispatch_Protocol => Periodic;
+  end LIBU.impl;
+
+  process LIBUp
+  features
+    from_demux : in event data port Uint_data;
+    from_idct : in event data port SAUchar_data;
+    from_vga : in event data port Uint_data;
+    to_vga : out event data port Uint_data;
+    to_block_metrics : out event data port Uint64_data;
+    to_color_metrics : out event data port int_data;
+  end LIBUp;
+
+  process implementation LIBUp.impl
+  subcomponents
+    P5 : thread LIBU.impl;
+  connections
+    c_demux : port from_demux -> P5.from_demux;
+    c_idct : port from_idct -> P5.from_idct;
+    c_rvga : port from_vga -> P5.from_vga;
+    c_vga : port P5.to_vga -> to_vga;
+    c_block_metrics : port P5.to_block_metrics -> to_block_metrics;
+    c_color_metrics : port P5.to_color_metrics -> to_color_metrics;
+  end LIBUp.impl;
+
+  subprogram BLOCK_METRICS_Function
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("BLOCK_METRICS.cpp");
+    Source_Name => "metrics";
+  end BLOCK_METRICS_Function;
+
+  thread BLOCK_METRICS
+  features
+    from_vld : in event data port VLD_data;
+    from_libu : in event data port Uint64_data;
+  end BLOCK_METRICS;
+
+  thread implementation BLOCK_METRICS.impl
+  calls loop : {code : subprogram BLOCK_METRICS_Function;};
+  properties
+    Period => 1ms;
+    Compute_Entrypoint => classifier (BLOCK_METRICS_Function);
+    Dispatch_Protocol => Periodic;
+  end BLOCK_METRICS.impl;
+
+  process BLOCK_METRICSp
+  features
+    from_vld : in event data port VLD_data;
+    from_libu : in event data port Uint64_data;
+  end BLOCK_METRICSp;
+
+  process implementation BLOCK_METRICSp.impl
+  subcomponents
+    P6 : thread BLOCK_METRICS.impl;
+  connections
+    c_vld : port from_vld -> P6.from_vld;
+    c_libu : port from_libu -> P6.from_libu;
+  end BLOCK_METRICSp.impl;
+
+  subprogram COLOR_METRICS_Function
+  properties
+    --Source_Language => (System_C);
+    Source_Text => ("COLOR_METRICS.cpp");
+    Source_Name => "color";
+  end COLOR_METRICS_Function;
+
+  thread COLOR_METRICS
+  features
+    from_libu : in event data port int_data;
+  end COLOR_METRICS;
+
+  thread implementation COLOR_METRICS.impl
+  calls loop : {code : subprogram COLOR_METRICS_Function;};
+  properties
+    Period => 1ms;
+    Compute_Entrypoint => classifier (COLOR_METRICS_Function);
+    Dispatch_Protocol => Periodic;
+  end COLOR_METRICS.impl;
+
+  process COLOR_METRICSp
+  features
+    from_libu : in event data port int_data;
+  end COLOR_METRICSp;
+
+  process implementation COLOR_METRICSp.impl
+  subcomponents
+    P7 : thread COLOR_METRICS.impl;
+  connections
+    c_libu : port from_libu -> P7.from_libu;
+  end COLOR_METRICSp.impl;
+
+
+  device VGA
+  features
+    from_libu : in event data port Uint_data;
+    to_libu : out event data port Uint_data;
+
+    b0 : requires bus access mjpeg::platform::AMBA;
+  end VGA;
+
+
+  system software
+  end software;
+
+  system implementation software.impl
+  subcomponents
+    demux : process Demuxp.impl;
+    vld : process VLDp.impl;
+    iqzz : process IQZZp.impl;
+    idct : process IDCTp.impl;
+    libu : process LIBUp.impl;
+    block_metrics : process BLOCK_METRICSp.impl;
+    color_metrics : process COLOR_METRICSp.impl;
+
+    vga : device VGA;
+  connections
+    C_demux_vld : port demux.to_vld -> vld.from_demux;
+    C_demux_idct : port demux.to_idct -> idct.from_demux;
+    C_demux_iqzz : port demux.to_iqzz -> iqzz.from_demux;
+    c_demux_libu : port demux.to_libu -> libu.from_demux;
+    c_vld_iqzz : port vld.to_iqzz -> iqzz.from_vld;
+    c_vld_block_metrics : port vld.to_block_metrics -> block_metrics.from_vld;
+    c_iqzz_idct : port iqzz.to_idct -> idct.from_iqzz;
+    c_idct_libu : port idct.to_libu -> libu.from_idct;
+    c_vga_libu : port vga.to_libu -> libu.from_vga;
+    c_libu_vga : port libu.to_vga -> vga.from_libu;
+    c_libu_block_metrics : port libu.to_block_metrics -> block_metrics.from_libu;
+    c_libu_color_metrics : port libu.to_color_metrics -> color_metrics.from_libu;
+  end software.impl;
+
+end mjpeg::software;

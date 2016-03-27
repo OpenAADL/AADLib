@@ -1,0 +1,194 @@
+package mjpeg::integration
+public
+with mjpeg::software;
+with mjpeg::platform;
+
+	system integration
+	end integration;
+
+	system implementation integration.DemuxLibuUb_IdctA9
+	subcomponents
+		demux : process mjpeg::software::Demuxp.impl;
+		vld : process mjpeg::software::VLDp.impl;
+		iqzz : process mjpeg::software::IQZZp.impl;
+		idct : process mjpeg::software::IDCTp.impl;
+		libu : process mjpeg::software::LIBUp.impl;
+		block_metrics : process mjpeg::software::BLOCK_METRICSp.impl;
+		color_metrics : process mjpeg::software::COLOR_METRICSp.impl;
+		vga : device mjpeg::software::VGA;
+		proc1 : processor mjpeg::platform::ub.impl;
+		proc2 : processor mjpeg::platform::a9.impl;
+		busAmba : bus mjpeg::platform::AMBA;
+		mem : memory mjpeg::platform::BRAM;
+	connections
+		C_demux_vld : port demux.to_vld -> vld.from_demux;
+		C_demux_idct : port demux.to_idct -> idct.from_demux;
+		C_demux_iqzz : port demux.to_iqzz -> iqzz.from_demux;
+		c_demux_libu : port demux.to_libu -> libu.from_demux;
+		c_vld_iqzz : port vld.to_iqzz -> iqzz.from_vld;
+		c_vld_block_metrics : port vld.to_block_metrics -> block_metrics.from_vld;
+		c_iqzz_idct : port iqzz.to_idct -> idct.from_iqzz;
+		c_idct_libu : port idct.to_libu -> libu.from_idct;
+		c_vga_libu : port vga.to_libu -> libu.from_vga;
+		c_libu_vga : port libu.to_vga -> vga.from_libu;
+		c_libu_block_metrics : port libu.to_block_metrics -> block_metrics.from_libu;
+		c_libu_color_metrics : port libu.to_color_metrics -> color_metrics.from_libu;
+		b0 : bus access busAmba <-> proc1.socket;
+		b1 : bus access busAmba <-> mem.b0;
+		b2 : bus access busAmba <-> vga.b0;
+		b3 : bus access busAmba <-> proc2.socket;
+	properties
+		Actual_Processor_Binding => (reference (proc1)) applies to demux;
+		Actual_Processor_Binding => (reference (proc2)) applies to idct;
+		Actual_Processor_Binding => (reference (proc1)) applies to libu;
+		Actual_Memory_Binding => (reference (mem)) applies to demux;
+	end integration.DemuxLibuUb_IdctA9;
+
+	system implementation integration.DemuxUb_IdctA9
+	subcomponents
+		demux : process mjpeg::software::Demuxp.impl;
+		vld : process mjpeg::software::VLDp.impl;
+		iqzz : process mjpeg::software::IQZZp.impl;
+		idct : process mjpeg::software::IDCTp.impl;
+		libu : process mjpeg::software::LIBUp.impl;
+		block_metrics : process mjpeg::software::BLOCK_METRICSp.impl;
+		color_metrics : process mjpeg::software::COLOR_METRICSp.impl;
+		vga : device mjpeg::software::VGA;
+		proc1 : processor mjpeg::platform::ub.impl;
+		proc2 : processor mjpeg::platform::a9.impl;
+		busAmba : bus mjpeg::platform::AMBA;
+		mem : memory mjpeg::platform::BRAM;
+	connections
+		C_demux_vld : port demux.to_vld -> vld.from_demux;
+		C_demux_idct : port demux.to_idct -> idct.from_demux;
+		C_demux_iqzz : port demux.to_iqzz -> iqzz.from_demux;
+		c_demux_libu : port demux.to_libu -> libu.from_demux;
+		c_vld_iqzz : port vld.to_iqzz -> iqzz.from_vld;
+		c_vld_block_metrics : port vld.to_block_metrics -> block_metrics.from_vld;
+		c_iqzz_idct : port iqzz.to_idct -> idct.from_iqzz;
+		c_idct_libu : port idct.to_libu -> libu.from_idct;
+		c_vga_libu : port vga.to_libu -> libu.from_vga;
+		c_libu_vga : port libu.to_vga -> vga.from_libu;
+		c_libu_block_metrics : port libu.to_block_metrics -> block_metrics.from_libu;
+		c_libu_color_metrics : port libu.to_color_metrics -> color_metrics.from_libu;
+		b0 : bus access busAmba <-> proc1.socket;
+		b1 : bus access busAmba <-> mem.b0;
+		b2 : bus access busAmba <-> vga.b0;
+		b3 : bus access busAmba <-> proc2.socket;
+	properties
+		Actual_Processor_Binding => (reference (proc1)) applies to demux;
+		Actual_Processor_Binding => (reference (proc2)) applies to idct;
+		Actual_Memory_Binding => (reference (mem)) applies to demux;
+	end integration.DemuxUb_IdctA9;
+
+		system implementation integration.DemuxUb_IqzzA9
+	subcomponents
+		demux : process mjpeg::software::Demuxp.impl;
+		vld : process mjpeg::software::VLDp.impl;
+		iqzz : process mjpeg::software::IQZZp.impl;
+		idct : process mjpeg::software::IDCTp.impl;
+		libu : process mjpeg::software::LIBUp.impl;
+		block_metrics : process mjpeg::software::BLOCK_METRICSp.impl;
+		color_metrics : process mjpeg::software::COLOR_METRICSp.impl;
+		vga : device mjpeg::software::VGA;
+		proc1 : processor mjpeg::platform::ub.impl;
+		proc2 : processor mjpeg::platform::a9.impl;
+		busAmba : bus mjpeg::platform::AMBA;
+		mem : memory mjpeg::platform::BRAM;
+	connections
+		C_demux_vld : port demux.to_vld -> vld.from_demux;
+		C_demux_idct : port demux.to_idct -> idct.from_demux;
+		C_demux_iqzz : port demux.to_iqzz -> iqzz.from_demux;
+		c_demux_libu : port demux.to_libu -> libu.from_demux;
+		c_vld_iqzz : port vld.to_iqzz -> iqzz.from_vld;
+		c_vld_block_metrics : port vld.to_block_metrics -> block_metrics.from_vld;
+		c_iqzz_idct : port iqzz.to_idct -> idct.from_iqzz;
+		c_idct_libu : port idct.to_libu -> libu.from_idct;
+		c_vga_libu : port vga.to_libu -> libu.from_vga;
+		c_libu_vga : port libu.to_vga -> vga.from_libu;
+		c_libu_block_metrics : port libu.to_block_metrics -> block_metrics.from_libu;
+		c_libu_color_metrics : port libu.to_color_metrics -> color_metrics.from_libu;
+		b0 : bus access busAmba <-> proc1.socket;
+		b1 : bus access busAmba <-> mem.b0;
+		b2 : bus access busAmba <-> vga.b0;
+		b3 : bus access busAmba <-> proc2.socket;
+	properties
+		Actual_Processor_Binding => (reference (proc1)) applies to demux;
+		Actual_Processor_Binding => (reference (proc2)) applies to iqzz;
+		Actual_Memory_Binding => (reference (mem)) applies to demux;
+	end integration.DemuxUb_IqzzA9;
+
+		system implementation integration.DemuxUb_VldA9
+	subcomponents
+		demux : process mjpeg::software::Demuxp.impl;
+		vld : process mjpeg::software::VLDp.impl;
+		iqzz : process mjpeg::software::IQZZp.impl;
+		idct : process mjpeg::software::IDCTp.impl;
+		libu : process mjpeg::software::LIBUp.impl;
+		block_metrics : process mjpeg::software::BLOCK_METRICSp.impl;
+		color_metrics : process mjpeg::software::COLOR_METRICSp.impl;
+		vga : device mjpeg::software::VGA;
+		proc1 : processor mjpeg::platform::ub.impl;
+		proc2 : processor mjpeg::platform::a9.impl;
+		busAmba : bus mjpeg::platform::AMBA;
+		mem : memory mjpeg::platform::BRAM;
+	connections
+		C_demux_vld : port demux.to_vld -> vld.from_demux;
+		C_demux_idct : port demux.to_idct -> idct.from_demux;
+		C_demux_iqzz : port demux.to_iqzz -> iqzz.from_demux;
+		c_demux_libu : port demux.to_libu -> libu.from_demux;
+		c_vld_iqzz : port vld.to_iqzz -> iqzz.from_vld;
+		c_vld_block_metrics : port vld.to_block_metrics -> block_metrics.from_vld;
+		c_iqzz_idct : port iqzz.to_idct -> idct.from_iqzz;
+		c_idct_libu : port idct.to_libu -> libu.from_idct;
+		c_vga_libu : port vga.to_libu -> libu.from_vga;
+		c_libu_vga : port libu.to_vga -> vga.from_libu;
+		c_libu_block_metrics : port libu.to_block_metrics -> block_metrics.from_libu;
+		c_libu_color_metrics : port libu.to_color_metrics -> color_metrics.from_libu;
+		b0 : bus access busAmba <-> proc1.socket;
+		b1 : bus access busAmba <-> mem.b0;
+		b2 : bus access busAmba <-> vga.b0;
+		b3 : bus access busAmba <-> proc2.socket;
+	properties
+		Actual_Processor_Binding => (reference (proc1)) applies to demux;
+		Actual_Processor_Binding => (reference (proc2)) applies to vld;
+		Actual_Memory_Binding => (reference (mem)) applies to demux;
+	end integration.DemuxUb_VldA9;
+	
+	system implementation integration.a9impl
+	subcomponents
+		demux : process mjpeg::software::Demuxp.impl;
+		vld : process mjpeg::software::VLDp.impl;
+		iqzz : process mjpeg::software::IQZZp.impl;
+		idct : process mjpeg::software::IDCTp.impl;
+		libu : process mjpeg::software::LIBUp.impl;
+		block_metrics : process mjpeg::software::BLOCK_METRICSp.impl;
+		color_metrics : process mjpeg::software::COLOR_METRICSp.impl;
+		vga : device mjpeg::software::VGA;
+		proc : processor mjpeg::platform::a9.impl;
+		busAmba : bus mjpeg::platform::AMBA;
+		mem : memory mjpeg::platform::BRAM;
+	connections
+		C_demux_vld : port demux.to_vld -> vld.from_demux;
+		C_demux_idct : port demux.to_idct -> idct.from_demux;
+		C_demux_iqzz : port demux.to_iqzz -> iqzz.from_demux;
+		c_demux_libu : port demux.to_libu -> libu.from_demux;
+		c_vld_iqzz : port vld.to_iqzz -> iqzz.from_vld;
+		c_vld_block_metrics : port vld.to_block_metrics -> block_metrics.from_vld;
+		c_iqzz_idct : port iqzz.to_idct -> idct.from_iqzz;
+		c_idct_libu : port idct.to_libu -> libu.from_idct;
+		c_vga_libu : port vga.to_libu -> libu.from_vga;
+		c_libu_vga : port libu.to_vga -> vga.from_libu;
+		c_libu_block_metrics : port libu.to_block_metrics -> block_metrics.from_libu;
+		c_libu_color_metrics : port libu.to_color_metrics -> color_metrics.from_libu;
+		b0 : bus access busAmba <-> proc.socket;
+		b1 : bus access busAmba <-> mem.b0;
+		b2 : bus access busAmba <-> vga.b0;
+	properties
+		Actual_Processor_Binding => (reference (proc)) applies to demux;
+		Actual_Processor_Binding => (reference (proc)) applies to iqzz;
+		Actual_Processor_Binding => (reference (proc)) applies to libu;
+		Actual_Memory_Binding => (reference (mem)) applies to demux;
+	end integration.a9impl;
+
+end mjpeg::integration;

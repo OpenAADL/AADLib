@@ -1,0 +1,39 @@
+property set SpaceStudio is
+
+  ----------------------TYPES OF PROPERTIES-------------------------
+  Size : type aadlinteger 0 Bytes .. Max_Memory_Size units Size_Units;
+
+  Component_Type : type enumeration
+  ( Module, UserDevice, SSMemory, PIC, SSBus, ISS,
+    Bridges, ExternalIOSlave, Serial, Signal,
+    Timer, Adapter
+  ) ;
+
+  Subtype : type enumeration
+  (STANDARD, RTL, UserDeviceSlave, MASTERSLAVE, GaislerDDR,
+   GaislerOnChipRAM, GaislerOnCHipROM, GaislerRAM, XilinxLMBRAM, XilinxBRAM,
+   APBBus, AMBA_AXIBus, AMBA_AXIBus_LT, AMBA_AHBBus, LMBBus, OPBBus, PLBBus, TFChannel,
+   UTFChannel, leon3, uBlaze, armCortexA9, ISSAdapter
+   );
+
+  Config_Type : type enumeration (Simtek, Elix);
+
+  ------------------POPERTIES RELATED TO PROJECT--------------------
+  name : aadlstring applies to (package, system, abstract);
+  ConfigName : aadlstring applies to (package, system, abstract);
+  level : SpaceStudio::config_type applies to (package, system, abstract);--Need to be updated
+  SpaceStudioVersion : aadlinteger applies to (package, system, abstract);
+
+  -----------------PROPERTIES RELATED TO COMPONENTS-----------------
+  Type_component : SpaceStudio::component_type applies to (all);
+  Subtype_component : SpaceStudio::subtype applies to (all);
+
+  verbose : aadlboolean applies to (all);
+  ulBaseAddress : aadlstring applies to (all);
+  ulHighAddress : aadlstring applies to (all);
+  ulMaxComponentSize : Size applies to (all);
+  ulMinComponentSize : Size applies to (all);
+  isFixRange : type aadlboolean;
+  ulSize : Size applies to (memory);
+
+end SpaceStudio;

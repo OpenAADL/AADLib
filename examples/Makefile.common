@@ -85,6 +85,10 @@ subprograms:
 	$(OCARINA) $(OCARINA_FLAGS) -g subprograms -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
+spacestudio:
+	$(OCARINA) $(OCARINA_FLAGS) -g spacestudio -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
 real:
 	$(OCARINA) $(OCARINA_FLAGS) -g real_theorem \
                 -real_continue_eval \
