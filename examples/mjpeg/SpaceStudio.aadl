@@ -1,4 +1,12 @@
+--  This property set defines properties that are specific to the
+--  SpaceStudio backend. This backend generates a project compatible
+--  with the SpaceCodesign toolchain.
+
 property set SpaceStudio is
+
+  Simulation_Model : aadlstring applies to (processor);
+  --  Configures the processor simulation model used to perform model
+  --  resource analysis, e.g. "None", "armCortexA9_DisTLM", ...
 
   ----------------------TYPES OF PROPERTIES-------------------------
   Size : type aadlinteger 0 Bytes .. Max_Memory_Size units Size_Units;
@@ -12,16 +20,16 @@ property set SpaceStudio is
   Subtype : type enumeration
   (STANDARD, RTL, UserDeviceSlave, MASTERSLAVE, GaislerDDR,
    GaislerOnChipRAM, GaislerOnCHipROM, GaislerRAM, XilinxLMBRAM, XilinxBRAM,
-   APBBus, AMBA_AXIBus, AMBA_AXIBus_LT, AMBA_AHBBus, LMBBus, OPBBus, PLBBus, TFChannel,
-   UTFChannel, leon3, uBlaze, armCortexA9, ISSAdapter
-   );
+   APBBus, AMBA_AXIBus, AMBA_AXIBus_LT, AMBA_AHBBus, LMBBus, OPBBus, PLBBus,
+   TFChannel, UTFChannel, leon3, uBlaze, armCortexA9, ISSAdapter);
 
   Config_Type : type enumeration (Simtek, Elix);
 
   ------------------POPERTIES RELATED TO PROJECT--------------------
   name : aadlstring applies to (package, system, abstract);
   ConfigName : aadlstring applies to (package, system, abstract);
-  level : SpaceStudio::config_type applies to (package, system, abstract);--Need to be updated
+  level : SpaceStudio::config_type applies to
+    (package, system, abstract);--Need to be updated
   SpaceStudioVersion : aadlinteger applies to (package, system, abstract);
 
   -----------------PROPERTIES RELATED TO COMPONENTS-----------------
