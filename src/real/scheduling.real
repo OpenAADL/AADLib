@@ -3,10 +3,10 @@
 -- schedduled with RMA (cf. Liu, Layland. "Scheduling Algorithms for
 -- Multi-programming in hard-Real-Time Environment", JACM, 01/1973)
 
--- Earliest deadline first (EDF) is a dynamic scheduling 
--- algorithm used in real-time operating systems 
+-- Earliest deadline first (EDF) is a dynamic scheduling
+-- algorithm used in real-time operating systems
 
--- Checking of the both scheduling protocol which designed in this theorems 
+-- Checking of the both scheduling protocol which designed in this theorems
 -- (RMS & EDF) assume shared data between tasks (cf. Laurent Pautet."Ordonnancement
 -- temps réel 1.5")
 
@@ -19,11 +19,11 @@ theorem check_scheduling
 -- This theorems check rma and edf schedulability hypothesis
 
 foreach e in local_set do
-	requires(required_properties 
-		and shared_data				
-		and check_priority_rma			
+	requires(required_properties
+		and shared_data
+		and check_priority_rma
 		and scheduling);
-				
+
 	check (1 <> 2);
 end check_scheduling;
 
@@ -64,14 +64,16 @@ then (1=1)
 
 -- check PCP applicability
 
-else 
+else
 ( ((Is_In (Property (processors, "Scheduling_protocol") , supported_pcp) )
 and ( Property (e, "priority") >= Max (Property (threads, "priority")))
-and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_high)) )
+--and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_high))
+))
 or
 ((Is_In (Property (processors, "Scheduling_protocol") , supported_pcp) )
 and ( Property (e, "priority") <= Max (Property (threads, "priority")))
-and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_low))) )
+--and (Is_In (Property (processors, "Processor_properties::Max_Prio_First"), MPF_low)))
+)
 
 -- Shared data managed by scheduling protocol
 
@@ -105,16 +107,15 @@ var rms_protocol := list ("RMS");
 var MPF_high := List ("high");
 var MPF_low := List ("low");
 
-check ( if ( cardinal (processor_set) = 1
-and Is_In (rms_protocol, Property (Processors, "scheduling_protocol"))
-and (cardinal (Equal_priority) = 1)
-)
+check (cardinal (processor_set) = 1
+      and Is_In (rms_protocol, Property (Processors, "scheduling_protocol"))
+      and (cardinal (Equal_priority) = 1));
 
-then ( if (Is_In (MPF_high, Property (Processors, "Processor_properties::Max_Prio_First")))
-then (cardinal (high_periods_high) = 0)
-else (cardinal (high_periods_low) = 0) )
+--then ( if (Is_In (MPF_high, Property (Processors, "Processor_properties::Max_Prio_First")))
+--then (cardinal (high_periods_high) = 0)
+--else (cardinal (high_periods_low) = 0) )
 
-else ( not Is_In (rms_protocol, Property (Processors, "scheduling_protocol"))));
+--else ( not Is_In (rms_protocol, Property (Processors, "scheduling_protocol"))));
 
 end check_priority_rma;
 -------------------------------------------------------------------------
@@ -141,13 +142,13 @@ conn_acc_shared := {x in con_to_shared | is_accessed_by(shared_data,x)};
 
 threads_acc_shared	:= { t in low_priority | Is_Accessed_By (t,conn_acc_shared)};
 
--- When access duration on shared data is low than period of task, "Access_Time" 
--- AADL properties must be designed for quantify this time. This theorem manages 
+-- When access duration on shared data is low than period of task, "Access_Time"
+-- AADL properties must be designed for quantify this time. This theorem manages
 -- access duration which is equal to period of task.
 -- "Access_Time" properties is not yet managed by REAL when this theorem is designed.
- 
-var B_i := if (cardinal (threads_acc_shared) > 0) 
-				then 
+
+var B_i := if (cardinal (threads_acc_shared) > 0)
+				then
 				Sum (Last (Property (threads_acc_shared, "compute_execution_time")))
 				else 0;
 
@@ -166,7 +167,7 @@ end Utilization_Factor;
 -- Scheduling theorem is designed for checking EDF and RMA schedulability
 
 theorem scheduling
-foreach e in processor_set do 
+foreach e in processor_set do
 
 Processes(e) := { x in process_set | Is_Bound_To (x,e)};
 threads	:= {x in thread_set | Is_Subcomponent_Of (x, processes)};
@@ -183,12 +184,12 @@ var single_protocol := if ( (bool_RMS + bool_EDF) <> 1 ) then 0 else (bool_RMS +
 
  check (if (bool_RMS * single_protocol = 1)
  		then (U <= (Cardinal (Threads) * (2 ** (1 / Cardinal (Threads))) -1)) 	-- Check RMA
- 		else (if ( bool_EDF * single_protocol = 1)							
+ 		else (if ( bool_EDF * single_protocol = 1)
  		then (U <= 1 * bool_EDF * single_protocol)		-- Check EDF
  		else (1 < 0) ) ); 		-- Return FALSE
- 		
+
  end scheduling;
- 
+
  -------------------------------------------------------------------------
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------

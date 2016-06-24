@@ -12,4 +12,4 @@ include $(srcdir)/../Makefile.common
 AVAILABLE_TARGETS= parse-aadl real cheddar mast aadl_xml build_ada build_c petri
 
 pouet:
-	ocarina -y -g real_theorem -aadlv2 -I../../src/property_set -I../../src/aadl -real_lib $(top_srcdir)/src/real/rma_theorems.real -real_theorem rma -r rma.impl $(AADL_SOURCES)
+	ocarina -y -g real_theorem -aadlv2 -I../../src/property_set -I../../src/aadl -real_lib $(top_srcdir)/src/real/rma_theorems.real -real_theorem rma -r rma.impl $(AADL_SOURCES) -o real.out

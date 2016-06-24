@@ -127,9 +127,9 @@ public
     Source_Name => "adiru-shm.exe" applies to main_cpu.part4;
 
     Clock_Period => 150 ms applies to main_cpu;
-  annex resolute {**
-     prove (check_deos_compliance(this))
-  **};
+--  annex resolute {**
+--     prove (check_deos_compliance(this))
+--  **};
   end ADIRU.DeOS;
 
   -------------------------------------------------------------------------

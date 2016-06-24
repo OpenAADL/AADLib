@@ -95,19 +95,21 @@ real:
 	        -real_lib $(top_srcdir)/src/real/aadl_theorems.real \
 		-real_lib $(top_srcdir)/src/real/arinc653_theorems.real \
 		-real_lib $(top_srcdir)/src/real/bare_board_theorems.real \
-		-real_lib $(top_srcdir)/src/real/consumption.real \
 		-real_lib $(top_srcdir)/src/real/data_model_theorems.real \
 		-real_lib $(top_srcdir)/src/real/edf_theorems.real \
-		-real_lib $(top_srcdir)/src/real/electricity.real \
-		-real_lib $(top_srcdir)/src/real/flow_latency.real \
-		-real_lib $(top_srcdir)/src/real/memory_theorems.real \
 		-real_lib $(top_srcdir)/src/real/ravenscar_theorems.real \
 		-real_lib $(top_srcdir)/src/real/rma_theorems.real \
 		-real_lib $(top_srcdir)/src/real/scheduling.real \
-		-real_lib $(top_srcdir)/src/real/uxv_lib.real \
 		-real_lib $(top_srcdir)/src/real/worst_case_rt.real \
 		-r $(AADL_ROOT) \
 		$(AADL_SOURCES)
+
+#		-real_lib $(top_srcdir)/src/real/uxv_lib.real
+
+#		-real_lib $(top_srcdir)/src/real/memory_theorems.real
+#		-real_lib $(top_srcdir)/src/real/flow_latency.real
+#		-real_lib $(top_srcdir)/src/real/electricity.real
+#		-real_lib $(top_srcdir)/src/real/consumption.real
 
 clean-local:
 	-rm -rf *~ *aadl_xml.xml *_cheddar.xml mast-model.txt $(CLEANFILES) \
