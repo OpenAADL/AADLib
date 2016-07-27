@@ -13,6 +13,9 @@ parse-aadl:
 instantiate:
 	$(OCARINA) $(OCARINA_FLAGS) -i -r $(AADL_ROOT) $(AADL_SOURCES)
 
+instantiate-aadl:
+	$(OCARINA) $(OCARINA_FLAGS) -i -r $(AADL_ROOT) $(AADL_SOURCES)
+
 aadl_xml:
 	$(OCARINA) $(OCARINA_FLAGS) -g aadl_xml -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
@@ -20,9 +23,6 @@ aadl_xml:
 alloy:
 	$(OCARINA) $(OCARINA_FLAGS) -g alloy -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
-
-instantiate-aadl:
-	$(OCARINA) $(OCARINA_FLAGS) -i -r $(AADL_ROOT) $(AADL_SOURCES)
 
 c:
 	$(OCARINA) $(OCARINA_FLAGS) -g polyorb_hi_c -r $(AADL_ROOT) \
@@ -85,6 +85,10 @@ subprograms:
 	$(OCARINA) $(OCARINA_FLAGS) -g subprograms -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
+bound-t:
+	$(OCARINA) $(OCARINA_FLAGS) -g boundt -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
 spacestudio:
 	$(OCARINA) $(OCARINA_FLAGS) -g spacestudio -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
@@ -114,7 +118,7 @@ real:
 clean-local:
 	-rm -rf *~ *aadl_xml.xml *_cheddar.xml mast-model.txt $(CLEANFILES) \
 	    mast_parser.lis cheddar_bug.xml model.nd model.cami instances imv \
-	    *.aaxl2 output.als
+	    *.aaxl2 output.als scenario.tpo con_model.als assertions.txt
 	if test ! "$(CLEANDIRS)" = "";  then \
 	   rm -rf $(CLEANDIRS); \
 	fi
