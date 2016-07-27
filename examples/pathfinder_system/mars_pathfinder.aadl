@@ -4,12 +4,11 @@ public
   with pathfinder_software;
   with pathfinder_hardware;
 
-  ------------------------------------------------------------------
-  ----------------system--------------------------------------------
-  ------------------------------------------------------------------
+  -----------------------
+  -- Pathfinder system --
+  -----------------------
 
-  system sys_mars_pathfinder
-  end sys_mars_pathfinder;
+  system sys_mars_pathfinder end sys_mars_pathfinder;
 
   system implementation sys_mars_pathfinder.impl
   subcomponents
