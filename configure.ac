@@ -91,7 +91,6 @@ AC_OUTPUT([
 	examples/line_follower/Makefile
 	examples/memory/Makefile
 	examples/mixin/Makefile
-        examples/mjpeg/Makefile
         examples/mosart/Makefile
         examples/multicore/Makefile
 	examples/pathfinder_system/Makefile
