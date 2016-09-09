@@ -21,8 +21,10 @@ aadl_xml:
 		$(AADL_SOURCES)
 
 alloy:
-	$(OCARINA) $(OCARINA_FLAGS) -g alloy -r $(AADL_ROOT) \
+	$(OCARINA) $(OCARINA_FLAGS) -g alloy -o alloy -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
+	cp -r `ocarina-config --runtime=alloy` .
+	mv con_model.als alloy
 
 c:
 	$(OCARINA) $(OCARINA_FLAGS) -g polyorb_hi_c -r $(AADL_ROOT) \
