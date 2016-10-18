@@ -1,4 +1,4 @@
-AADL_SOURCES = $(srcdir)/AvionicsBusManagers.aadl
+AADL_SOURCES = $(srcdir)/avionicsbusmanagers.aadl
 AADL_ROOT    = avionicsbusmgr.xps8500
 
 OTHER_FILES = $(srcdir)/BCMgr.c $(srcdir)/busmgr0.aadl			\
