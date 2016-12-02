@@ -3,7 +3,7 @@ AADL_ROOT    = fms.impl
 
 OTHER_FILES = $(srcdir)/afdx_properties.aadl $(srcdir)/fms.aadl	\
      $(srcdir)/m1_software.aadl $(srcdir)/m4_software.aadl	\
-     $(srcdir)/subsystem.aadl $(srcdir)/dataType.aadl		\
+     $(srcdir)/subsystem.aadl $(srcdir)/datatype.aadl		\
      $(srcdir)/fms_hardware.aadl $(srcdir)/m3_software.aadl	\
      $(srcdir)/m2_software.aadl
 
