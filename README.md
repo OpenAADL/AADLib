@@ -1,11 +1,7 @@
-     ___    ___    ____  __    _ __  
-    /   |  /   |  / __ \/ /   (_) /_ 
-   / /| | / /| | / / / / /   / / __ \
-  / ___ |/ ___ |/ /_/ / /___/ / /_/ /
- /_/  |_/_/  |_/_____/_____/_/_.___/ 
-
 AADLib - A library of AADL components
 =====================================
+
+[![Build Status](https://travis-ci.org/OpenAADL/AADLib.svg?branch=master)](https://travis-ci.org/OpenAADL/AADLib)
 
 AADLib is a library of reusable AADLv2 components, associated property
 sets and validation theorems based on REAL. It has been defined to

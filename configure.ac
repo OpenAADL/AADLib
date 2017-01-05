@@ -1,5 +1,5 @@
 AC_PREREQ(2.57)
-AC_INIT(AADLib, 0.0.1, hugues.jerome@gmail.com)
+AC_INIT(AADLib, 2017.1)
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_AUX_DIR(support)
 

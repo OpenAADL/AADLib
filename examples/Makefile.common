@@ -3,6 +3,16 @@ OCARINA_FLAGS = -aadlv2 -y -I$(top_srcdir)/src/property_set \
 	      -I$(top_srcdir)/src/aadl -I$(srcdir) $(AADL_LIB)
 
 check-local: $(AVAILABLE_TARGETS)
+EXTRA_DIST= $(AADL_SOURCES) $(OTHER_FILES)
+
+EXAMPLE_DIR = ${shell basename '$(abs_srcdir)'}
+SAMPLE_DIR = ${shell $(CYGPATH_U) '$(OCARINA_PREFIX)/examples/ocarina/$(EXAMPLE_DIR)'}
+
+install-data-local:
+	$(INSTALL) -d $(DESTDIR)$(SAMPLE_DIR)
+	for file in $(EXTRA_DIST); do \
+	 $(INSTALL_DATA) $$file $(DESTDIR)$(SAMPLE_DIR) || exit 1; \
+	done
 
 help:
 	@echo "Available targets: " $(AVAILABLE_TARGETS)
@@ -124,5 +134,3 @@ clean-local:
 	if test ! "$(CLEANDIRS)" = "";  then \
 	   rm -rf $(CLEANDIRS); \
 	fi
-
-EXTRA_DIST= $(AADL_SOURCES) $(OTHER_FILES)

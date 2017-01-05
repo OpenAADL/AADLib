@@ -8,13 +8,5 @@ SUBDIRS= adiru ahrs_discovery aocs aram ardupilot arinc653_annex asl behavior_an
 
 EXTRA_DIST=$(srcdir)/Makefile.common
 
-SAMPLE_DIR = ${shell $(CYGPATH_U) '$(OCARINA_PREFIX)/examples/ocarina/aadlib'}
-
-install-data-local:
-	$(INSTALL) -d $(DESTDIR)$(SAMPLE_DIR)
-
-uninstall-local:
-	rm -rf $(DESTDIR)$(SAMPLE_DIR)
-
 clean-local:
 	-rm -rf *~
