@@ -61,7 +61,7 @@ cheddar:
 		$(AADL_SOURCES)
 
 run_cheddar:
-	cheddarkernel_d -file ./*_cheddar.xml -request st
+	-cheddarkernel_d -file ./*_cheddar.xml -request st
 
 mast:
 	$(OCARINA) $(OCARINA_FLAGS) -g mast -r $(AADL_ROOT) \
