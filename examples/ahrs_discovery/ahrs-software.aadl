@@ -1,0 +1,200 @@
+package AHRS::Software
+public
+
+  with AHRS;
+  with AHRS::Data_Types;
+  with AHRS::Subprograms;
+
+  -------------
+  -- Threads --
+  -------------
+
+  thread ACCELERO
+  features
+    --  Connections from the accelerometer device
+
+    acc_in_data_x : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_in_data_y : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_in_data_z : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    --  Connections to the other software elements
+
+    acc_out_data_x : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_out_data_y : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_out_data_z : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+  flows
+      f1 : flow sink acc_in_data_x { latency => 10 ms .. 20 ms;}; -- XXX: consolidate to all ports
+
+  properties
+    Priority               => 5;
+    Dispatch_Protocol      => Periodic;
+    Period                 => 80 ms;
+    Compute_Execution_Time => 0 ms .. 4 ms;
+    Source_Stack_Size      => 512 Bytes;
+  end ACCELERO;
+
+  thread implementation ACCELERO.IMPL
+  calls
+    ACCELERO_CALL: {
+      accelero_sub : subprogram AHRS::Subprograms::ACCELERO_SUB;
+    };
+  connections
+    ACC_PC1 : parameter accelero_sub.acc_out_data_x -> acc_out_data_x;
+    ACC_PC2 : parameter accelero_sub.acc_out_data_y -> acc_out_data_y;
+    ACC_PC3 : parameter accelero_sub.acc_out_data_z -> acc_out_data_z;
+
+  end ACCELERO.IMPL;
+
+  thread MAGNETO
+  features
+    --  Connections from the magnetometer device
+
+    mag_in_data_x : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_in_data_y : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_in_data_z : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    --  Connections to the other software elements
+
+    mag_out_data_x : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_out_data_y : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_out_data_z : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+  properties
+    Priority               => 4;
+    Dispatch_Protocol      => Periodic;
+    Period			       => 80 ms;
+    Compute_Execution_Time => 0 ms .. 4 ms;
+    Source_Stack_Size      => 512 Bytes;
+  end MAGNETO;
+
+  thread implementation MAGNETO.IMPL
+  calls
+    MAGNETO_CALL: { magneto_sub : subprogram AHRS::Subprograms::MAGNETO_SUB; };
+
+  connections
+    MAG_PC1 : parameter magneto_sub.mag_out_data_x -> mag_out_data_x;
+    MAG_PC2 : parameter magneto_sub.mag_out_data_y -> mag_out_data_y;
+    MAG_PC3 : parameter magneto_sub.mag_out_data_z -> mag_out_data_z;
+
+  end MAGNETO.IMPL;
+
+  thread GYRO
+  features
+    --  Connections from the gyrometer device
+
+    gyro_in_data_x : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_in_data_y : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_in_data_z : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    --  Connections to the other software elements
+
+    gyro_out_data_x : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_out_data_y : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_out_data_z : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+  properties
+    Priority               => 3;
+    Dispatch_Protocol      => Periodic;
+    Period                 => 80 ms;
+    Compute_Execution_Time => 0 ms .. 4 ms;
+    Source_Stack_Size      => 512 Bytes;
+  end GYRO;
+
+  thread implementation GYRO.IMPL
+  calls
+    GYRO_CALL: { gyro_sub : subprogram AHRS::Subprograms::GYRO_SUB; };
+
+  connections
+    GYRO_PC1 : parameter gyro_sub.gyro_out_data_x -> gyro_out_data_x;
+    GYRO_PC2 : parameter gyro_sub.gyro_out_data_y -> gyro_out_data_y;
+    GYRO_PC3 : parameter gyro_sub.gyro_out_data_z -> gyro_out_data_z;
+
+  end GYRO.IMPL;
+
+  thread ATTITUDE_CALCULATION
+  features
+    acc_in_data_x : in event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_in_data_y : in event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_in_data_z : in event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    mag_in_data_x : in event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_in_data_y : in event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_in_data_z : in event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    gyro_in_data_x : in event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_in_data_y : in event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_in_data_z : in event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+  properties
+    Priority               => 1;
+    Dispatch_Protocol      => Periodic;
+    Period                 => 80 ms;
+    Compute_Execution_Time => 0 ms .. 65 ms;
+    Source_Stack_Size      => 4096 Bytes;
+  end ATTITUDE_CALCULATION;
+
+  thread implementation ATTITUDE_CALCULATION.IMPL
+  calls
+    ATTITUDE_CALL: {
+    attitude_sub : subprogram AHRS::Subprograms::ATTITUDE_SUB;
+    };
+
+  connections
+    ACC_PC1 : parameter acc_in_data_x	-> attitude_sub.acc_in_data_x;
+    ACC_PC2 : parameter acc_in_data_y	-> attitude_sub.acc_in_data_y;
+    ACC_PC3 : parameter acc_in_data_z	-> attitude_sub.acc_in_data_z;
+
+    MAG_PC1 : parameter mag_in_data_x	-> attitude_sub.mag_in_data_x;
+    MAG_PC2 : parameter mag_in_data_y	-> attitude_sub.mag_in_data_y;
+    MAG_PC3 : parameter mag_in_data_z	-> attitude_sub.mag_in_data_z;
+
+    GYRO_PC1 : parameter gyro_in_data_x -> attitude_sub.gyro_in_data_x;
+    GYRO_PC2 : parameter gyro_in_data_y -> attitude_sub.gyro_in_data_y;
+    GYRO_PC3 : parameter gyro_in_data_z -> attitude_sub.gyro_in_data_z;
+
+  end ATTITUDE_CALCULATION.IMPL;
+
+  ---------------
+  -- Processes --
+  ---------------
+
+  process ATTITUDE extends AHRS::AHRS_Process
+  end ATTITUDE;
+
+  process implementation ATTITUDE.IMPL
+  subcomponents
+    accelero_thread : thread ACCELERO.IMPL;
+    magneto_thread  : thread MAGNETO.IMPL;
+    gyro_thread	    : thread GYRO.IMPL;
+
+    attitude_calculation_thread	: thread ATTITUDE_CALCULATION.IMPL;
+
+  connections
+    ACC_INPUT_PC1   : port acc_in_data_x	-> accelero_thread.acc_in_data_x;
+    ACC_INPUT_PC2   : port acc_in_data_y	-> accelero_thread.acc_in_data_y;
+    ACC_INPUT_PC3   : port acc_in_data_z	-> accelero_thread.acc_in_data_z;
+
+    MAG_INPUT_PC1   : port mag_in_data_x	-> magneto_thread.mag_in_data_x;
+    MAG_INPUT_PC2   : port mag_in_data_y	-> magneto_thread.mag_in_data_y;
+    MAG_INPUT_PC3   : port mag_in_data_z	-> magneto_thread.mag_in_data_z;
+
+    GYRO_INPUT_PC1  : port gyro_in_data_x	-> gyro_thread.gyro_in_data_x;
+    GYRO_INPUT_PC2  : port gyro_in_data_y	-> gyro_thread.gyro_in_data_y;
+    GYRO_INPUT_PC3  : port gyro_in_data_z	-> gyro_thread.gyro_in_data_z;
+
+    ACC_SUBMIT_PC1  : port accelero_thread.acc_out_data_x -> attitude_calculation_thread.acc_in_data_x;
+    ACC_SUBMIT_PC2  : port accelero_thread.acc_out_data_y -> attitude_calculation_thread.acc_in_data_y;
+    ACC_SUBMIT_PC3  : port accelero_thread.acc_out_data_z -> attitude_calculation_thread.acc_in_data_z;
+
+    MAG_SUBMIT_PC1  : port magneto_thread.mag_out_data_x  -> attitude_calculation_thread.mag_in_data_x;
+    MAG_SUBMIT_PC2  : port magneto_thread.mag_out_data_y  -> attitude_calculation_thread.mag_in_data_y;
+    MAG_SUBMIT_PC3  : port magneto_thread.mag_out_data_z  -> attitude_calculation_thread.mag_in_data_z;
+
+    GYRO_SUBMIT_PC1 : port gyro_thread.gyro_out_data_x	 -> attitude_calculation_thread.gyro_in_data_x;
+    GYRO_SUBMIT_PC2 : port gyro_thread.gyro_out_data_y	 -> attitude_calculation_thread.gyro_in_data_y;
+    GYRO_SUBMIT_PC3 : port gyro_thread.gyro_out_data_z	 -> attitude_calculation_thread.gyro_in_data_z;
+  flows
+    f1 : flow sink acc_in_data_x -> ACC_INPUT_PC1 -> accelero_thread.f1;
+  end ATTITUDE.IMPL;
+
+end AHRS::Software;

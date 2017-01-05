@@ -1,0 +1,169 @@
+package AHRS::Hardware
+
+  --  This package models the hardware of the AHRS case study.
+  --  In this case study, we use a 32F411EDISCOVERY kit,
+
+public
+
+  with Buses::I2C;
+  with Buses::SPI;
+  with Data_Sheet;
+  with Deployment;
+  with Processors::ARM;
+
+  with AHRS;
+  with AHRS::Data_Types;
+
+  ------------
+  -- System --
+  ------------
+
+  system SBC_32F411EDISCOVERY
+  properties
+    Data_Sheet::UUID =>
+    "http://www.st.com/en/evaluation-tools/32f411ediscovery.html";
+  end SBC_32F411EDISCOVERY;
+
+  -- Bare version: only hardware elements are presented
+
+  system implementation SBC_32F411EDISCOVERY.impl
+  subcomponents
+    CPU : processor CortexM4.IMPL;
+    RAM : memory Flash.IMPL;
+
+    LSM303DLHC : device LSM303DLHC;
+    L3GD20     : device L3GD20;
+
+    i2c_bus  : bus Buses::I2C::I2C.IMPL;
+    spi_bus  : bus Buses::SPI::SPI.IMPL;
+
+  connections
+    I2C_ACC_MAG_BA : bus access i2c_bus <-> LSM303DLHC.i2c_bus;
+    I2C_ARM_BA	   : bus access i2c_bus <-> CPU.i2c_bus;
+
+    SPI_GYRO_BA	: bus access spi_bus <-> L3GD20.spi_bus;
+    SPI_ARM_BA	: bus access spi_bus <-> CPU.spi_bus;
+
+  end SBC_32F411EDISCOVERY.impl;
+
+  --  AHRS variant: a generic software block is present, but *not* connected
+  --  to devices. This variant is necessary for code generation.
+
+  system implementation SBC_32F411EDISCOVERY.RTOS
+    extends SBC_32F411EDISCOVERY.impl
+
+  subcomponents
+    Software : process AHRS::AHRS_Process;
+
+  properties
+    Actual_Processor_Binding => (reference(cpu)) applies to Software;
+    Actual_Memory_Binding => (reference(ram)) applies to Software;
+
+  end SBC_32F411EDISCOVERY.RTOS;
+
+  system implementation SBC_32F411EDISCOVERY.v2
+    extends SBC_32F411EDISCOVERY.RTOS
+
+  connections
+    ACC_PC1 : port LSM303DLHC.acc_out_data_x -> Software.acc_in_data_x;
+    ACC_PC2 : port LSM303DLHC.acc_out_data_y -> Software.acc_in_data_y;
+    ACC_PC3 : port LSM303DLHC.acc_out_data_z -> Software.acc_in_data_z;
+
+    MAG_PC1 : port LSM303DLHC.mag_out_data_x -> Software.mag_in_data_x;
+    MAG_PC2 : port LSM303DLHC.mag_out_data_y -> Software.mag_in_data_y;
+    MAG_PC3 : port LSM303DLHC.mag_out_data_z -> Software.mag_in_data_z;
+
+   GYRO_PC1 : port L3GD20.gyro_out_data_x -> Software.gyro_in_data_x;
+   GYRO_PC2 : port L3GD20.gyro_out_data_y -> Software.gyro_in_data_y;
+   GYRO_PC3 : port L3GD20.gyro_out_data_z -> Software.gyro_in_data_z;
+
+  flows
+    etef1 : end to end flow LSM303DLHC.f1 -> ACC_PC1 -> Software.f1 { latency => 40 ms .. 90 ms;};
+
+  properties
+
+    Actual_Connection_Binding => (reference (i2c_bus)) applies to ACC_PC1;
+    Actual_Connection_Binding => (reference (i2c_bus)) applies to ACC_PC2;
+    Actual_Connection_Binding => (reference (i2c_bus)) applies to ACC_PC3;
+
+    Actual_Connection_Binding => (reference (i2c_bus)) applies to MAG_PC1;
+    Actual_Connection_Binding => (reference (i2c_bus)) applies to MAG_PC2;
+    Actual_Connection_Binding => (reference (i2c_bus)) applies to MAG_PC3;
+
+    Actual_Connection_Binding => (reference (spi_bus)) applies to GYRO_PC1;
+    Actual_Connection_Binding => (reference (spi_bus)) applies to GYRO_PC2;
+    Actual_Connection_Binding => (reference (spi_bus)) applies to GYRO_PC3;
+
+
+  end SBC_32F411EDISCOVERY.V2;
+
+  -------------
+  -- Devices --
+  -------------
+
+  device LSM303DLHC
+    --  This device combines a 3D accelerometer and a 3D magnetometer
+
+  features
+    acc_out_data_x  : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_out_data_y  : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_out_data_z  : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    mag_out_data_x : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_out_data_y : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_out_data_z : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    i2c_bus   : requires bus access Buses::I2C::I2C.impl;
+
+  	flows
+  		f1 : flow source acc_out_data_x  { latency => 10 ms .. 20 ms;}; -- XXX: consolidate to all ports
+  properties
+    Data_Sheet::UUID => "http://www.st.com/en/mems-and-sensors/lsm303dlhc.html";
+
+  end LSM303DLHC;
+
+  device L3GD20
+    --  This device is a 3D gyroscope
+
+  features
+    gyro_out_data_x : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_out_data_y : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_out_data_z : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    spi_bus   : requires bus access Buses::SPI::SPI.impl; --  XXX
+  properties
+    Data_Sheet::UUID => "http://www.st.com/en/mems-and-sensors/lsm303dlhc.html";
+
+  end L3GD20;
+
+  ---------------
+  -- Processor --
+  ---------------
+
+  processor CortexM4 extends Processors::ARM::Generic_ARM
+  features
+    i2c_bus   : requires bus access Buses::I2C::I2C.IMPL;
+    spi_bus   : requires bus access Buses::SPI::SPI.IMPL;
+
+  properties
+    --    Deployment::Execution_Platform => Native;
+        Deployment::Execution_Platform => FreeRTOS;
+  end CortexM4;
+
+  processor implementation CortexM4.IMPL
+  properties
+    Scheduling_Protocol => (Posix_1003_Highest_Priority_First_Protocol);
+    Priority_Range => 0 .. 255;
+  end CortexM4.IMPL;
+
+  -------------
+  -- Memory ---
+  -------------
+
+  memory Flash
+  end Flash;
+
+  memory implementation Flash.IMPL
+  end Flash.IMPL;
+
+end AHRS::Hardware;

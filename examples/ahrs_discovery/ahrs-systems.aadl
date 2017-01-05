@@ -1,0 +1,28 @@
+package AHRS::Systems
+
+
+public
+
+   with AHRS::Hardware;
+  with AHRS::Software;
+  
+  ------------
+  -- System --
+  ------------
+  
+   system AHRS_System
+    extends AHRS::Hardware::SBC_32F411EDISCOVERY
+  end AHRS_System;
+  
+  system implementation AHRS_System.IMPL
+    extends AHRS::Hardware::SBC_32F411EDISCOVERY.RTOS
+  subcomponents
+    Software : refined to process AHRS::Software::ATTITUDE.IMPL;
+    --  actual AHRS software
+
+  end AHRS_System.IMPL;
+
+
+
+
+end AHRS::Systems;

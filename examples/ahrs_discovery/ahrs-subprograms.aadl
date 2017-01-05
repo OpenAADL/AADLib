@@ -1,0 +1,65 @@
+package AHRS::Subprograms
+
+  -- This package models the subprograms of the AHRS case study
+
+public
+
+  with AHRS::Data_Types;
+
+  subprogram ACCELERO_SUB
+  features
+    acc_out_data_x : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_out_data_y : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_out_data_z : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+  properties
+    Source_Language => (C);
+    Source_Name     => "EntryAccelero";
+    Source_Text     => ("threads.c");
+  end ACCELERO_SUB;
+
+  subprogram MAGNETO_SUB
+  features
+    mag_out_data_x : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_out_data_y : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_out_data_z : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+  properties
+    Source_Language => (C);
+    Source_Name     => "EntryMagneto";
+    Source_Text     => ("threads.c");
+  end MAGNETO_SUB;
+
+  subprogram GYRO_SUB
+  features
+    gyro_out_data_x : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_out_data_y : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_out_data_z : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+  properties
+    Source_Language => (C);
+    Source_Name     => "EntryGyro";
+    Source_Text     => ("threads.c");
+  end GYRO_SUB;
+
+  subprogram ATTITUDE_SUB
+  features
+    acc_in_data_x	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_in_data_x	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_in_data_x	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    acc_in_data_y	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_in_data_y	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_in_data_y	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    acc_in_data_z	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_in_data_z	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_in_data_z	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+  properties
+    Source_Language => (C);
+    Source_Name     => "EntryAttitude";
+    Source_Text     => ("threads.c");
+  end ATTITUDE_SUB;
+
+end AHRS::Subprograms;

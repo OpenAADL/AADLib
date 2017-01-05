@@ -1,0 +1,3 @@
+toto:
+	echo "o<"
+

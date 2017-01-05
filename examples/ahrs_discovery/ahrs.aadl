@@ -1,0 +1,33 @@
+package AHRS
+
+--  This hierarchy provides a simple AHRS -- Attitude Heading
+--  Reference System -- implemented on a STM32F411 Discovery board.
+
+public
+
+  with AHRS::Data_Types;
+
+  process AHRS_Process
+  features
+    acc_in_data_x : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_in_data_y : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_in_data_z : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    mag_in_data_x : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_in_data_y : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_in_data_z : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    gyro_in_data_x : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_in_data_y : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_in_data_z : in data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+    roll_out_data  : out data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    pitch_out_data : out data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    yaw_out_data   : out data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
+
+  flows
+    f1 : flow sink acc_in_data_x { latency => 10 ms .. 20 ms;}; -- XXX: consolidate to all ports
+ 
+  end AHRS_Process;
+
+end AHRS;

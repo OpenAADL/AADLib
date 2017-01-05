@@ -1,0 +1,24 @@
+package AHRS::Data_Types
+
+  -- This package models the data type of the AHRS case study.
+
+public
+
+  --  For these types, we directly map to PolyORB-HI/C types
+
+  data UINT32_TYPE_AADL
+  properties
+    Type_Source_Name => "__po_hi_uint32_t";
+    Source_Text => ("types");
+    Data_Size => 4 Bytes;
+  end UINT32_TYPE_AADL;
+
+
+  data FLOAT32_TYPE_AADL
+  properties
+    Type_Source_Name => "__po_hi_float32_t";
+    Source_Text => ("types");
+    Data_Size => 4 Bytes;
+  end FLOAT32_TYPE_AADL;
+
+end AHRS::Data_Types;
