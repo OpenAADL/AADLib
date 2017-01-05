@@ -68,7 +68,7 @@
 	     "subcomponents" "system" "thread" "to" "type" "units" "value"
 	     "virtual"
              "initial" "states" "transition" "complete" "final" "state"
-             "transitions" "on" "dispatch"
+             "transitions" "on" "dispatch" "variables"
              ) t)
 	  "\\>")
 	 '(1 font-lock-keyword-face))
