@@ -8,7 +8,7 @@ DIST_SUBDIRS = $(SUBDIRS)
 clean-local:
 	-rm -rf *~ ocarina_out
 
-EXTRA_DIST = $(srcdir)/README
+EXTRA_DIST = $(srcdir)/README.md
 
 # We disable checking of the distclean rule, it is a nuisance
 distcleancheck:
