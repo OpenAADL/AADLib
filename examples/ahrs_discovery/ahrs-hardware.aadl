@@ -81,7 +81,6 @@ public
     etef1 : end to end flow LSM303DLHC.f1 -> ACC_PC1 -> Software.f1 { latency => 40 ms .. 90 ms;};
 
   properties
-
     Actual_Connection_Binding => (reference (i2c_bus)) applies to ACC_PC1;
     Actual_Connection_Binding => (reference (i2c_bus)) applies to ACC_PC2;
     Actual_Connection_Binding => (reference (i2c_bus)) applies to ACC_PC3;
@@ -93,7 +92,6 @@ public
     Actual_Connection_Binding => (reference (spi_bus)) applies to GYRO_PC1;
     Actual_Connection_Binding => (reference (spi_bus)) applies to GYRO_PC2;
     Actual_Connection_Binding => (reference (spi_bus)) applies to GYRO_PC3;
-
 
   end SBC_32F411EDISCOVERY.V2;
 
