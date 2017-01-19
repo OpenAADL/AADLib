@@ -3,5 +3,5 @@ AADL_ROOT    = fcs.impl
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl real cheddar
+AVAILABLE_TARGETS= parse-aadl real cheddar stats
 
