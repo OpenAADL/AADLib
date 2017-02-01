@@ -1,5 +1,5 @@
 OCARINA = ocarina
-OCARINA_FLAGS = -aadlv2 -y -I$(top_srcdir)/src/property_set \
+OCARINA_FLAGS = -aadlv2 -y -disable-annexes=emv2 -I$(top_srcdir)/src/property_set \
 	      -I$(top_srcdir)/src/aadl -I$(srcdir) $(AADL_LIB)
 
 check-local: $(AVAILABLE_TARGETS)
