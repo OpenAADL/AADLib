@@ -13,12 +13,12 @@ CLEANFILES =
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= mission-parse functional-parse blocks-parse		\
-	  impl-parse validation-parse instanciate-impl1			\
-	  instanciate-impl2 connectivity-matrix-impl1			\
-	  connectivity-matrix-impl2 functions-matrix-validation		\
-	  check-real-functional check-real-first-impl			\
-	  check-real-second-impl check-real-validation check-real
+AVAILABLE_TARGETS= mission-parse functional-parse blocks-parse	\
+	  impl-parse validation-parse instanciate-impl1		\
+	  instanciate-impl2 connectivity-matrix-impl1		\
+	  connectivity-matrix-impl2 functions-matrix-validation	\
+	  check-real-first-impl check-real-second-impl		\
+	  check-real-validation check-real
 
 OCARINA_FLAGS=-aadlv2 -y -I$(srcdir) -I$(top_srcdir)/src/property_set
 REAL_FLAGS=-g real_theorem -real_lib ./lib.real
@@ -75,8 +75,8 @@ check-all: parse-all				\
 	check-real				\
 	functions-matrix-validation
 
-check-real-functional:
-	-ocarina $(OCARINA_FLAGS) $(REAL_FLAGS) -r gaia.functional $(FUNCTIONAL)
+#check-real-functional:
+#	-ocarina $(OCARINA_FLAGS) $(REAL_FLAGS) -r gaia.functional $(FUNCTIONAL)
 
 check-real-first-impl:
 	-ocarina $(OCARINA_FLAGS) $(REAL_FLAGS) -r gaia.first_architecture $(IMPLEMENTATION)
@@ -87,4 +87,6 @@ check-real-second-impl:
 check-real-validation:
 	-ocarina $(OCARINA_FLAGS) $(REAL_FLAGS) -r gaia.validation $(VALIDATION)
 
-check-real: check-real-functional check-real-first-impl check-real-second-impl check-real-validation
+check-real: check-real-first-impl check-real-second-impl check-real-validation
+
+# check-real-functional  XXX
