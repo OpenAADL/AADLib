@@ -1,0 +1,79 @@
+package flyByWire_subsys
+public
+
+  with Papa_Types;
+
+  with flyByWire_soft;
+  with flyByWire_hard;
+  with paparazzi_hard;
+
+  -- MCU1 est charge de la Reception des ordres de la radio-commande,
+  -- la communication avec MCU0 et le pilotage des servos commandes
+
+  system MCU1
+  features
+    RC_EvtData_Input : in event data port Papa_Types::Unknown;
+    AP_EvtData_Input : in event data port Papa_Types::Inter_mcu_msg.Generic;--AP: autopilot
+    D_MCU1_Output : out event data port Papa_Types::Inter_mcu_msg.Generic;
+    SPI_Con : requires bus access paparazzi_hard::SPI;
+  end MCU1;
+
+  system implementation MCU1.Impl
+  subcomponents
+    --declare system subcomponents
+    MCU1_P : processor flyByWire_hard::Proc_MCU1.Impl;
+    Ram : memory flyByWire_hard::Ram_MCU1;
+    Mem_Bus : bus flyByWire_hard::Mem_Bus_MCU1;
+    Dev_Bus : bus flyByWire_hard::Device_Bus.MCU1;
+    Recpt_dv : device flyByWire_hard::Recepteur;
+    Cpt_dv : device flyByWire_hard::Compteur;
+    Ser_Rudder_dv : device flyByWire_hard::Servo;
+    Ser_Elevator_dv : device flyByWire_hard::Servo;
+    Ser_AileronL_dv : device flyByWire_hard::Servo;--Aileron Left
+    Ser_AileronR_dv : device flyByWire_hard::Servo;--Aileron Right
+    Ser_MotorL_dv : device flyByWire_hard::Servo;
+    Ser_MotorR_dv : device flyByWire_hard::Servo;
+    Proc_RcptCde_PilotServ : process flyByWire_soft::RecepteurCde_PilotageServo.Impl;
+  connections
+    --bus connections
+    Mem_Bus_Access1: bus access Mem_Bus -> MCU1_P.Mem_Bus;
+    Mem_Bus_Access2: bus access Mem_Bus -> Ram.Mem_Bus;
+    Dev_Buss_Access3: bus access Dev_Bus -> MCU1_P.Dev_Bus;
+    Dev_Buss_Access4: bus access Dev_Bus -> Recpt_dv.Dev_Bus;
+    Dev_Buss_Access5: bus access Dev_Bus -> Cpt_dv.Dev_Bus;
+    Dev_Buss_Access6: bus access Dev_Bus -> Ser_Rudder_dv.Dev_Bus;
+    Dev_Buss_Access7: bus access Dev_Bus -> Ser_Elevator_dv.Dev_Bus;
+    Dev_Buss_Access8: bus access Dev_Bus -> Ser_AileronL_dv.Dev_Bus;
+    Dev_Buss_Access9: bus access Dev_Bus -> Ser_AileronR_dv.Dev_Bus;
+    Dev_Buss_Access10: bus access Dev_Bus -> Ser_MotorL_dv.Dev_Bus;
+    Dev_Buss_Access11: bus access Dev_Bus -> Ser_MotorR_dv.Dev_Bus;
+
+    --port connections
+    c1: port RC_EvtData_Input->Recpt_dv.RC_Input;
+    c2: port Recpt_dv.RC_Output->Proc_RcptCde_PilotServ.Radio_Cdes_Input;
+    c3: port Proc_RcptCde_PilotServ.Cdes_Vol_Output->D_MCU1_Output;
+    c4: port AP_EvtData_Input->Proc_RcptCde_PilotServ.AP_Cdes_Input;
+    c5: port Recpt_dv.RC_Evt_Output-> Proc_RcptCde_PilotServ.RC_Evt_Input;
+
+    c6: port Proc_RcptCde_PilotServ.Cde_Elevator_Output->Cpt_dv.Data_Elev_Input;
+    c7: port Proc_RcptCde_PilotServ.Cde_AileronL_Output->Cpt_dv.Data_AilL_Input;
+    c8: port Proc_RcptCde_PilotServ.Cde_AileronR_Output->Cpt_dv.Data_AilR_Input;
+    c9: port Proc_RcptCde_PilotServ.Cde_MotorL_Output->Cpt_dv.Data_MotorL_Input;
+    c10: port Proc_RcptCde_PilotServ.Cde_MotorR_Output->Cpt_dv.Data_MotorR_Input;
+    c11: port Proc_RcptCde_PilotServ.Cde_Rudder_Output->Cpt_dv.Data_Rudder_Input;
+
+    c12: port Cpt_dv.Data_Rudder_Output->Ser_Rudder_dv.Data_Input;
+    c13: port Cpt_dv.Data_Elev_Output->Ser_Elevator_dv.Data_Input;
+    c14: port Cpt_dv.Data_AilL_Output->Ser_AileronL_dv.Data_Input;
+    c15: port Cpt_dv.Data_AilR_Output->Ser_AileronR_dv.Data_Input;
+    c16: port Cpt_dv.Data_MotorL_Output->Ser_MotorL_dv.Data_Input;
+    c17: port Cpt_dv.Data_MotorR_Output->Ser_MotorR_dv.Data_Input;
+
+  properties
+    --to bind the Proc_RcptCde_PilotServ to the memory Ram and the processor MCU1_P
+    --using predeclared properties
+    Actual_Processor_Binding => (reference (MCU1_P)) applies to Proc_RcptCde_PilotServ;
+    Actual_Memory_Binding => (reference (Ram)) applies to Proc_RcptCde_PilotServ;
+  end MCU1.Impl;
+
+end flyByWire_subsys;

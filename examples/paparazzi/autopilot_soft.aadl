@@ -1,0 +1,277 @@
+package autopilot_soft
+public
+
+  with Papa_Types;
+  with Base_Types;
+
+  --Taches MCU0
+  --radio command task
+  --navigation
+  --climb control
+  --altitude control
+  --Receive GPS position
+  --stabilisation
+  --Send message to MCU1
+  --Receive Message from MCU1
+  --Send Data to ground station
+  --Interruptions
+  --Send/Receive via SPI
+  --Modem Interruption
+
+  -- Task 6
+  thread radio_control_task
+  end radio_control_task;
+
+  thread implementation radio_control_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period=> 100 ms;
+    Compute_Execution_Time => 15600 us .. 21100 us;
+    Source_Text => ("autopilot/main.c");
+    Compute_Entrypoint_Source_Text => "radio_control_task";
+  end radio_control_task.Impl;
+
+  -- Task 7
+  -- Controle la stabilisation et transmet les donnees a MCU1
+  thread stabilisation_task
+  features
+    IR_Input : in data port Papa_Types::Stream_Element.Generic;
+  end stabilisation_task;
+
+  thread implementation stabilisation_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period => 100 ms;
+    Compute_Execution_Time => 5681 us .. 6654 us;
+    Source_Text => ("autopilot/main.c");
+    Compute_Entrypoint_Source_Text => "stabilisation_task";
+  end stabilisation_task.Impl;
+
+  -- Task 8
+  thread link_fbw_send
+  features
+    MCU0_Send_Output : out event data port Papa_Types::Inter_mcu_msg.Generic;
+  end link_fbw_send;
+
+  --ce thread se declenche toujours apres la Stabilisation d'ou sa periode
+  thread implementation link_fbw_send.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period => 250 ms;
+    Compute_Execution_Time => 233 us .. 471 us;
+    Source_Text => ("autopilot/link_fbw.c");
+    Compute_Entrypoint_Source_Text => "link_fbw_send";
+  end link_fbw_send.Impl;
+
+  -- Task 9
+  thread receive_gps_data_task
+  features
+    GPS_Output : out event data port Papa_Types::Position.GPS;
+  end receive_gps_data_task;
+
+  thread implementation receive_gps_data_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    period => 250 ms;
+    Compute_Execution_Time => 5987 us .. 6659 us;
+    Source_Text => ("autopilot/main.c");
+    Compute_Entrypoint_Source_Text => "receive_gps_data_task";
+  end receive_gps_data_task.Impl;
+
+  -- Task 10
+  --controle la navigation de l'avion
+  thread navigation_task
+  features
+    GPS_Data_Input : in event data port Papa_Types::Position.GPS;
+    Altitude_Desiree_Output: out event data port Base_Types::Float_32;
+  end navigation_task;
+
+  --Ce thread est declenche a la frequence des informations delivrees
+  --par le GPS 4Hz, sa periode est de 250 ms
+  thread implementation navigation_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period=> 250 ms;
+    Compute_Execution_Time => 44420 us .. 53350 us;
+    Source_Text => ("autopilot/main.c");
+    Compute_Entrypoint_Source_Text => "navigation_task";
+  end navigation_task.Impl;
+
+  -- Task 11
+  --Controle l'altitude
+  thread altitude_control_task
+  features
+    Altitude_Desiree_Input : in event data port Base_Types::Float_32;--fourni par navigation
+    Montee_Desiree_Output : out event data port Base_Types::Float_32;
+  end altitude_control_task;
+
+  --le thread Navigation est toujours suivi, dans cet ordre,
+  -- par les threads Altitude_Control et Climb_Controle d'ou leur Periode
+  thread implementation altitude_control_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period => 250 ms;
+    Compute_Execution_Time => 1478 us .. 1660 us;
+    Source_Text => ("autopilot/main.c");
+    Compute_Entrypoint_Source_Text =>"altitude_control_task";
+  end altitude_control_task.Impl;
+
+  -- Task 12
+  --controle la montee
+  thread climb_control_task
+  features
+    Montee_Desiree_Input: in event data port Base_Types::Float_32;--fourni par Altitude_Ctrl
+  end climb_control_task;
+
+  thread implementation climb_control_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period => 250 ms;
+    Compute_Execution_Time => 5429 us .. 6241 us;
+    Source_Text => ("autopilot/main.c");
+    Compute_Entrypoint_Source_Text => "climb_control_task";
+  end climb_control_task.Impl;
+
+  -- Task 13
+  thread reporting_task
+  features
+    Data_Output : out data port Papa_Types::Inter_mcu_msg.Generic;
+  end reporting_task;
+
+  thread implementation reporting_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period=> 100 ms;
+    Compute_Execution_Time => 5000 us .. 12220 us;
+    Source_Text => ("autopilot/main.c");
+    Compute_Entrypoint_Source_Text => "reporting_task";
+  end reporting_task.Impl;
+
+  -- Interrupt 4
+  thread Interruption_SPI_MCU0_1
+  features
+    Evt_Rec_SPI_Input : in event data port Papa_Types::Inter_mcu_msg.Generic;
+    Data_Rec_MCU0_Output: out  event data port Papa_Types::Inter_mcu_msg.Generic;
+    Data_Send_SPI_Output: out  event data port Papa_Types::Inter_mcu_msg.Generic;
+    Evt_Send_SPI_Input: in event data port Papa_Types::Inter_mcu_msg.Generic;
+  end Interruption_SPI_MCU0_1;
+
+  thread implementation Interruption_SPI_MCU0_1.Impl
+  properties
+    --	Period => 50 ms;
+    Compute_Execution_Time => 251 us .. 447 us;
+    Source_Text => ("autopilot/spi.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_17";
+  end Interruption_SPI_MCU0_1.Impl;
+
+  -- Interrupt 4 bis?
+  thread Interruption_SPI_MCU0_2
+  features
+    Data_Rec_MCU0_Output: out  event data port Papa_Types::Inter_mcu_msg.Generic;--fourni a MCU0
+    Data_Send_SPI_Output: out  event data port Papa_Types::Inter_mcu_msg.Generic;
+    Data_Send_SPI_Input : in event data port Papa_Types::Inter_mcu_msg.Generic;
+    Data_Rec_MCU0_Input: in event data port Papa_Types::Inter_mcu_msg.Generic;
+  end Interruption_SPI_MCU0_2;
+
+  thread implementation Interruption_SPI_MCU0_2.Impl
+  properties
+    --	Period => 50 ms;
+    Compute_Execution_Time => 151 us .. 228 us;
+    Source_Text => ("autopilot/linf_fbw.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_12";
+  end Interruption_SPI_MCU0_2.Impl;
+
+  -- Interupt 5
+  thread Interruption_Modem
+  features
+    Data_Input : in data port Papa_Types::Inter_mcu_msg.Generic;
+    Data_Output : out event data port Papa_Types::Inter_mcu_msg.Generic;
+  end Interruption_Modem;
+
+  thread implementation Interruption_Modem.Impl
+  properties
+    --	Period => 100 ms;
+    Compute_Execution_Time=> 303 us .. 520 us;
+    Source_Text => ("autopilot/modem.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_5";
+  end Interruption_Modem.Impl;
+
+  -- Interrupt 6
+  -- Ce thread recoit les sigaux GPS et les transforme
+  -- en donnees utilisables
+  thread Interruption_GPS
+  features
+    GPS_Input : in event data port Papa_Types::Stream_Element.Generic;
+  end Interruption_GPS;
+
+  thread implementation Interruption_GPS.Impl
+  properties
+    --	Period => 250 ms;
+    Compute_Execution_Time => 283 us .. 493 us;
+    Source_Text => ("autopilot/gps_ubx.c/parse_ubx");
+    Compute_Entrypoint_Source_Text => "__vector_30";
+  end Interruption_GPS.Impl;
+
+  -- Autopilot process
+
+  process Nav_Stab_Control_Proc
+  features
+    MCU1_Data_Input : in event data port Papa_Types::Inter_mcu_msg.Generic;--Param Radio_Cde (mode manuel)
+    GPS_Input : in event data port Papa_Types::Stream_Element.Generic;
+    GPS_Evt_Input : in event port;
+    IR_Input : in data port Papa_Types::Stream_Element.Generic;
+    P_Input : in data port Base_Types::Float_32;
+    T_Input : in data port Base_Types::Integer_8;
+    Compas_Input : in data port Base_Types::Float_32;
+    V_Air_Input : in data port Base_Types::Integer_8;
+    -- donnees transmies a MCU1
+    Trans_MCU0_Output: out event data port Papa_Types::Inter_mcu_msg.Generic;
+    -- donnees transmies a la station sol
+    Trans_Sol_Output : out event data port Papa_Types::Inter_mcu_msg.Generic;
+  end Nav_Stab_Control_Proc;
+
+  process implementation Nav_Stab_Control_Proc.Impl
+  subcomponents
+    Data_Acq_Filt_Th : thread receive_gps_data_task.Impl;
+    Alt_Ctrl_Th : thread altitude_control_task.Impl;
+    Nav_Th : thread navigation_task.Impl;
+    Climb_Ctrl_Th : thread climb_control_task.Impl;
+    Stab_Th : thread stabilisation_task.Impl;
+    Send_MCU1_Th : thread link_fbw_send.Impl;
+    Send_Grd_Station_Th : thread reporting_task.Impl;
+    Interrupt_SPI_Th1:thread Interruption_SPI_MCU0_1.Impl;
+    Interrupt_SPI_Th2:thread Interruption_SPI_MCU0_2.Impl;
+    Interrupt_Modem_Th: thread Interruption_Modem.Impl;
+    Interrupt_GPS_Th: thread Interruption_GPS.Impl;
+    Ctrl_By_RC_Th: thread radio_control_task.Impl;
+
+    --save the autopilot settings
+    AP_Data : data Papa_Types::Inter_mcu_msg.Generic;
+  connections
+
+    c1: port GPS_Input->Interrupt_GPS_Th.GPS_Input;
+    c2: port Data_Acq_Filt_Th.GPS_Output->Nav_Th.GPS_Data_Input;
+    c3: port Nav_Th.Altitude_Desiree_Output->Alt_Ctrl_Th.Altitude_Desiree_Input in modes (auto, home);
+    c4: port Alt_Ctrl_Th.Montee_Desiree_Output->Climb_Ctrl_Th.Montee_Desiree_Input in modes (auto, home);
+
+    c5: port IR_Input->Stab_Th.IR_Input;
+
+    c6: port Send_MCU1_Th.MCU0_Send_Output->Interrupt_SPI_Th1.Evt_Send_SPI_Input in modes(auto,home,manual);
+    c7: port Interrupt_SPI_Th1.Data_Send_SPI_Output->Interrupt_SPI_Th2.Data_Send_SPI_Input in modes(auto,home,manual);
+    c8: port Interrupt_SPI_Th2.Data_Send_SPI_Output->Trans_MCU0_Output in modes(auto,home,manual);
+
+    c9: port MCU1_Data_Input->Interrupt_SPI_Th1.Evt_Rec_SPI_Input in modes(manual);
+    c10: port Interrupt_SPI_Th1.Data_Rec_MCU0_Output->Interrupt_SPI_Th2.Data_Rec_MCU0_Input in modes(manual);
+
+    c11: port Send_Grd_Station_Th.Data_Output->Interrupt_Modem_Th.Data_Input in modes (auto,manual,home);
+    c12: port Interrupt_Modem_Th.Data_Output->Trans_Sol_Output in modes (auto,manual,home);
+
+  modes
+    manual : initial mode;
+    auto : mode;
+    home : mode;
+  properties
+    Source_Text => ("autopilot/mainloop.c");
+  end Nav_Stab_Control_Proc.Impl;
+
+end autopilot_soft;

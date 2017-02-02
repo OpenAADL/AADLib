@@ -1,0 +1,78 @@
+package autopilot_subsys
+public
+
+  with Papa_Types;
+
+  with autopilot_soft;
+  with autopilot_hard;
+  with paparazzi_hard;
+
+  -- MCU0 est charge de la Stabilisation,
+  -- la navigation, la communication avec MCU1
+  -- et la transmission des parametres de vol
+
+  system MCU0
+  features
+    D_MCU1_Input : in event data port Papa_Types::Inter_mcu_msg.Generic;--updated
+    --E_MCU1_Input : in event port;--updated
+    D_MCU0_Output : out event data port Papa_Types::Inter_mcu_msg.Generic;--updated
+    --E_MCU0_Output : out event port;--updated
+    SPI_Con : requires bus access paparazzi_hard::SPI;
+  end MCU0;
+
+  system implementation MCU0.Impl
+  subcomponents
+    Proc_0 : processor autopilot_hard::Proc_MCU0.Impl;
+    Ram    : memory autopilot_hard::Ram_MCU0;
+    Mem_Bus: bus autopilot_hard::Mem_Bus_MCU0;
+    P_dv : device autopilot_hard::Pression;
+    T_dv : device autopilot_hard::Tension;
+    Compas_dv : device autopilot_hard::Compas;
+    V_Air_dv : device autopilot_hard::Vitesse_Air;
+    Cam_dv : device autopilot_hard::Camera_Video;
+    Emet_dv : device autopilot_hard::Emetteur;
+    GPS_dv : device autopilot_hard::GPS;
+    IR_dv : device autopilot_hard::InfraRed;
+    Dev_Bus : bus autopilot_hard::Device_Bus.MCU0;
+    Modem_Bus : bus autopilot_hard::Modem;
+    N_S_C_proc : process autopilot_soft::Nav_Stab_Control_Proc.Impl;
+  connections
+    -- bus connections
+    acc1: bus access Mem_Bus->Proc_0.Mem_Bus;
+    acc2: bus access Mem_Bus->Ram.Mem_Bus;
+
+    acc3: bus access Dev_Bus->Proc_0.Dev_Bus;
+    acc4: bus access Dev_Bus->P_dv.Dev_Bus;
+    acc5: bus access Dev_Bus->T_dv.Dev_Bus;
+    acc6: bus access Dev_Bus->Compas_dv.Dev_Bus;
+    acc7: bus access Dev_Bus->V_Air_dv.Dev_Bus;
+    acc8: bus access Dev_Bus->Cam_dv.Dev_Bus;
+    acc9: bus access Dev_Bus->Emet_dv.Dev_Bus;
+    acc10: bus access Modem_Bus->Emet_dv.Modem_Bus;
+    acc11: bus access Dev_Bus->GPS_dv.Dev_Bus;
+    acc12: bus access Dev_Bus->IR_dv.Dev_Bus;
+
+    --ports connections
+    c1: port P_dv.P_Output->N_S_C_proc.P_Input;
+    c2: port T_dv.T_Output->N_S_C_proc.T_Input;
+    c3: port Compas_dv.Compas_Output->N_S_C_proc.Compas_Input;
+    c4: port V_Air_dv.V_Air_Output->N_S_C_proc.V_Air_Input;
+    c5: port GPS_dv.GPS_Output->N_S_C_proc.GPS_Input;
+    c6: port GPS_dv.Error_Output->N_S_C_proc.GPS_Evt_Input;
+
+    c7: port N_S_C_proc.Trans_Sol_Output->Emet_dv.Trans_Data_Input;--updated
+    c8: port Cam_dv.Video_Output->Emet_dv.Video_Input;
+
+    c9: port D_MCU1_Input->N_S_C_proc.MCU1_Data_Input;--updated
+    --event port E_MCU1_Input->N_S_C_proc.MCU1_Evt_Input; --updated
+
+    c10: port N_S_C_proc.Trans_MCU0_Output->D_MCU0_Output;--updated
+    --event port GPS_dv.Error_Output->E_MCU0_Output; --updated
+
+  properties
+    -- pour relier le processus a la memoire et au processeur
+    Actual_Processor_Binding => (reference (Proc_0)) applies to N_S_C_Proc;
+    Actual_Memory_Binding => (reference (Ram)) applies to N_S_C_Proc;
+  end MCU0.Impl;
+
+end autopilot_subsys;

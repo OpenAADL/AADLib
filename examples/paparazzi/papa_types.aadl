@@ -1,0 +1,147 @@
+package Papa_Types
+public
+
+  with Base_Types;
+
+  -- customized data types
+
+  -- Note: initially proposed data structures that do not match the
+  -- AADL standard have been commented
+  --		 subprograms are not allowed data features
+
+  -- Lat_long represents longitudes and latitudes
+  data Lat_Long
+    --features
+    --	Get_Degs : subprogram subprograms::Get_Integer;
+    --	Set_Degs : subprogram subprograms::Set_Integer;
+    --	Get_Mins : subprogram subprograms::Get_Integer;
+    --	Set_Mins : subprogram subprograms::Set_Integer;
+    --	Get_Secs : subprogram subprograms::Get_Integer;
+    --	Set_Secs : subprogram subprograms::Set_Integer;
+  end Lat_Long;
+
+  data implementation Lat_Long.generic
+  subcomponents
+    Degs : data Base_Types::Integer_8;
+    Mins : data Base_Types::Integer_8;
+    Secs : data Base_Types::Integer_8;
+  end Lat_Long.generic;
+
+  -- This data type represents the position
+  data Position
+  end Position;
+
+  data implementation Position.simple
+  subcomponents
+    Latitude : data Lat_Long.generic;
+    Longitude : data Lat_Long.generic;
+  end Position.simple;
+
+  -- The data type that represents GPS sensor data
+  data implementation Position.GPS extends Position.simple
+  subcomponents
+    Altitude : data Base_Types::Integer_8;
+    Cap		 : data Base_Types::Integer_8;
+  end Position.GPS;
+
+  data Stream_Element
+  end Stream_Element;
+
+  data implementation Stream_Element.Generic
+  properties
+    Data_Size => 8bits;
+  end Stream_Element.Generic;
+
+  data Tab
+  end Tab;
+
+  data Tableau extends Tab
+    --features
+    --	Get_Data0 : subprogram subprograms::Get_Integer16;
+    --	Set_Data0 : subprogram subprograms::Set_Integer16;
+    --	Get_Data1 : subprogram subprograms::Get_Integer16;
+    --	Set_Data1 : subprogram subprograms::Set_Integer16;
+    --	Get_Data2 : subprogram subprograms::Get_Integer16;
+    --	Set_Data2 : subprogram subprograms::Set_Integer16;
+    --	Get_Data3 : subprogram subprograms::Get_Integer16;
+    --	Set_Data3 : subprogram subprograms::Set_Integer16;
+    --	Get_Data4 : subprogram subprograms::Get_Integer16;
+    --	Set_Data4 : subprogram subprograms::Set_Integer16;
+    --	Get_Data5 : subprogram subprograms::Get_Integer16;
+    --	Set_Data5 : subprogram subprograms::Set_Integer16;
+    --	Get_Data6 : subprogram subprograms::Get_Integer16;
+    --	Set_Data6 : subprogram subprograms::Set_Integer16;
+    --	Get_Data7 : subprogram subprograms::Get_Integer16;
+    --	Set_Data7 : subprogram subprograms::Set_Integer16;
+    --	Get_Data8 : subprogram subprograms::Get_Integer16;
+    --	Set_Data8 : subprogram subprograms::Set_Integer16;
+  end Tableau;
+
+  data implementation Tableau.Generic
+  subcomponents
+    data_0 : data Base_Types::Integer_16;
+    data_1 : data Base_Types::Integer_16;
+    data_2 : data Base_Types::Integer_16;
+    data_3 : data Base_Types::Integer_16;
+    data_4 : data Base_Types::Integer_16;
+    data_5 : data Base_Types::Integer_16;
+    data_6 : data Base_Types::Integer_16;
+    data_7 : data Base_Types::Integer_16;
+    data_8 : data Base_Types::Integer_16;
+    --etc selon le parametre RADIO_CTL_NB = 9 du fichier link_autopilot.h
+    --Valeur de RADIO_CTL_NB se trouve dans radio.h
+    --qui est egale a PPM_NB_OF_PULSE de ppm.h
+  end Tableau.Generic;
+
+  data TabServos extends Tab
+    --features
+    --	Get_MotorL : subprogram subprograms::Get_Integer16;
+    --	Set_MotorL : subprogram subprograms::Set_Integer16;
+    --	Get_MotorR : subprogram subprograms::Get_Integer16;
+    --	Set_MotorR : subprogram subprograms::Set_Integer16;
+    --	Get_AileronL : subprogram subprograms::Get_Integer16;
+    --	Set_AileronL : subprogram subprograms::Set_Integer16;
+    --	Get_AileronR : subprogram subprograms::Get_Integer16;
+    --	Set_AileronR : subprogram subprograms::Set_Integer16;
+    --	Get_Rudder : subprogram subprograms::Get_Integer16;
+    --	Set_Rudder : subprogram subprograms::Set_Integer16;
+    --	Get_Elevator : subprogram subprograms::Get_Integer16;
+    --	Set_Elevator : subprogram subprograms::Set_Integer16;
+  end TabServos;
+
+  data Implementation TabServos.Impl
+  subcomponents
+    MotorL: data Base_Types::Integer_16;
+    MotorR: data Base_Types::Integer_16;
+    AileronL: data Base_Types::Integer_16;
+    AileronR: data Base_Types::Integer_16;
+    Rudder: data Base_Types::Integer_16;
+    Elevator: data Base_Types::Integer_16;
+  end TabServos.Impl;
+
+  data inter_mcu_msg
+    --features
+    --	Set_Ppm : subprogram subprograms::Set_Integer;
+    --	Get_Ppm : subprogram subprograms::Get_Integer;
+    --	Set_Status : subprogram subprograms::Set_Integer;
+    --	Get_Status : subprogram subprograms::Get_Integer;
+    --	Set_NbErr : subprogram subprograms::Set_Integer;
+    --	Get_NbErr : subprogram subprograms::Get_Integer;
+    --	Set_Vsupply : subprogram subprograms::Set_Integer;
+    --	Get_Vsupply : subprogram subprograms::Get_Integer;
+  end inter_mcu_msg;
+
+  data implementation Inter_mcu_msg.Generic
+  subcomponents
+    channels : data Tableau.Generic;
+    ppm_cpt	: data Base_Types::Integer_8;
+    satus : data Base_Types::Integer_8;
+    nb_err : data Base_Types::Integer_8;
+    vsupply : data Base_Types::Integer_8;
+  end Inter_mcu_msg.generic;
+
+  --type to define later
+  data Unknown
+  end Unknown;
+
+end Papa_Types;

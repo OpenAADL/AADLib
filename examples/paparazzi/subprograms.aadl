@@ -1,0 +1,27 @@
+package subprograms
+public
+
+  with Base_Types;
+
+  -- subprograms
+  subprogram Get_Integer
+  features
+    Result : out parameter Base_Types::Integer_8;
+  end Get_Integer;
+
+  subprogram Set_Integer
+  features
+    Int : in parameter Base_Types::Integer_8;
+  end Set_Integer;
+
+  subprogram Get_Integer16
+  features
+    Result : out parameter Base_Types::Integer_16;
+  end Get_Integer16;
+
+  subprogram Set_Integer16
+  features
+    Int : in parameter Base_Types::Integer_16;
+  end Set_Integer16;
+
+end subprograms;

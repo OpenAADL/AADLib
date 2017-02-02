@@ -1,0 +1,104 @@
+package autopilot_hard
+public
+
+  with Papa_Types;
+  with Base_Types;
+
+  with paparazzi_hard;
+
+  --buses
+  -- relie le systeme MCU0 a la station sol
+  --ce qui permet la transmission de donnes
+  bus Modem
+  end Modem;
+
+  -- bus that links processors and devices
+  bus Device_Bus
+  end Device_Bus;
+
+  bus implementation Device_Bus.MCU0
+  end Device_Bus.MCU0;
+
+  -- bus that links processors and memories
+  bus Mem_Bus_MCU0
+  end Mem_Bus_MCU0;
+
+  --devices
+  --determine la pression
+  device Pression
+  features
+    P_Output : out data port Base_Types::Float_32;
+    Dev_Bus : requires bus access Device_Bus.MCU0;
+  end Pression;
+
+  --determine la tension
+  device Tension -- Alimentation
+  features
+    T_Output : out data port Base_Types::Integer_8;
+    Dev_Bus : requires bus access Device_Bus.MCU0;
+  end Tension;
+
+  device Compas
+  features
+    Compas_Output : out data port Base_Types::Float_32;
+    Dev_Bus : requires bus access Device_Bus.MCU0;
+  end compas;
+
+  --determine la vitesse de l'air
+  device Vitesse_Air
+  features
+    V_Air_Output : out data port Base_Types::Integer_8;
+    Dev_Bus : requires bus access Device_Bus.MCU0;
+  end Vitesse_Air;
+
+  --filme le trajet de la mission
+  device Camera_Video
+  features
+    Video_Output : out data port Papa_Types::Unknown; -- new data type?
+    Dev_Bus : requires bus access Device_bus.MCU0;
+  end Camera_Video;
+
+  -- transmet les donnees a la station sol
+  device Emetteur
+  features
+    Video_Input : in data port Papa_Types::Unknown;--data type?
+    Trans_Data_Input : in event data port Papa_Types::Inter_mcu_msg.Generic;
+    Trans_Data_Output : out data port Papa_Types::Unknown;
+    Video_Output : out data port Papa_Types::Unknown;
+    Modem_Bus : requires bus access Modem;
+    Dev_Bus : requires bus access Device_Bus.MCU0;
+  end Emetteur;
+
+  -- determine la position du drone
+  device GPS
+  features
+    Error_Output : out event port;
+    GPS_Output : out event data port Papa_Types::Stream_Element.Generic;
+    Dev_Bus : requires bus access Device_Bus.MCU0;
+  end GPS;
+
+  device InfraRed
+  features
+    Error_Output : out event port;
+    IR_Output : out data port Papa_Types::Stream_Element.Generic;
+    Dev_Bus : requires bus access Device_Bus.MCU0;
+  end InfraRed;
+
+  --processor
+  processor Proc_MCU0
+  features
+    Mem_Bus : requires bus access Mem_Bus_MCU0;
+    Dev_Bus : requires bus access Device_Bus.MCU0;
+    SPI : requires bus access paparazzi_hard::SPI;
+  end Proc_MCU0;
+
+  processor implementation Proc_MCU0.Impl
+  end Proc_MCU0.Impl;
+
+  --memory
+  memory Ram_MCU0
+  features
+    Mem_Bus : requires bus access Mem_Bus_MCU0;
+  end Ram_MCU0;
+
+end autopilot_hard;

@@ -94,7 +94,8 @@ AC_OUTPUT([
 	examples/mixin/Makefile
         examples/mosart/Makefile
         examples/multicore/Makefile
-	examples/pathfinder_system/Makefile
+	examples/paparazzi/Makefile
+        examples/pathfinder_system/Makefile
 	examples/perseus/Makefile
 	examples/producer_consumer/Makefile
 	examples/radar/Makefile

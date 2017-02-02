@@ -1,0 +1,72 @@
+package flyByWire_hard
+public
+
+  with Papa_Types;
+  with Base_Types;
+
+  with paparazzi_hard;
+
+  -- buses
+
+  -- bus that links processors and devices
+  bus Device_Bus
+  end Device_Bus;
+
+  bus implementation Device_Bus.MCU1
+  end Device_Bus.MCU1;
+
+  -- bus that links processors and memories
+  bus Mem_Bus_MCU1
+  end Mem_Bus_MCU1;
+
+  -- devices
+  device Compteur
+  features
+    Data_Elev_Input : in data port Base_Types::Integer_16;
+    Data_AilL_Input : in data port Base_Types::Integer_16;
+    Data_AilR_Input : in data port Base_Types::Integer_16;
+    Data_MotorL_Input : in data port Base_Types::Integer_16;
+    Data_MotorR_Input : in data port Base_Types::Integer_16;
+    Data_Rudder_Input : in data port Base_Types::Integer_16;
+    Data_Elev_Output : out data port Base_Types::Integer_16;
+    Data_AilL_Output : out data port Base_Types::Integer_16;
+    Data_AilR_Output : out data port Base_Types::Integer_16;
+    Data_MotorL_Output : out data port Base_Types::Integer_16;
+    Data_MotorR_Output : out data port Base_Types::Integer_16;
+    Data_Rudder_Output : out data port Base_Types::Integer_16;
+    Dev_Bus : requires bus access Device_Bus.MCU1;
+  end Compteur;
+
+  device Servo
+  features
+    Data_Input : in data port Base_Types::Integer_16;
+    Dev_bus : requires bus access Device_Bus.MCU1;
+  end Servo;
+
+  device Recepteur
+  features
+    RC_Input : in event data port Papa_Types::Unknown;
+    RC_Output : out event data port Papa_Types::Unknown;
+    RC_Evt_Output : out event port;
+    Dev_Bus : requires bus access Device_Bus.MCU1;
+  end Recepteur;
+
+  --processor
+  processor Proc_MCU1
+  features
+    Mem_Bus : requires bus access Mem_Bus_MCU1;
+    Dev_Bus : requires bus access Device_Bus.MCU1;
+    SPI : requires bus access paparazzi_hard::SPI;
+  end Proc_MCU1;
+
+  -- AADL processor = microprocessor + scheduler
+  processor implementation Proc_MCU1.Impl
+  end Proc_MCU1.Impl;
+
+  -- memory
+  memory Ram_MCU1
+  features
+    Mem_Bus : requires bus access Mem_Bus_MCU1;
+  end Ram_MCU1;
+
+end flyByWire_hard;

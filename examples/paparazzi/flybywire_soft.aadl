@@ -1,0 +1,258 @@
+package flyByWire_soft
+public
+
+  with Papa_Types;
+  with Base_Types;
+
+  -- software architecture of fly-by-ware system
+  -- Note: initially proposed calls to subprograms have been commented
+  --       according to AADLv2 subprograms cannot be part of data definitions
+
+  --tasks MCU1:
+  --Reception Radio Command
+  --Send Servos Commands
+  --Send Message to MCU0
+  --Interrupts:
+  --Receive/Send Data via SPI
+  --Servos Interrupts (6 interrupts)
+
+  --les taches sont soit periodiques
+  --et les interruptions sont periodiques
+
+  -- Task 1?
+  thread test_ppm_task
+  end test_ppm_task;
+
+  thread implementation test_ppm_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period =>25 ms;--Periode deduite de PPM.h >> PPM_FREQ
+    Source_Text => ("fly_by_wire/main.c");
+    Compute_Entrypoint_Source_Text => "test_ppm_task";
+  end test_ppm_task.Impl;
+
+  --Task 2
+  --this thread sends data to and receives data from MCU0
+  thread send_data_to_autopilot_task
+  features
+    MCU1_Data_Input : in data port Papa_Types::Tableau.Generic;
+    MCU1_Send_Output : out event data port Papa_Types::Inter_mcu_msg.Generic;
+    Radio_Ok_Input : in data port Base_Types::Boolean;
+    Radio_Really_Lost_Input : in data port Base_Types::Boolean;
+  end send_data_to_autopilot_task;
+
+  thread implementation send_data_to_autopilot_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period => 25 ms; --meme periode que reception_Decodage
+    Source_Text => ("fly_by_wire/main.c");
+    Compute_Entrypoint_Source_Text => "send_data_to_autopilot_task";
+  end send_data_to_autopilot_task.Impl;
+
+  --Task 3?
+  thread check_mega128_values_task
+  end check_mega128_values_task;
+
+  thread implementation check_mega128_values_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period=> 50 ms;--20Hz
+    Source_Text => ("fly_by_wire/main.c");
+    Compute_Entrypoint_Source_Text => "check_mega128_values_task";
+  end check_mega128_values_task.Impl;
+
+  --Task 4
+  --this thread gets the flight parameters and transmit them to the Counter
+  --fonction servo_transmit
+  thread servo_transmit
+  end servo_transmit;
+
+  thread implementation servo_transmit.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period => 50ms;--20Hz;
+    Source_Text => ("fly_by_wire/servo.c");
+    Compute_Entrypoint_Source_Text =>  "servo_transmit";
+  end servo_transmit.Impl;
+
+  --Task 5
+  thread check_failsafe_task
+  end check_failsafe_task;
+
+  thread implementation check_failsafe_task.Impl
+  properties
+    Dispatch_Protocol=>periodic;
+    Period=> 50 ms;--20Hz
+    Source_Text => ("fly_by_wire/main.c");
+    Compute_Entrypoint_Source_Text => "check_failsafe_task";
+  end check_failsafe_task.Impl;
+
+  --Interrupt 1
+  --Ce thread gere l'interruption d'envoi des parametres au servos
+  thread Interruption_Envoi_Servo
+  features
+    Signal_Input: in event data port Papa_Types::TabServos.Impl;
+    Data_Output : out data port Base_Types::Integer_16;
+  end Interruption_Envoi_Servo;
+
+  thread implementation Interruption_Envoi_Servo.Elevator
+    --calls
+    --	sub1: {Elevator_Value: subprogram Papa_Types::TabServos.Get_Elevator;};
+    --connections
+    --	c1: parameter Elevator_Value.Result->Data_Output;
+  properties
+    Source_Text => ("fly_by_wire/servo.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_6";
+  end Interruption_Envoi_Servo.Elevator;
+
+  thread implementation Interruption_Envoi_Servo.MotorL
+    --calls
+    --	sub1: {MotorL_Value: subprogram Papa_Types::TabServos.Get_MotorL;};
+    --connections
+    --	c1: parameter MotorL_Value.Result->Data_Output;
+  properties
+    Source_Text => ("fly_by_wire/servo.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_6";
+  end Interruption_Envoi_Servo.MotorL;
+
+  thread implementation Interruption_Envoi_Servo.MotorR
+    --calls
+    --	sub1: {MotorR_Value: subprogram Papa_Types::TabServos.Get_MotorR;};
+    --connections
+    --	c1: parameter MotorR_Value.Result->Data_Output;
+  properties
+    Source_Text => ("fly_by_wire/servo.c_SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_6";
+  end Interruption_Envoi_Servo.MotorR;
+
+  thread implementation Interruption_Envoi_Servo.AileronL
+    --calls
+    --	sub1: {AileronL_Value: subprogram Papa_Types::TabServos.Get_AileronL;};
+    --connections
+    --	c1: parameter AileronL_Value.Result->Data_Output;
+  properties
+    Source_Text => ("fly_by_wire/servo.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_6";
+  end Interruption_Envoi_Servo.AileronL;
+
+  thread implementation Interruption_Envoi_Servo.AileronR
+    --calls
+    --	sub1: {AileronR_Value: subprogram Papa_Types::TabServos.Get_AileronR;};
+    --connections
+    --	c1: parameter AileronR_Value.Result->Data_Output;
+  properties
+    Source_Text => ("fly_by_wire/servo.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_6";
+  end Interruption_Envoi_Servo.AileronR;
+
+  thread implementation Interruption_Envoi_Servo.Rudder
+    --calls
+    --	sub1: {Rudder_Value: subprogram Papa_Types::TabServos.Get_Rudder;};
+    --connections
+    --	c1: parameter Rudder_Value.Result->Data_Output;
+  properties
+    Source_Text => ("fly_by_wire/servo.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_6";
+  end Interruption_Envoi_Servo.Rudder;
+
+  --Interrupt 2
+  -- envoi reception signaux via SPI
+  thread Interruption_SPI_MCU1
+  features
+    Evt_Rec_SPI_Input : in event data port Papa_Types::Inter_mcu_msg.Generic;
+    Data_Rec_MCU1_Output: out  data port Papa_Types::Inter_mcu_msg.Generic;--fourni a MCU1
+    Data_Send_SPI_Output: out  event data port Papa_Types::Inter_mcu_msg.Generic;
+    Evt_Send_SPI_Input: in event data port Papa_Types::Inter_mcu_msg.Generic;
+    AP_Evt_Output : out event port;
+  end Interruption_SPI_MCU1;
+
+  thread implementation Interruption_SPI_MCU1.Impl
+  properties
+    Source_Text => ("fly_by_wire/spi.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_10";
+  end Interruption_SPI_MCU1.Impl;
+
+  --Interrupt 3
+  --this thread gets the data from the Radio Commande (RC)
+  --il definit les interruptions provenant de la RC
+  --il doit y avoir une contrainte temporelle sur l'envoi des messages de la radio commande!!
+  -- au moins il faut que cette tache soit sporadic
+  --sporadic veut dire que la tache est declenchee par l'arrivee d'un evenement
+  --mais le temps entre deux dispatch successifs ne doit pas etre < a la periode
+  thread Interruption_Radio
+  features
+    RC_Evt_Input : in event data port Papa_Types::Unknown;
+  end Interruption_Radio;
+
+  thread implementation Interruption_Radio.Impl
+  properties
+    Source_Text => ("fly_by_wire/ppm.c/SIGNAL");
+    Compute_Entrypoint_Source_Text => "__vector_5";
+  end Interruption_Radio.Impl;
+
+  -- Fly_By_Ware process
+
+  --N.B: le choix du Scheduling_Protocol du processeur indique si
+  --la preemption est autorisee ou non
+  --on donnera plus tard l'ordonnancement avec ou sans preemption
+
+  process RecepteurCde_PilotageServo
+  features
+    Radio_Cdes_Input : in event data port Papa_Types::Unknown;
+    RC_Evt_Input : in event port;
+    AP_Cdes_Input : in event data port Papa_Types::Inter_mcu_msg.Generic;--Autopilot Input
+    Cdes_Vol_Output : out event data port Papa_Types::Inter_mcu_msg.Generic;--data transmission to MCU0
+
+    Cde_Elevator_Output : out data port Base_Types::Integer_16;
+    Cde_MotorL_Output : out data port Base_Types::Integer_16;
+    Cde_MotorR_Output : out data port Base_Types::Integer_16;
+    Cde_AileronL_Output : out data port Base_Types::Integer_16;
+    Cde_AileronR_Output : out data port Base_Types::Integer_16;
+    Cde_Rudder_Output : out data port Base_Types::Integer_16;
+  end RecepteurCde_PilotageServo;
+
+  process implementation RecepteurCde_PilotageServo.Impl
+  subcomponents
+    Rec_Dec_Th : thread test_ppm_task.Impl;
+    Send_Th	: thread send_data_to_autopilot_task.Impl;
+    Pilot_Serv_Th : thread servo_transmit.Impl;
+    Check_Ap_Th : thread check_mega128_values_task.Impl;
+    Check_Fail_Th: thread check_failsafe_task.Impl;
+
+    Interrupt_Elevator_Th:thread Interruption_Envoi_Servo.Elevator;
+    Interrupt_MotorL_Th:thread Interruption_Envoi_Servo.MotorL;
+    Interrupt_MotorR_Th:thread Interruption_Envoi_Servo.MotorR;
+    Interrupt_AileronL_Th:thread Interruption_Envoi_Servo.AileronL;
+    Interrupt_AileronR_Th:thread Interruption_Envoi_Servo.AileronR;
+    Interrupt_Rudder_Th:thread Interruption_Envoi_Servo.Rudder;
+
+    Interrupt_SPI_1: thread Interruption_SPI_MCU1;
+    Interrupt_RC_Th: thread Interruption_Radio.Impl;
+
+    --System Settings
+    System_Mode : data Base_Types::Boolean;
+    Radio_Ok : data Base_Types::Boolean;
+    Radio_Really_Lost : data Base_Types::Boolean;
+    Mega128_Ok : data Base_Types::Boolean;
+  connections
+    c1: port Radio_Cdes_Input-> Interrupt_RC_Th.RC_Evt_Input in modes (manual);
+    c2: port Send_Th.MCU1_Send_Output->Interrupt_SPI_1.Evt_Send_SPI_Input in modes(manual);
+    c3: port Interrupt_SPI_1.Data_Send_SPI_Output->Cdes_Vol_Output in modes(manual);
+
+    c4: port AP_Cdes_Input->Interrupt_SPI_1.Evt_Rec_SPI_Input in modes (auto,manual);
+
+    c5: port Interrupt_Elevator_Th.Data_Output->Cde_Elevator_Output;
+    c6: port Interrupt_MotorL_Th.Data_Output->Cde_MotorL_Output;
+    c7: port Interrupt_MotorR_Th.Data_Output->Cde_MotorR_Output;
+    c8: port Interrupt_AileronL_Th.Data_Output->Cde_AileronL_Output;
+    c9: port Interrupt_AileronR_Th.Data_Output->Cde_AileronR_Output;
+    c10: port Interrupt_Rudder_Th.Data_Output->Cde_Rudder_Output;
+  modes
+    manual : initial mode;
+    auto : mode;
+    failsafe: mode;
+  properties
+    Source_Text => ("fly_by_wire/main.c");
+  end RecepteurCde_PilotageServo.Impl;
+
+end flyByWire_soft;

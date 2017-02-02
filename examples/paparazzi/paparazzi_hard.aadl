@@ -1,0 +1,8 @@
+package paparazzi_hard
+public
+
+  -- bus to link the subsystems
+  bus SPI
+  end SPI;
+
+end paparazzi_hard;
