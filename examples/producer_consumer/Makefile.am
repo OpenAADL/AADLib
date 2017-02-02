@@ -8,7 +8,7 @@ CLEANDIRS = pc_simple_native
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl real petri build_ada
+AVAILABLE_TARGETS= parse-aadl real petri build_ada lnt
 
 # Note: we overwrite the "real" target to match this project specific
 # constraints.

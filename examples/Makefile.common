@@ -74,6 +74,10 @@ petri:
 	$(OCARINA) $(OCARINA_FLAGS) -g petri_nets -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
+lnt:
+	$(OCARINA) $(OCARINA_FLAGS) -g lnt -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
 deos_code:
 	$(OCARINA) $(OCARINA_FLAGS) -g pok_c -k deos -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
@@ -130,7 +134,7 @@ real:
 clean-local:
 	-rm -rf *~ *aadl_xml.xml *_cheddar.xml mast-model.txt $(CLEANFILES) \
 	    mast_parser.lis cheddar_bug.xml model.nd model.cami instances imv \
-	    *.aaxl2 output.als scenario.tpo con_model.als assertions.txt
+	    *.aaxl2 output.als scenario.tpo con_model.als assertions.txt *.lnt *.svl
 	if test ! "$(CLEANDIRS)" = "";  then \
 	   rm -rf $(CLEANDIRS); \
 	fi
