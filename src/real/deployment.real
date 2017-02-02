@@ -1,0 +1,9 @@
+theorem check_deployment
+   foreach d in Device_Set do
+     CPU = { p in Processor_Set | Is_Bound_To (p, d) };
+     --  Processors d is bound-to
+
+     check (Is_In (property (d, "Supported_Execution_Platform"),
+                   property (CPU, "Execution_Platform")));
+
+end check_deployment;
