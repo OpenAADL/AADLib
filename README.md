@@ -12,7 +12,7 @@ The recommended installation process is through the proper configuration and ins
 
 ### OSATE
 
-Simply import the AADLib repository as an AADL proejct
+Simply import the AADLib repository as an AADL project
 
 ## Q&A
 
