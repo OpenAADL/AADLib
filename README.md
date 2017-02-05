@@ -16,4 +16,4 @@ Simply import the AADLib repository as an AADL proejct
 
 ## Q&A
 
-[![Build Status](https://travis-ci.org/OpenAADL/AADLib.svg?branch=master)](https://travis-ci.org/OpenAADL/AADLib)
+Build status for Linux and OS X: [![Build Status](https://travis-ci.org/OpenAADL/AADLib.svg?branch=master)](https://travis-ci.org/OpenAADL/AADLib)
