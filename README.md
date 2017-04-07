@@ -14,6 +14,10 @@ The recommended installation process is through the proper configuration and ins
 
 Simply import the AADLib repository as an AADL project
 
+### AADL Inspector
+
+Import the AADLib examples through the GitHub import facility
+
 ## Q&A
 
-Build status for Linux and OS X: [![Build Status](https://travis-ci.org/OpenAADL/AADLib.svg?branch=master)](https://travis-ci.org/OpenAADL/AADLib)
+Build status for Linux: [![Build Status](https://travis-ci.org/OpenAADL/AADLib.svg?branch=master)](https://travis-ci.org/OpenAADL/AADLib)
