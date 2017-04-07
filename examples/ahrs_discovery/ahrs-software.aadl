@@ -23,7 +23,8 @@ public
     acc_out_data_y : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
     acc_out_data_z : out event data port AHRS::Data_Types::FLOAT32_TYPE_AADL;
   flows
-      f1 : flow sink acc_in_data_x { latency => 10 ms .. 20 ms;}; -- XXX: consolidate to all ports
+    f1 : flow sink acc_in_data_x { latency => 10 ms .. 20 ms;};
+    -- XXX: consolidate to all ports
 
   properties
     Priority               => 5;
@@ -33,11 +34,25 @@ public
     Source_Stack_Size      => 512 Bytes;
   end ACCELERO;
 
+  subprogram ACCELERO_SUB_wrapper
+  features
+    acc_out_data_x : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_out_data_y : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    acc_out_data_z : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+  end ACCELERO_SUB_wrapper;
+
+  subprogram implementation ACCELERO_SUB_wrapper.i
+  calls
+    Mycalls: { Spg : subprogram AHRS::Subprograms::ACCELERO_SUB; };
+  connections
+    parameter Spg.acc_out_data_x -> Acc_Out_Data_X;
+    parameter Spg.acc_out_data_Y -> Acc_Out_Data_Y;
+    parameter Spg.acc_out_data_Z -> Acc_Out_Data_Z;
+  end ACCELERO_SUB_wrapper.i;
+
   thread implementation ACCELERO.IMPL
   calls
-    ACCELERO_CALL: {
-      accelero_sub : subprogram AHRS::Subprograms::ACCELERO_SUB;
-    };
+    ACCELERO_CALL: { accelero_sub : subprogram ACCELERO_SUB_wrapper.i; };
   connections
     ACC_PC1 : parameter accelero_sub.acc_out_data_x -> acc_out_data_x;
     ACC_PC2 : parameter accelero_sub.acc_out_data_y -> acc_out_data_y;
@@ -67,9 +82,25 @@ public
     Source_Stack_Size      => 512 Bytes;
   end MAGNETO;
 
+  subprogram MAGNETO_SUB_wrapper
+  features
+    mag_out_data_x : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_out_data_y : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    mag_out_data_z : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+  end MAGNETO_SUB_wrapper;
+
+  subprogram implementation MAGNETO_SUB_wrapper.i
+  calls
+    Mycalls: { Spg : subprogram AHRS::Subprograms::MAGNETO_SUB; };
+  connections
+    parameter Spg.mag_out_data_x -> Mag_Out_Data_X;
+    parameter Spg.mag_out_data_Y -> Mag_Out_Data_Y;
+    parameter Spg.mag_out_data_Z -> Mag_Out_Data_Z;
+  end MAGNETO_SUB_wrapper.i;
+
   thread implementation MAGNETO.IMPL
   calls
-    MAGNETO_CALL: { magneto_sub : subprogram AHRS::Subprograms::MAGNETO_SUB; };
+    MAGNETO_CALL: { magneto_sub : subprogram MAGNETO_SUB_wrapper.i; };
 
   connections
     MAG_PC1 : parameter magneto_sub.mag_out_data_x -> mag_out_data_x;
@@ -100,9 +131,25 @@ public
     Source_Stack_Size      => 512 Bytes;
   end GYRO;
 
+  subprogram GYRO_SUB_wrapper
+  features
+    gyro_out_data_x : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_out_data_y : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+    gyro_out_data_z : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
+  end GYRO_SUB_wrapper;
+
+  subprogram implementation GYRO_SUB_wrapper.i
+  calls
+    Mycalls: { Spg : subprogram AHRS::Subprograms::GYRO_SUB; };
+  connections
+    parameter Spg.gyro_out_data_x -> Gyro_Out_Data_X;
+    parameter Spg.gyro_out_data_Y -> Gyro_Out_Data_Y;
+    parameter Spg.gyro_out_data_Z -> Gyro_Out_Data_Z;
+  end GYRO_SUB_wrapper.i;
+
   thread implementation GYRO.IMPL
   calls
-    GYRO_CALL: { gyro_sub : subprogram AHRS::Subprograms::GYRO_SUB; };
+    GYRO_CALL: { gyro_sub : subprogram GYRO_SUB_wrapper.i; };
 
   connections
     GYRO_PC1 : parameter gyro_sub.gyro_out_data_x -> gyro_out_data_x;

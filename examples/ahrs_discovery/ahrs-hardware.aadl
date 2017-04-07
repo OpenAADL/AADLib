@@ -13,6 +13,7 @@ public
 
   with AHRS;
   with AHRS::Data_Types;
+  with AHRS::Software;
 
   ------------
   -- System --
@@ -26,9 +27,24 @@ public
 
   -- Bare version: only hardware elements are presented
 
-  system implementation SBC_32F411EDISCOVERY.impl
+
+  --  AHRS variant: a generic software block is present, but *not* connected
+  --  to devices. This variant is necessary for code generation.
+
+  system implementation SBC_32F411EDISCOVERY.RTOS
   subcomponents
+    Software : process AHRS::Software::Attitude.impl;
     CPU : processor CortexM4.IMPL;
+
+  properties
+    Actual_Processor_Binding => (reference(cpu)) applies to Software;
+
+  end SBC_32F411EDISCOVERY.RTOS;
+
+
+  system implementation SBC_32F411EDISCOVERY.impl
+    extends SBC_32F411EDISCOVERY.RTOS
+  subcomponents
     RAM : memory Flash.IMPL;
 
     LSM303DLHC : device LSM303DLHC;
@@ -46,23 +62,8 @@ public
 
   end SBC_32F411EDISCOVERY.impl;
 
-  --  AHRS variant: a generic software block is present, but *not* connected
-  --  to devices. This variant is necessary for code generation.
-
-  system implementation SBC_32F411EDISCOVERY.RTOS
-    extends SBC_32F411EDISCOVERY.impl
-
-  subcomponents
-    Software : process AHRS::AHRS_Process;
-
-  properties
-    Actual_Processor_Binding => (reference(cpu)) applies to Software;
-    Actual_Memory_Binding => (reference(ram)) applies to Software;
-
-  end SBC_32F411EDISCOVERY.RTOS;
-
   system implementation SBC_32F411EDISCOVERY.v2
-    extends SBC_32F411EDISCOVERY.RTOS
+    extends SBC_32F411EDISCOVERY.impl
 
   connections
     ACC_PC1 : port LSM303DLHC.acc_out_data_x -> Software.acc_in_data_x;

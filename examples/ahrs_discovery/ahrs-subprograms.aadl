@@ -13,9 +13,9 @@ public
     acc_out_data_z : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
 
   properties
-    Source_Language => (C);
-    Source_Name     => "EntryAccelero";
-    Source_Text     => ("threads.c");
+    Source_Language => (CPP);
+    Source_Name     => "entryaccelero";
+    Source_Text     => ("threads.cpp");
   end ACCELERO_SUB;
 
   subprogram MAGNETO_SUB
@@ -25,9 +25,9 @@ public
     mag_out_data_z : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
 
   properties
-    Source_Language => (C);
-    Source_Name     => "EntryMagneto";
-    Source_Text     => ("threads.c");
+    Source_Language => (CPP);
+    Source_Name     => "entrymagneto";
+    Source_Text     => ("threads.cpp");
   end MAGNETO_SUB;
 
   subprogram GYRO_SUB
@@ -37,9 +37,9 @@ public
     gyro_out_data_z : out parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
 
   properties
-    Source_Language => (C);
-    Source_Name     => "EntryGyro";
-    Source_Text     => ("threads.c");
+    Source_Language => (CPP);
+    Source_Name     => "entrygyro";
+    Source_Text     => ("threads.cpp");
   end GYRO_SUB;
 
   subprogram ATTITUDE_SUB
@@ -57,9 +57,9 @@ public
     gyro_in_data_z	: in parameter AHRS::Data_Types::FLOAT32_TYPE_AADL;
 
   properties
-    Source_Language => (C);
-    Source_Name     => "EntryAttitude";
-    Source_Text     => ("threads.c");
+    Source_Language => (CPP);
+    Source_Name     => "entryattitude";
+    Source_Text     => ("threads.cpp");
   end ATTITUDE_SUB;
 
 end AHRS::Subprograms;

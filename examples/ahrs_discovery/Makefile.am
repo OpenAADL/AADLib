@@ -1,6 +1,6 @@
 AADL_SOURCES = $(srcdir)/ahrs-systems.aadl
 
-AADL_ROOT    = ahrs_system.impl
+AADL_ROOT    = AHRS::Hardware::sbc_32f411ediscovery.rtos
 
 OTHER_FILES = $(srcdir)/ahrs-data_types.aadl				\
 	$(srcdir)/ahrs-software.aadl $(srcdir)/ahrs-hardware.aadl	\
