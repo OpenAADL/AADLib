@@ -16,7 +16,7 @@ AC_ARG_ENABLE(ocarina-version-check,
 else
   ocarina_version_check=false
 fi],
-[ocarina_version_check=true])
+[ocarina_version_check=false])
 
 AC_ARG_WITH(ocarina-prefix,
   AC_HELP_STRING([--with-ocarina-prefix=PREFIX],
@@ -42,7 +42,7 @@ AC_PATH_PROG(OCARINA_CONFIG, ocarina-config, no)
 AS_IF([test x"$ocarina_config_prefix" != "x" -a "${ocarina_version_check}" = "false"],
       [OCARINA_PREFIX="$ocarina_config_prefix"
        OCARINA_ADAFLAGS="false"
-       OCARINA_LIBS="flase"
+       OCARINA_LIBS="false"
        OCARINA_RUNTIME="$ocarina_config_prefix/include/ocarina/runtime"
        OCARINA_RESOURCES="$ocarina_config_prefix/share/ocarina"],
       [test "$OCARINA_CONFIG" != "no"],
@@ -51,16 +51,7 @@ AS_IF([test x"$ocarina_config_prefix" != "x" -a "${ocarina_version_check}" = "fa
        OCARINA_ADAFLAGS=`$OCARINA_CONFIG --cflags`
        OCARINA_LIBS=`$OCARINA_CONFIG --libs`
        OCARINA_RUNTIME=`$OCARINA_CONFIG --runtime`
-       OCARINA_RESOURCES=`$OCARINA_CONFIG --resources`
-       ocarina_major_version=`$OCARINA_CONFIG --version | \
-         sed 's/Ocarina \([[0-9]]*\).\([[0-9]]*\).*/\1/'`
-       ocarina_minor_version=`$OCARINA_CONFIG --version | \
-         sed 's/Ocarina \([[0-9]]*\).\([[0-9]]*\).*/\2/'`
-       AS_IF([test $ocarina_major_version -gt $min_ocarina_major_version -o \( $ocarina_major_version -eq $min_ocarina_major_version -a $ocarina_minor_version -ge $min_ocarina_minor_version \)],
-              [AC_MSG_RESULT(yes)
-               ifelse([$2], , :, [$2])],
-              [AC_MSG_RESULT(no)
-               ifelse([$3], , :, [$3])])],
+       OCARINA_RESOURCES=`$OCARINA_CONFIG --resources`],
       [$3])
 AC_SUBST(OCARINA_PREFIX)
 AC_SUBST(OCARINA_ADAFLAGS)
