@@ -6,7 +6,8 @@ OTHER_FILES = $(srcdir)/ahrs-data_types.aadl				\
 	$(srcdir)/ahrs-software.aadl $(srcdir)/ahrs-hardware.aadl	\
 	$(srcdir)/ahrs-subprograms.aadl $(srcdir)/ahrs.aadl
 
-CLEANDIRS = ahrs_system_impl
+CLEANDIRS = sbc_32f411ediscovery_rtos
+
 CLEANFILES =
 
 include $(srcdir)/../Makefile.common

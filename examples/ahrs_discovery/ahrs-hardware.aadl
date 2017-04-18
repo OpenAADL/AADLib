@@ -145,7 +145,6 @@ public
     spi_bus   : requires bus access Buses::SPI::SPI.IMPL;
 
   properties
-    --    Deployment::Execution_Platform => Native;
         Deployment::Execution_Platform => FreeRTOS;
   end CortexM4;
 

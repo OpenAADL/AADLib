@@ -45,9 +45,9 @@ public
   calls
     Mycalls: { Spg : subprogram AHRS::Subprograms::ACCELERO_SUB; };
   connections
-    parameter Spg.acc_out_data_x -> Acc_Out_Data_X;
-    parameter Spg.acc_out_data_Y -> Acc_Out_Data_Y;
-    parameter Spg.acc_out_data_Z -> Acc_Out_Data_Z;
+    P1: parameter Spg.acc_out_data_x -> Acc_Out_Data_X;
+    P2: parameter Spg.acc_out_data_Y -> Acc_Out_Data_Y;
+    P3: parameter Spg.acc_out_data_Z -> Acc_Out_Data_Z;
   end ACCELERO_SUB_wrapper.i;
 
   thread implementation ACCELERO.IMPL
@@ -93,9 +93,9 @@ public
   calls
     Mycalls: { Spg : subprogram AHRS::Subprograms::MAGNETO_SUB; };
   connections
-    parameter Spg.mag_out_data_x -> Mag_Out_Data_X;
-    parameter Spg.mag_out_data_Y -> Mag_Out_Data_Y;
-    parameter Spg.mag_out_data_Z -> Mag_Out_Data_Z;
+    P1: parameter Spg.mag_out_data_x -> Mag_Out_Data_X;
+    P2: parameter Spg.mag_out_data_Y -> Mag_Out_Data_Y;
+    P3: parameter Spg.mag_out_data_Z -> Mag_Out_Data_Z;
   end MAGNETO_SUB_wrapper.i;
 
   thread implementation MAGNETO.IMPL
@@ -142,9 +142,9 @@ public
   calls
     Mycalls: { Spg : subprogram AHRS::Subprograms::GYRO_SUB; };
   connections
-    parameter Spg.gyro_out_data_x -> Gyro_Out_Data_X;
-    parameter Spg.gyro_out_data_Y -> Gyro_Out_Data_Y;
-    parameter Spg.gyro_out_data_Z -> Gyro_Out_Data_Z;
+    P1: parameter Spg.gyro_out_data_x -> Gyro_Out_Data_X;
+    P2: parameter Spg.gyro_out_data_Y -> Gyro_Out_Data_Y;
+    P3: parameter Spg.gyro_out_data_Z -> Gyro_Out_Data_Z;
   end GYRO_SUB_wrapper.i;
 
   thread implementation GYRO.IMPL
