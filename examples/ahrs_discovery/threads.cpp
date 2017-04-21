@@ -46,6 +46,7 @@
 #include "eigen_math.h"
 #include "thread.h"
 #include "AttitudeEKF.h"
+#include "hardware.h"
 #include <math.h>
 
 //#include "Vector.hpp"
@@ -351,6 +352,8 @@ extern "C"void entryaccelero
     ahrs__data_types__float32_type_aadl* acc_out_data_z)
 #endif
 {
+        init_hardware();
+
 	// Initialise the xLastWakeTime variable with the current time.
 	int16_t tAccValue_int[3];
 	float tAccValue[3];
@@ -408,6 +411,8 @@ extern "C" void entrymagneto
     ahrs__data_types__float32_type_aadl* mag_out_data_z)
 #endif
 {
+        init_hardware();
+
 	static int i = 0;
 	int32_t execution_time = 0;
 	float tMagValue[3]={0, 0, 0};
@@ -457,6 +462,8 @@ extern "C" void entrygyro
     ahrs__data_types__float32_type_aadl* gyro_out_data_z)
 #endif
 {
+        init_hardware();
+
 	float tGyroValue[3];
 
 	static int i = 0, count = 0;
