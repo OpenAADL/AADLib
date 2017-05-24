@@ -3,7 +3,8 @@ SUBDIRS= adiru ahrs_discovery aocs aram ardupilot arinc653_annex asl	\
 	  fms isr line_follower mixin memory mosart multicore		\
 	  paparazzi pathfinder_system perseus producer_consumer		\
 	  ravenscar radar rap redundancy rma robot round_robin		\
-	  time_triggered units uxv voter satellite
+	  time_triggered units uxv voter satellite robot_ba		\
+	  pacemaker doors
 #mjpeg
 
 EXTRA_DIST=$(srcdir)/Makefile.common

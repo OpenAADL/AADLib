@@ -5,6 +5,7 @@ OTHER_FILES = $(srcdir)/producer_consumer.adb	\
 	  $(srcdir)/producer_consumer.ads
 
 CLEANDIRS = pc_simple_native
+CLEANFILES = *.lnt demo.svl
 
 include $(srcdir)/../Makefile.common
 

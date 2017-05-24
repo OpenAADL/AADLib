@@ -104,6 +104,7 @@ AC_OUTPUT([
 	examples/rma/Makefile
 	examples/redundancy/Makefile
         examples/robot/Makefile
+        examples/robot_ba/Makefile
 	examples/round_robin/Makefile
 	examples/satellite/Makefile
 	examples/time_triggered/Makefile
@@ -115,6 +116,8 @@ AC_OUTPUT([
 	examples/uxv/quadrirotorv1/Makefile
 	examples/uxv/traxsterv3/Makefile
 	examples/voter/Makefile
+	examples/pacemaker/Makefile
+	examples/doors/Makefile
 	src/Makefile
 	src/aadl/Makefile
 	src/property_set/Makefile

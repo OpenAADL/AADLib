@@ -5,4 +5,4 @@ include $(srcdir)/../Makefile.common
 
 CLEANDIRS = fcs_impl
 
-AVAILABLE_TARGETS= parse-aadl real cheddar stats
+AVAILABLE_TARGETS= parse-aadl real cheddar stats lnt
