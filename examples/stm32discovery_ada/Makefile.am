@@ -8,4 +8,4 @@ CLEANFILES =
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl build_ada
+AVAILABLE_TARGETS= parse-aadl ada
