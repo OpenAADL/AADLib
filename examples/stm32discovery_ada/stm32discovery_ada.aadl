@@ -1,0 +1,55 @@
+--  This example demonstrates how to use an embedded Ada runtime when
+--  performing code generation from AADL.
+--
+-- It blink a led on a STM32F407 Discovery kit, and relies on the ada
+-- Drivers Library from AdaCore
+
+package STM32Discovery_Ada
+public
+  with Deployment;
+
+  subprogram Blink
+  properties
+    Source_Language => (Ada);
+    Source_Name     => "blink.do_blink";
+  end Blink;
+
+  thread Task end Task;
+
+  thread implementation Task.impl_1
+  calls
+    Mycalls: { P_Spg : subprogram Blink; };
+
+  properties
+    Dispatch_Protocol  => Periodic;
+    Priority           => 1;
+    Period             => 1000 ms;
+  end Task.impl_1;
+
+  processor Cortex_M4
+  properties
+    Deployment::Execution_Platform => GNAT_Runtime;
+    deployment::Ada_Runtime => "stm32f407_discovery";
+  end Cortex_M4;
+
+  process node_a
+  end node_a;
+
+  process implementation node_a.impl
+  subcomponents
+    Task1 : thread Task.impl_1;
+  end node_a.impl;
+
+  system blinky
+  end blinky;
+
+  system implementation blinky.impl
+  subcomponents
+    node_a : process node_a.impl;
+    cpu	   : processor Cortex_M4;
+  properties
+    Actual_Processor_Binding => (reference (cpu)) applies to node_a;
+
+  end blinky.impl;
+
+end STM32Discovery_Ada;

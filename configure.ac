@@ -106,7 +106,8 @@ AC_OUTPUT([
         examples/robot/Makefile
 	examples/round_robin/Makefile
 	examples/satellite/Makefile
-	examples/time_triggered/Makefile
+        examples/stm32discovery_ada/Makefile
+        examples/time_triggered/Makefile
 	examples/units/Makefile
 	examples/uxv/Makefile
 	examples/uxv/emaxxv2/Makefile
