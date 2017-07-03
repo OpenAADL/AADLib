@@ -45,8 +45,6 @@ Here is a short description of available examples
 * asl: work in progress REAL theorems in preparation for the ASL annex
   as part of SAE AS2/C committee work
 
-* behavior_annex: models from the Behavior annex language for AADLv2
-
 * car: case study from the chapter written by Emmanuel Grolleau,
   Pascal Richard and Michaël Richard, Scheduling in Distributed
   Real-Time Systems, Distributed Systems: Design and Algorithms,
