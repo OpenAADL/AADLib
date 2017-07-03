@@ -127,9 +127,9 @@ void MX_USART2_UART_Init(void)
 
 }
 
-/** Configure pins as 
-        * Analog 
-        * Input 
+/** Configure pins as
+        * Analog
+        * Input
         * Output
         * EVENT_OUT
         * EXTI
@@ -214,9 +214,9 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PD12 PD13 PD14 PD15 
+  /*Configure GPIO pins : PD12 PD13 PD14 PD15
                            PD4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15 
+  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15
                           |GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -255,6 +255,13 @@ void MX_GPIO_Init(void)
 
 void init_hardware()
 {
+  static bool is_initialized = false;
+
+  if (is_initialized) {
+    is_initialized = true;
+    return;
+  }
+
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
@@ -270,7 +277,7 @@ void init_hardware()
   BSP_LED_Init(1);
   BSP_LED_Init(2);
   BSP_LED_Init(3);
-  	
+
   MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
