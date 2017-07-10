@@ -1,8 +1,9 @@
 --------------------------------------------------------------------------------
---  EM412 -- AADL: fcs.aadl
---------------------------------------------------------------------------------
---  This AADL package models the Flight Control System from this lab
---  session, a set of periodic threads interacting with some devices.
+--  This AADL package models a naive Flight Control Systems, adapted
+--  from a lab on scheduling analysis tools developed by C. Pagetti
+--  from ONERA; and adapted for AADL teaching classes by J. Hugues at
+--  ISAE. Only the architecture is developed, to be analyzed with
+--  Cheddar.
 --------------------------------------------------------------------------------
 
 package Flight_Control_System
