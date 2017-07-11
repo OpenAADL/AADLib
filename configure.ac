@@ -100,6 +100,7 @@ AC_OUTPUT([
 	examples/producer_consumer/Makefile
 	examples/radar/Makefile
 	examples/rap/Makefile
+	examples/rap_code/Makefile
 	examples/ravenscar/Makefile
 	examples/rma/Makefile
 	examples/redundancy/Makefile

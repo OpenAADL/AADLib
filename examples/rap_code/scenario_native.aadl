@@ -1,0 +1,15 @@
+--  $Id: scenario_native.aadl 2119 2007-10-24 07:15:27Z zalila $
+
+system RAP
+properties
+  Ocarina_Config::AADL_Files           => ("RAP.aadl", "RAP_NATIVE.aadl");
+  Ocarina_Config::Generator            => polyorb_hi_ada;
+  Ocarina_Config::Needed_Property_Sets => 
+  (value (Ocarina_Config::Data_Model),
+  value (Ocarina_Config::Deployment),
+  value (Ocarina_Config::Cheddar_Properties));
+
+end RAP;
+
+system implementation RAP.Impl
+end  RAP.Impl;
