@@ -1,7 +1,7 @@
 ;; aadl-mode
 ;; Copyright 2004-2006 Ecole Nationale Superieure des Telecommunications
 ;; Laurent.Pautet@enst.fr, Thomas.Vergnaud@enst.fr, Bechir.Zalila@enst.fr
-;; Copyright 2009-2013 Institut Superieur de l'Aeronautique et de l'Espace
+;; Copyright 2009-2017 Institut Superieur de l'Aeronautique et de l'Espace
 ;; Jerome.Hugues@isae.fr
 
 ;; To load this file, just add the following line to your .emacs :
@@ -217,7 +217,7 @@
    ((looking-at "^[ \t]*\\<\\(bus\\|data\\|port\\)\\>[ \t]+\\<\\(access\\|port\\|group\\)\\>")
     (aadl-indent-statement))
 
-   ((looking-at "^[ \t]*\\<\\(data\\|thread\\|subprogram\\|process\\|bus\\|processor\\|device\\|memory\\|port +group\\|features\\|subcomponents\\|properties\\|flows\\|connections\\|modes\\|calls\\)\\>[^;]*$")
+   ((looking-at "^[ \t]*\\<\\(data\\|thread\\|subprogram\\|process\\|bus\\|processor\\|device\\|memory\\|port +group\\|prototypes\\|features\\|subcomponents\\|properties\\|flows\\|connections\\|modes\\|calls\\)\\>[^;]*$")
     (+ (current-indentation) 2))
 
    ((looking-at "^[ \t]*$")
@@ -252,7 +252,7 @@
 	 ((looking-at "^[ \t]*\\<\\(data\\|thread\\|subprogram\\|process\\|bus\\|processor\\|device\\|memory\\|system\\|port +group\\)[ \t]+\\(implementation\\)?\\>")
 	  (aadl-indent-component-statement))
 
-	 ((looking-at "^[ \t]*\\<\\(features\\|modes\\|subcomponents\\|properties\\|flows\\|connections\\|calls\\|annex\\)\\>")
+	 ((looking-at "^[ \t]*\\<\\(prototypes\\|features\\|modes\\|subcomponents\\|properties\\|flows\\|connections\\|calls\\|annex\\)\\>")
 	  (aadl-indent-subclause-statement))
 
 	 (t

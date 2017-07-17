@@ -100,6 +100,7 @@ AC_OUTPUT([
 	examples/producer_consumer/Makefile
 	examples/radar/Makefile
 	examples/rap/Makefile
+	examples/rap_code/Makefile
 	examples/ravenscar/Makefile
 	examples/rma/Makefile
 	examples/redundancy/Makefile
@@ -107,7 +108,8 @@ AC_OUTPUT([
         examples/robot_ba/Makefile
 	examples/round_robin/Makefile
 	examples/satellite/Makefile
-	examples/time_triggered/Makefile
+        examples/stm32discovery_ada/Makefile
+        examples/time_triggered/Makefile
 	examples/units/Makefile
 	examples/uxv/Makefile
 	examples/uxv/emaxxv2/Makefile

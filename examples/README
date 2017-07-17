@@ -45,8 +45,6 @@ Here is a short description of available examples
 * asl: work in progress REAL theorems in preparation for the ASL annex
   as part of SAE AS2/C committee work
 
-* behavior_annex: models from the Behavior annex language for AADLv2
-
 * car: case study from the chapter written by Emmanuel Grolleau,
   Pascal Richard and Michaël Richard, Scheduling in Distributed
   Real-Time Systems, Distributed Systems: Design and Algorithms,
@@ -89,9 +87,16 @@ Here is a short description of available examples
   F. Singhoff from UBO, P. Disseaux from Ellidiss and Nader Khammassi
   from Virtualys and J. Hugues (ISAE). Adapted to AADLv2
 
-* rap: Ravenscar Avionics Platform, written by Olivier Gilles during
-  his PhD. This models builds upon the Generic Avionics Platform from
-  SEI.
+* rap: Ravenscar Avionics Platform, adapted from Irfan Hamid and
+  Bechir Zalila code by Olivier Gilles during his PhD to demonstrate
+  optimization of AADL model. This models builds upon the Generic
+  Avionics Platform from SEI.
+
+* rap_code: Ravenscar Avionics Platform, by Irfan Hamid and Bechir
+  Zalila, and updated to AADLv2. This models builds upon the "Generic
+  Avionic Platform", by C. Douglass Locke, David R. Vogel, Lee Lucas ,
+  John B. Goodenough as presented in the CMU/SEI Technical Report
+  CMU/SEI-90-TR-8.
 
 * ravenscar: case study issued from the ``Guide for the use of the Ada
   Ravenscar Profile in high integrity systems'' written by Alan Burns,
