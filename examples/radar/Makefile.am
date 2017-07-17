@@ -10,5 +10,5 @@ CLEANDIRS = radar_simple
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl real build_ada
+AVAILABLE_TARGETS= parse-aadl real build_ada lnt
 

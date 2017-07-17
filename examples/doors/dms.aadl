@@ -1,0 +1,476 @@
+package DMS
+
+public
+with Base_Types;
+
+  system door_management
+  end door_management;
+  
+  system implementation door_management.imp
+    subcomponents
+      door1: device door.imp;
+      door2: device door.imp;
+      lgs: device LGS.imp;
+      dps: device DPS.imp;
+      ocu: device OCU.imp;
+      fws: device FWS.imp;
+      ecam: device ECAM.imp;
+      process_door: process doors_process.imp;
+
+    connections
+      connPD11: port door1.handle_position -> process_door.D1_handle_position;
+      connPD12: port door1.closed -> process_door.D1_closed;
+      connPD102: port door1.latched -> process_door.D1_latched;
+      connPD13: port door1.locked  -> process_door.D1_locked;
+      connPD14: port process_door.D1_swivel -> door1.swivel;
+      connPD15: port process_door.D1_de_arrest -> door1.de_arrest;
+      connPD16: port process_door.D1_lock -> door1.lock;
+      connPD17: port process_door.D1_warn_diff_pres -> door1.warn_diff_pres;
+      connPD18: port process_door.D1_warn_slide -> door1.warn_slide;
+      connPD19: port lgs.in_flight1 -> process_door.D1_in_flight;
+      connPD110: port lgs.on_ground1 -> process_door.D1_on_ground;
+      connPD111: port lgs.engine_running1 -> process_door.D1_engine_running;
+      connPD112: port lgs.emergency_evacuation1 -> process_door.D1_emergency_evacuation;
+      connPD113 : port process_door.D1_ecam_info  -> ecam.info_door1;
+      connPD114 : port process_door.D1_warning_info -> fws.wrn_door1;
+
+      connPD116: port dps.dps1 ->  process_door.D1_dps;
+
+      connPD21: port door2.handle_position -> process_door.D2_handle_position;
+      connPD22: port door2.closed -> process_door.D2_closed;
+      connPD202: port door2.latched -> process_door.D2_latched;
+      connPD23: port door2.locked  -> process_door.D2_locked;
+      connPD24: port process_door.D2_swivel -> door2.swivel;
+      connPD25: port process_door.D2_de_arrest -> door2.de_arrest;
+      connPD26: port process_door.D2_lock -> door2.lock;
+      connPD27: port process_door.D2_warn_diff_pres -> door2.warn_diff_pres;
+      connPD28: port process_door.D2_warn_slide -> door2.warn_slide;
+      connPD29: port lgs.in_flight2 -> process_door.D2_in_flight;
+      connPD210: port lgs.on_ground2 -> process_door.D2_on_ground;
+      connPD211: port lgs.engine_running2 -> process_door.D2_engine_running;
+      connPD212: port lgs.emergency_evacuation2 -> process_door.D2_emergency_evacuation;
+      connPD213 : port process_door.D2_warning_info -> fws.wrn_door2;
+      connPD214 : port process_door.D2_ecam_info -> ecam.info_door2;
+
+      connPD216: port dps.dps2 ->  process_door.D2_dps;
+
+
+
+
+      connMix: port process_door.Mix_cll -> ocu.cll;
+  end door_management.imp;
+  
+--The electric door actuation system on the A380 replaces conventional manual door opening mechanisms.
+
+--The system includes three actuators:
+--        the Swivel Actuator which opens and closes the aircraft door;
+--        the De-Arrest Actuator which secures the door in the open position; 
+--        the Flight Lock Actuator that ensures the door remains closed during flight. 
+--To safeguard the integrity of the system in critical situations redundant 
+-- windings are integrated in the Swivel Actuator.
+
+  device door -- without duplication
+    features
+      -- sensors
+      -- sensor of handle position
+      handle_position: out data port Base_Types::boolean; -- handle in open (true) or closed (false) pos
+      -- sensor is closed ?
+      closed: out data port Base_Types::boolean; -- the door state: open (true) or closed (false)
+      -- sensor is latched ?
+      latched: out data port Base_Types::boolean; -- the door is latched with swivel actuator (true)
+      -- sensor is locked ?
+      locked: out data port Base_Types::boolean; -- the door is locked with the lock actuator
+
+      -- actuators from A380
+      swivel    : in data port Base_Types::boolean; -- Actuator which opens and closes the door
+      de_arrest : in data port Base_Types::boolean; -- Actuator that secures the door in the open pos
+      lock : in data port Base_Types::boolean; -- Actuator that ensures the door remains closed
+
+      -- lighting warning     
+      warn_diff_pres: in data port Base_Types::boolean; -- pressure cabin warning 
+      warn_slide: in data port Base_Types::boolean; -- slide armed warning
+  end door;
+
+--  If a door (warn_slide) is put into armed mode, 
+--  it will trigger the evacuation slide when the door is opened.  
+  device implementation door.imp
+    annex Behavior_Specification {**
+      states
+        s0 : initial complete state;
+      transitions
+        s0 -[ on dispatch ]-> s0 {
+          computation(1ms);
+          handle_position := true;
+          closed := false;
+          latched := false;
+          locked:= false};
+
+        s0 -[ on dispatch ]-> s0 {
+          computation(1ms);
+          handle_position := false;
+          closed := true;
+          latched := false;
+          locked:= false};
+
+        s0 -[ on dispatch ]-> s0 {
+          computation(1ms);
+          handle_position := false;
+          closed := true;
+          latched := true;
+          locked:= false};
+
+        s0 -[ on dispatch ]-> s0 {
+          computation(1ms);
+          handle_position := false;
+          closed := true;
+          latched := true;
+          locked:= true};
+**};
+  end door.imp;
+  
+  device LGS
+    features
+      in_flight1: out data port Base_Types::boolean;
+      on_ground1: out data port Base_Types::boolean;
+      engine_running1:  out data port Base_Types::boolean;
+      emergency_evacuation1 : out data port Base_Types::boolean;
+
+      in_flight2: out data port Base_Types::boolean;
+      on_ground2: out data port Base_Types::boolean;
+      engine_running2:  out data port Base_Types::boolean;
+      emergency_evacuation2 : out data port Base_Types::boolean;
+
+  end LGS;
+  
+  device implementation LGS.imp
+    annex Behavior_Specification {**
+      states
+        s0 : initial complete state;
+      transitions
+        s0 -[ on dispatch ]-> s0 {
+          computation(1ms);
+          in_flight1 := false;
+          on_ground1 := true;
+          engine_running1:= false;
+          emergency_evacuation1:= false;
+
+          in_flight2 := false;
+          on_ground2 := true;
+          engine_running2:= false;
+          emergency_evacuation2:= false
+        };
+        s0 -[ on dispatch ]-> s0 {
+          computation(1ms);
+          in_flight1 := false;
+          on_ground1 := true;
+          engine_running1:= true;
+          emergency_evacuation1:= false;
+
+          in_flight2 := false;
+          on_ground2 := true;
+          engine_running2:= true;
+          emergency_evacuation2:= false
+        };
+
+        s0 -[ on dispatch ]-> s0 {
+          computation(1ms);
+          in_flight1 := true;
+          on_ground1 := false;
+          engine_running1:= true;
+          emergency_evacuation1:= false;
+          in_flight2 := true;
+          on_ground2 := false;
+          engine_running2:= true;
+          emergency_evacuation2:= false
+        };
+**};
+  end LGS.imp;
+  
+  device DPS
+    features
+      dps1: out data port Base_Types::integer;
+      dps2: out data port Base_Types::integer;
+  end DPS;
+  
+  device implementation DPS.imp
+    annex Behavior_Specification {**
+      states
+        s0 : initial complete state;
+      transitions
+        s0 -[ on dispatch ]-> s0 {
+          computation(1ms);
+          dps1 := 0;
+          dps2 := 0};
+        s0 -[ on dispatch ]-> s0 {
+          computation(1ms);
+          dps1 := 4;
+          dps2 := 4};
+**};
+  end DPS.imp;
+  
+  device OCU
+    features
+      cll: in data port Base_Types::boolean;
+  end OCU;
+  
+  device implementation OCU.imp
+  end OCU.imp;
+
+  device FWS
+    features
+      wrn_door1: in data port Base_Types::boolean;
+      wrn_door2: in data port Base_Types::boolean;
+  end FWS;
+  
+  device implementation FWS.imp
+  end FWS.imp;
+
+  device ECAM
+    features
+      info_door1: in data port Base_Types::boolean;
+      info_door2: in data port Base_Types::boolean;
+  end ECAM;
+  
+  device implementation ECAM.imp
+  end ECAM.imp;
+
+  
+  process doors_process
+    features
+      -- door 1
+      D1_handle_position: in data port Base_Types::boolean;
+      D1_closed: in data port Base_Types::boolean;
+      D1_latched: in data port Base_Types::boolean;
+      D1_locked: in data port Base_Types::boolean;
+      D1_swivel: out data port Base_Types::boolean;
+      D1_de_arrest: out data port Base_Types::boolean;
+      D1_lock: out data port Base_Types::boolean;
+      D1_warn_diff_pres: out data port Base_Types::boolean;
+      D1_warn_slide: out data port Base_Types::boolean;
+      D1_in_flight: in data port Base_Types::boolean;
+      D1_on_ground: in data port Base_Types::boolean;
+      D1_engine_running: in data port Base_Types::boolean;
+      D1_emergency_evacuation: in data port Base_Types::boolean;
+      D1_dps: in data port Base_Types::integer;
+      D1_warning_info: out data port Base_Types::boolean;
+      D1_ecam_info: out data port Base_Types::boolean;
+
+      -- door 2
+      D2_handle_position: in data port Base_Types::boolean;
+      D2_closed: in data port Base_Types::boolean;
+      D2_latched: in data port Base_Types::boolean;
+      D2_locked: in data port Base_Types::boolean;
+      D2_swivel: out data port Base_Types::boolean;
+      D2_de_arrest: out data port Base_Types::boolean;
+      D2_lock: out data port Base_Types::boolean;
+      D2_warn_diff_pres: out data port Base_Types::boolean;
+      D2_warn_slide: out data port Base_Types::boolean;
+      D2_in_flight: in data port Base_Types::boolean;
+      D2_on_ground: in data port Base_Types::boolean;
+      D2_engine_running: in data port Base_Types::boolean;
+      D2_emergency_evacuation: in data port Base_Types::boolean;
+      D2_warning_info: out data port Base_Types::boolean;
+      D2_ecam_info: out data port Base_Types::boolean;
+      D2_dps: in data port Base_Types::integer;
+
+      -- door Mix
+      Mix_cll: out data port Base_Types::boolean;
+  end doors_process;
+  
+  process implementation doors_process.imp
+    subcomponents
+      door1: thread door_handler.imp;
+      door2: thread door_handler.imp;
+      doors_mix: thread doors_int.imp;
+    connections
+      connD11: port D1_handle_position -> door1.handle_position;
+      connD12: port D1_closed -> door1.closed;
+      connD102: port D1_latched -> door1.latched;
+      connD13: port D1_locked -> door1.locked;
+      connD14: port door1.swivel -> D1_swivel;
+      connD15: port door1.de_arrest -> D1_de_arrest;
+      connD16: port door1.lock -> D1_lock;
+      connD17: port door1.warn_diff_pres -> D1_warn_diff_pres;
+      connD18: port door1.warn_slide -> D1_warn_slide;
+      connD19: port D1_in_flight -> door1.in_flight;
+      connD110: port D1_on_ground -> door1.on_ground;
+      connD111: port D1_engine_running -> door1.engine_running;
+      connD112: port D1_emergency_evacuation -> door1.emergency_evacuation;
+      connD113: port door1.warning_info -> D1_warning_info;
+      connD114: port door1.ecam_info -> D1_ecam_info;
+      connD116: port D1_dps -> door1.dps;
+
+      connD21: port D2_handle_position -> door2.handle_position;
+      connD22: port D2_closed -> door2.closed;
+      connD202: port D2_latched -> door2.latched;
+      connD23: port D2_locked -> door2.locked;
+      connD24: port door2.swivel -> D2_swivel;
+      connD25: port door2.de_arrest -> D2_de_arrest;
+      connD26: port door2.lock -> D2_lock;
+      connD27: port door2.warn_diff_pres -> D2_warn_diff_pres;
+      connD28: port door2.warn_slide -> D2_warn_slide;
+      connD29: port D2_in_flight -> door2.in_flight;
+      connD210: port D2_on_ground -> door2.on_ground;
+      connD211: port D2_engine_running -> door2.engine_running;
+      connD212: port D2_emergency_evacuation -> door2.emergency_evacuation;
+      connD213: port door2.warning_info -> D2_warning_info;
+      connD214: port door2.ecam_info -> D2_ecam_info;
+      connD216: port D2_dps -> door2.dps;
+
+      connMix: port doors_mix.cll -> Mix_cll;
+
+      -- inter-thread connections
+      connD218: port door2.door_locked -> doors_mix.door2;
+      connD118: port door1.door_locked -> doors_mix.door1;
+  end doors_process.imp;
+--  Model-checking TODO
+-- P1: It must not be possible to position the lock in the locked position if the latch and the
+--    latching mechanism are not in the latched position. 
+-- P2: It must not be possible to unlatch the latches with the locks in the locked position. 
+  thread door_handler
+    features
+      -- door device
+      handle_position: in data port Base_Types::boolean; -- handle in open (true) or closed (false) pos
+      closed: in data port Base_Types::boolean; -- the door state: open (true) or closed (false)
+      latched: in data port Base_Types::boolean;
+      locked: in data port Base_Types::boolean; -- the door state: open (true) or closed (false)
+      swivel : out data port Base_Types::boolean; -- Actuator that opens and closes the aircraft door
+      de_arrest : out data port Base_Types::boolean; -- Actuator that secures the door in the open pos
+      lock : out data port Base_Types::boolean; -- Actuator that ensures the door remains closed
+      warn_diff_pres: out data port Base_Types::boolean; -- pressure cabin warning 
+      warn_slide: out data port Base_Types::boolean; -- slide armed warning
+
+      -- LGS device
+      in_flight: in data port Base_Types::boolean;
+      on_ground: in data port Base_Types::boolean;
+      engine_running: in data port Base_Types::boolean;
+      emergency_evacuation : in data port Base_Types::boolean;
+      --  airspeed1: in data port Base_Types::integer; -- x
+
+      -- DPS device
+      dps: in data port Base_Types::integer;
+
+      -- mix door thread
+      door_locked: out data port Base_Types::boolean;
+
+      -- FWS device
+      warning_info: out data port Base_Types::boolean;
+
+      -- ECAM device
+      ecam_info: out data port Base_Types::boolean;
+
+  end door_handler;
+
+      --  It is also acceptable to have procedures so the doors 
+      -- are armed simultaneously with the start of pushback.  
+  thread implementation door_handler.imp
+    properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 20 ms;
+      Period => 50 Ms;
+
+    annex Behavior_Specification {**
+      states
+        sd_opened : initial complete final state;
+        sd_closed, sd_latch, sd_latched, sd_lock, sd_locked, sd_armed  : complete state;
+        sa_inflight, sa_landing : complete state;
+        sd_warning, sa_evacuation : complete final state;
+        s1, s2, s3, s4, s5, s6, s7 : state;
+      transitions
+       sd_opened -[on dispatch]-> s1 {
+          door_locked := closed and latched and locked
+       };
+       s1 -[handle_position]-> sd_opened;
+
+       s1 -[not handle_position and closed and on_ground and not engine_running]-> sd_latch {
+       swivel := true
+       };
+       sd_latch -[on dispatch ]-> s2 {
+          door_locked := closed and latched and locked
+       };
+
+       s2 -[closed and latched and on_ground and not engine_running]-> sd_lock {
+       lock := true
+       };
+       sd_lock -[on dispatch ]-> s3 {
+          door_locked := closed and latched and locked
+       };
+       s3 -[not closed or not latched or not locked]-> sd_warning {
+          warning_info := true
+       };
+
+       s3 -[closed and latched and locked and on_ground and not engine_running]-> sd_locked {
+          ecam_info := true
+       };
+
+       sd_locked -[on dispatch ]-> s4
+          {door_locked := closed and latched and locked
+       };
+
+       s4 -[closed and latched and locked and on_ground and engine_running]-> sd_armed {
+          warn_slide := true
+       };
+       sd_armed -[on dispatch ]-> s5
+          {door_locked := closed and latched and locked
+       };
+
+       -- takeoff of the aircraft ==> inflight
+       s5 -[in_flight and engine_running and dps > 0]-> sa_inflight {
+          warn_diff_pres := true
+       };
+       sa_inflight -[on dispatch ]-> s6
+          {door_locked := closed and latched and locked
+       };
+       s6 -[in_flight and engine_running and dps > 0]-> sa_inflight;
+
+       s6 -[in_flight and not closed or not latched or not locked]-> sd_warning {
+          warning_info := true
+       };
+       s6 -[in_flight and handle_position]-> sd_warning {
+          warning_info := true
+       }; 
+       -- landing
+       s6 -[on_ground and not engine_running and dps = 0]-> sa_landing {
+          warn_diff_pres := false;
+          lock := false
+       };
+       sa_landing -[on dispatch ]-> s7
+          {door_locked := closed and latched and locked
+       };
+       s7 -[on_ground and emergency_evacuation]-> sa_evacuation {
+          warn_diff_pres := false;
+          lock := false;
+          swivel := false
+       };
+       s7 -[handle_position and not closed and not latched and not locked and
+            on_ground and not engine_running]->
+       sd_opened {
+          --new aircraft automatically disarm the sliderafts if the doors are opened from the outside. 
+         de_arrest := true
+       };
+**};
+
+
+  end door_handler.imp;
+  
+  thread doors_int
+    features
+      door1: in data port Base_Types::boolean;
+      door2: in data port Base_Types::boolean;
+      cll: out data port Base_Types::boolean;
+  end doors_int;
+  
+  thread implementation doors_int.imp
+    properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 0 ms .. 5 ms;
+      Period => 50 Ms;
+    annex Behavior_Specification {**
+      states
+        s0 : initial complete final state;
+      transitions
+        s0 -[ on dispatch ]-> s0 {
+          cll := door1 and door2};
+**};
+  end doors_int.imp;
+end DMS;

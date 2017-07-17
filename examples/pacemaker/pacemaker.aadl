@@ -1,0 +1,158 @@
+PACKAGE Pacemaker_Pkg
+  PUBLIC
+with Base_Types;
+with data_Model;
+
+system Pacemaker
+end Pacemaker;
+
+device VentricleLead
+features
+  VentricleSense : out event port;
+  VentriclePulse : in event port;
+  Normal_Beat    : in event port;  
+end VentricleLead;
+
+thread Controler
+features
+  L_VentricleSense : in event port;
+  L_VentriclePulse : out event port;
+  Normal_Beat    : in event port;
+  S_VentricleSense : out event port;
+  S_VentriclePulse : in event port;
+end Controler;
+
+process Pg_Controler
+features
+  L_VentricleSense : in event port;
+  L_VentriclePulse : out event port;
+  Normal_Beat    : in event port;
+  S_VentricleSense : out event port;
+  S_VentriclePulse : in event port;
+end Pg_Controler;
+
+process implementation Pg_Controler.others
+subcomponents
+  controler : thread Controler
+    { Dispatch_Protocol => periodic;
+      Period => 100 ms;  -- to be changed for analysing
+      Compute_Execution_Time => 0 ms .. 10 ms;};
+connections
+  cnx_0 : port L_VentricleSense -> controler.L_VentricleSense;
+  cnx_1 : port controler.L_VentriclePulse -> L_VentriclePulse;
+  cnx_2 : port controler.S_VentricleSense -> S_VentricleSense;
+  cnx_3 : port S_VentriclePulse -> controler.S_VentriclePulse;
+  cnx_4 : port Normal_Beat -> controler.Normal_Beat;
+end Pg_Controler.others;
+
+system DeviceControllerMonitor
+end DeviceControllerMonitor;
+
+system implementation DeviceControllerMonitor.others
+subcomponents
+  Lead : device VentricleLead;
+  PacemakerSW : process PacemakerSW.others;
+  HWPlatform : processor HWPlatform;
+connections 
+  cnx_3 : port Lead.VentricleSense -> PacemakerSW.s;
+  cnx_4 : port PacemakerSW.p -> Lead.VentriclePulse;
+  cnx_5 : port PacemakerSW.n -> Lead.Normal_Beat;
+properties
+  Actual_Processor_Binding => (reference(HWPlatform)) applies to PacemakerSW;
+end DeviceControllerMonitor.others;
+
+process PacemakerSW
+features
+  s : in event port;
+  p : out event port;
+  n : out event port;
+end PacemakerSW;
+
+process implementation PacemakerSW.others
+subcomponents
+  VRPTimeout : thread DualOrTimer
+    { Dispatch_Protocol => Timed;
+      Period => 30 ms;
+      Compute_Execution_Time => 0 ms .. 2 ms; };
+  LRLTimeout : thread DualOrTimer
+    { Dispatch_Protocol => Timed;
+      Period => 100 ms; 
+      Compute_Execution_Time => 0 ms .. 2 ms;};
+  VVIMode : thread VVIMode.others;
+connections
+  cnx_0 : port s -> VVIMode.s;
+  cnx_1 : port VVIMode.p -> p;
+  cnx_2 : port VVIMode.n -> n;
+  cnx_3 : port VRPTimeout.output -> VVIMode.vrp_timeout;
+  cnx_4 : port LRLTimeout.output -> VVIMode.lrl_timeout;
+  cnx_5 : port VVIMode.p_or_n1 -> VRPTimeout.input;
+  cnx_7 : port VVIMode.p_or_n2 -> LRLTimeout.input;
+end PacemakerSW.others;
+
+thread DualOrTimer
+features
+  input : in event port;
+  output : out event port;
+annex Behavior_Specification {**
+  states 
+    s1 : initial complete final state;
+  transitions
+    t1 : s1 -[ on dispatch input ]-> s1;
+    t2 : s1 -[ on dispatch timeout ]-> s1 { 
+    output! 
+    };
+**};
+end DualOrTimer;
+
+thread VVIMode
+features
+  s : in event port;
+  lrl_timeout : in event port;
+  vrp_timeout : in event port;
+  p : out event port;
+  n : out event port;  
+  p_or_n1 : out event port;
+  p_or_n2 : out event port;    
+ 
+
+end VVIMode;
+
+thread implementation VVIMode.others
+subcomponents
+  vrp : data int;
+properties
+  Dispatch_Protocol => Sporadic;
+  Period => 30 ms;
+  Compute_Execution_Time => 0 ms .. 4 ms;
+
+annex Behavior_Specification {**
+  states 
+    s1 : initial complete final state;
+  transitions
+    t0 : s1 -[ on dispatch vrp_timeout ]-> s1 { 
+       vrp := 0 };
+    t1 : s1 -[ on dispatch s ]-> s1 {
+       if (vrp = 0) 
+          n!; 
+          p_or_n1!;
+          p_or_n2!;
+          vrp := 1 
+       end if 
+    };
+    t2 : s1 -[ on dispatch lrl_timeout ]-> s1 {
+       p!; 
+       p_or_n1!;
+       p_or_n2!;
+       vrp := 1 };
+**};
+end VVIMode.others;
+
+data int
+properties
+  data_Model::Initial_Value => ("1");
+end int;
+
+processor HWPlatform
+end HWPlatform;
+
+end Pacemaker_Pkg;
