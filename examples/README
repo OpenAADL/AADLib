@@ -108,6 +108,11 @@ Here is a short description of available examples
   checked by Cheddar, or can generate code for either PolyORB-HI/C or
   Ada.
 
+* rosace: models the case study from "Pagetti, Claire and Saussie,
+  David and Gratia, Romain and Noulard, Eric and Siron, Pierre "The
+  ROSACE Case Study: From Simulink Specification to Multi/Many-Core
+  Execution." (2014) published in RTAS'2014
+
 * time_triggered: shows how to implement a time-triggered architecture
   using delayed connections.
 

@@ -106,6 +106,7 @@ AC_OUTPUT([
 	examples/redundancy/Makefile
         examples/robot/Makefile
         examples/robot_ba/Makefile
+        examples/rosace/Makefile
 	examples/round_robin/Makefile
 	examples/satellite/Makefile
         examples/stm32discovery_ada/Makefile
