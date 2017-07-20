@@ -1,4 +1,4 @@
-AADL_SOURCES = $(srcdir)/robot.aadl
+AADL_SOURCES = $(srcdir)/robot_ba.aadl
 AADL_ROOT    = robot.i
 
 OTHER_FILES =

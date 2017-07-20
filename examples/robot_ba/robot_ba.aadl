@@ -1,4 +1,4 @@
-package Robot
+package Robot_BA
 public
   with Deployment;
   with Data_Model;
@@ -216,4 +216,4 @@ public
     actual_processor_binding => (reference (CPU1)) applies to proc_servomoteur_gauche;
   end robot.i;
 
-end Robot;
+end Robot_BA;
