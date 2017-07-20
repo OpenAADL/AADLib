@@ -1,4 +1,4 @@
-package subprograms
+package paparazzi_subprograms
 public
 
   with Base_Types;
@@ -24,4 +24,4 @@ public
     Int : in parameter Base_Types::Integer_16;
   end Set_Integer16;
 
-end subprograms;
+end paparazzi_subprograms;
