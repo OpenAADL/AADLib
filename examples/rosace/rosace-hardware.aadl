@@ -1,0 +1,35 @@
+package ROSACE::Hardware
+public
+  with Deployment;
+  with Processor_Properties;
+
+  ---------------
+  -- POSIX_CPU --
+  ---------------
+
+  processor POSIX_CPU
+  properties
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Deployment::Execution_Platform => Native;
+  end POSIX_CPU;
+
+  processor implementation POSIX_CPU.Default
+    --  This implements default POSIX_CPU behavior, does not assume
+    --  anything on task placement in case of multicore systems.
+  end POSIX_CPU.Default;
+
+  virtual processor a_core
+  end a_core;
+
+  virtual processor implementation a_core.impl
+  end a_core.impl;
+
+  processor implementation POSIX_CPU.Cores4
+  subcomponents
+    Cpu0 : virtual processor a_core.impl {Processor_Properties::Core_Id => 0;};
+    Cpu1 : virtual processor a_core.impl {Processor_Properties::Core_Id => 1;};
+    Cpu2 : virtual processor a_core.impl {Processor_Properties::Core_Id => 2;};
+    Cpu3 : virtual processor a_core.impl {Processor_Properties::Core_Id => 3;};
+  end POSIX_CPU.Cores4;
+
+end ROSACE::Hardware;

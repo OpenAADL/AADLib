@@ -1,0 +1,8 @@
+Shared code/file for the ROSACE use case
+
+This part of the code is "shared" by the various implementation
+namelly, POSIX, XtratuM, RTEMS and TASTE (generated from AADL specs).
+
+A Makefile allows users to compute WCET for all functions, to be used
+with Bound-T for SPARC LEON3 processors. wcet.txt provides reference
+output, unit is number of instructions cycles.

@@ -1,0 +1,314 @@
+package ROSACE::XtratuM
+
+  --  This package models the controller design from figure 3 of the
+  --  ROSACE paper, and propose various system to deploy this assembly
+  --  on XtratuM systems, either in 1-core configuration
+  --  (ROSACE_XtratuM.Monocore)
+
+public
+  with Processor_Properties; -- Specific to Ocarina
+  with Deployment;           -- Specific to Ocarina
+  with ARINC653;
+
+  with ROSACE::Software;
+  with ROSACE::Threads;
+  with ROSACE::POSIX;
+
+  -----------------------------------------------------------------------------
+  --  Memory components
+
+  memory myram end myram;
+  memory segment end segment;
+  memory implementation segment.i end segment.i;
+
+  memory implementation  myram.stram
+  properties
+    Base_Address => 40000000;
+    Byte_Count   => 4194304;
+  end myram.stram;
+
+  memory implementation myram.sdram extends myram.stram
+  subcomponents
+    segment1 : memory segment.i
+    {Base_Address => 16#40100000#; Byte_Count => 524_288;};
+    segment2 : memory segment.i
+    {Base_Address => 16#40180000#; Byte_Count => 524_288;};
+    segment3 : memory segment.i
+    {Base_Address => 16#40280000#; Byte_Count => 524_288;};
+  end myram.sdram;
+
+  -----------------------------------------------------------------------------
+  --  Processor
+
+  processor leon3
+  properties
+    Processor_Properties::Processor_Frequency => 50 Mhz;
+    --  XtratuM uses this information for internal system configuration
+  end leon3;
+
+  processor implementation leon3.xtratum
+  properties
+    Deployment::Execution_Platform => LEON3_XTRATUM;
+  end leon3.xtratum;
+
+  -----------------------------------------------------------------------------
+  --  Processes
+
+  -- For each partition, we define a corresponding software process
+  -- that contains the corresponding thread. For Xtratum, we follow a
+  -- schedule that is different from the RTAS paper, and is presented
+  -- in section 2.1.4 of the TASTE Multicore deliverable.
+
+  process ROSACE_Partition0
+
+    --  Partition 0 executes aircraft_dynamics, engine and elevator
+
+  features
+    Delta_E_C  : in   data port ROSACE::Software::ROSACE_Float;
+    Delta_Th_C : in   data port ROSACE::Software::ROSACE_Float;
+
+    Va        : out  data port ROSACE::Software::ROSACE_Float;
+    Vz        : out  data port ROSACE::Software::ROSACE_Float;
+    Q         : out  data port ROSACE::Software::ROSACE_Float;
+    Az        : out  data port ROSACE::Software::ROSACE_Float;
+    H         : out  data port ROSACE::Software::ROSACE_Float;
+  end ROSACE_Partition0;
+
+  process implementation ROSACE_Partition0.impl
+  subcomponents
+    Aircraft_Dynamics : thread ROSACE::Threads::Aircraft_Dynamics_T.impl;
+    Engine            : thread ROSACE::Threads::Engine_T.impl;
+    Elevator          : thread ROSACE::Threads::Elevator_T.impl;
+  connections
+    C1 : port Delta_E_C  -> Elevator.Delta_E_C;
+    C2 : port Delta_Th_C -> Engine.Delta_Th_C;
+
+    C3 : port Aircraft_Dynamics.Va -> Va;
+    C4 : port Aircraft_Dynamics.Vz -> Vz;
+    C5 : port Aircraft_Dynamics.Q -> Q;
+    C6 : port Aircraft_Dynamics.Az -> Az;
+    C7 : port Aircraft_Dynamics.H -> H;
+
+    C8 : port Elevator.Output -> Aircraft_Dynamics.Delta_E;
+    C9 : port Engine.Output   -> Aircraft_Dynamics.T;
+  end ROSACE_Partition0.impl;
+
+  process ROSACE_Partition1
+
+    --  Partition1 executes h_filter, az_filter, Vz_filter, q_filter,
+    --  Va_filter, altitude_hold
+
+  features
+    Va      : in  data port ROSACE::Software::ROSACE_Float;
+    Vz      : in  data port ROSACE::Software::ROSACE_Float;
+    Q       : in  data port ROSACE::Software::ROSACE_Float;
+    Az      : in  data port ROSACE::Software::ROSACE_Float;
+    H       : in  data port ROSACE::Software::ROSACE_Float;
+
+    Va_f    : out  data port ROSACE::Software::ROSACE_Float;
+    Vz_f    : out  data port ROSACE::Software::ROSACE_Float;
+    Q_f     : out  data port ROSACE::Software::ROSACE_Float;
+    Az_f    : out  data port ROSACE::Software::ROSACE_Float;
+    H_f     : out  data port ROSACE::Software::ROSACE_Float;
+    Vz_c    : out  data port ROSACE::Software::ROSACE_Float;
+  end ROSACE_Partition1;
+
+  process implementation ROSACE_Partition1.impl
+  subcomponents
+    Va_filter         : thread ROSACE::Threads::Va_Filter_T.impl;
+    Vz_filter         : thread ROSACE::Threads::Vz_Filter_T.impl;
+    Q_filter          : thread ROSACE::Threads::Q_Filter_T.impl;
+    Az_filter         : thread ROSACE::Threads::Az_Filter_T.impl;
+    H_filter          : thread ROSACE::Threads::H_Filter_T.impl;
+    Altitude_hold     : thread ROSACE::Threads::Altitude_Hold_T.impl;
+
+  connections
+    C1 : port Va -> Va_filter.Va;
+    C2 : port Va_Filter.output -> Va_f;
+
+    C3 : port Vz -> Vz_filter.Vz;
+    C4 : port Vz_Filter.output -> Vz_f;
+
+    C5 : port Q -> Q_filter.Q;
+    C6 : port Q_Filter.output -> Q_f;
+
+    C7 : port Az -> Az_filter.Az;
+    C8 : port Az_Filter.output -> Az_f;
+
+    C9 : port H -> H_filter.H;
+    C10 : port H_Filter.output -> H_f;
+
+    C11 : port H_filter.output -> Altitude_Hold.H_f;
+    C12 : port Altitude_Hold.output -> Vz_c;
+
+  end ROSACE_Partition1.impl;
+
+  process ROSACE_Partition2
+
+    --  Partition2 executes Vz_control and Va_control
+
+  features
+    Vz_f   : in  data port ROSACE::Software::ROSACE_Float;
+    Vz_c   : in  data port ROSACE::Software::ROSACE_Float;
+    Q_f    : in  data port ROSACE::Software::ROSACE_Float;
+    Az_f   : in  data port ROSACE::Software::ROSACE_Float;
+
+    Va_f   : in  data port ROSACE::Software::ROSACE_Float;
+    Va_c   : in  data port ROSACE::Software::ROSACE_Float;
+
+    Vz_Output : out data port ROSACE::Software::ROSACE_Float;
+    Va_Output : out data port ROSACE::Software::ROSACE_Float;
+
+  end ROSACE_Partition2;
+
+  process implementation ROSACE_Partition2.impl
+  subcomponents
+    Va : thread ROSACE::Threads::Va_control_T.impl;
+    Vz : thread ROSACE::Threads::Vz_control_T.impl;
+
+  connections
+    C1 : port Vz_f -> Vz.Vz_f;
+    C2 : port Vz_c -> Vz.Vz_c;
+    C3 : port Q_f -> Vz.Q_f;
+    C4 : port Az_f -> Vz.Az_f;
+    C5 : port Vz.Output -> Vz_Output;
+
+    C6 : port Va_f -> Va.Va_f;
+    C7 : port Vz_f -> Va.Vz_f;
+    C8 : port Q_f -> Va.Q_f;
+    C9 : port Va_c -> Va.Va_c;
+    C10 : port Va.Output -> Va_Output;
+  end ROSACE_Partition2.impl;
+
+  -----------------------------------------------------------------------------
+  --  Partitions
+
+  virtual processor xtratum_partition
+  end xtratum_partition;
+
+  virtual processor implementation xtratum_partition.generic
+  end xtratum_partition.generic;
+
+  processor implementation leon3.xtratum_partitions extends leon3.xtratum
+  subcomponents
+    P0 : virtual processor xtratum_partition.generic
+    { Deployment::Execution_Platform => LEON3_XM3;
+      ARINC653::Partition_Identifier => 0;
+      ARINC653::Partition_Name       => "P0";
+    };
+    P1 : virtual processor xtratum_partition.generic
+    { Deployment::Execution_Platform => LEON3_XM3;
+      ARINC653::Partition_Identifier => 1;
+      ARINC653::Partition_Name       => "P1";
+    };
+    P2 : virtual processor xtratum_partition.generic
+    { Deployment::Execution_Platform => LEON3_XM3;
+      ARINC653::Partition_Identifier => 2;
+      ARINC653::Partition_Name       => "P2";
+    };
+  properties
+    ARINC653::Module_Schedule =>
+            ( [Partition => reference (P0);
+               Duration  => 2 ms;
+               Periodic_Processing_Start => true;],
+               [Partition => reference (P1);
+               Duration  => 1 ms;
+               Periodic_Processing_Start => true;],
+               [Partition => reference (P2);
+               Duration  => 1 ms;
+               Periodic_Processing_Start => true;],
+               [Partition => reference (P0);
+               Duration  => 1 ms;
+               Periodic_Processing_Start => true;]
+            );
+    ARINC653::Module_Major_Frame => 5ms;
+  end leon3.xtratum_partitions;
+
+  -----------------------------------------------------------------------------
+  --  System
+
+  system ROSACE_XtratuM
+  end ROSACE_XtratuM;
+
+  system implementation ROSACE_XtratuM.Monocore
+  subcomponents
+    Software_P0 : process ROSACE_Partition0.impl;
+    Software_P1 : process ROSACE_Partition1.impl;
+    Software_P2 : process ROSACE_Partition2.impl;
+
+    Hardware : processor leon3.xtratum_partitions;
+    Mem : memory myram.sdram;
+
+  connections
+    -- Partition 0 to Partition 1 communications
+
+    C0 : port Software_P0.Va -> Software_P1.Va;
+    C1 : port Software_P0.Vz -> Software_P1.Vz;
+    C2 : port Software_P0.Q -> Software_P1.Q;
+    C3 : port Software_P0.Az -> Software_P1.Az;
+    C4 : port Software_P0.H -> Software_P1.H;
+
+    -- Partition 1 to Partition 2 communications
+
+    C5 : port Software_P1.Vz_f -> Software_P2.Vz_f;
+    C6 : port Software_P1.Vz_c -> Software_P2.Vz_c;
+    C7 : port Software_P1.Q_f -> Software_P2.Q_f;
+    C8 : port Software_P1.Az_f -> Software_P2.Az_f;
+    C9 : port Software_P1.Va_f -> Software_P2.Va_f;
+
+    -- Partition 2 to Partition 0 communications
+
+    C10 : port Software_P2.Va_Output -> Software_P0.Delta_Th_C;
+    C11 : port Software_P2.Vz_Output -> Software_P0.Delta_E_C;
+
+  properties
+    Actual_Processor_Binding =>
+       (reference (Hardware.P0)) applies to Software_P0;
+    Actual_Memory_Binding =>
+       (reference (Mem.segment1)) applies to Software_P0;
+
+    Actual_Processor_Binding =>
+       (reference (Hardware.P1)) applies to Software_P1;
+    Actual_Memory_Binding =>
+       (reference (Mem.segment2)) applies to Software_P1;
+
+    Actual_Processor_Binding =>
+       (reference (Hardware.P2)) applies to Software_P2;
+    Actual_Memory_Binding =>
+       (reference (Mem.segment3)) applies to Software_P2;
+  end ROSACE_XtratuM.Monocore;
+
+  --  In the following, we extend the mono core XtratuM into a 2-core
+  --  one. We extend the processor subcomponent to define the two
+  --  cores, and bind CPU to partitions.
+
+  virtual processor a_core
+  end a_core;
+
+  virtual processor implementation a_core.impl
+  end a_core.impl;
+
+  processor implementation leon3.xtratum_2cores extends leon3.xtratum_partitions
+
+    --  This processor extends the LEON3 + XtratuM configuration that
+    --  defined logical partitions. We add the definition of cores
+
+  subcomponents
+    Cpu0 : virtual processor a_core.impl {Processor_Properties::Core_Id => 0;};
+    Cpu1 : virtual processor a_core.impl {Processor_Properties::Core_Id => 1;};
+  end leon3.xtratum_2cores;
+
+  system implementation ROSACE_XtratuM.SMP extends ROSACE_XtratuM.Monocore
+  subcomponents
+    Hardware : refined to processor Leon3.XTRATUM_2cores;
+  properties
+    Actual_Processor_Binding =>
+    (reference (Hardware.CPU0)) applies to Hardware.P0;
+    Actual_Processor_Binding =>
+    (reference (Hardware.CPU0)) applies to Hardware.P1;
+    Actual_Processor_Binding =>
+    (reference (Hardware.CPU1)) applies to Hardware.P2;
+
+  end ROSACE_XtratuM.SMP;
+
+end ROSACE::Xtratum;

@@ -1,0 +1,227 @@
+package ROSACE::Software
+
+--  This package models the software elements of the ROSACE case
+--  study, and reflects elements from the app_aadl.c, app2_aadl.c and
+--  app3_aadl.c
+
+public
+
+  with Base_Types;
+
+  data ROSACE_Float extends Base_Types::Float
+  end  ROSACE_Float;
+
+  -----------------------
+  -- Aircraft_Dynamics --
+  -----------------------
+
+  subprogram Aircraft_Dynamics
+  features
+    Delta_E : in   parameter ROSACE_Float;
+    T       : in   parameter ROSACE_Float;
+    Va      : out  parameter ROSACE_Float;
+    Vz      : out  parameter ROSACE_Float;
+    Q       : out  parameter ROSACE_Float;
+    Az      : out  parameter ROSACE_Float;
+    H       : out  parameter ROSACE_Float;
+
+  properties
+    Source_Language => (C);
+    Source_Name => "aircraft_dynamics_aadl";
+    Source_Text => ("app_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 200 us;
+  end Aircraft_Dynamics;
+
+  --------------
+  -- Elevator --
+  --------------
+
+  subprogram Elevator
+  features
+    Delta_E_C : in  parameter ROSACE_Float;
+    Output    : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "elevator_aadl";
+    Source_Text => ("app_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end Elevator;
+
+  ------------
+  -- Engine --
+  ------------
+
+  subprogram Engine
+  features
+    Delta_Th_C : in  parameter ROSACE_Float;
+    Output     : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "engine_aadl";
+    Source_Text => ("app_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end Engine;
+
+  ---------------
+  -- Va_Filter --
+  ---------------
+
+  subprogram Va_Filter
+  features
+    Va     : in  parameter ROSACE_Float;
+    Output : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "va_filter_aadl";
+    Source_Text => ("app2_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end Va_Filter;
+
+  --------------
+  -- H_Filter --
+  --------------
+
+  subprogram H_Filter
+  features
+    H      : in  parameter ROSACE_Float;
+    Output : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "h_filter_aadl";
+    Source_Text => ("app2_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end H_Filter;
+
+  ---------------
+  -- Az_Filter --
+  ---------------
+
+  subprogram Az_Filter
+  features
+    Az     : in  parameter ROSACE_Float;
+    Output : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "az_filter_aadl";
+    Source_Text => ("app2_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end Az_Filter;
+
+  ---------------
+  -- Vz_Filter --
+  ---------------
+
+  subprogram Vz_Filter
+  features
+    Vz     : in  parameter ROSACE_Float;
+    Output : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "vz_filter_aadl";
+    Source_Text => ("app2_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end Vz_Filter;
+
+  --------------
+  -- Q_Filter --
+  --------------
+
+  subprogram Q_Filter
+  features
+    Q      : in  parameter ROSACE_Float;
+    Output : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "q_filter_aadl";
+    Source_Text => ("app2_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end Q_Filter;
+
+  -------------------
+  -- Altitude_Hold --
+  -------------------
+
+  subprogram Altitude_Hold
+  features
+    H_f    : in  parameter ROSACE_Float;
+    H_c    : in  parameter ROSACE_Float;
+    Output : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "altitude_hold_aadl";
+    Source_Text => ("app3_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end Altitude_Hold;
+
+  ----------------
+  -- Vz_control --
+  ----------------
+
+  subprogram Vz_control
+  features
+    Vz_f   : in  parameter ROSACE_Float;
+    Vz_c   : in  parameter ROSACE_Float;
+    Q_f    : in  parameter ROSACE_Float;
+    Az_f   : in  parameter ROSACE_Float;
+    Output : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "vz_control_aadl";
+    Source_Text => ("app3_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end Vz_control;
+
+  ----------------
+  -- Va_control --
+  ----------------
+
+  subprogram Va_control
+  features
+    Va_f   : in  parameter ROSACE_Float;
+    Vz_f   : in  parameter ROSACE_Float;
+    Q_f    : in  parameter ROSACE_Float;
+    Va_c   : in  parameter ROSACE_Float;
+    Output : out parameter ROSACE_Float;
+  properties
+    Source_Language => (C);
+    Source_Name => "va_control_aadl";
+    Source_Text => ("app3_aadl.c");
+
+    Compute_Execution_Time => 0 us .. 100 us;
+  end Va_control;
+
+  ----------------
+  -- ROSACE_Log --
+  ----------------
+
+  subprogram ROSACE_Log
+    --  Note: the current spec is to generate the same CSV as for the
+    --  regular ROSACE case study
+
+  features
+    T          : in parameter ROSACE_Float;
+    Va         : in parameter ROSACE_Float;
+    Az         : in parameter ROSACE_Float;
+    Q          : in parameter ROSACE_Float;
+    Vz         : in parameter ROSACE_Float;
+    H          : in parameter ROSACE_Float;
+    Delta_th_c : in parameter ROSACE_Float;
+    Delta_E_C  : in parameter ROSACE_Float;
+
+  properties
+    Source_Language => (C);
+    Source_Name => "rosace_log";
+    Source_Text => ("log.c");
+  end ROSACE_Log;
+
+end ROSACE::Software;

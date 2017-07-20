@@ -1,0 +1,32 @@
+package ROSACE::RTEMS
+
+  --  This package models the controller design from figure 3 of the
+  --  ROSACE paper, and propose various system to deploy this assembly
+  --  on RTEMS systems, either in 1-core configuration (ROSACE_RTEMS.Monocore),
+  --  or 4-core setting (ROSACE_RTEMS.Multicore).
+
+public
+  with Deployment;
+  with ROSACE::POSIX;
+
+  --  In the following, we simply adjust the deployment platform from
+  --  Native (POSIX) to RTEMS
+
+  system ROSACE_RTEMS extends ROSACE::POSIX::ROSACE_POSIX
+  end ROSACE_RTEMS;
+
+  system implementation ROSACE_RTEMS.Monocore
+     extends ROSACE::POSIX::ROSACE_POSIX.Monocore
+  properties
+    Deployment::Execution_Platform => LEON_RTEMS_POSIX applies to Hardware;
+
+  end ROSACE_RTEMS.Monocore;
+
+  system implementation ROSACE_RTEMS.Multicore
+     extends ROSACE::POSIX::ROSACE_POSIX.Multicore
+  properties
+    Deployment::Execution_Platform => LEON_RTEMS_POSIX applies to Hardware;
+
+  end ROSACE_RTEMS.Multicore;
+
+end ROSACE::RTEMS;

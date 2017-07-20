@@ -1,0 +1,324 @@
+package ROSACE::Threads
+
+-- This package models threads for the ROSACE case study. It assumes a
+-- one function per task mapping, it uses the timeline of Figure 11 in
+-- the ROSACE paper to define the Dispatch_Offset, and table p7 to
+-- define the period.
+
+public
+  with ROSACE::Software;
+
+  -------------------------
+  -- Aircraft_Dynamics_T --
+  -------------------------
+
+  thread Aircraft_Dynamics_T
+  features
+    Delta_E : in   data port ROSACE::Software::ROSACE_Float;
+    T       : in   data port ROSACE::Software::ROSACE_Float;
+    Va      : out  data port ROSACE::Software::ROSACE_Float;
+    Vz      : out  data port ROSACE::Software::ROSACE_Float;
+    Q       : out  data port ROSACE::Software::ROSACE_Float;
+    Az      : out  data port ROSACE::Software::ROSACE_Float;
+    H       : out  data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 5 ms; -- 200 Hz
+  end Aircraft_Dynamics_T;
+
+  thread implementation Aircraft_Dynamics_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Aircraft_Dynamics; };
+
+  connections
+    C1 : parameter Delta_E -> S.Delta_E;
+    C2 : parameter T       -> S.T;
+    C3 : parameter S.Va    -> Va;
+    C4 : parameter S.Vz    -> Vz;
+    C5 : parameter S.Q     -> Q;
+    C6 : parameter S.Az    -> Az;
+    C7 : parameter S.H     -> H;
+  end  Aircraft_Dynamics_T.impl;
+
+  ----------------
+  -- Elevator_T --
+  ----------------
+
+  thread Elevator_T
+  features
+    Delta_E_C : in  data port ROSACE::Software::ROSACE_Float;
+    Output    : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 5 ms; -- 200 Hz
+  end Elevator_T;
+
+  thread implementation Elevator_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Elevator; };
+
+  connections
+    C1 : parameter Delta_E_C -> S.Delta_E_C;
+    C3 : parameter S.Output -> Output;
+  end  Elevator_T.impl;
+
+  --------------
+  -- Engine_T --
+  --------------
+
+  thread Engine_T
+  features
+    Delta_Th_C : in  data port ROSACE::Software::ROSACE_Float;
+    Output     : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 5 ms; -- 200 Hz
+  end Engine_T;
+
+  thread implementation Engine_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Engine; };
+
+  connections
+    C1 : parameter Delta_Th_C -> S.Delta_Th_C;
+    C3 : parameter S.Output -> Output;
+  end  Engine_T.impl;
+
+  -----------------
+  -- Va_Filter_T --
+  -----------------
+
+  thread Va_Filter_T
+  features
+    Va     : in  data port ROSACE::Software::ROSACE_Float;
+    Output : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 10 ms; -- 100 Hz
+  end Va_Filter_T;
+
+  thread implementation Va_Filter_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Va_Filter; };
+
+  connections
+    C1 : parameter Va -> S.Va;
+    C3 : parameter S.Output -> Output;
+  end  Va_Filter_T.impl;
+
+  ----------------
+  -- H_Filter_T --
+  ----------------
+
+  thread H_Filter_T
+  features
+    H      : in  data port ROSACE::Software::ROSACE_Float;
+    Output : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 10 ms; -- 100 Hz
+  end H_Filter_T;
+
+  thread implementation H_Filter_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::H_Filter; };
+
+  connections
+    C1 : parameter H -> S.H;
+    C3 : parameter S.Output -> Output;
+  end  H_Filter_T.impl;
+
+  -----------------
+  -- Az_Filter_T --
+  -----------------
+
+  thread Az_Filter_T
+  features
+    Az     : in  data port ROSACE::Software::ROSACE_Float;
+    Output : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 10 ms; -- 100 Hz
+  end Az_Filter_T;
+
+  thread implementation Az_Filter_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Az_Filter; };
+
+  connections
+    C1 : parameter Az -> S.Az;
+    C3 : parameter S.Output -> Output;
+  end  Az_Filter_T.impl;
+
+  -----------------
+  -- Vz_Filter_T --
+  -----------------
+
+  thread Vz_Filter_T
+  features
+    Vz     : in  data port ROSACE::Software::ROSACE_Float;
+    Output : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 10 ms; -- 100 Hz
+  end Vz_Filter_T;
+
+  thread implementation Vz_Filter_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Vz_Filter; };
+
+  connections
+    C1 : parameter Vz -> S.Vz;
+    C3 : parameter S.Output -> Output;
+  end  Vz_Filter_T.impl;
+
+  ----------------
+  -- Q_Filter_T --
+  ----------------
+
+  thread Q_Filter_T
+  features
+    Q     : in  data port ROSACE::Software::ROSACE_Float;
+    Output : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 10 ms; -- 100 Hz
+  end Q_Filter_T;
+
+  thread implementation Q_Filter_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Q_Filter; };
+
+  connections
+    C1 : parameter Q -> S.Q;
+    C3 : parameter S.Output -> Output;
+  end  Q_Filter_T.impl;
+
+  ---------------------
+  -- Altitude_Hold_T --
+  ---------------------
+
+  thread Altitude_Hold_T
+  features
+    H_f    : in  data port ROSACE::Software::ROSACE_Float;
+    H_c    : in  data port ROSACE::Software::ROSACE_Float;
+    Output : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 20 ms; -- 50 Hz
+  end Altitude_Hold_T;
+
+  thread implementation Altitude_Hold_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Altitude_Hold; };
+
+  connections
+    C1 : parameter H_f -> S.H_f;
+    C2 : parameter H_c -> S.H_c;
+    C3 : parameter S.Output -> Output;
+  end  Altitude_Hold_T.impl;
+
+  ------------------
+  -- Vz_control_T --
+  ------------------
+
+  thread Vz_control_T
+  features
+    Vz_f   : in  data port ROSACE::Software::ROSACE_Float;
+    Vz_c   : in  data port ROSACE::Software::ROSACE_Float;
+    Q_f    : in  data port ROSACE::Software::ROSACE_Float;
+    Az_f   : in  data port ROSACE::Software::ROSACE_Float;
+    Output : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 20 ms; -- 50 Hz
+  end Vz_control_T;
+
+  thread implementation Vz_control_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Vz_control; };
+
+  connections
+    C1 : parameter Vz_f -> S.Vz_f;
+    C2 : parameter Vz_c -> S.Vz_c;
+    C3 : parameter Q_f -> S.Q_f;
+    C4 : parameter Az_f -> S.Az_f;
+    C5 : parameter S.Output -> Output;
+  end  Vz_control_T.impl;
+
+  ------------------
+  -- Va_control_T --
+  ------------------
+
+  thread Va_control_T
+  features
+    Va_f   : in  data port ROSACE::Software::ROSACE_Float;
+    Vz_f   : in  data port ROSACE::Software::ROSACE_Float;
+    Q_f    : in  data port ROSACE::Software::ROSACE_Float;
+    Va_c   : in  data port ROSACE::Software::ROSACE_Float;
+    Output : out data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 20 ms; -- 50 Hz
+  end Va_control_T;
+
+  thread implementation Va_control_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::Va_control; };
+
+  connections
+    C1 : parameter Va_f -> S.Va_f;
+    C2 : parameter Vz_f -> S.Vz_f;
+    C3 : parameter Q_f -> S.Q_f;
+    C4 : parameter Va_c -> S.Va_c;
+    C5 : parameter S.Output -> Output;
+  end  Va_control_T.impl;
+
+  ------------------
+  -- ROSACE_Log_T --
+  ------------------
+
+  thread ROSACE_Log_T
+  features
+    T          : in data port ROSACE::Software::ROSACE_Float;
+    Va         : in data port ROSACE::Software::ROSACE_Float;
+    Az         : in data port ROSACE::Software::ROSACE_Float;
+    Q          : in data port ROSACE::Software::ROSACE_Float;
+    Vz         : in data port ROSACE::Software::ROSACE_Float;
+    H          : in data port ROSACE::Software::ROSACE_Float;
+    Delta_th_c : in data port ROSACE::Software::ROSACE_Float;
+    Delta_E_C  : in data port ROSACE::Software::ROSACE_Float;
+
+  properties
+    Dispatch_Protocol => Periodic;
+    Period            => 20 ms; -- 50 Hz
+  end ROSACE_Log_T;
+
+  thread implementation ROSACE_Log_T.impl
+  calls
+    Call1 : { S : subprogram ROSACE::Software::ROSACE_Log; };
+
+  connections
+    C1 : parameter T -> S.T;
+    C2 : parameter Va -> S.Va;
+    C3 : parameter Az -> S.Az;
+    C4 : parameter Q -> S.Q;
+    C5 : parameter Vz -> S.Vz;
+    C6 : parameter H -> S.H;
+    C7 : parameter Delta_Th_C -> S.Delta_Th_C;
+    C8 : parameter Delta_E_C -> S.Delta_E_C;
+
+  end  ROSACE_Log_T.impl;
+
+end ROSACE::Threads;

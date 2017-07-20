@@ -1,0 +1,200 @@
+package ROSACE::POSIX
+
+  --  This package models the controller design from figure 3 of the
+  --  ROSACE paper, and propose various system to deploy this assembly
+  --  on POSIX systems, either in 1-core configuration (ROSACE_POSIX.Monocore),
+  --  or 4-core setting (ROSACE_POSIX.Multicore).
+
+public
+  with Data_Model;
+
+  with ROSACE;
+  with ROSACE::Hardware;
+  with ROSACE::Threads;
+
+  -----------------------
+  -- ROSACE_Controller --
+  -----------------------
+
+  process ROSACE_Controller
+  end ROSACE_Controller;
+
+  process implementation ROSACE_Controller.impl
+    --  In this first process, all threads are combined
+
+  subcomponents
+    Aircraft_Dynamics : thread ROSACE::Threads::Aircraft_Dynamics_T.impl;
+    Elevator          : thread ROSACE::Threads::Elevator_T.impl;
+    Engine            : thread ROSACE::Threads::Engine_T.impl;
+    Va_filter         : thread ROSACE::Threads::Va_Filter_T.impl;
+    H_filter          : thread ROSACE::Threads::H_Filter_T.impl;
+    Az_filter         : thread ROSACE::Threads::Az_Filter_T.impl;
+    Vz_filter         : thread ROSACE::Threads::Vz_Filter_T.impl;
+    Q_filter          : thread ROSACE::Threads::Q_Filter_T.impl;
+    Altitude_hold     : thread ROSACE::Threads::Altitude_Hold_T.impl;
+    Vz_control        : thread ROSACE::Threads::Vz_control_T.impl;
+    Va_control        : thread ROSACE::Threads::Va_control_T.impl;
+
+    ROSACE_Log        : thread ROSACE::Threads::ROSACE_Log_T.impl;
+
+  connections
+    --  Input for Aircraft Dynamics
+    C1  : port Engine.Output   -> Aircraft_Dynamics.T;
+    C2  : port Elevator.Output -> Aircraft_Dynamics.Delta_E;
+
+    --  Inputs for H_Filter
+    C3  : port Aircraft_Dynamics.H -> H_filter.H;
+
+    --  Input for Az_Filter
+    C4  : port Aircraft_Dynamics.Az -> az_filter.az;
+
+    --  Input for Vz_Filter
+    C5  : port Aircraft_Dynamics.Vz -> Vz_filter.Vz;
+
+    --  Input for Q_Filter
+    C6  : port Aircraft_Dynamics.Q -> Q_filter.Q;
+
+    --  Input for Va_Filter
+    C7  : port Aircraft_Dynamics.Va -> Va_filter.Va;
+
+    --  Input for Altitude_Hold
+    C8  : port H_filter.output -> Altitude_Hold.H_f;
+
+    --  Inputs for Va_Control
+    C9  : port Vz_filter.output -> Va_Control.Vz_f;
+    C10 : port Q_filter.output  -> Va_Control.Q_f;
+    C11 : port Va_filter.output -> Va_Control.Va_f;
+
+    --  Inputs for Vz_Control
+    C12 : port Altitude_Hold.output -> Vz_Control.Vz_c;
+    C13 : port Az_filter.output     -> Vz_Control.Az_F;
+    C14 : port Vz_filter.output     -> Vz_Control.Vz_f;
+    C15 : port Q_filter.output      -> Vz_Control.Q_f;
+
+    -- Input for Elevator
+    C17 : port Vz_Control.output -> Elevator.Delta_E_C;
+
+    -- Input for Engine
+    C18 : port Va_Control.output -> Engine.Delta_Th_C;
+
+    -- Inputs for ROSACE_Log
+
+    C19 : port Engine.Output        -> ROSACE_Log.T;
+    C20 : port Aircraft_Dynamics.Va -> ROSACE_Log.Va;
+    C21 : port Aircraft_Dynamics.Az -> ROSACE_Log.az;
+    C22 : port Aircraft_Dynamics.Q  -> ROSACE_Log.Q;
+    C23 : port Aircraft_Dynamics.Vz -> ROSACE_Log.Vz;
+    C24 : port Aircraft_Dynamics.H  -> ROSACE_Log.H;
+    C25 : port Va_Control.output    -> ROSACE_Log.Delta_Th_C;
+    C26 : port Vz_Control.output    -> ROSACE_Log.Delta_E_C;
+
+  end ROSACE_Controller.impl;
+
+  ------------------
+  -- ROSACE_POSIX --
+  ------------------
+
+  system ROSACE_POSIX extends ROSACE::ROSACE_System
+  end ROSACE_POSIX;
+
+  system implementation ROSACE_POSIX.Monocore
+
+    --  This system implementation is for testing purpose only. There
+    --  is no scheduling being enforced, it is a fallback model to see
+    --  whether the system may run.
+
+  subcomponents
+    Software : process ROSACE_Controller.impl;
+    Hardware : processor ROSACE::Hardware::POSIX_CPU.Default;
+
+  properties
+    --  Binding all threads to the same processor
+    Actual_Processor_Binding => (reference (Hardware)) applies to Software;
+
+    --    Dispatch_Offset => 0 us applies to Software.Aircraft_Dynamics;
+
+    Dispatch_Offset => 200 us applies to Software.H_filter;
+    Dispatch_Offset => 300 us applies to Software.Az_filter;
+    Dispatch_Offset => 400 us applies to Software.Vz_filter;
+    Dispatch_Offset => 500 us applies to Software.Q_filter;
+    Dispatch_Offset => 600 us applies to Software.Va_filter;
+    Dispatch_Offset => 800 us applies to Software.Altitude_Hold;
+    Dispatch_Offset => 900 us applies to Software.Vz_Control;
+    Dispatch_Offset => 1200 us applies to Software.Elevator;
+    Dispatch_Offset => 1300 us applies to Software.Va_Control;
+    Dispatch_Offset => 1400 us applies to Software.Engine;
+    Dispatch_Offset => 1500 us applies to Software.ROSACE_Log;
+
+  end ROSACE_POSIX.Monocore;
+
+  system implementation ROSACE_POSIX.Multicore extends ROSACE_POSIX.Monocore
+
+    --  This systems configures dispatch offset and cores to mimic the
+    --  behavior of ROSACE paper, fig 11. It should match the
+    --  expectation of the ROSACE validation oracle.
+
+  subcomponents
+    Hardware : refined to processor ROSACE::Hardware::POSIX_CPU.Cores4;
+
+  properties
+    --  XXX The following crashes ocarina, to be investigated
+    --  Actual_Processor_Binding => (reference (Hardware.xxx)) ...
+
+    --  Initial values of Aircraft_Dynamics ports
+
+    Data_Model::Initial_Value => ("owww")
+       applies to Software.Aircraft_Dynamics.Delta_E;
+
+    -- Core #1 dispatch offset
+    --    Dispatch_Offset => 0 us applies to Software.Aircraft_Dynamics;
+    Dispatch_Offset => 600 us applies to Software.Elevator;
+    Dispatch_Offset => 800 us applies to Software.Engine;
+
+    -- Core #2 dispatch offset
+    Dispatch_Offset => 200 us applies to Software.H_filter;
+    Dispatch_Offset => 300 us applies to Software.Az_filter;
+    Dispatch_Offset => 400 us applies to Software.Vz_filter;
+    Dispatch_Offset => 500 us applies to Software.Q_filter;
+    Dispatch_Offset => 600 us applies to Software.Va_filter;
+
+    -- Core #3 dispatch offset
+    Dispatch_Offset => 300 us applies to Software.Altitude_Hold;
+    Dispatch_Offset => 500 us applies to Software.Vz_Control;
+    Dispatch_Offset => 700 us applies to Software.Va_Control;
+
+    Dispatch_Offset => 1000 us applies to Software.ROSACE_Log;
+
+    -- Core #1 binding
+    Actual_Processor_Binding => (reference (Hardware.Cpu1))
+       applies to Software.Aircraft_Dynamics;
+    Actual_Processor_Binding => (reference (Hardware.Cpu1))
+       applies to Software.Elevator;
+    Actual_Processor_Binding => (reference (Hardware.Cpu1))
+       applies to Software.Engine;
+
+    -- Core #2 binding
+    Actual_Processor_Binding => (reference (Hardware.Cpu2))
+       applies to Software.H_filter;
+    Actual_Processor_Binding => (reference (Hardware.Cpu2))
+       applies to Software.Az_filter;
+    Actual_Processor_Binding => (reference (Hardware.Cpu2))
+       applies to Software.Vz_filter;
+    Actual_Processor_Binding => (reference (Hardware.Cpu2))
+       applies to Software.Q_filter;
+    Actual_Processor_Binding => (reference (Hardware.Cpu2))
+       applies to Software.Va_filter;
+
+    -- Core #3 binding
+    Actual_Processor_Binding => (reference (Hardware.Cpu3))
+       applies to Software.Altitude_Hold;
+    Actual_Processor_Binding => (reference (Hardware.Cpu3))
+       applies to Software.Vz_Control;
+    Actual_Processor_Binding => (reference (Hardware.Cpu3))
+       applies to Software.Va_Control;
+
+    Actual_Processor_Binding => (reference (Hardware.Cpu3))
+       applies to Software.ROSACE_Log;
+
+  end ROSACE_POSIX.Multicore;
+
+end ROSACE::POSIX;

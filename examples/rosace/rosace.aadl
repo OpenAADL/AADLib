@@ -1,0 +1,15 @@
+package ROSACE
+
+  -- This package models the case study from "Pagetti, Claire and
+  -- Saussie, David and Gratia, Romain and Noulard, Eric and Siron,
+  -- Pierre "The ROSACE Case Study: From Simulink Specification to
+  -- Multi/Many-Core Execution." (2014) In: Journees FAC -
+  -- Formalisation des Activités Concurrentes, 16 April 2014 - 17
+  -- April 2014 (Toulouse, France).
+
+public
+
+  system ROSACE_System
+  end ROSACE_System;
+
+end ROSACE;
