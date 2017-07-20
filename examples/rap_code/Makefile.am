@@ -30,6 +30,6 @@ OTHER_FILES = $(srcdir)/ac_flight_data.adb				\
 CLEANDIRS = rap_native
 CLEANFILES =
 
-include $(srcdir)//../Makefile.common
+include $(srcdir)/../Makefile.common
 
 AVAILABLE_TARGETS= parse-aadl cheddar ada
