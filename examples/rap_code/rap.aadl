@@ -816,135 +816,135 @@ subcomponents
   Keyset              : thread Keyset_T;
   HOTAS               : thread HOTAS_T;
 connections
-  port AC_Flight_Data.Angle_Of_Attack -> Weapon_Trajectory.Angle_Of_Attack;
-  port AC_Flight_Data.Angle_Of_Attack -> HUD_Display.Angle_Of_Attack;
+  C1: port AC_Flight_Data.Angle_Of_Attack -> Weapon_Trajectory.Angle_Of_Attack;
+  C2: port AC_Flight_Data.Angle_Of_Attack -> HUD_Display.Angle_Of_Attack;
 
-  port AC_Flight_Data.Body_Rates -> Weapon_Trajectory.Body_Rates;
-  port AC_Flight_Data.Body_Rates -> HUD_Display.Body_Rates;
+  C3: port AC_Flight_Data.Body_Rates -> Weapon_Trajectory.Body_Rates;
+  C4: port AC_Flight_Data.Body_Rates -> HUD_Display.Body_Rates;
 
-  port AC_Flight_Data.Velocity -> Steering.Velocity;
-  port AC_Flight_Data.Velocity -> HUD_Display.Velocity;
+  C5: port AC_Flight_Data.Velocity -> Steering.Velocity;
+  C6: port AC_Flight_Data.Velocity -> HUD_Display.Velocity;
 
-  port AC_Flight_Data.Airspeed -> HUD_Display.Airspeed;
+  C7: port AC_Flight_Data.Airspeed -> HUD_Display.Airspeed;
 
-  port AC_Flight_Data.Position -> Steering.Position;
-  port AC_Flight_Data.Position -> HUD_Display.Position;
-  port AC_Flight_Data.Position -> MPD_Tactical.Position;
-  port AC_Flight_Data.Position -> Target_Tracking.Aircraft_Position;
-  port AC_Flight_Data.Position -> Weapon_Trajectory.Aircraft_Position;
+  C8: port AC_Flight_Data.Position -> Steering.Position;
+  C9: port AC_Flight_Data.Position -> HUD_Display.Position;
+  C10: port AC_Flight_Data.Position -> MPD_Tactical.Position;
+  C11: port AC_Flight_Data.Position -> Target_Tracking.Aircraft_Position;
+  C12: port AC_Flight_Data.Position -> Weapon_Trajectory.Aircraft_Position;
 
-  port AC_Flight_Data.Attitude -> Weapon_Trajectory.Attitude;
-  port AC_Flight_Data.Attitude -> HUD_Display.Attitude;
+  C13: port AC_Flight_Data.Attitude -> Weapon_Trajectory.Attitude;
+  C14: port AC_Flight_Data.Attitude -> HUD_Display.Attitude;
 
-  port AC_Flight_Data.Magnetic_Variation -> MPD_Tactical.Magnetic_Variation;
+  C15: port AC_Flight_Data.Magnetic_Variation -> MPD_Tactical.Magnetic_Variation;
 
 --  port AC_Flight_Data.Velocity -> Steering.Velocity;
 --  port AC_Flight_Data.Velocity -> HUD_Display.Velocity;
 
-  port AC_Flight_Data.Wind -> Weapon_Trajectory.Wind;
+  C16: port AC_Flight_Data.Wind -> Weapon_Trajectory.Wind;
 
-  port Steering.Steer_to_Point -> HUD_Display.Steer_to_Point;
-  port Steering.Steer_to_Point -> MPD_Tactical.Steer_to_Point;
+  C17: port Steering.Steer_to_Point -> HUD_Display.Steer_to_Point;
+  C18: port Steering.Steer_to_Point -> MPD_Tactical.Steer_to_Point;
 
-  port Radar_Control.Status -> MPD_Status_Display.Radar_Status;
+  C19: port Radar_Control.Status -> MPD_Status_Display.Radar_Status;
 
-  port Target_Tracking.Reticle_Position   -> HUD_Display.Reticle_Position;
-  port Target_Tracking.Target_Reticle     -> HUD_Display.Target_Reticle;
-  port Target_Tracking.Target_Location    -> Weapon_Trajectory.Target_Location;
-  port Target_Tracking.Target_Location    -> MPD_Tactical.Target_Location;
-  port Target_Tracking.Target_Location    -> Steering.Target_Location;
+  C20: port Target_Tracking.Reticle_Position   -> HUD_Display.Reticle_Position;
+  C21: port Target_Tracking.Target_Reticle     -> HUD_Display.Target_Reticle;
+  C22: port Target_Tracking.Target_Location    -> Weapon_Trajectory.Target_Location;
+  C23: port Target_Tracking.Target_Location    -> MPD_Tactical.Target_Location;
+  C24: port Target_Tracking.Target_Location    -> Steering.Target_Location;
 
-  port Weapon_Selection.Delivery_Mode_Selected
+  C25: port Weapon_Selection.Delivery_Mode_Selected
                                  -> Weapon_Trajectory.Delivery_Mode_Selected;
-  port Weapon_Selection.Delivery_Mode_Selected
+  C26: port Weapon_Selection.Delivery_Mode_Selected
                                  -> Weapon_Release.Delivery_Mode_Selected;
-  port Weapon_Selection.Delivery_Mode_Selected
+  C27: port Weapon_Selection.Delivery_Mode_Selected
                                  -> HUD_Display.Delivery_Mode_Selected;
-  port Weapon_Selection.Delivery_Mode_Selected
+  C28: port Weapon_Selection.Delivery_Mode_Selected
                                  -> MPD_Stores_Display.Delivery_Mode_Selected;
 --  port Weapon_Selection.Delivery_Mode_Selected
 --                                 -> HUD_Display.Delivery_Mode_Selected;
 --  port Weapon_Selection.Delivery_Mode_Selected
 --                                 -> Weapon_Trajectory.Delivery_Mode_Selected;
-  port Weapon_Selection.Interval_Selected
+  C29: port Weapon_Selection.Interval_Selected
                                  -> MPD_Stores_Display.Interval_Selected;
-  port Weapon_Selection.Quantity_Selected
+  C30: port Weapon_Selection.Quantity_Selected
                                  -> MPD_Stores_Display.Quantity_Selected;
-  port Weapon_Selection.Weapon_Selected
+  C31: port Weapon_Selection.Weapon_Selected
                                  -> MPD_Stores_Display.Weapon_Selected;
 
-  port Weapon_Trajectory.Do_Relaunch -> Weapon_Trajectory.Relaunch;
-  port Weapon_Trajectory.Weapon_Down_Range_Travel
+  C32: port Weapon_Trajectory.Do_Relaunch -> Weapon_Trajectory.Relaunch;
+  C33: port Weapon_Trajectory.Weapon_Down_Range_Travel
                                            -> HUD_Display.Weapon_Down_Range_Travel;
-  port Weapon_Trajectory.Weapon_Cross_Range_Travel
+  C34: port Weapon_Trajectory.Weapon_Cross_Range_Travel
                                            -> HUD_Display.Weapon_Cross_Range_Travel;
-  port Weapon_Trajectory.Time_to_go_to_Release
+  C35: port Weapon_Trajectory.Time_to_go_to_Release
                                            -> Weapon_Release.Time_to_go_to_Release;
-  port Weapon_Trajectory.Time_to_go_to_Release
+  C36: port Weapon_Trajectory.Time_to_go_to_Release
                                            -> HUD_Display.Time_to_go_to_Release;
 
-  port Weapon_Release.Do_Relaunch -> Weapon_Release.Relaunch;
+  C37: port Weapon_Release.Do_Relaunch -> Weapon_Release.Relaunch;
 
-  port Keyset.Waypoint_Table             -> Steering.Waypoint_Table;
-  port Keyset.Waypoint_Offset            -> Steering.Offset;
-  port Keyset.Waypoint_Steering_Selected -> Steering.Waypoint_Steering_Selected;
-  port Keyset.Quantity_Select_Request    -> Weapon_Selection.Quantity_Select_Request;
-  port Keyset.Interval_Select_Request    -> Weapon_Selection.Interval_Select_Request;
-  port Keyset.Auto_CCIP_Toggle           -> Weapon_Selection.Auto_CCIP_Toggle;
+  C38: port Keyset.Waypoint_Table             -> Steering.Waypoint_Table;
+  C39: port Keyset.Waypoint_Offset            -> Steering.Offset;
+  C40: port Keyset.Waypoint_Steering_Selected -> Steering.Waypoint_Steering_Selected;
+  C41: port Keyset.Quantity_Select_Request    -> Weapon_Selection.Quantity_Select_Request;
+  C42: port Keyset.Interval_Select_Request    -> Weapon_Selection.Interval_Select_Request;
+  C43: port Keyset.Auto_CCIP_Toggle           -> Weapon_Selection.Auto_CCIP_Toggle;
 
-  port HOTAS.Manual_Weapon_Release
+  C44: port HOTAS.Manual_Weapon_Release
                                   -> Weapon_Release.Manual_Weapon_Release;
-  port HOTAS.Bomb_Button     -> Weapon_Release.Bomb_Button_Depressed;
+  C45: port HOTAS.Bomb_Button     -> Weapon_Release.Bomb_Button_Depressed;
 
-  port Builtin_Test.MCC_Status   -> MPD_Status_Display.MCC_Status;
-  port Builtin_Test.ADC_Status   -> MPD_Status_Display.ADC_Status;
-  port Builtin_Test.INS_Status   -> MPD_Status_Display.INS_Status;
-  port Builtin_Test.SMS_Status   -> MPD_Status_Display.SMS_Status;
-  port Builtin_Test.Radar_Status -> MPD_Status_Display.Radar_Status;
-  port Builtin_Test.RALT_Status  -> MPD_Status_Display.RALT_Status;
-  port Builtin_Test.RWR_Status   -> MPD_Status_Display.RWR_Status;
-  port Builtin_Test.HUD_Error_Advisory_Message
+  C46: port Builtin_Test.MCC_Status   -> MPD_Status_Display.MCC_Status;
+  C47: port Builtin_Test.ADC_Status   -> MPD_Status_Display.ADC_Status;
+  C48: port Builtin_Test.INS_Status   -> MPD_Status_Display.INS_Status;
+  C49: port Builtin_Test.SMS_Status   -> MPD_Status_Display.SMS_Status;
+  C50: port Builtin_Test.Radar_Status -> MPD_Status_Display.Radar_Status;
+  C51: port Builtin_Test.RALT_Status  -> MPD_Status_Display.RALT_Status;
+  C52: port Builtin_Test.RWR_Status   -> MPD_Status_Display.RWR_Status;
+  C53: port Builtin_Test.HUD_Error_Advisory_Message
                                       -> HUD_Display.Error_Advisory_Message;
-  port Builtin_Test.MPD_Error_Advisory_Message
+  C54: port Builtin_Test.MPD_Error_Advisory_Message
                                       -> MPD_Tactical.Error_Advisory_Message;
-  port Builtin_Test.MPD_Error_Advisory_Message
+  C55: port Builtin_Test.MPD_Error_Advisory_Message
                                       -> MPD_Stores_Display.Error_Advisory_Message;
 
   --  Connections with hardware
 
-  port Radar_Control.Radar_Mode              -> Radar_Mode;
-  port Radar_Control.Contact_Number_to_Track -> Contact_Number_to_Track;
-  port Contact_Table                         -> Radar_Control.Contact_Table;
-  port Contact_Table                         -> MPD_Tactical.Contact_Table;
-  port Target_Position                       -> MPD_Tactical.Target_Position;
-  port Target_Position                       -> Target_Tracking.Target_Position;
+  C56: port Radar_Control.Radar_Mode              -> Radar_Mode;
+  C57: port Radar_Control.Contact_Number_to_Track -> Contact_Number_to_Track;
+  C58: port Contact_Table                         -> Radar_Control.Contact_Table;
+  C59: port Contact_Table                         -> MPD_Tactical.Contact_Table;
+  C60: port Target_Position                       -> MPD_Tactical.Target_Position;
+  C61: port Target_Position                       -> Target_Tracking.Target_Position;
 
-  port Keyset.Waypoint_Table             -> Waypoint_Table;
-  port Keyset.Waypoint_Offset            -> Waypoint_Offset;
-  port Keyset.Waypoint_Steering_Selected -> Waypoint_Steering_Selected;
-  port Keyset.Quantity_Select_Request    -> Quantity_Select_Request;
-  port Keyset.Interval_Select_Request    -> Interval_Select_Request;
-  port Keyset.Auto_CCIP_Toggle          -> Auto_CCIP_Toggle;
-  port Keyset.RWR_Frequency_Table        -> RWR_Frequency_Table;
-  port Keyset.RWR_Search_Sector_Table    -> RWR_Search_Sector_Table;
+  C62: port Keyset.Waypoint_Table             -> Waypoint_Table;
+  C63: port Keyset.Waypoint_Offset            -> Waypoint_Offset;
+  C64: port Keyset.Waypoint_Steering_Selected -> Waypoint_Steering_Selected;
+  C65: port Keyset.Quantity_Select_Request    -> Quantity_Select_Request;
+  C66: port Keyset.Interval_Select_Request    -> Interval_Select_Request;
+  C67: port Keyset.Auto_CCIP_Toggle          -> Auto_CCIP_Toggle;
+  C68: port Keyset.RWR_Frequency_Table        -> RWR_Frequency_Table;
+  C69: port Keyset.RWR_Search_Sector_Table    -> RWR_Search_Sector_Table;
 
-  port AC_Flight_Data.Acceleration       -> Acceleration;
-  port AC_Flight_Data.Reference_Velocity -> Reference_Velocity;
-  port AC_Flight_Data.Rate_of_Change_Airspeed
+  C70: port AC_Flight_Data.Acceleration       -> Acceleration;
+  C71: port AC_Flight_Data.Reference_Velocity -> Reference_Velocity;
+  C72: port AC_Flight_Data.Rate_of_Change_Airspeed
                                               -> Rate_of_Change_Airspeed;
-  port AC_Flight_Data.Flight_Path_Angle
+  C73: port AC_Flight_Data.Flight_Path_Angle
                                               -> Flight_Path_Angle;
-  port AC_Flight_Data.Ground_Speed
+  C74: port AC_Flight_Data.Ground_Speed
                                               -> Ground_Speed;
-  port AC_Flight_Data.Ground_Track_Angle -> Ground_Track_Angle;
-  port AC_Flight_Data.Altitude           -> Altitude;
-  port AC_Flight_Data.Body_to_Earth_Transform
+  C75: port AC_Flight_Data.Ground_Track_Angle -> Ground_Track_Angle;
+  C76: port AC_Flight_Data.Altitude           -> Altitude;
+  C77: port AC_Flight_Data.Body_to_Earth_Transform
                                               -> Body_to_Earth_Transform;
-  port AC_Flight_Data.Body_to_Horizon_Transform
+  C78: port AC_Flight_Data.Body_to_Horizon_Transform
                                               -> Body_to_Horizon_Transform;
-  port AC_Flight_Data.Radar_to_Body_Transform
+  C79: port AC_Flight_Data.Radar_to_Body_Transform
                                               -> Radar_to_Body_Transform;
-  port AC_Flight_Data.Radar_to_Earth_Transform
+  C80: port AC_Flight_Data.Radar_to_Earth_Transform
                                               -> Radar_to_Earth_Transform;
 end Monolithic_RAP.LEON;
 
@@ -1084,36 +1084,36 @@ subcomponents
   INS      : thread INS_H;
   NAV      : thread NAV_H;
 connections
-  port Radar_Mode              -> Radar_H.Radar_Mode;
-  port Contact_Number_to_Track -> Radar_H.Contact_Number_to_Track;
-  port Radar_H.Contact_Table   -> Contact_Table;
-  port Radar_H.Target_Position -> Target_Position;
-  port Status                  -> Radar_H.Status;
+  C1: port Radar_Mode              -> Radar_H.Radar_Mode;
+  C2: port Contact_Number_to_Track -> Radar_H.Contact_Number_to_Track;
+  C3: port Radar_H.Contact_Table   -> Contact_Table;
+  C4: port Radar_H.Target_Position -> Target_Position;
+  C5: port Status                  -> Radar_H.Status;
 
-  port Threat_Radar_Frequency_Message -> RWR_H.Threat_Radar_Frequency_Message;
-  port Threat_Search_Sector_Message   -> RWR_H.Threat_Search_Sector_Message;
+  C6: port Threat_Radar_Frequency_Message -> RWR_H.Threat_Radar_Frequency_Message;
+  C7: port Threat_Search_Sector_Message   -> RWR_H.Threat_Search_Sector_Message;
 
-  port Waypoint_Table             -> Keyset_H.Waypoint_Table;
-  port Waypoint_Offset            -> Keyset_H.Waypoint_Offset;
-  port Waypoint_Steering_Selected -> Keyset_H.Waypoint_Steering_Selected;
-  port Quantity_Select_Request    -> Keyset_H.Quantity_Select_Request;
-  port Interval_Select_Request    -> Keyset_H.Interval_Select_Request;
-  port Auto_CCIP_Toggle          -> Keyset_H.Auto_CCIP_Toggle;
-  port RWR_Frequency_Table        -> Keyset_H.RWR_Frequency_Table;
-  port RWR_Search_Sector_Table    -> Keyset_H.RWR_Search_Sector_Table;
+  C8: port Waypoint_Table             -> Keyset_H.Waypoint_Table;
+  C9: port Waypoint_Offset            -> Keyset_H.Waypoint_Offset;
+  C10: port Waypoint_Steering_Selected -> Keyset_H.Waypoint_Steering_Selected;
+  C11: port Quantity_Select_Request    -> Keyset_H.Quantity_Select_Request;
+  C12: port Interval_Select_Request    -> Keyset_H.Interval_Select_Request;
+  C13: port Auto_CCIP_Toggle          -> Keyset_H.Auto_CCIP_Toggle;
+  C14: port RWR_Frequency_Table        -> Keyset_H.RWR_Frequency_Table;
+  C15: port RWR_Search_Sector_Table    -> Keyset_H.RWR_Search_Sector_Table;
 
-  port INS.Acceleration -> Acceleration;
-  port Acceleration -> NAV.Acceleration;
-  port Reference_Velocity -> INS.Reference_Velocity;
-  port Rate_of_Change_Airspeed -> NAV.Rate_of_Change_Airspeed;
-  port Ground_Speed -> NAV.Ground_Speed;
-  port Flight_Path_Angle -> NAV.Flight_Path_Angle;
-  port Ground_Track_Angle -> NAV.Ground_Track_Angle;
-  port Altitude -> NAV.Altitude;
-  port Body_to_Earth_Transform -> NAV.Body_to_Earth_Transform;
-  port Body_to_Horizon_Transform -> NAV.Body_to_Horizon_Transform;
-  port Radar_to_Body_Transform -> NAV.Radar_to_Body_Transform;
-  port Radar_to_Earth_Transform -> NAV.Radar_to_Earth_Transform;
+  C16: port INS.Acceleration -> Acceleration;
+  C17: port Acceleration -> NAV.Acceleration;
+  C18: port Reference_Velocity -> INS.Reference_Velocity;
+  C19: port Rate_of_Change_Airspeed -> NAV.Rate_of_Change_Airspeed;
+  C20: port Ground_Speed -> NAV.Ground_Speed;
+  C21: port Flight_Path_Angle -> NAV.Flight_Path_Angle;
+  C22: port Ground_Track_Angle -> NAV.Ground_Track_Angle;
+  C23: port Altitude -> NAV.Altitude;
+  C24: port Body_to_Earth_Transform -> NAV.Body_to_Earth_Transform;
+  C25: port Body_to_Horizon_Transform -> NAV.Body_to_Horizon_Transform;
+  C26: port Radar_to_Body_Transform -> NAV.Radar_to_Body_Transform;
+  C27: port Radar_to_Earth_Transform -> NAV.Radar_to_Earth_Transform;
 end Hardware_Emulator.Impl;
 
 ---------------
@@ -1177,66 +1177,66 @@ subcomponents
 
   the_bus : bus C_Bus.Impl;
 connections
-  bus access the_bus -> s_cpu.B;
-  bus access the_bus -> h_cpu.B;
+  C1: bus access the_bus -> s_cpu.B;
+  C2: bus access the_bus -> h_cpu.B;
 
-  port software.Contact_Number_to_Track -> hardware.Contact_Number_to_Track
+  C3: port software.Contact_Number_to_Track -> hardware.Contact_Number_to_Track
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Radar_Mode              -> hardware.Radar_Mode
+  C4: port software.Radar_Mode              -> hardware.Radar_Mode
     {Actual_Connection_Binding => (reference (the_bus));};
-  port hardware.Contact_Table           -> software.Contact_Table
+  C5: port hardware.Contact_Table           -> software.Contact_Table
     {Actual_Connection_Binding => (reference (the_bus));};
-  port hardware.Target_Position         -> software.Target_Position
+  C6: port hardware.Target_Position         -> software.Target_Position
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Status                  -> hardware.Status
-    {Actual_Connection_Binding => (reference (the_bus));};
-
-  port software.Threat_Radar_Frequency_Message -> hardware.Threat_Radar_Frequency_Message
-    {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Threat_Search_Sector_Message -> hardware.Threat_Search_Sector_Message
+  C7: port software.Status                  -> hardware.Status
     {Actual_Connection_Binding => (reference (the_bus));};
 
-  port software.Waypoint_Table -> hardware.Waypoint_Table
+  C8: port software.Threat_Radar_Frequency_Message -> hardware.Threat_Radar_Frequency_Message
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Waypoint_Offset -> hardware.Waypoint_Offset
+  C9: port software.Threat_Search_Sector_Message -> hardware.Threat_Search_Sector_Message
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Waypoint_Steering_Selected -> hardware.Waypoint_Steering_Selected
+
+  C10: port software.Waypoint_Table -> hardware.Waypoint_Table
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Quantity_Select_Request -> hardware.Quantity_Select_Request
+  C11: port software.Waypoint_Offset -> hardware.Waypoint_Offset
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Interval_Select_Request -> hardware.Interval_Select_Request
+  C12: port software.Waypoint_Steering_Selected -> hardware.Waypoint_Steering_Selected
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Auto_CCIP_Toggle -> hardware.Auto_CCIP_Toggle
+  C13: port software.Quantity_Select_Request -> hardware.Quantity_Select_Request
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.RWR_Frequency_Table -> hardware.RWR_Frequency_Table
+  C14: port software.Interval_Select_Request -> hardware.Interval_Select_Request
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.RWR_Search_Sector_Table -> hardware.RWR_Search_Sector_Table
+  C15: port software.Auto_CCIP_Toggle -> hardware.Auto_CCIP_Toggle
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Acceleration            -> hardware.Acceleration
+  C16: port software.RWR_Frequency_Table -> hardware.RWR_Frequency_Table
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Reference_Velocity -> hardware.Reference_Velocity
+  C17: port software.RWR_Search_Sector_Table -> hardware.RWR_Search_Sector_Table
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Rate_of_Change_Airspeed -> hardware.Rate_of_Change_Airspeed
+  C18: port software.Acceleration            -> hardware.Acceleration
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Ground_Speed -> hardware.Ground_Speed
+  C19: port software.Reference_Velocity -> hardware.Reference_Velocity
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Flight_Path_Angle -> hardware.Flight_Path_Angle
+  C20: port software.Rate_of_Change_Airspeed -> hardware.Rate_of_Change_Airspeed
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Ground_Track_Angle -> hardware.Ground_Track_Angle
+  C21: port software.Ground_Speed -> hardware.Ground_Speed
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Altitude -> hardware.Altitude
+  C22: port software.Flight_Path_Angle -> hardware.Flight_Path_Angle
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Body_to_Earth_Transform -> hardware.Body_to_Earth_Transform
+  C23: port software.Ground_Track_Angle -> hardware.Ground_Track_Angle
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Body_to_Horizon_Transform -> hardware.Body_to_Horizon_Transform
+  C24: port software.Altitude -> hardware.Altitude
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Radar_to_Body_Transform -> hardware.Radar_to_Body_Transform
+  C25: port software.Body_to_Earth_Transform -> hardware.Body_to_Earth_Transform
     {Actual_Connection_Binding => (reference (the_bus));};
-  port software.Radar_to_Earth_Transform -> hardware.Radar_to_Earth_Transform
+  C26: port software.Body_to_Horizon_Transform -> hardware.Body_to_Horizon_Transform
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C27: port software.Radar_to_Body_Transform -> hardware.Radar_to_Body_Transform
+    {Actual_Connection_Binding => (reference (the_bus));};
+  C28: port software.Radar_to_Earth_Transform -> hardware.Radar_to_Earth_Transform
     {Actual_Connection_Binding => (reference (the_bus));};
 properties
-  Actual_Processor_Binding => reference (s_cpu) applies to software;
-  Actual_Processor_Binding => reference (h_cpu) applies to hardware;
+  Actual_Processor_Binding => (reference (s_cpu)) applies to software;
+  Actual_Processor_Binding => (reference (h_cpu)) applies to hardware;
 end RAP.Native;
 
 
