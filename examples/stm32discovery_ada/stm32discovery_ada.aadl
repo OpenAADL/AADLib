@@ -29,7 +29,7 @@ public
   processor Cortex_M4
   properties
     Deployment::Execution_Platform => GNAT_Runtime;
-    deployment::Ada_Runtime => "stm32f407_discovery";
+    Deployment::Ada_Runtime => "stm32f407_discovery";
   end Cortex_M4;
 
   process node_a
