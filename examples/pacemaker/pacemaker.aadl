@@ -1,6 +1,6 @@
 PACKAGE Pacemaker_Pkg
   PUBLIC
-with Base_Types;
+
 with data_Model;
 
 system Pacemaker
