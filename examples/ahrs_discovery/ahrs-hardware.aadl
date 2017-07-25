@@ -27,7 +27,6 @@ public
 
   -- Bare version: only hardware elements are presented
 
-
   --  AHRS variant: a generic software block is present, but *not* connected
   --  to devices. This variant is necessary for code generation.
 
@@ -145,7 +144,7 @@ public
     spi_bus   : requires bus access Buses::SPI::SPI.IMPL;
 
   properties
-        Deployment::Execution_Platform => FreeRTOS;
+    Deployment::Execution_Platform => FreeRTOS;
   end CortexM4;
 
   processor implementation CortexM4.IMPL
