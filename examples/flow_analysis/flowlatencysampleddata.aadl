@@ -1,4 +1,4 @@
---  XXX Crediat authors of this model !
+--  XXX Credit authors of this model !
 
 -- This file contains a model that illustrates end-to-end latency due
 -- to sampled processing sampled processing occurs through event data
@@ -75,15 +75,11 @@ public
   end step1;
 
   thread implementation step1.periodic
-  flows
-    flow1: flow path ined -> outed;
   properties
     Dispatch_Protocol => Periodic;
   end step1.periodic;
   
   thread implementation step1.aperiodic
-  flows
-    flow1: flow path ined -> outed;
   properties
     Dispatch_Protocol => Aperiodic;
   end step1.aperiodic;
@@ -103,15 +99,11 @@ public
     end step2;
     
     thread implementation step2.periodic
-    flows
-      flow1: flow path ined -> outed;
     properties
       Dispatch_Protocol => Periodic;
     end step2.periodic;
     
     thread implementation step2.aperiodic
-    flows
-      flow1: flow path ined -> outed;
     properties
       Dispatch_Protocol => Aperiodic;
     end step2.aperiodic;
@@ -131,15 +123,11 @@ public
   end step3;
     
   thread implementation step3.periodic
-  flows
-    flow1: flow path ined -> outed;
   properties
     Dispatch_Protocol => Periodic;
   end step3.periodic;
   
   thread implementation step3.aperiodic
-  flows
-    flow1: flow path ined -> outed;
   properties
     Dispatch_Protocol => Aperiodic;
   end step3.aperiodic;
@@ -161,8 +149,6 @@ public
   
   -- sensor periodically senses the physical environment
   device implementation sensor.periodic
-  flows
-    flow1: flow source outed;
   properties
     Dispatch_Protocol => Periodic;
   end sensor.periodic;
@@ -171,8 +157,6 @@ public
   -- randomly with a maximum rate of the period
 
   device implementation sensor.aperiodic
-  flows
-    flow1: flow source outed;
   properties
     Dispatch_Protocol => Aperiodic;
   end sensor.aperiodic;
@@ -192,19 +176,16 @@ public
     Compute_Execution_Time => 1 ms .. 3 ms;
   end actuator;
   
-  -- output is sampled. This reducees the latency jitter.
+  -- output is sampled. This reduces the latency jitter
   device implementation actuator.periodic
-  flows
-    flow1: flow sink ined;
+
   properties
     Dispatch_Protocol => Periodic;
   end actuator.periodic;
 
   -- arrival of data causes actuator to become active. 
-  -- This reduces end-to-end lantecy at the expense of increased litter.
+  -- This reduces end-to-end latency at the expense of increased jitter.
   device implementation actuator.aperiodic
-  flows
-    flow1: flow sink ined;
   properties
     Dispatch_Protocol => Aperiodic;
   end actuator.aperiodic;
