@@ -18,7 +18,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1438432333285</id>
+			<id>1501005269556</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
@@ -27,7 +27,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1438432333286</id>
+			<id>1501005269558</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
@@ -36,7 +36,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1438432333287</id>
+			<id>1501005269561</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
@@ -45,12 +45,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1438432333289</id>
+			<id>1501005269563</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-false-behavior_annex</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1501005269565</id>
+			<name></name>
+			<type>22</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-pok.aadl</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>
