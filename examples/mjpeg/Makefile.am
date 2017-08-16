@@ -13,7 +13,7 @@ OTHER_FILES = $(srcdir)/BLOCK_METRICS.cpp $(srcdir)/DEMUX.h		\
 	$(srcdir)/COLOR_METRICS.h $(srcdir)/IQZZ.cpp $(srcdir)/VLD.h	\
 	$(srcdir)/DEMUX.cpp $(srcdir)/IQZZ.h				\
 	$(srcdir)/mjpeg-platform.aadl $(srcdir)/mjpeg-software.aadl	\
-	$(srcdir)/SpaceStudio.aadl
+	$(srcdir)/spacestudio.aadl
 
 CLEANDIRS = SpaceStudioProject
 CLEANFILES =
