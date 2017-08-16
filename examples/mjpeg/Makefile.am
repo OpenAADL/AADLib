@@ -20,4 +20,7 @@ CLEANFILES =
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl spacestudio
+AVAILABLE_TARGETS= parse-aadl
+
+# The backend is deactivated for the moment
+#spacestudio
