@@ -19,10 +19,11 @@ AC_CHECK_PROG(RM, rm, rm)
 AC_CHECK_PROG(CP, cp, cp)
 
 ##########################################
-# Check for GNU Make
+# Check for GNU Make & GCC
 ##########################################
 
 AM_GNU_MAKE
+AC_PROG_CC
 
 ##########################################
 # Check for Ocarina
@@ -84,7 +85,7 @@ AC_OUTPUT([
 	examples/asl/Makefile
 	examples/behavior_annex/Makefile
 	examples/car/Makefile
-	examples/data_modeling_annex/Makefile
+        examples/data_modeling_annex/Makefile
 	examples/fcs/Makefile
 	examples/flow_analysis/Makefile
 	examples/fms/Makefile
@@ -92,6 +93,7 @@ AC_OUTPUT([
 	examples/line_follower/Makefile
 	examples/memory/Makefile
 	examples/mixin/Makefile
+        examples/mjpeg/Makefile
         examples/mosart/Makefile
         examples/multicore/Makefile
 	examples/paparazzi/Makefile
