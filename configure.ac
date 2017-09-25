@@ -85,6 +85,7 @@ AC_OUTPUT([
 	examples/asl/Makefile
 	examples/behavior_annex/Makefile
 	examples/car/Makefile
+        examples/crazyflie/Makefile
         examples/data_modeling_annex/Makefile
 	examples/fcs/Makefile
 	examples/flow_analysis/Makefile

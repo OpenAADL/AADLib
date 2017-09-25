@@ -1,0 +1,8 @@
+<PROJECT>
+  <AADL path="crazyflie_final.aadl" enabled="true" opened="false"/>
+  <AADL path="crazyflie_functional.aadl" enabled="true" opened="true"/>
+  <AADL path="crazyflie_hardware.aadl" enabled="true" opened="true"/>
+  <AADL path="crazyflie_software.aadl" enabled="true" opened="true"/>
+  <AADL path="crazyflie_system.aadl" enabled="true" opened="true"/>
+  <AADL path="crazyflie_types.aadl" enabled="true" opened="true"/>
+</PROJECT>

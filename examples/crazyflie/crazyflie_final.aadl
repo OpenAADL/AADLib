@@ -1,0 +1,23 @@
+package Crazyflie_Final
+public
+
+  with Crazyflie_System;
+  with Crazyflie_Functional;
+
+  system Crazyflie_Final
+  end Crazyflie_Final;
+
+  system implementation Crazyflie_Final.impl
+  subcomponents
+    Functional : system Crazyflie_Functional::Crazyflie_Functional_Chain.impl;
+    Actual : system Crazyflie_System::Crazyflie_System.impl;
+
+  properties
+    Actual_Function_Binding => (reference (Actual.nRF51822_Firmware)) applies to Functional.Pilot;
+    Actual_Function_Binding => (reference (Actual.STM32F405_Firmware)) applies to Functional.Controller;
+    Actual_Function_Binding => (reference (Actual.STM32F405_Firmware)) applies to Functional.Fusion; 
+    Actual_Function_Binding => (reference (Actual.M1), reference (Actual.M2), reference (Actual.M3), reference (Actual.M4)) applies to Functional.Motors; 
+    Actual_Function_Binding => (reference (Actual.MPU9250)) applies to Functional.Gyro, Functional.Acc, Functional.Magneto;
+  end Crazyflie_Final.impl;
+
+end Crazyflie_Final;
