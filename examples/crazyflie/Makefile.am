@@ -1,10 +1,17 @@
-AADL_SOURCES = $(srcdir)/crazyflie_system.aadl
+AADL_SOURCES =  $(srcdir)/crazyflie_system.aadl
+
 AADL_ROOT    = crazyflie_system::crazyflie_system.impl
 
-OTHER_FILES = $(srcdir)/hello.c
+OTHER_FILES = $(srcdir)/crazyflie_errors.aadl				\
+	$(srcdir)/crazyflie_software.aadl				\
+	$(srcdir)/crazyflie_final.aadl $(srcdir)/crazyflie_system.aadl	\
+	$(srcdir)/crazyflie_functional.aadl				\
+	$(srcdir)/crazyflie_types.aadl					\
+	$(srcdir)/crazyflie_hardware.aadl
 
-CLEANDIRS = rma_impl
-CLEANFILES = rma_impl_aadl_xml.xml
+
+CLEANDIRS =
+CLEANFILES =
 
 include $(srcdir)/../Makefile.common
 
