@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="ASCII"?>
+<pi:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:al="http://eclipse.org/graphiti/mm/algorithms" xmlns:pi="http://eclipse.org/graphiti/mm/pictograms" visible="true" gridUnit="10" diagramTypeId="AADL Diagram" name="Crazyflie_Hardware::MPU9250" snapToGrid="true" version="0.12.0">
+  <properties key="independentObject" value="classifier Crazyflie_Hardware::MPU9250"/>
+  <graphicsAlgorithm xsi:type="al:Rectangle" background="//@colors.1" foreground="//@colors.0" lineWidth="1" transparency="0.0" width="1000" height="1000"/>
+  <children xsi:type="pi:ContainerShape" visible="true" active="true">
+    <properties key="independentObject" value="classifier Crazyflie_Hardware::MPU9250"/>
+    <properties key="is_lt_node" value="true"/>
+    <properties key="is_ghost" value="false"/>
+    <properties key="is_layed_out" value="true"/>
+    <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" filled="false" width="300" height="325" x="20" y="20" style="//@styles.6/@styles.0">
+      <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" lineVisible="false" style="//@styles.7">
+        <points x="300"/>
+        <points x="300" y="325"/>
+        <points x="296" y="321"/>
+        <points x="296" y="4"/>
+      </graphicsAlgorithmChildren>
+      <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" lineVisible="false" style="//@styles.7">
+        <points x="300" y="325"/>
+        <points y="325"/>
+        <points x="4" y="321"/>
+        <points x="296" y="321"/>
+      </graphicsAlgorithmChildren>
+      <graphicsAlgorithmChildren xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" filled="false" width="292" height="317" x="4" y="4" style="//@styles.6/@styles.0"/>
+      <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.6/@styles.0">
+        <points/>
+        <points x="5" y="5"/>
+      </graphicsAlgorithmChildren>
+      <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.6/@styles.0">
+        <points x="300"/>
+        <points x="295" y="5"/>
+      </graphicsAlgorithmChildren>
+      <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.6/@styles.0">
+        <points x="295" y="320"/>
+        <points x="300" y="325"/>
+      </graphicsAlgorithmChildren>
+      <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.6/@styles.0">
+        <points y="325"/>
+        <points x="5" y="320"/>
+      </graphicsAlgorithmChildren>
+    </graphicsAlgorithm>
+    <anchors xsi:type="pi:ChopboxAnchor">
+      <properties key="name" value="chopbox"/>
+    </anchors>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="feature Crazyflie_Hardware::MPU9250.DOF6"/>
+      <properties key="is_ghost" value="false"/>
+      <properties key="is_coloring_container" value="true"/>
+      <properties key="is_lt_node" value="true"/>
+      <properties key="is_layed_out" value="true"/>
+      <properties key="side" value="left"/>
+      <properties key="layout_side" value="left"/>
+      <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="57" height="31" y="20"/>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" outgoingConnections="//@connections.0" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="innerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="15" y="26"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="outerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location y="26"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" incomingConnections="//@connections.0" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="flowSpecification"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="65" y="26"/>
+      </anchors>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="name" value="feature"/>
+        <properties key="is_inner_shape" value="true"/>
+        <properties key="is_coloring_child" value="true"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="15" height="10" y="21" style="//@styles.2">
+          <graphicsAlgorithmChildren xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="15" height="10" style="//@styles.2">
+            <points x="15"/>
+            <points y="5"/>
+            <points x="15" y="10"/>
+          </graphicsAlgorithmChildren>
+        </graphicsAlgorithm>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+      </children>
+      <children visible="true">
+        <properties key="name" value="label"/>
+        <properties key="is_manually_positioned" value="true"/>
+        <properties key="is_transient" value="true"/>
+        <properties key="independentObject" value="feature Crazyflie_Hardware::MPU9250.DOF6"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="52" height="21" x="5" style="//@styles.0">
+          <graphicsAlgorithmChildren xsi:type="al:Text" lineStyle="UNSPECIFIED" width="52" height="21" style="//@styles.1" verticalAlignment="UNSPECIFIED" value="DOF6"/>
+        </graphicsAlgorithm>
+      </children>
+      <children visible="true" active="true">
+        <properties key="name" value="annotation"/>
+        <properties key="is_manually_positioned" value="true"/>
+        <properties key="is_transient" value="true"/>
+        <properties key="independentObject" value="feature Crazyflie_Hardware::MPU9250.DOF6"/>
+        <properties key="is_unselectable" value="true"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" x="5" y="31" style="//@styles.0">
+          <graphicsAlgorithmChildren xsi:type="al:Text" lineStyle="UNSPECIFIED" width="15" height="21" style="//@styles.1" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value=""/>
+        </graphicsAlgorithm>
+      </children>
+    </children>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="feature Crazyflie_Hardware::MPU9250.i2c_bus"/>
+      <properties key="is_ghost" value="false"/>
+      <properties key="is_coloring_container" value="true"/>
+      <properties key="is_lt_node" value="true"/>
+      <properties key="is_layed_out" value="true"/>
+      <properties key="side" value="right"/>
+      <properties key="layout_side" value="right"/>
+      <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="70" height="41" x="230" y="20"/>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="innerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="50" y="31"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="outerConnector"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location x="70" y="31"/>
+      </anchors>
+      <anchors xsi:type="pi:FixPointAnchor" visible="true" active="true" useAnchorLocationAsConnectionEndpoint="true">
+        <properties key="name" value="flowSpecification"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0"/>
+        <location y="31"/>
+      </anchors>
+      <children xsi:type="pi:ContainerShape" visible="true" active="true">
+        <properties key="name" value="feature"/>
+        <properties key="is_inner_shape" value="true"/>
+        <properties key="is_coloring_child" value="true"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineWidth="1" filled="false" lineVisible="false" transparency="0.0" width="20" height="20" x="50" y="21">
+          <graphicsAlgorithmChildren xsi:type="al:Polyline" lineStyle="UNSPECIFIED" width="20" height="20" style="//@styles.2">
+            <points x="20"/>
+            <points x="5"/>
+            <points y="10"/>
+            <points x="5" y="20"/>
+            <points x="20" y="20"/>
+            <points x="20"/>
+          </graphicsAlgorithmChildren>
+        </graphicsAlgorithm>
+        <anchors xsi:type="pi:ChopboxAnchor">
+          <properties key="name" value="chopbox"/>
+        </anchors>
+      </children>
+      <children visible="true">
+        <properties key="name" value="label"/>
+        <properties key="is_manually_positioned" value="true"/>
+        <properties key="is_transient" value="true"/>
+        <properties key="independentObject" value="feature Crazyflie_Hardware::MPU9250.i2c_bus"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="65" height="21" style="//@styles.0">
+          <graphicsAlgorithmChildren xsi:type="al:Text" lineStyle="UNSPECIFIED" width="65" height="21" style="//@styles.1" horizontalAlignment="ALIGNMENT_RIGHT" verticalAlignment="UNSPECIFIED" value="i2c_bus"/>
+        </graphicsAlgorithm>
+      </children>
+      <children visible="true" active="true">
+        <properties key="name" value="annotation"/>
+        <properties key="is_manually_positioned" value="true"/>
+        <properties key="is_transient" value="true"/>
+        <properties key="independentObject" value="feature Crazyflie_Hardware::MPU9250.i2c_bus"/>
+        <properties key="is_unselectable" value="true"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" x="65" y="41" style="//@styles.0">
+          <graphicsAlgorithmChildren xsi:type="al:Text" lineStyle="UNSPECIFIED" width="15" height="21" style="//@styles.1" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value=""/>
+        </graphicsAlgorithm>
+      </children>
+    </children>
+    <children xsi:type="pi:ContainerShape" visible="true" active="true">
+      <properties key="independentObject" value="annex_subclause Crazyflie_Hardware::MPU9250 emv2 0"/>
+      <properties key="is_lt_node" value="true"/>
+      <properties key="is_ghost" value="false"/>
+      <properties key="is_layed_out" value="true"/>
+      <graphicsAlgorithm xsi:type="al:Polygon" lineStyle="UNSPECIFIED" width="150" height="51" x="57" y="20" style="//@styles.3">
+        <points y="51"/>
+        <points y="9"/>
+        <points x="6"/>
+        <points x="45"/>
+        <points x="51" y="9"/>
+        <points x="150" y="9"/>
+        <points x="150" y="51"/>
+      </graphicsAlgorithm>
+      <anchors xsi:type="pi:ChopboxAnchor">
+        <properties key="name" value="chopbox"/>
+      </anchors>
+      <children visible="true" active="true">
+        <properties key="name" value="annex_label"/>
+        <properties key="is_manually_positioned" value="true"/>
+        <properties key="is_transient" value="true"/>
+        <properties key="independentObject" value="annex_subclause Crazyflie_Hardware::MPU9250 emv2 0"/>
+        <graphicsAlgorithm xsi:type="al:Rectangle" lineStyle="UNSPECIFIED" width="93" height="21" x="28" y="17" style="//@styles.0">
+          <graphicsAlgorithmChildren xsi:type="al:Text" lineStyle="UNSPECIFIED" width="93" height="21" style="//@styles.1" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED" value="{**EMV2**}"/>
+        </graphicsAlgorithm>
+      </children>
+    </children>
+  </children>
+  <styles background="//@colors.1" lineStyle="UNSPECIFIED" filled="true" lineVisible="false" transparency="0.2" id="text-background" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  <styles foreground="//@colors.2" lineStyle="UNSPECIFIED" filled="false" id="label" font="//@fonts.0"/>
+  <styles background="//@colors.2" foreground="//@colors.2" lineWidth="2" lineVisible="true" id="feature" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  <styles background="//@colors.1" foreground="//@colors.2" lineWidth="2" filled="false" lineVisible="true" transparency="0.0" id="default_annex" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  <styles background="//@colors.2" foreground="//@colors.2" lineWidth="2" lineVisible="true" id="flow_specification" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  <styles background="//@colors.2" foreground="//@colors.2" lineWidth="2" lineVisible="true" id="decorator" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  <styles background="//@colors.1" foreground="//@colors.2" lineWidth="1" lineVisible="true" transparency="0.0" id="classifier" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED">
+    <styles lineWidth="2" lineStyle="UNSPECIFIED" id="device" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  </styles>
+  <styles background="//@colors.3" lineStyle="UNSPECIFIED" transparency="0.5" id="shaded" horizontalAlignment="UNSPECIFIED" verticalAlignment="UNSPECIFIED"/>
+  <connections xsi:type="pi:FreeFormConnection" visible="true" active="true" start="//@children.0/@children.0/@anchors.1" end="//@children.0/@children.0/@anchors.3">
+    <properties key="independentObject" value="flow_specification Crazyflie_Hardware::MPU9250.f1"/>
+    <properties key="is_lt_node" value="true"/>
+    <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.4"/>
+    <connectionDecorators visible="true" locationRelative="true">
+      <graphicsAlgorithm xsi:type="al:Polygon" lineStyle="UNSPECIFIED" style="//@styles.5">
+        <points x="-6" y="4"/>
+        <points x="2"/>
+        <points x="-6" y="-4"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <connectionDecorators visible="true" locationRelative="true" location="1.0">
+      <graphicsAlgorithm xsi:type="al:Polyline" lineStyle="UNSPECIFIED" style="//@styles.5">
+        <points y="8"/>
+        <points y="-8"/>
+      </graphicsAlgorithm>
+    </connectionDecorators>
+    <connectionDecorators visible="true" active="true" locationRelative="true" location="0.5">
+      <properties key="independentObject" value="flow_specification Crazyflie_Hardware::MPU9250.f1"/>
+      <graphicsAlgorithm xsi:type="al:Text" lineWidth="1" filled="false" transparency="0.0" x="5" y="10" style="//@styles.1" font="//@fonts.1" value="f1"/>
+    </connectionDecorators>
+  </connections>
+  <colors red="227" green="238" blue="249"/>
+  <colors red="255" green="255" blue="255"/>
+  <colors/>
+  <colors red="192" green="192" blue="192"/>
+  <fonts name="Arial" size="13" bold="true"/>
+  <fonts name="Arial" size="8"/>
+</pi:Diagram>
