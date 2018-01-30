@@ -12,4 +12,4 @@ CLEANFILES =
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl c cheddar run_cheddar
+AVAILABLE_TARGETS= parse-aadl c cheddar # run_cheddar

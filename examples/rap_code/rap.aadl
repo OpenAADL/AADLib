@@ -369,8 +369,8 @@ thread Weapon_Selection_T
 features
   --  Inoputs from MPD
 
-  Weapon_Select_Request   : in event data port RAP_Int_32
-    {Compute_Entrypoint_Source_Text => "Weapon_Selection.On_Weapon_Select_Request";};
+--  Weapon_Select_Request   : in event data port RAP_Int_32
+--    {Compute_Entrypoint_Source_Text => "Weapon_Selection.On_Weapon_Select_Request";};
   --  Inputs from Keyset
 
   Quantity_Select_Request : in data port RAP_Int_32;
@@ -1123,11 +1123,8 @@ end Hardware_Emulator.Impl;
 processor cpu
 features
   B : requires bus access C_Bus.Impl;
---properties
-  --  Scheduling_Protocol => Rate_Monotonic_Protocol;
-  --  Scheduling_Protocol => Deadline_Monotonic_Protocol;
-
---  Cheddar_Properties::Preemptive_Scheduler => true;
+properties
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
 end cpu;
 
 ---------

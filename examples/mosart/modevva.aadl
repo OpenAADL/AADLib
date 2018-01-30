@@ -57,27 +57,27 @@ with Processors;
   -- Mailbox --
   -------------
 
-  subprogram Store
-  features
-    this : requires data access Mailbox.impl;
-  properties
-    Compute_Execution_Time => 1 ms .. 1 ms;
-  end Store;
+--   subprogram Store
+--   features
+--     this : requires data access Mailbox.impl;
+--   properties
+--     Compute_Execution_Time => 1 ms .. 1 ms;
+--   end Store;
 
   data Mailbox
-  features
-    Store : provides subprogram access Store;
-  properties
-    --Priority => 240;
-    -- Priority cannot applied to data component
-    Concurrency_Control_Protocol => Priority_Ceiling;
+--   features
+--     Store : provides subprogram access Store;
+--   properties
+--     --Priority => 240;
+--     -- Priority cannot applied to data component
+--     Concurrency_Control_Protocol => Priority_Ceiling;
   end Mailbox;
 
   data implementation Mailbox.impl
-  subcomponents
-    spgStore : subprogram Store;
-  connections
-    Cnx_1 : subprogram access spgStore -> Store;
+--   subcomponents
+--     spgStore : subprogram Store;
+--   connections
+--     Cnx_1 : subprogram access spgStore -> Store;
   end Mailbox.impl;
 
   -------------

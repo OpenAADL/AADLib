@@ -1998,6 +1998,8 @@ features
 end cpu;
 
 processor implementation cpu.impl
+properties
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
 end cpu.impl;
 
 ---------
