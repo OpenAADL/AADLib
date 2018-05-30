@@ -42,3 +42,6 @@ xtratum_monocore:
 
 xtratum_multicore:
 	$(OCARINA) $(OCARINA_FLAGS) -g xtratum_configuration -r ROSACE::XtratuM::rosace_xtratum.smp rosace-xtratum.aadl
+
+air_monocore:
+	$(OCARINA) $(OCARINA_FLAGS) -g air_configuration -r ROSACE::XtratuM::rosace_xtratum.monocore rosace-xtratum.aadl

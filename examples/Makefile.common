@@ -1,5 +1,6 @@
 OCARINA = ocarina
-OCARINA_FLAGS = -aadlv2 -y -disable-annexes=emv2 -I$(top_srcdir)/src/property_set \
+OCARINA_FLAGS = -aadlv2 -v -y -disable-annexes=emv2 \
+	      -I$(top_srcdir)/src/property_set \
 	      -I$(top_srcdir)/src/aadl -I$(srcdir) $(AADL_LIB)
 
 check-local: $(AVAILABLE_TARGETS)
@@ -109,10 +110,14 @@ spacestudio:
 	$(OCARINA) $(OCARINA_FLAGS) -g spacestudio -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
+air_conf:
+	$(OCARINA) $(OCARINA_FLAGS) -g air_configuration -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
 real:
 	$(OCARINA) $(OCARINA_FLAGS) -g real_theorem \
-                -real_continue_eval \
-	        -real_lib $(top_srcdir)/src/real/aadl_theorems.real \
+		-real_continue_eval \
+		-real_lib $(top_srcdir)/src/real/aadl_theorems.real \
 		-real_lib $(top_srcdir)/src/real/arinc653_theorems.real \
 		-real_lib $(top_srcdir)/src/real/bare_board_theorems.real \
 		-real_lib $(top_srcdir)/src/real/data_model_theorems.real \
