@@ -58,13 +58,13 @@ public
 
   processor cpurm
   properties
-    Deployment::Execution_Platform => LEON3_XTRATUM;
+    Deployment::Execution_Platform => AIR;
   end cpurm;
 
   processor implementation cpurm.impl
   subcomponents
     P0 : virtual processor partition_runtime.i
-    { Deployment::Execution_Platform => LEON3_XM3;
+    { Deployment::Execution_Platform => AIR;
       ARINC653::Partition_Identifier => 0;
       ARINC653::Partition_Name       => "P0";
     };
@@ -87,15 +87,15 @@ public
   memory implementation  myram.stram
   properties
     Base_Address => 40000000;
-    Byte_Count   => 4194304;
+    Byte_Count   => 16#400000#;
   end myram.stram;
 
   memory implementation myram.sdram
   subcomponents
-    segment1 : memory segment.i {Base_Address => 40100000; Byte_Count => 524288;};
+    segment1 : memory segment.i {Base_Address => 40100000; Byte_Count => 16#400000#;};
   properties
     Base_Address => 40000000;
-    Byte_Count   => 4194304;
+    Byte_Count   => 16#400000#;
   end myram.sdram;
 
   ------------
