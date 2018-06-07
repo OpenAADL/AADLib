@@ -27,10 +27,10 @@ public
     P_Spg : subprogram Hello_Spg_1;
     };
   properties
-    Dispatch_Protocol                  => periodic;
-    Period                             => 1000ms;
+    Priority => 100;
+    Dispatch_Protocol                  => Periodic;
+    Period                             => 100 ms;
     Compute_Execution_time             => 0 ms .. 3 ms;
-    Deadline                           => 1000 ms;
   end Task.impl_1;
 
   -------------
