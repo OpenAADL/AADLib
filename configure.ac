@@ -75,6 +75,7 @@ AC_OUTPUT([
         Makefile
         examples/Makefile
         examples/air/Makefile
+        examples/air/hello/Makefile
         examples/adiru/Makefile
         examples/ahrs_discovery/Makefile
         examples/aocs/Makefile
