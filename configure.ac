@@ -76,6 +76,7 @@ AC_OUTPUT([
         examples/Makefile
         examples/air/Makefile
         examples/air/hello/Makefile
+        examples/air/ping/Makefile
         examples/adiru/Makefile
         examples/ahrs_discovery/Makefile
         examples/aocs/Makefile

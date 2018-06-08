@@ -1,0 +1,114 @@
+package PING
+public
+  with Software;
+  with Deployment;
+  with ARINC653;
+
+  ---------------
+  -- Processes --
+  ---------------
+
+  process A
+  features
+    Data_Source : out event data port Software::Simple_Type;
+  end A;
+
+  process implementation A.Impl
+  subcomponents
+    Pinger        : thread Software::P.Impl;
+  connections
+    port Pinger.Data_Source -> Data_Source;
+  end A.Impl;
+
+  process B
+  features
+    Data_Sink  : in event data port Software::Simple_Type;
+  end B;
+
+  process implementation B.Impl
+  subcomponents
+    Ping_Me        : thread Software::Q.Impl ;
+  connections
+    port Data_Sink -> Ping_Me.Data_Sink;
+  end B.Impl;
+
+  memory myram
+  end myram;
+
+  memory segment
+  end segment;
+
+  memory implementation segment.i
+  end segment.i;
+
+  memory implementation  myram.stram
+  properties
+    Base_Address => 40000000;
+    Byte_Count   => 4194304;
+  end myram.stram;
+
+  memory implementation myram.sdram
+  subcomponents
+    segment1 : memory segment.i
+    {Base_Address => 40100000; Byte_Count => 524288;};
+    segment2 : memory segment.i
+    {Base_Address => 40180000; Byte_Count => 524288;};
+  end myram.sdram;
+
+  processor leon3
+  end leon3;
+
+  virtual processor AIR_partition
+  end AIR_partition;
+
+  virtual processor implementation AIR_partition.generic
+  end AIR_partition.generic;
+
+  processor implementation leon3.AIR
+  properties
+    Deployment::Execution_Platform => AIR;
+  end leon3.AIR;
+
+  processor implementation leon3.AIR_2partitions extends leon3.AIR
+  subcomponents
+    part1 : virtual processor AIR_partition.generic
+    { Deployment::Execution_Platform => AIR;};
+    part2 : virtual processor AIR_partition.generic
+    { Deployment::Execution_Platform => AIR;};
+  properties
+
+    ARINC653::Module_Schedule =>
+            ( [Partition => reference (part1);
+               Duration  => 20 ms;
+               Periodic_Processing_Start => true;],
+               [Partition => reference (part2);
+               Duration  => 10 ms;
+               Periodic_Processing_Start => true;]
+            );
+    ARINC653::Module_Major_Frame => 40ms;
+  end leon3.AIR_2partitions;
+
+  ------------
+  -- System --
+  ------------
+
+  system PING
+  end PING;
+
+  system implementation PING.IMA
+  subcomponents
+    Node_A : process A.Impl;
+    Node_B : process B.Impl;
+    memst  :  memory myram.stram;
+    mem    :  memory myram.sdram;
+    cpu    : processor leon3.AIR_2partitions;
+  connections
+    port Node_A.Data_Source -> Node_B.Data_Sink;
+  properties
+    actual_processor_binding => (reference (cpu.part1)) applies to Node_A;
+    actual_processor_binding => (reference (cpu.part2)) applies to Node_B;
+    actual_memory_binding => (reference (mem.segment1)) applies to Node_A;
+    actual_memory_binding => (reference (mem.segment2)) applies to Node_B;
+  end PING.IMA;
+
+end PING;
