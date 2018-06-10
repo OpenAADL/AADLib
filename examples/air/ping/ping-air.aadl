@@ -103,7 +103,7 @@ public
     mem    :  memory myram.sdram;
     cpu    : processor leon3.AIR_2partitions;
   connections
-    port Node_A.Data_Source -> Node_B.Data_Sink;
+    C1 : port Node_A.Data_Source -> Node_B.Data_Sink;
   properties
     actual_processor_binding => (reference (cpu.part1)) applies to Node_A;
     actual_processor_binding => (reference (cpu.part2)) applies to Node_B;
