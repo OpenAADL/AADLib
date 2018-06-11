@@ -4,6 +4,28 @@ public
   with Deployment;
   with ARINC653;
 
+
+ subprogram do_ports_polling
+  properties
+    source_language => C;
+    source_name     => "user_ports_polling";
+    source_text     => ("air_polling.c");
+  end do_ports_polling;
+
+  thread port_poller
+  end port_poller;
+
+  thread implementation port_poller.i
+  calls
+    Mycalls: {
+    P_Spg : subprogram do_ports_polling;
+    };
+  properties
+    Dispatch_Protocol                  => Periodic;
+    Period                             => 100 ms;
+    Deadline                           => 100 ms;
+  end port_poller.i;
+
   ---------------
   -- Processes --
   ---------------
@@ -28,6 +50,7 @@ public
   process implementation B.Impl
   subcomponents
     Ping_Me        : thread Software::Q.Impl ;
+    poll_port      : thread port_poller.i;
   connections
     port Data_Sink -> Ping_Me.Data_Sink;
   end B.Impl;
@@ -50,9 +73,9 @@ public
   memory implementation myram.sdram
   subcomponents
     segment1 : memory segment.i
-    {Base_Address => 40100000; Byte_Count => 524288;};
+    {Base_Address => 16#40100000#; Byte_Count => 16#400000#; };
     segment2 : memory segment.i
-    {Base_Address => 40180000; Byte_Count => 524288;};
+    {Base_Address => 16#40200000#; Byte_Count => 16#400000#; };
   end myram.sdram;
 
   processor leon3
@@ -72,11 +95,17 @@ public
   processor implementation leon3.AIR_2partitions extends leon3.AIR
   subcomponents
     part1 : virtual processor AIR_partition.generic
-    { Deployment::Execution_Platform => AIR;};
+    { Deployment::Execution_Platform => AIR;
+      ARINC653::Partition_Identifier => 1;
+      ARINC653::Partition_Name       => "part1";
+    };
     part2 : virtual processor AIR_partition.generic
-    { Deployment::Execution_Platform => AIR;};
-  properties
+    { Deployment::Execution_Platform => AIR;
+      ARINC653::Partition_Identifier => 2;
+      ARINC653::Partition_Name       => "part2";
+      };
 
+  properties
     ARINC653::Module_Schedule =>
             ( [Partition => reference (part1);
                Duration  => 20 ms;

@@ -3,7 +3,7 @@ AADL_ROOT    = ping.ima
 
 OTHER_FILES =
 
-CLEANDIRS = hello_impl
+CLEANDIRS = ping_ima
 CLEANFILES =
 
 include $(srcdir)/../../Makefile.common

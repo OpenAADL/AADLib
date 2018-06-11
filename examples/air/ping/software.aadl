@@ -1,90 +1,81 @@
---  This AADL model illustrates how to model a simple interaction
---  between tasks, in a local or distributed environment.
---
---  One task pings another, sending a data periodically.
---
---  $Id: software.aadl 344 2007-04-17 14:48:16Z zalila $
-
 package Software
 public
   with Data_Model;
 
-----------
--- Data --
-----------
+  ----------
+  -- Data --
+  ----------
 
-data Simple_Type
-properties
-  Type_Source_Name => "custom_int"; 
-  Source_Text => ("ping");
-  Source_Data_Size => 8 Bytes;
-end Simple_Type;
+  data Simple_Type
+  properties
+    Type_Source_Name => "custom_int";
+    Source_Text => ("ping");
+    Source_Data_Size => 8 Bytes;
+  end Simple_Type;
 
------------------
--- Subprograms --
------------------
+  -----------------
+  -- Subprograms --
+  -----------------
 
-subprogram Do_Ping_Spg
-features
-  Data_Source : out parameter Simple_Type;
-properties
-  source_language => C;
-  source_name     => "user_do_ping_spg";
-  source_text     => ("ping.c");
-end Do_Ping_Spg;
+  subprogram Do_Ping_Spg
+  features
+    Data_Source : out parameter Simple_Type;
+  properties
+    Source_Language => (C);
+    Source_Name     => "user_do_ping_spg";
+    Source_Text     => ("ping.c");
+  end Do_Ping_Spg;
 
-subprogram Ping_Spg
-features
-  Data_Sink : in parameter Simple_Type;
-properties
-  source_language => C;
-  source_name     => "user_ping_spg";
-  source_text     => ("ping.c");
-end Ping_Spg;
+  subprogram Ping_Spg
+  features
+    Data_Sink : in parameter Simple_Type;
+  properties
+    Source_Language => C;
+    Source_Name     => "user_ping_spg";
+    Source_Text     => ("ping.c");
+  end Ping_Spg;
 
+  -------------
+  -- Threads --
+  -------------
 
--------------
--- Threads --
--------------
+  thread P
+  features
+    Data_Source : out event data port Simple_Type;
+  end P;
 
-thread P
-features
-  Data_Source : out event data port Simple_Type;
-end P;
+  thread implementation P.Impl
+  calls
+    Mycalls: {
+    P_Spg : subprogram Do_Ping_Spg;
+    };
+  connections
+    parameter P_Spg.Data_Source -> Data_Source;
+  properties
+    Dispatch_Protocol                  => Periodic;
+    Period                             => 2000 Ms;
+    Deadline                           => 2000 ms;
+    Priority                           => 2;
+    Dispatch_Offset                    => 500 Ms;
+  end P.Impl;
 
-thread implementation P.Impl
-calls 
-Mycalls: {
-  P_Spg : subprogram Do_Ping_Spg;
-};
-connections
-  parameter P_Spg.Data_Source -> Data_Source;
-properties
-  Recover_Entrypoint_Source_Text     => "recover";
-  Dispatch_Protocol                  => Periodic;
-  Period                             => 2000 Ms;
-  Deadline                           => 2000 ms;
-  Priority                           => 2;
-  Dispatch_Offset                    => 500 Ms;
-end P.Impl;
+  thread Q
+  features
+    Data_Sink : in event data port Simple_Type;
+  end Q;
 
-thread Q
-features
-  Data_Sink : in event data port Simple_Type;
-end Q;
-
-thread implementation Q.Impl
-calls 
-Mycalls: {
-  Q_Spg : subprogram Ping_Spg;
-};
-connections
-  parameter Data_Sink -> Q_Spg.Data_Sink;
-properties
-  Dispatch_Protocol                  => Sporadic;
-  Period                             => 10 Ms;
-  deadline                           => 10 Ms;
-  Priority                           => 1;
-end Q.Impl;
+  thread implementation Q.Impl
+  calls
+    Mycalls: {
+    Q_Spg : subprogram Ping_Spg;
+    };
+  connections
+    parameter Data_Sink -> Q_Spg.Data_Sink;
+  properties
+    Dispatch_Protocol                  => Sporadic;
+    Period                             => 10 Ms;
+    deadline                           => 10 Ms;
+    Priority                           => 1;
+  end Q.Impl;
 
 end Software;
