@@ -1,10 +1,13 @@
 #include <stdio.h>
-#include <deployment.h>
+
 #include <po_hi_debug.h>
 #include <po_hi_types.h>
 #include <po_hi_transport.h>
 #include <po_hi_gqueue.h>
+
+#include <deployment.h>
 #include <request.h>
+#include <activity.h>
 
 #include <air.h>
 #include <a653.h>
@@ -18,13 +21,9 @@ void user_ports_polling ()
    __po_hi_port_kind_t pkind;
 
    RETURN_CODE_TYPE rc;
-   MESSAGE_SIZE_TYPE SIZE;
-   UPDATED_TYPE UPDATED;
-   VALIDITY_TYPE VALIDITY;
    SAMPLING_PORT_CURRENT_STATUS_TYPE STATUS;
    MESSAGE_SIZE_TYPE len;
    PARTITION_ID_TYPE self_id;
-   char message[1024];
 
    __DEBUGMSG ("Polling ports for partition \n");
 
@@ -46,11 +45,11 @@ void user_ports_polling ()
          }
         */
         __DEBUGMSG ("Testing port %d\n",
-                    __po_hi_transport_xtratum_get_port (portno));
+                    __po_hi_transport_air_get_port (portno));
 
          if (pkind ==  __PO_HI_IN_EVENT_DATA_INTER_PROCESS) {
            RECEIVE_QUEUING_MESSAGE
-             (__po_hi_transport_xtratum_get_port (portno),
+             (__po_hi_transport_air_get_port (portno),
               INFINITE_TIME_VALUE,
               &request,
               &len,
