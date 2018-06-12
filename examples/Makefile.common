@@ -145,7 +145,7 @@ real:
 # d) finally run make ;-)
 
 build_air:
-	( cd $(CLEANDIRS) && rm Makefile && (configure) && make )
+	( cd $(CLEANDIRS) && rm Makefile && (configure --keep-files-silent) && make )
 
 clean-local:
 	-rm -rf *~ *aadl_xml.xml *_cheddar.xml mast-model.txt		\
