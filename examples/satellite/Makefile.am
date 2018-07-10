@@ -9,4 +9,4 @@ CLEANFILES =
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl cheddar mast
+AVAILABLE_TARGETS= parse-aadl cheddar mast stats

@@ -9,7 +9,7 @@ CLEANFILES = *.lnt demo.svl
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl real petri build_ada lnt
+AVAILABLE_TARGETS= parse-aadl real petri build_ada lnt stats
 
 # Note: we overwrite the "real" target to match this project specific
 # constraints.
