@@ -1,4 +1,4 @@
-package Buses
+package Buses::Misc
 public
   with Electricity_Properties;
 
@@ -6,26 +6,26 @@ public
   -- TIMER --
   -----------
 
-  bus TIMER_bus  
+  bus TIMER_bus
   end TIMER_bus;
 
   bus implementation TIMER_bus.impl
   end TIMER_bus.impl;
-  
+
   ---------
   -- PWM --
   ---------
 
-  bus PWM_bus    
+  bus PWM_bus
   end PWM_bus;
 
   bus implementation PWM_bus.impl
   end PWM_bus.impl;
-  
+
   -- three_phases   --
-  bus three_phases_bus    
+  bus three_phases_bus
   end three_phases_bus;
-  
+
   bus implementation three_phases_bus.impl
   end three_phases_bus.impl;
 
@@ -38,46 +38,46 @@ public
 
   bus power
   end power;
-  
+
   bus implementation power.i
   end power.i;
 
-  bus VBat_bus    
+  bus VBat_bus
   properties
-    Electricity_Properties::Bus_Voltage_Range => 7.0 V .. 14.8 V;    
+    Electricity_Properties::Bus_Voltage_Range => 7.0 V .. 14.8 V;
   end VBat_bus;
 
   bus implementation VBat_bus.impl
   end VBat_bus.impl;
-  
-  bus V3v3_bus    
+
+  bus V3v3_bus
   properties
-    Electricity_Properties::Bus_Voltage_Range => 3.3 V .. 3.3 V;   
+    Electricity_Properties::Bus_Voltage_Range => 3.3 V .. 3.3 V;
   end V3v3_bus;
 
   bus implementation V3v3_bus.impl
   end V3v3_bus.impl;
-  
-  bus V5_bus    
+
+  bus V5_bus
   properties
-    Electricity_Properties::Bus_Voltage_Range => 5.0 V .. 5.0 V;   
+    Electricity_Properties::Bus_Voltage_Range => 5.0 V .. 5.0 V;
   end V5_bus;
 
   bus implementation V5_bus.impl
   end V5_bus.impl;
-  
-  bus V12_bus    
+
+  bus V12_bus
   properties
-    Electricity_Properties::Bus_Voltage_Range => 12.0 V .. 12.0 V;   
+    Electricity_Properties::Bus_Voltage_Range => 12.0 V .. 12.0 V;
   end V12_bus;
 
   bus implementation V12_bus.impl
   end V12_bus.impl;
-  
+
   bus generic_bus
   end generic_bus;
-  
+
   bus implementation generic_bus.impl
   end generic_bus.impl;
-  
-end Buses;
+
+end Buses::Misc;

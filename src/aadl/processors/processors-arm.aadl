@@ -7,7 +7,7 @@ public
   with Electricity_Properties;
   with Processor_Properties;
 
-  with Buses;
+  with Buses::Misc;
   with Buses::Ethernet;
   with Buses::I2C;
   with Buses::UART;
@@ -34,17 +34,17 @@ public
   processor Xscale_PXA270 extends Generic_ARM
   properties
     Processor_Properties::FPU_Present => False;
-    Data_Sheet::UUID => 
+    Data_Sheet::UUID =>
        "http://www.marvell.com/products/processors/applications/pxa_family/";
   end Xscale_PXA270;
-  
+
   --------------
   -- ARM7TDMI --
   --------------
 
   processor ARM7TDMI extends Generic_ARM
   end ARM7TDMI;
-  
+
   ----------------
   -- AT91SAM7A3 --
   ----------------
@@ -55,7 +55,7 @@ public
 
   processor AT91SAM7A3 extends ARM7TDMI
   features
-    Supply : requires bus access buses::V3v3_bus.impl;        
+    Supply : requires bus access Buses::Misc::V3v3_bus.impl;
   end AT91SAM7A3;
 
   processor implementation AT91SAM7A3.impl
@@ -77,14 +77,14 @@ public
   features
     Serial_Wire :    requires bus access Buses::I2C::I2C.impl;
   end TWI_Peripheral;
-  
+
   device implementation TWI_Peripheral.impl
   properties
-    Electricity_Properties::VIH_min => 2.0 V;  
-    Electricity_Properties::VIL_max => 1.0 V;  
-    Electricity_Properties::VOH_min => 3.2 V;  
-    Electricity_Properties::VOL_max => 0.4 V;  
-    Electricity_Properties::Device_Type => Master;  
+    Electricity_Properties::VIH_min => 2.0 V;
+    Electricity_Properties::VIL_max => 1.0 V;
+    Electricity_Properties::VOH_min => 3.2 V;
+    Electricity_Properties::VOL_max => 0.4 V;
+    Electricity_Properties::Device_Type => Master;
     Electricity_Properties::Run_Current =>  0.0 A;
     Electricity_Properties::Idle_Current =>  0.0 A;
     Electricity_Properties::Peak_Current => 0.0 A;
@@ -92,64 +92,64 @@ public
     Electricity_Properties::Acquisition_Time => 0 sec;
     Electricity_Properties::Peak_Time => 0 sec;
   end TWI_Peripheral.impl;
-  
+
   --  USART0   --
   device USART0_Peripheral
   features
     Serial_Wire :    requires bus access buses::UART::UART.impl;
   end USART0_Peripheral;
-  
+
   device implementation USART0_Peripheral.impl
   properties
-    Electricity_Properties::VIH_min => 1.2 V;  
-    Electricity_Properties::VIL_max => 0.5 V;  
-    Electricity_Properties::VOH_min => 1.7 V;  
+    Electricity_Properties::VIH_min => 1.2 V;
+    Electricity_Properties::VIL_max => 0.5 V;
+    Electricity_Properties::VOH_min => 1.7 V;
     Electricity_Properties::VOL_max => 0.1 V;
     Electricity_Properties::Run_Current =>  0.0 A;
     Electricity_Properties::Idle_Current =>  0.0 A;
     Electricity_Properties::Peak_Current => 0.0 A;
-    Electricity_Properties::Core_Voltage => 0.0 V; 
+    Electricity_Properties::Core_Voltage => 0.0 V;
     Electricity_Properties::Acquisition_Time => 0 sec;
     Electricity_Properties::Peak_Time => 0 sec;
-    Electricity_Properties::Device_Type => Slave;  
+    Electricity_Properties::Device_Type => Slave;
   end USART0_Peripheral.impl;
-  
+
   device TIMER_Peripheral
   features
-    Serial_Wire :    requires bus access buses::TIMER_bus.impl;
+    Serial_Wire :    requires bus access Buses::Misc::TIMER_bus.impl;
   end TIMER_Peripheral;
-  
+
   device implementation TIMER_Peripheral.impl
   properties
-    Electricity_Properties::VIH_min => 2.0 V;  
-    Electricity_Properties::VIL_max => 1.0 V;  
-    Electricity_Properties::VOH_min => 3.2 V;  
-    Electricity_Properties::VOL_max => 0.4 V;  
-    Electricity_Properties::Device_Type => Master; 
-    Electricity_Properties::Run_Current =>  0.0 A;
-    Electricity_Properties::Idle_Current =>  0.0 A;
-    Electricity_Properties::Peak_Current => 0.0 A;
-    Electricity_Properties::Core_Voltage => 0.0 V; 
-    Electricity_Properties::Acquisition_Time => 0 sec;
-    Electricity_Properties::Peak_Time => 0 sec;
-  end TIMER_Peripheral.impl;
-  
-  device PWM_Peripheral
-  features
-    Serial_Wire :    requires bus access buses::PWM_bus.impl;
-  end PWM_Peripheral;
-  
-  device implementation PWM_Peripheral.impl
-  properties
-    Electricity_Properties::VIH_min => 2.0 V;  
-    Electricity_Properties::VIL_max => 1.0 V;  
-    Electricity_Properties::VOH_min => 3.2 V;  
-    Electricity_Properties::VOL_max => 0.4 V;  
+    Electricity_Properties::VIH_min => 2.0 V;
+    Electricity_Properties::VIL_max => 1.0 V;
+    Electricity_Properties::VOH_min => 3.2 V;
+    Electricity_Properties::VOL_max => 0.4 V;
     Electricity_Properties::Device_Type => Master;
     Electricity_Properties::Run_Current =>  0.0 A;
     Electricity_Properties::Idle_Current =>  0.0 A;
     Electricity_Properties::Peak_Current => 0.0 A;
-    Electricity_Properties::Core_Voltage => 0.0 V;  
+    Electricity_Properties::Core_Voltage => 0.0 V;
+    Electricity_Properties::Acquisition_Time => 0 sec;
+    Electricity_Properties::Peak_Time => 0 sec;
+  end TIMER_Peripheral.impl;
+
+  device PWM_Peripheral
+  features
+    Serial_Wire :    requires bus access buses::Misc::PWM_bus.impl;
+  end PWM_Peripheral;
+
+  device implementation PWM_Peripheral.impl
+  properties
+    Electricity_Properties::VIH_min => 2.0 V;
+    Electricity_Properties::VIL_max => 1.0 V;
+    Electricity_Properties::VOH_min => 3.2 V;
+    Electricity_Properties::VOL_max => 0.4 V;
+    Electricity_Properties::Device_Type => Master;
+    Electricity_Properties::Run_Current =>  0.0 A;
+    Electricity_Properties::Idle_Current =>  0.0 A;
+    Electricity_Properties::Peak_Current => 0.0 A;
+    Electricity_Properties::Core_Voltage => 0.0 V;
     Electricity_Properties::Acquisition_Time => 0 sec;
     Electricity_Properties::Peak_Time => 0 sec;
   end PWM_Peripheral.impl;
@@ -160,30 +160,30 @@ public
   end USART1_Peripheral;
   device implementation USART1_Peripheral.impl
   properties
-    Electricity_Properties::VIH_min => 1.2 V;  
-    Electricity_Properties::VIL_max => 0.5 V;  
-    Electricity_Properties::VOH_min => 1.7 V;  
-    Electricity_Properties::VOL_max => 0.1 V;  
-    Electricity_Properties::Device_Type => Master; 
+    Electricity_Properties::VIH_min => 1.2 V;
+    Electricity_Properties::VIL_max => 0.5 V;
+    Electricity_Properties::VOH_min => 1.7 V;
+    Electricity_Properties::VOL_max => 0.1 V;
+    Electricity_Properties::Device_Type => Master;
     Electricity_Properties::Run_Current =>  0.0 A;
     Electricity_Properties::Idle_Current => 0.0 A;
     Electricity_Properties::Peak_Current => 0.0 A;
-    Electricity_Properties::Core_Voltage => 0.0 V; 
+    Electricity_Properties::Core_Voltage => 0.0 V;
     Electricity_Properties::Acquisition_Time => 0 sec;
     Electricity_Properties::Peak_Time => 0 sec;
   end USART1_Peripheral.impl;
-  
+
   device USART2_Peripheral
   features
     Serial_Wire :    requires bus access buses::UART::UART.impl;
   end USART2_Peripheral;
   device implementation USART2_Peripheral.impl
   properties
-    Electricity_Properties::VIH_min => 1.2 V;  
-    Electricity_Properties::VIL_max => 0.5 V;  
-    Electricity_Properties::VOH_min => 2.0 V;  
-    Electricity_Properties::VOL_max => 0.1 V;  
-    Electricity_Properties::Device_Type => Master;  
+    Electricity_Properties::VIH_min => 1.2 V;
+    Electricity_Properties::VIL_max => 0.5 V;
+    Electricity_Properties::VOH_min => 2.0 V;
+    Electricity_Properties::VOL_max => 0.1 V;
+    Electricity_Properties::Device_Type => Master;
     Electricity_Properties::Run_Current =>  0.0 A;
     Electricity_Properties::Idle_Current =>  0.0 A;
     Electricity_Properties::Peak_Current => 0.0 A;
@@ -191,18 +191,18 @@ public
     Electricity_Properties::Acquisition_Time => 0 sec;
     Electricity_Properties::Peak_Time => 0 sec;
   end USART2_Peripheral.impl;
-  
+
   device USB1_Peripheral
   features
     Serial_Wire :    requires bus access buses::USB::USB.impl;
   end USB1_Peripheral;
   device implementation USB1_Peripheral.impl
   properties
-    Electricity_Properties::VIH_min => 2.0 V;  
-    Electricity_Properties::VIL_max => 1.0 V;  
-    Electricity_Properties::VOH_min => 3.2 V;  
-    Electricity_Properties::VOL_max => 0.4 V;  
-    Electricity_Properties::Device_Type => Master;  
+    Electricity_Properties::VIH_min => 2.0 V;
+    Electricity_Properties::VIL_max => 1.0 V;
+    Electricity_Properties::VOH_min => 3.2 V;
+    Electricity_Properties::VOL_max => 0.4 V;
+    Electricity_Properties::Device_Type => Master;
     Electricity_Properties::Run_Current =>  0.0 A;
     Electricity_Properties::Idle_Current =>  0.0 A;
     Electricity_Properties::Peak_Current => 0.0 A;
@@ -210,18 +210,18 @@ public
     Electricity_Properties::Acquisition_Time => 0 sec;
     Electricity_Properties::Peak_Time => 0 sec;
   end USB1_Peripheral.impl;
-  
+
   device USB2_Peripheral
   features
     Serial_Wire :    requires bus access buses::USB::USB.impl;
   end USB2_Peripheral;
   device implementation USB2_Peripheral.impl
   properties
-    Electricity_Properties::VIH_min => 2.0 V;  
-    Electricity_Properties::VIL_max => 1.0 V;  
-    Electricity_Properties::VOH_min => 3.2 V;  
-    Electricity_Properties::VOL_max => 0.4 V;  
-    Electricity_Properties::Device_Type => Master;  
+    Electricity_Properties::VIH_min => 2.0 V;
+    Electricity_Properties::VIL_max => 1.0 V;
+    Electricity_Properties::VOH_min => 3.2 V;
+    Electricity_Properties::VOL_max => 0.4 V;
+    Electricity_Properties::Device_Type => Master;
     Electricity_Properties::Run_Current =>  0.0 A;
     Electricity_Properties::Idle_Current =>  0.0 A;
     Electricity_Properties::Peak_Current => 0.0 A;
@@ -229,18 +229,18 @@ public
     Electricity_Properties::Acquisition_Time => 0 sec;
     Electricity_Properties::Peak_Time => 0 sec;
   end USB2_Peripheral.impl;
-  
+
   device ETHERNET_Peripheral
   features
     Serial_Wire :    requires bus access buses::Ethernet::Ethernet.impl;
   end ETHERNET_Peripheral;
   device implementation ETHERNET_Peripheral.impl
   properties
-    Electricity_Properties::VIH_min => 2.0 V;  
-    Electricity_Properties::VIL_max => 1.0 V;  
-    Electricity_Properties::VOH_min => 3.2 V;  
-    Electricity_Properties::VOL_max => 0.4 V;  
-    Electricity_Properties::Device_Type => Slave;  
+    Electricity_Properties::VIH_min => 2.0 V;
+    Electricity_Properties::VIL_max => 1.0 V;
+    Electricity_Properties::VOH_min => 3.2 V;
+    Electricity_Properties::VOL_max => 0.4 V;
+    Electricity_Properties::Device_Type => Slave;
     Electricity_Properties::Run_Current =>  0.0 A;
     Electricity_Properties::Idle_Current =>  0.0 A;
     Electricity_Properties::Peak_Current => 0.0 A;
@@ -248,24 +248,24 @@ public
     Electricity_Properties::Acquisition_Time => 0 sec;
     Electricity_Properties::Peak_Time => 0 sec;
   end ETHERNET_Peripheral.impl;
-  
+
   -----------------
   -- AT91SAM9G20 --
   -----------------
 
   processor AT91SAM9G20
   features
-    Supply : requires bus access buses::V5_bus.impl; 
+    Supply : requires bus access buses::Misc::V5_bus.impl;
   end AT91SAM9G20;
 
   processor implementation AT91SAM9G20.impl
   properties
-    Data_Sheet::UUID => 
+    Data_Sheet::UUID =>
     "http://www.atmel.com:80/dyn/products/product_card.asp?part_id=4337";
 
-    Electricity_Properties::Idle_Current => 17.0 mA; 
-    Electricity_Properties::Run_Current => 130.0 mA; 
-    Electricity_Properties::Core_Voltage => 1.8 V; 
+    Electricity_Properties::Idle_Current => 17.0 mA;
+    Electricity_Properties::Run_Current => 130.0 mA;
+    Electricity_Properties::Core_Voltage => 1.8 V;
   end AT91SAM9G20.impl;
 
 end Processors::ARM;
