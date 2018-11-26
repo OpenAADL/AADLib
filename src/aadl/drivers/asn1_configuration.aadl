@@ -1,0 +1,33 @@
+package ASN1_Configuration
+public
+  with Deployment;
+
+  ------------------------
+  -- Configuration Type --
+  ------------------------
+
+   data configuration_type_ip
+   properties
+      Type_Source_Name                 => "IP-Conf-T";
+      Deployment::ASN1_Module_Name     => "POHICDRIVER-IP";
+      Source_Language                  => (ASN1);
+      Source_Text                      => ("OCARINA_INCLUDE_PATH/ocarina/runtime/polyorb-hi-c/src/drivers/configuration/ip.asn" , "drivers/configuration/ip.h");
+   end configuration_type_ip;
+
+   data configuration_type_serial
+   properties
+      Type_Source_Name              => "Serial-Conf-T";
+      Deployment::ASN1_Module_Name  => "POHICDRIVER-UART";
+      Source_Language               => (ASN1);
+      Source_Text                   => ("OCARINA_INCLUDE_PATH/ocarina/runtime/polyorb-hi-c/src/drivers/configuration/serial.asn", "drivers/configuration/serial.h");
+   end configuration_type_serial;
+
+   data configuration_type_spacewire
+   properties
+      Type_Source_Name              => "Spacewire-Conf-T";
+      Deployment::ASN1_Module_Name  => "POHICDRIVER-SPACEWIRE";
+      Source_Language               => (ASN1);
+      Source_Text                   => ("OCARINA_INCLUDE_PATH/ocarina/runtime/polyorb-hi-c/src/drivers/configuration/spacewire.asn", "drivers/configuration/spacewire.h");
+   end configuration_type_spacewire;
+
+end ASN1_Configuration;

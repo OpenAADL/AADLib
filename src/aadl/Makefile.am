@@ -2,12 +2,17 @@
 
 AADL_SOURCES = ${shell find $(srcdir) -name '*.aadl'}
 
+OCARINA_FLAGS=-I$(top_srcdir)/src/aadl -I$(top_srcdir)/src/aadl/buses	\
+-I$(top_srcdir)/src/aadl/devices -I$(top_srcdir)/src/aadl/drivers	\
+-I$(top_srcdir)/src/aadl/drivers/uart					\
+-I$(top_srcdir)/src/property_set
+
 debug:
 	@echo $(AADL_SOURCES)
 
 check-local:
 	for FILE in ${AADL_SOURCES}; do \
-		ocarina -y -aadlv2 -I$(top_srcdir)/src/aadl -I$(top_srcdir)/src/property_set $${FILE};\
+		ocarina -y -aadlv2 $(OCARINA_FLAGS) $${FILE};\
 	done
 
 clean-local:

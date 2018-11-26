@@ -6,6 +6,7 @@ public
   with Processors::SPARC, Memories, Data_Sheet;
   with Buses::Ethernet, Buses::UART;
   with Deployment;
+  with RTEMS5_UART;
 
   ------------------
   -- GR_XC3S_1500 --
@@ -21,9 +22,6 @@ public
 
     Eth_Bus_0       : requires bus access Buses::Ethernet::Ethernet.impl;
 
-  properties
-    Data_Sheet::UUID => "http://www.gaisler.com/cms/index.php?option=com_content&task=view&id=187&Itemid=118";
-
   end GR_XC3S_1500;
 
   system implementation GR_XC3S_1500.impl
@@ -33,17 +31,21 @@ public
     Eth_0     : device    Buses::Ethernet::Generic_Ethernet;
     UART_1    : device    Buses::UART::Generic_UART;
     UART_2    : device    Buses::UART::Generic_UART;
+
+  connections
+     C1 : bus access UART_Bus_0 -> UART_1.UART;
+     C2 : bus access UART_Bus_1 -> UART_2.UART;
+     C3 : bus access Eth_Bus_0 -> Eth_0.Eth;
+
   end GR_XC3S_1500.impl;
 
   system implementation GR_XC3S_1500.rtems extends GR_XC3S_1500.impl
   subcomponents
     LEON_Core : refined to processor
     { Deployment::Execution_Platform => LEON_RTEMS;};
-  connections
 
-     C1 :  bus access UART_Bus_0 -> UART_1.UART;
-     C2 : bus access UART_Bus_1 -> UART_2.UART;
-     C3 : bus access Eth_Bus_0 -> Eth_0.Eth;
+    UART_1 : refined to device RTEMS5_UART::RTEMS5_APBUART.impl;
+    UART_2 : refined to device RTEMS5_UART::RTEMS5_APBUART.impl;
   end GR_XC3S_1500.rtems;
 
 end Boards::GR_XC3S_1500;
