@@ -2,33 +2,33 @@ package devices::camera_usb
 public
 
   with types;
-  with buses;
+  with buses::misc;
   with Buses::USB;
   with Electricity_Properties;
-  
-  device CAMERA   
+
+  device CAMERA
   features
     Serial_Wire :    requires bus access buses::USB::USB.impl;
-    Supply :         requires bus access buses::V5_Bus.impl;     
-    proc_evt : out event port;   
+    Supply :         requires bus access buses::misc::V5_Bus.impl;
+    proc_evt : out event port;
   end  CAMERA;
 
   device implementation CAMERA.impl
   properties
     Initialize_Entrypoint => classifier (devices::camera_usb::Initialize);
-    Electricity_Properties::Idle_Current => 1.0 mA;  -- no data  
-    Electricity_Properties::Run_Current =>  50.0 mA; --  no data 
+    Electricity_Properties::Idle_Current => 1.0 mA;  -- no data
+    Electricity_Properties::Run_Current =>  50.0 mA; --  no data
     Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
     Electricity_Properties::Core_Voltage => 5.0 V; -- 4.75 .. 5.25 V  standard USB range
     Electricity_Properties::Acquisition_Time => 1 sec; -- no data
     Electricity_Properties::Peak_Time => 1 ms;
-    Electricity_Properties::VIH_min => 2.0 V; 
-    Electricity_Properties::VIL_max => 1.0 V; 
-    Electricity_Properties::VOH_min => 3.2 V; 
-    Electricity_Properties::VOL_max => 0.4 V;  
-    Electricity_Properties::Device_Type => Slave;  
+    Electricity_Properties::VIH_min => 2.0 V;
+    Electricity_Properties::VIL_max => 1.0 V;
+    Electricity_Properties::VOH_min => 3.2 V;
+    Electricity_Properties::VOL_max => 0.4 V;
+    Electricity_Properties::Device_Type => Slave;
   end CAMERA.impl;
-  
+
   abstract CAMERA_Driver
   end CAMERA_Driver;
 
@@ -37,15 +37,15 @@ public
 
   -----------------
   -- SUBPROGRAMS --
-  ----------------- 
-  
+  -----------------
+
   subprogram Initialize
   properties
     Source_Name => "initialize";
     Source_Text => ("camera_usb.c");
     Source_Language => (C);
   end Initialize;
-  
+
   subprogram Read_Acquisition
   features
     CAMERA_meas        : out parameter types::CAMERA_meas_dat;
@@ -54,13 +54,12 @@ public
     Source_Text => ("camera_usb.c");
     Source_Language => (C);
   end Read_Acquisition;
-  
+
   subprogram Start_Acquisition
   properties
     Source_Name => "start_acquisition";
     Source_Text => ("camera_usb.c");
     Source_Language => (C);
   end Start_Acquisition;
-  
+
 end devices::camera_usb;
- 

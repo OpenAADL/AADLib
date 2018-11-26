@@ -35,7 +35,7 @@
 --
 -- The sampling latency is affected by whether the system operates
 -- with respect to a global clock (synchronous system) or independent
--- clock (asynchronous system). 
+-- clock (asynchronous system).
 --
 -- The models below are set up to execute under a synchronous and an
 -- asynchronous system.
@@ -43,8 +43,8 @@
 package Flowlatencysampleddata
 public
   with processors;
-  with buses;
-  
+  with buses::misc;
+
   data timedata
   end timedata;
 
@@ -61,7 +61,7 @@ public
   --
   -- Step1 executes at a rate of 20 Hz and has a deadline or maximum
   -- latency of 45 ms.
-  
+
   thread step1
   features
     ined: in event data port timedata { Queue_Size => 0; };
@@ -78,12 +78,12 @@ public
   properties
     Dispatch_Protocol => Periodic;
   end step1.periodic;
-  
+
   thread implementation step1.aperiodic
   properties
     Dispatch_Protocol => Aperiodic;
   end step1.aperiodic;
-  
+
   -- step2??
 
   thread step2
@@ -97,17 +97,17 @@ public
     deadline => 70 ms;
     Compute_Execution_Time => 15 ms .. 23 ms;
     end step2;
-    
+
     thread implementation step2.periodic
     properties
       Dispatch_Protocol => Periodic;
     end step2.periodic;
-    
+
     thread implementation step2.aperiodic
     properties
       Dispatch_Protocol => Aperiodic;
     end step2.aperiodic;
-    
+
   -- step3??
 
   thread step3
@@ -121,20 +121,20 @@ public
     deadline => 45 ms;
     Compute_Execution_Time => 6 ms .. 10 ms;
   end step3;
-    
+
   thread implementation step3.periodic
   properties
     Dispatch_Protocol => Periodic;
   end step3.periodic;
-  
+
   thread implementation step3.aperiodic
   properties
     Dispatch_Protocol => Aperiodic;
   end step3.aperiodic;
-  
+
   -- At the beginning of each dispatch the sensor device reads the
   -- clock and passes it as the value of its output
-  
+
   device sensor
   features
     outed: out event data port timedata;
@@ -146,13 +146,13 @@ public
     deadline => 2 ms;
     Compute_Execution_Time => 1 ms .. 2 ms;
   end sensor;
-  
+
   -- sensor periodically senses the physical environment
   device implementation sensor.periodic
   properties
     Dispatch_Protocol => Periodic;
   end sensor.periodic;
-  
+
   -- Then sensor detects an in the physical environment occurs
   -- randomly with a maximum rate of the period
 
@@ -160,10 +160,10 @@ public
   properties
     Dispatch_Protocol => Aperiodic;
   end sensor.aperiodic;
-  
+
   -- The actuator will read the clock and log the difference to the
   -- received data (sensor clock time) as its last action
-  
+
   device actuator
   features
     ined: in event data port timedata { Queue_Size => 0; };
@@ -175,7 +175,7 @@ public
     deadline => 3 ms;
     Compute_Execution_Time => 1 ms .. 3 ms;
   end actuator;
-  
+
   -- output is sampled. This reduces the latency jitter
   device implementation actuator.periodic
 
@@ -183,13 +183,13 @@ public
     Dispatch_Protocol => Periodic;
   end actuator.periodic;
 
-  -- arrival of data causes actuator to become active. 
+  -- arrival of data causes actuator to become active.
   -- This reduces end-to-end latency at the expense of increased jitter.
   device implementation actuator.aperiodic
   properties
     Dispatch_Protocol => Aperiodic;
   end actuator.aperiodic;
-  
+
   process Pstep1
   features
     ined: in event data port timedata;
@@ -197,7 +197,7 @@ public
   flows
     flow1: flow path ined -> outed;
   end Pstep1;
-  
+
   process implementation Pstep1.periodic
   subcomponents
     Tstep1: thread Step1.periodic;
@@ -207,7 +207,7 @@ public
   flows
     flow1: flow path ined -> cin -> Tstep1.flow1 -> cout -> outed;
   end Pstep1.periodic;
-  
+
   process implementation Pstep1.aperiodic
   subcomponents
     Tstep1: thread Step1.aperiodic;
@@ -225,7 +225,7 @@ public
   flows
     flow1: flow path ined -> outed;
   end Pstep2;
-  
+
   process implementation Pstep2.periodic
   subcomponents
     Tstep2: thread Step2.periodic;
@@ -235,7 +235,7 @@ public
   flows
     flow1: flow path ined -> cin -> Tstep2.flow1 -> cout -> outed;
   end Pstep2.periodic;
-  
+
   process implementation Pstep2.aperiodic
   subcomponents
     Tstep2: thread Step2.aperiodic;
@@ -253,7 +253,7 @@ public
   flows
     flow1: flow path ined -> outed;
   end Pstep3;
-  
+
   process implementation Pstep3.periodic
   subcomponents
     Tstep3: thread Step3.periodic;
@@ -263,7 +263,7 @@ public
   flows
     flow1: flow path ined -> cin -> Tstep3.flow1 -> cout -> outed;
   end Pstep3.periodic;
-  
+
   process implementation Pstep3.aperiodic
   subcomponents
     Tstep3: thread Step3.aperiodic;
@@ -278,7 +278,7 @@ public
   features
     db: requires bus access devicebus.basic;
   end application;
-  
+
   -- This application configuration has all processing steps as well
   -- as the sensor and actuator as periodic tasks.
   --
@@ -347,32 +347,32 @@ public
     -> compute12 -> compute2.flow1 -> compute23 -> compute3.flow1
     -> actuateconn -> actuate.flow1 { latency => 165 ms .. 165 ms;};
   end application.alldatadriven;
-  
-  
+
+
   -- hardware platforms: single processor, dual processor
   processor singleCPU extends processors::generic_cpu
   features
     db: requires bus access devicebus.basic;
     pb: requires bus access cpubus;
   end singleCPU;
-  
+
   processor implementation singleCPU.basic
   end singleCPU.basic;
-  
-  bus cpubus extends buses::generic_bus end cpubus;
-  
-  bus implementation cpubus.basic extends buses::generic_bus.impl end cpubus.basic;
 
-  bus devicebus extends buses::generic_bus end devicebus;
+  bus cpubus extends buses::misc::generic_bus end cpubus;
 
-  bus implementation devicebus.basic extends buses::generic_bus.impl
+  bus implementation cpubus.basic extends buses::misc::generic_bus.impl end cpubus.basic;
+
+  bus devicebus extends buses::misc::generic_bus end devicebus;
+
+  bus implementation devicebus.basic extends buses::misc::generic_bus.impl
   end devicebus.basic;
 
   system hardwareplatform
   features
     db: provides bus access devicebus.basic;
   end hardwareplatform;
-  
+
   system implementation hardwareplatform.single
   subcomponents
     cpu1: processor singleCPU.basic;
@@ -381,7 +381,7 @@ public
     W5:bus access db1 -> cpu1.db;
     W6:bus access db1 -> db;
   end hardwareplatform.single;
-  
+
   system implementation hardwareplatform.dual
   subcomponents
     cpu1: processor singleCPU.basic;
@@ -395,11 +395,11 @@ public
   end hardwareplatform.dual;
 
   -- system configurations: hardware and application
-  
+
   system topsystem end topsystem;
 
   -- first all single processor configurations
-  
+
   system implementation topsystem.allperiodicsampled
   subcomponents
     app: system application.allperiodicsampled;
@@ -409,7 +409,7 @@ public
   properties
     Actual_Processor_Binding => (reference (hw.cpu1)) applies to app;
   end topsystem.allperiodicsampled;
-  
+
   system implementation topsystem.alldatadriven
   subcomponents
     app: system application.alldatadriven;
@@ -419,13 +419,13 @@ public
   properties
     Actual_Processor_Binding => (reference (hw.cpu1)) applies to app;
   end topsystem.alldatadriven;
-  
+
   -- The same application sytems can be configured with a two
   -- processor system. We are showing one configuration where the
   -- second step is located on a second processor. In this case the
   -- end-to-end latency is increased by any communication latency
   -- between the two processors across the bus
-  
+
   system implementation topsystem.distributedalldatadriven
   subcomponents
     app: system application.alldatadriven;

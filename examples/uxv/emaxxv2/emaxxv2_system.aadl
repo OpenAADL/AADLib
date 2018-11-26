@@ -1,39 +1,39 @@
 package emaxxv2_system
-public 
+public
   with Deployment;
   With Electricity_Properties;
-  with buses;
+  with buses::misc;
   with Buses::I2C;
   with Buses::USB;
-  with Buses::UART; 
+  with Buses::UART;
   with Buses::Ethernet;
   with Processors::ARM;
 
   with devices::ultrasound_sfr08;
   with devices::odometer_refx;
   with devices::receiver_smc16;
-  
+
   with devices::inertial_gps_ig500n;
   with devices::telemeter_utm30lx;
   with devices::camera_nc353l;
   with devices::router_wifi_wndr3300;
-  
+
   with emaxxv2_sw;
-    
+
   ------------
   -- System --
   ------------
-  
-  system emaxxv2 
+
+  system emaxxv2
   end emaxxv2;
-  
+
   system implementation emaxxv2.impl
   subcomponents
     ------------------------------------------------------------------
     -- IPC bus between CICAS & CCDS
     ------------------------------------------------------------------
     UART_IPC_bus      :  bus      buses::UART::UART.impl;
-    
+
     ------------------------------------------------------------------
     -- Node #1 hardware components : CICAS (ARM7 card)
     ------------------------------------------------------------------
@@ -41,7 +41,7 @@ public
     -- sensors/actautors to support communication through various protocols
     ------------------------------------------------------------------
     I2C_bus           :   bus        Buses::I2C::I2C.impl;
-    TIMER_bus_ARM7    :   bus        buses::TIMER_bus.impl;
+    TIMER_bus_ARM7    :   bus        buses::misc::TIMER_bus.impl;
     ------------------------------------------------------------------
     --  Hardware components for CICAS configuration
     ------------------------------------------------------------------
@@ -52,21 +52,21 @@ public
     ------------------------------------------------------------------
      US1           :      device     devices::ultrasound_sfr08::US.impl
     { Deployment::Location => "0xE0";}; -- define here the address of US1
-    TWI_ARM7       :      device     Processors::ARM::TWI_Peripheral.impl;	   
-    UART0_ARM7     :      device     Processors::ARM::USART0_Peripheral.impl;	
+    TWI_ARM7       :      device     Processors::ARM::TWI_Peripheral.impl;
+    UART0_ARM7     :      device     Processors::ARM::USART0_Peripheral.impl;
     TIMER_ARM7     :      device     Processors::ARM::TIMER_Peripheral.impl;
-    PWM_ARM7       :      device     Processors::ARM::PWM_Peripheral.impl;	 
+    PWM_ARM7       :      device     Processors::ARM::PWM_Peripheral.impl;
     ------------------------------------------------------------------
     -- End Node #1
     ------------------------------------------------------------------
-    
+
     ------------------------------------------------------------------
     -- Node #2 hardware components : CCDS (ARM9 card)
     ------------------------------------------------------------------
     -- CCDS Interconnect bus. This component are shared by ARM9
     -- peripherals and sensors/actautors to support communication
     -- through various protocols
-    
+
     ------------------------------------------------------------------
     USB1_bus      :  bus      buses::USB::USB.impl;
     UART2_bus     :  bus      buses::UART::UART.impl;
@@ -81,41 +81,41 @@ public
     --  Processor peripherals for CCDS communication with sensors
     ------------------------------------------------------------------
     UART0_ARM9      : device     Processors::ARM::USART0_Peripheral.impl
-    {Electricity_Properties::Device_Type => Master;}; 	-- Refined Property (UART0_ARM9 and UART0_ARM7 devices inherit
-    													-- the same device) for checking Electrical_Compatibility theorem 
-    UART2_ARM9      : device     Processors::ARM::USART2_Peripheral.impl; 
-    USB1_ARM9       : device     Processors::ARM::USB1_Peripheral.impl; 
-    ETHERNET_ARM9   : device     Processors::ARM::ETHERNET_Peripheral.impl; 
+    {Electricity_Properties::Device_Type => Master;};   -- Refined Property (UART0_ARM9 and UART0_ARM7 devices inherit
+                                                                                                        -- the same device) for checking Electrical_Compatibility theorem
+    UART2_ARM9      : device     Processors::ARM::USART2_Peripheral.impl;
+    USB1_ARM9       : device     Processors::ARM::USB1_Peripheral.impl;
+    ETHERNET_ARM9   : device     Processors::ARM::ETHERNET_Peripheral.impl;
     ------------------------------------------------------------------
     -- End Node #2
     ------------------------------------------------------------------
-    
+
     ------------------------------------------------------------------
     --  List of sensors/actuators
     ------------------------------------------------------------------
     --------------------- ARM7 ----------------------
-   
+
     US2       :      device     devices::ultrasound_sfr08::US.impl
     { Deployment::Location => "0xE4";}; -- define here the address of US2
     ODOMETER1  :      device     devices::odometer_refx::ODOMETER.impl;
     ODOMETER2  :      device     devices::odometer_refx::ODOMETER.impl;
     RECEIVER   :      device     devices::receiver_smc16::RECEIVER.impl;
-    
+
     ---------------------- ARM9 ----------------------
     INERTIAL_GPS  :   device     devices::inertial_gps_ig500n::INERTIAL_GPS.impl;
     TELEMETER     :   device     devices::telemeter_utm30lx::TELEMETER.impl;
     CAMERA_IP     :   device     devices::camera_nc353l::CAMERA_IP.impl;
     ROUTER_WIFI   :   device     devices::router_wifi_wndr3300::ROUTER_WIFI.impl;
-    
+
   connections
     ------------------------------------------------------------------
-    -- System bus connections : between CCDS & CICAS 
+    -- System bus connections : between CCDS & CICAS
     -- USART serial line, it is shared by CICAS and CCDS to support
     -- communication through the serial line.
     ------------------------------------------------------------------
     F1:bus access UART_IPC_bus -> UART0_ARM9.Serial_Wire;
     F2:bus access UART_IPC_bus -> UART0_ARM7.Serial_Wire;
-    
+
     ------------------------------------------------------------------
     -- Node #1 bus connections : CICAS (ARM7 card)
     ------------------------------------------------------------------
@@ -127,7 +127,7 @@ public
     F7:bus access TIMER_bus_ARM7 -> ODOMETER1.Serial_Wire;
     F8:bus access TIMER_bus_ARM7 -> ODOMETER2.Serial_Wire;
     F9:bus access TIMER_bus_ARM7 -> RECEIVER.Serial_Wire;
-    -- 
+    --
     ------------------------------------------------------------------
     -- Node #2 bus connections : CCDS (ARM9 card)
     ------------------------------------------------------------------
@@ -141,47 +141,47 @@ public
     F15:bus access ETHERNET2_bus -> CAMERA_IP.PortCom;
     F16:bus access ETHERNET1_bus -> ROUTER_WIFI.Port1;
     F17:bus access ETHERNET2_bus -> ROUTER_WIFI.Port2;
-    
-    EventCnx1 : port proc_1.US1_evt -> US1.proc_evt ; 
-    EventCnx2 : port proc_1.US2_evt -> US2.proc_evt ; 
-    EventCnx3 : port proc_1.Odometer1_evt -> ODOMETER1.proc_evt ; 
-    EventCnx4 : port proc_1.Odometer2_evt -> ODOMETER2.proc_evt ; 
-    EventCnx5 : port proc_1.Receiver_evt -> RECEIVER.proc_evt ; 
-    
+
+    EventCnx1 : port proc_1.US1_evt -> US1.proc_evt ;
+    EventCnx2 : port proc_1.US2_evt -> US2.proc_evt ;
+    EventCnx3 : port proc_1.Odometer1_evt -> ODOMETER1.proc_evt ;
+    EventCnx4 : port proc_1.Odometer2_evt -> ODOMETER2.proc_evt ;
+    EventCnx5 : port proc_1.Receiver_evt -> RECEIVER.proc_evt ;
+
   properties
     -- The processor CPU runs the process and the TWI driver for I2C connexion
     Actual_Processor_Binding => (reference (CPU_ARM7)) applies to proc_1;
     --Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
-    
+
   annex real_specification {**
-  	
-  	--  Electricity_Prop_Defined and Utilization_prop_def theorems
-  	-- are required for analysis Current_Drain and Electrical_Compatibility theorems
-  	
+
+        --  Electricity_Prop_Defined and Utilization_prop_def theorems
+        -- are required for analysis Current_Drain and Electrical_Compatibility theorems
+
     theorem Electricity_Prop_Defined
     foreach e in Device_Set do
     requires(Electricity_Prop_Defined);
     check(1=1);
     end Electricity_Prop_Defined;
-    
+
     theorem Utilization_prop_def
     foreach e in Thread_Set do
     requires(Utilization_prop_def);
     check(1=1);
     end Utilization_prop_def;
-    
+
     theorem Current_Drain
     foreach e in System_Set do
     requires(Current_Drain);
     check(1=1);
     end Current_Drain;
-    
+
     theorem Electrical_Compatibility
     foreach e in Bus_Set do
     requires(Electrical_Compatibility);
     check(1=1);
     end Electrical_Compatibility;
-    
+
     **};
     end emaxxv2.impl;
 

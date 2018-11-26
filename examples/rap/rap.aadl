@@ -4,7 +4,7 @@ public
   with Deployment;
   with Transformations;
   with processors;
-  with buses;
+  with buses::misc;
   with memories;
 
   ----------
@@ -2006,7 +2006,7 @@ end cpu.impl;
 -- Bus --
 ---------
 
-bus C_Bus extends buses::generic_bus
+bus C_Bus extends buses::misc::generic_bus
 end C_Bus;
 
 bus implementation C_Bus.Impl

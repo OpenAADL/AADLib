@@ -2,35 +2,35 @@ package devices::telemeter_utm30lx
 public
 
 with types;
-with buses;
+with buses::misc;
 with Electricity_Properties;
 with buses::USB;
 
 -----------------
 --   DEVICE   --
 -----------------
-device TELEMETER   
+device TELEMETER
 features
    Serial_Wire :    requires bus access  buses::USB::USB.impl;
-   Supply      :    requires bus access buses::V12_Bus.impl;     
+   Supply      :    requires bus access buses::misc::V12_Bus.impl;
    proc_evt : out event port;
 end  TELEMETER;
 device implementation TELEMETER.impl
 properties
   Initialize_Entrypoint => classifier (devices::telemeter_utm30lx::Initialize);
-  Electricity_Properties::Idle_Current => 10.0 mA;  -- no data 
+  Electricity_Properties::Idle_Current => 10.0 mA;  -- no data
   Electricity_Properties::Run_Current =>  800.0 mA; --  800 mA nominal
   Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
-  Electricity_Properties::Core_Voltage => 12.0 V; 
+  Electricity_Properties::Core_Voltage => 12.0 V;
   Electricity_Properties::Acquisition_Time => 1 sec; -- no data, scanning: 100 msec/scan
   Electricity_Properties::Peak_Time => 1 ms;
-  Electricity_Properties::VIH_min => 2.0 V; 
-  Electricity_Properties::VIL_max => 1.0 V; 
-  Electricity_Properties::VOH_min => 3.2 V; 
-  Electricity_Properties::VOL_max => 0.4 V;  
-  Electricity_Properties::Device_Type => Slave;  
+  Electricity_Properties::VIH_min => 2.0 V;
+  Electricity_Properties::VIL_max => 1.0 V;
+  Electricity_Properties::VOH_min => 3.2 V;
+  Electricity_Properties::VOL_max => 0.4 V;
+  Electricity_Properties::Device_Type => Slave;
 end TELEMETER.impl;
- 
+
 abstract TELEMETER_Driver
 end TELEMETER_Driver;
 abstract implementation TELEMETER_driver.impl
@@ -39,7 +39,7 @@ end TELEMETER_driver.impl;
 
 -----------------
 -- SUBPROGRAMS --
------------------ 
+-----------------
 -- These subprograms model the high-level view of the serial line
 -- protocol stack. They define an API used by the stack to send and
 -- receive data, and perform node's initialisation.
@@ -66,6 +66,5 @@ properties
   Source_Text => ("telemeter_utm30lx.c");
   Source_Language => (C);
 end Start_Acquisition;
-  
+
 end devices::telemeter_utm30lx;
- 

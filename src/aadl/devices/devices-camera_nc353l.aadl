@@ -2,36 +2,36 @@ package devices::camera_nc353l
 public
 
 with types;
-with buses;
+with buses::misc;
 with Electricity_Properties;
 with buses::Ethernet;
 
 -----------------
 --   DEVICE   --
 -----------------
-device CAMERA_IP   
+device CAMERA_IP
 features
    PortCom :    requires bus access Buses::Ethernet::Ethernet.impl;
-   Supply    :    requires bus access buses::V12_Bus.impl;  -- power connection not defined completly , may use switcher between Bat & camera in  the future      
+   Supply    :    requires bus access buses::misc::V12_Bus.impl;  -- power connection not defined completly , may use switcher between Bat & camera in  the future
    proc_evt : in event port;
 end  CAMERA_IP;
 device implementation CAMERA_IP.impl
 properties
 
   Initialize_Entrypoint => classifier (devices::camera_nc353l::Initialize);
-  Electricity_Properties::Idle_Current => 1.0 mA;  -- no data  
+  Electricity_Properties::Idle_Current => 1.0 mA;  -- no data
   Electricity_Properties::Run_Current =>  1600.0 mA; -- worst case  Typical power consumption between 2.4W - 5.8W depending on operation and load (under 3.3V)
   Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
   Electricity_Properties::Core_Voltage => 3.3 V; -- range is 3.3 V .. 48.0 V; -- 4-pin header provides unregulated 48VDC from PoE input circuitry and 3.3V system power
   Electricity_Properties::Acquisition_Time => 1 sec; -- no data
   Electricity_Properties::Peak_Time => 1 ms;
-  Electricity_Properties::VIH_min => 2.0 V; 
-  Electricity_Properties::VIL_max => 1.0 V; 
-  Electricity_Properties::VOH_min => 3.2 V; 
-  Electricity_Properties::VOL_max => 0.4 V;  
-  Electricity_Properties::Device_Type => Slave;  
+  Electricity_Properties::VIH_min => 2.0 V;
+  Electricity_Properties::VIL_max => 1.0 V;
+  Electricity_Properties::VOH_min => 3.2 V;
+  Electricity_Properties::VOL_max => 0.4 V;
+  Electricity_Properties::Device_Type => Slave;
 end CAMERA_IP.impl;
-  
+
 abstract CAMERA_IP_Driver
 end CAMERA_IP_Driver;
 abstract implementation CAMERA_IP_Driver.impl
@@ -40,7 +40,7 @@ end CAMERA_IP_Driver.impl;
 
 -----------------
 -- SUBPROGRAMS --
------------------ 
+-----------------
 -- These subprograms model the high-level view of the serial line
 -- protocol stack. They define an API used by the stack to send and
 -- receive data, and perform node's initialization.
@@ -67,7 +67,6 @@ properties
   Source_Text => ("camera_nc353l.c");
   Source_Language => (C);
 end Start_Acquisition;
-  
-  
+
+
 end devices::camera_nc353l;
- 

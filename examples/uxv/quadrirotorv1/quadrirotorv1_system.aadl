@@ -1,8 +1,8 @@
 package quadrirotorv1_system
-public 
+public
   with Deployment;
 
-  with buses;
+  with buses::misc;
   with Buses::I2C;
   with Buses::UART;
   with Buses::USB;
@@ -21,29 +21,29 @@ public
   -- System --
   ------------
 
-  system quadrirotorv1 
+  system quadrirotorv1
   end quadrirotorv1;
-  
+
   system implementation quadrirotorv1.impl
   subcomponents
     I2C_bus              : bus   Buses::I2C::I2C.impl;
-    three_phases_1_bus   : bus   buses::three_phases_bus.impl;
-    three_phases_2_bus   : bus   buses::three_phases_bus.impl;
-    three_phases_3_bus   : bus   buses::three_phases_bus.impl;
-    three_phases_4_bus   : bus   buses::three_phases_bus.impl;
+    three_phases_1_bus   : bus   buses::misc::three_phases_bus.impl;
+    three_phases_2_bus   : bus   buses::misc::three_phases_bus.impl;
+    three_phases_3_bus   : bus   buses::misc::three_phases_bus.impl;
+    three_phases_4_bus   : bus   buses::misc::three_phases_bus.impl;
     USB1_bus             : bus   buses::USB::USB.impl;
     USB2_bus             : bus   buses::USB::USB.impl;
     UART1_bus            : bus   buses::UART::UART.impl;
     UART2_bus            : bus   buses::UART::UART.impl;
-    
+
     proc_2               : process    quadrirotorv1_sw::proc_2.impl;
     CPU_ARM9             : processor  Processors::ARM::AT91SAM9G20.impl;
-    
-    TWI_ARM9             : device     Processors::ARM::TWI_Peripheral.impl;  
-    UART1_ARM9           : device     Processors::ARM::USART1_Peripheral.impl; 
-    UART2_ARM9           : device     Processors::ARM::USART2_Peripheral.impl; 
-    USB1_ARM9            : device     Processors::ARM::USB1_Peripheral.impl; 
-    USB2_ARM9            : device     Processors::ARM::USB2_Peripheral.impl; 
+
+    TWI_ARM9             : device     Processors::ARM::TWI_Peripheral.impl;
+    UART1_ARM9           : device     Processors::ARM::USART1_Peripheral.impl;
+    UART2_ARM9           : device     Processors::ARM::USART2_Peripheral.impl;
+    USB1_ARM9            : device     Processors::ARM::USB1_Peripheral.impl;
+    USB2_ARM9            : device     Processors::ARM::USB2_Peripheral.impl;
 
     US1                  : device     devices::ultrasound_sfr08::US.impl { Deployment::Location => "0xE0";}; -- define here the address of US1
     US2                  : device     devices::ultrasound_sfr08::US.impl { Deployment::Location => "0xE4";}; -- define here the address of US2
@@ -63,7 +63,7 @@ public
 
   connections
     L1:bus access I2C_bus -> TWI_ARM9.Serial_Wire;
-    
+
     L2:bus access I2C_bus -> US1.Serial_Wire;
     L3:bus access I2C_bus -> US2.Serial_Wire;
     L4:bus access I2C_bus -> PRESSURE.Serial_Wire;
@@ -71,28 +71,28 @@ public
     L6:bus access I2C_bus -> VARIATOR_2.Serial_Wire;
     L7:bus access I2C_bus -> VARIATOR_3.Serial_Wire;
     L8:bus access I2C_bus -> VARIATOR_4.Serial_Wire;
-    
+
     L9:bus access three_phases_1_bus -> VARIATOR_1.three_phases_Wire;
     L10:bus access three_phases_2_bus -> VARIATOR_2.three_phases_Wire;
     L11:bus access three_phases_3_bus -> VARIATOR_3.three_phases_Wire;
     L12:bus access three_phases_4_bus -> VARIATOR_4.three_phases_Wire;
-    
+
     L13:bus access three_phases_1_bus -> MOTOR_1.three_phases_Wire;
     L14:bus access three_phases_2_bus -> MOTOR_2.three_phases_Wire;
     L15:bus access three_phases_3_bus -> MOTOR_3.three_phases_Wire;
     L16:bus access three_phases_4_bus -> MOTOR_4.three_phases_Wire;
-    
+
     L17:bus access UART1_bus -> UART1_ARM9.Serial_Wire;
     L18:bus access UART1_bus -> GPS.Serial_Wire;
-    
+
     L19:bus access UART2_bus -> UART2_ARM9.Serial_Wire;
     L20:bus access UART2_bus -> INERTIAL.Serial_Wire;
-    
+
     L21:bus access USB1_bus -> USB1_ARM9.Serial_Wire;
     L22:bus access USB1_bus -> CAMERA.Serial_Wire;
     L23:bus access USB2_bus -> USB2_ARM9.Serial_Wire;
     L24:bus access USB2_bus -> TELEMETER.Serial_Wire;
-    
+
   properties
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to TWI_ARM9;
@@ -100,36 +100,36 @@ public
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to USB2_ARM9;
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to UART1_ARM9;
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to UART2_ARM9;
-    
-    annex 
+
+    annex
     real_specification {**
-    	
+
     theorem Electricity_Prop_Defined
     foreach e in Device_Set do
     requires(Electricity_Prop_Defined);
     check(1=1);
     end Electricity_Prop_Defined;
-    
+
     theorem Utilization_prop_def
     foreach e in Thread_Set do
     requires(Utilization_prop_def);
     check(1=1);
     end Utilization_prop_def;
-    
+
     theorem Current_Drain
     foreach e in System_Set do
     requires(Current_Drain);
     check(1=1);
     end Current_Drain;
-    
+
     theorem Electrical_Compatibility
     foreach e in Bus_Set do
     requires(Electrical_Compatibility);
     check(1=1);
     end Electrical_Compatibility;
-    
+
   **};
-    
+
   end quadrirotorv1.impl;
-  
+
 end  quadrirotorv1_system;

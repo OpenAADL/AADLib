@@ -2,37 +2,37 @@ package devices::variator_evx
 public
 
 with types;
-with buses;
+with buses::misc;
 with Electricity_Properties;
 
 -----------------
 --   DEVICE   --
 -----------------
-device VARIATOR  
+device VARIATOR
 features
-   Serial_Wire :    requires bus access buses::PWM_bus.impl;
-   Supply :         requires bus access buses::VBat_bus.impl;            
+   Serial_Wire :    requires bus access buses::misc::PWM_bus.impl;
+   Supply :         requires bus access buses::misc::VBat_bus.impl;
 end  VARIATOR;
 
 device implementation VARIATOR.impl
 properties
   Initialize_Entrypoint => classifier (devices::variator_evx::Initialize);
-  Electricity_Properties::Idle_Current => 10.0 mA; -- no data 
+  Electricity_Properties::Idle_Current => 10.0 mA; -- no data
   Electricity_Properties::Run_Current => 3000.0 mA;  -- continious current (exsist breaking, forward, reverse current)
-  Electricity_Properties::Core_Voltage => 14.4 V; 
+  Electricity_Properties::Core_Voltage => 14.4 V;
   Electricity_Properties::Acquisition_Time => 65 ms; -- should be always running / no acquisition for motor
-  Electricity_Properties::VIH_min => 3.1 V; 
-  Electricity_Properties::VIL_max => 1.5 V; 
-  Electricity_Properties::VOH_min => 4.7 V; 
-  Electricity_Properties::VOL_max => 0.4 V;  
+  Electricity_Properties::VIH_min => 3.1 V;
+  Electricity_Properties::VIL_max => 1.5 V;
+  Electricity_Properties::VOH_min => 4.7 V;
+  Electricity_Properties::VOL_max => 0.4 V;
   -- level shifter added to connect to PWM interface
-  --Electricity_Properties::Level_Shifter_VIH_min => 2.0 V ;  
-  --Electricity_Properties::Level_Shifter_VIL_max => 1.0 V;  
-  --Electricity_Properties::Level_Shifter_VOH_min => 3.2 V;  
-  --Electricity_Properties::Level_Shifter_VOL_max => 0.4 V ;  
-  --Electricity_Properties::Device_Type => Slave;    
+  --Electricity_Properties::Level_Shifter_VIH_min => 2.0 V ;
+  --Electricity_Properties::Level_Shifter_VIL_max => 1.0 V;
+  --Electricity_Properties::Level_Shifter_VOH_min => 3.2 V;
+  --Electricity_Properties::Level_Shifter_VOL_max => 0.4 V ;
+  --Electricity_Properties::Device_Type => Slave;
  end VARIATOR.impl;
-  
+
 -----------------------------------
 --  VARIATOR DRIVER FOR PWM INTERFACE --
 -----------------------------------
@@ -52,7 +52,7 @@ end VARIATOR_Driver.impl;
 
 -----------------
 -- SUBPROGRAMS --
------------------ 
+-----------------
 -- These subprograms model the high-level view of the serial line
 -- protocol stack. They define an API used by the stack to SetValue and
 --  and perform node's initialisation.
@@ -75,7 +75,6 @@ properties
   Source_Text => ("variator_evx.c");
   Source_Language => (C);
 end SetValue.impl;
-  
-  
+
+
 end devices::variator_evx;
- 

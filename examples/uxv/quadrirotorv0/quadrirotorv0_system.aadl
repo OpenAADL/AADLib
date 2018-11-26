@@ -1,9 +1,9 @@
 package quadrirotorv0_system
-public 
+public
   with Deployment;
   with Processors::ARM;
 
-  with buses;
+  with buses::misc;
   with buses::I2C;
   with Buses::UART;
   with Buses::USB;
@@ -15,33 +15,33 @@ public
   with devices::telemeter_urg04lx;
   with devices::camera_usb;
   with quadrirotorv0_sw;
-  
+
   ------------
   -- System --
   ------------
 
-  system quadrirotorv0 
+  system quadrirotorv0
   end quadrirotorv0;
 
   system arm7
   features
     Serial_Wire :    requires bus access buses::UART::UART.impl;
   end arm7;
-  
+
   system implementation arm7.i
-  subcomponents 
+  subcomponents
     I2C_bus              : bus        Buses::I2C::I2C.impl;
-    three_phases_1_bus   : bus        buses::three_phases_bus.impl;
-    three_phases_2_bus   : bus        buses::three_phases_bus.impl;
-    three_phases_3_bus   : bus        buses::three_phases_bus.impl;
-    three_phases_4_bus   : bus        buses::three_phases_bus.impl;
-    
+    three_phases_1_bus   : bus        buses::misc::three_phases_bus.impl;
+    three_phases_2_bus   : bus        buses::misc::three_phases_bus.impl;
+    three_phases_3_bus   : bus        buses::misc::three_phases_bus.impl;
+    three_phases_4_bus   : bus        buses::misc::three_phases_bus.impl;
+
     proc_1               : process    quadrirotorv0_sw::proc_1.impl;
     CPU_ARM7             : processor  Processors::ARM::AT91SAM7A3.impl;
-    
+
     TWI_ARM7             : device     Processors::ARM::TWI_Peripheral.impl;
     UART0_ARM7           : device     Processors::ARM::USART0_Peripheral.impl;
-    
+
     US1                  : device     devices::ultrasound_sfr08::US.impl          { Deployment::Location => "0xE0";}; -- define here the address of US1
     US2                  : device     devices::ultrasound_sfr08::US.impl          { Deployment::Location => "0xE4";}; -- define here the address of US2
     PRESSURE             : device     devices::pressure_hca0811::PRESSURE.impl    { Deployment::Location => "xxx";};  -- define here the address of the I2C device
@@ -54,9 +54,9 @@ public
     VARIATOR_3           : device     devices::variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
     VARIATOR_4           : device     devices::variator_blctlv12::VARIATOR.impl { Deployment::Location => "xxx";}; -- define here the address of the I2C device
 
-  connections 
-   	J1:bus access I2C_bus -> TWI_ARM7.Serial_Wire;
-    
+  connections
+        J1:bus access I2C_bus -> TWI_ARM7.Serial_Wire;
+
     J2:bus access I2C_bus -> US1.Serial_Wire;
     J3:bus access I2C_bus -> US2.Serial_Wire;
     J4:bus access I2C_bus -> PRESSURE.Serial_Wire;
@@ -64,57 +64,57 @@ public
     J6:bus access I2C_bus -> VARIATOR_2.Serial_Wire;
     J7:bus access I2C_bus -> VARIATOR_3.Serial_Wire;
     J8:bus access I2C_bus -> VARIATOR_4.Serial_Wire;
-    
+
     J9:bus access three_phases_1_bus -> VARIATOR_1.three_phases_Wire;
     J10:bus access three_phases_2_bus -> VARIATOR_2.three_phases_Wire;
     J11:bus access three_phases_3_bus -> VARIATOR_3.three_phases_Wire;
     J12:bus access three_phases_4_bus -> VARIATOR_4.three_phases_Wire;
-    
+
     J13:bus access three_phases_1_bus -> MOTOR_1.three_phases_Wire;
     J14:bus access three_phases_2_bus -> MOTOR_2.three_phases_Wire;
     J15:bus access three_phases_3_bus -> MOTOR_3.three_phases_Wire;
     J16:bus access three_phases_4_bus -> MOTOR_4.three_phases_Wire;
-    
+
     J17:bus access Serial_Wire -> UART0_ARM7.Serial_Wire;
-  properties 
+  properties
     Actual_Processor_Binding => (reference (CPU_ARM7)) applies to proc_1;
     Actual_Processor_Binding => (reference (CPU_ARM7)) applies to TWI_ARM7;
     Actual_Processor_Binding => (reference (CPU_ARM7)) applies to UART0_ARM7;
   end arm7.i;
-  
+
   system arm9
   features
     Serial_Wire :    requires bus access buses::UART::UART.impl;
   end arm9;
-  
+
   system implementation arm9.i
   subcomponents
     USB1_bus       :  bus       buses::USB::USB.impl;
     USB2_bus       :  bus       buses::USB::USB.impl;
     UART2_bus      :  bus       buses::UART::UART.impl;
-    
+
     proc_2         : process    quadrirotorv0_sw::proc_2.impl;
     CPU_ARM9       : processor  Processors::ARM::AT91SAM9G20.impl;
-    
-    UART0_ARM9     : device     Processors::ARM::USART0_Peripheral.impl; 
+
+    UART0_ARM9     : device     Processors::ARM::USART0_Peripheral.impl;
     UART1_ARM9     : device     Processors::ARM::USART1_Peripheral.impl;
     UART2_ARM9     : device     Processors::ARM::USART2_Peripheral.impl;
     USB1_ARM9      : device     Processors::ARM::USB1_Peripheral.impl;
     USB2_ARM9      : device     Processors::ARM::USB2_Peripheral.impl;
-    
+
     INERTIAL_GPS   : device     devices::inertial_gps_ig500n::INERTIAL_GPS.impl;
     TELEMETER      : device     devices::telemeter_urg04lx::TELEMETER.impl;
     CAMERA         : device     devices::camera_usb::CAMERA.impl;
   connections
     J18:bus access UART2_bus     -> UART2_ARM9.Serial_Wire;
     J19:bus access UART2_bus     -> INERTIAL_GPS.Serial_Wire;
-    
+
     J20:bus access USB1_bus      -> USB1_ARM9.Serial_Wire;
     J21:bus access USB1_bus      -> CAMERA.Serial_Wire;
-    
+
     J22:bus access USB2_bus      -> USB2_ARM9.Serial_Wire;
     J23:bus access USB2_bus      -> TELEMETER.Serial_Wire;
-    
+
     J24:bus access Serial_Wire   -> UART0_ARM9.Serial_Wire;
   properties
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
@@ -124,44 +124,44 @@ public
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to UART1_ARM9;
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to UART2_ARM9;
   end arm9.i;
-  
+
   system implementation quadrirotorv0.impl
   subcomponents
     arm7_board     : system arm7.i;
     arm9_board     : system arm9.i;
-    
+
     UART_IPC_bus   :  bus      buses::UART::UART.impl;
   connections
     J25:bus access UART_IPC_bus -> arm9_board.Serial_Wire;
     J26:bus access UART_IPC_bus -> arm7_board.Serial_Wire;
-    
-    annex 
+
+    annex
     real_specification {**
-    	
+
     theorem Electricity_Prop_Defined
     foreach e in Device_Set do
     requires(Electricity_Prop_Defined);
     check(1=1);
     end Electricity_Prop_Defined;
-    
+
     theorem Utilization_prop_def
     foreach e in Thread_Set do
     requires(Utilization_prop_def);
     check(1=1);
     end Utilization_prop_def;
-    
+
     theorem Current_Drain
     foreach e in System_Set do
     requires(Current_Drain);
     check(1=1);
     end Current_Drain;
-    
+
     theorem Electrical_Compatibility
     foreach e in Bus_Set do
     requires(Electrical_Compatibility);
     check(1=1);
     end Electrical_Compatibility;
-    
+
   **};
   end quadrirotorv0.impl;
 

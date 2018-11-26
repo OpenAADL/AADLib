@@ -1,37 +1,36 @@
 package devices::router_wifi_wndr3300
 public
 
-with buses;
+with buses::misc;
 with Buses::Ethernet;
 with Electricity_Properties;
 
 -----------------
 --   DEVICE   --
 -----------------
-device ROUTER_WIFI   
+device ROUTER_WIFI
 features
    Port1 :    requires bus access Buses::Ethernet::Ethernet.impl;
    Port2 :    requires bus access Buses::Ethernet::Ethernet.impl;
    Port3 :    requires bus access Buses::Ethernet::Ethernet.impl;
    Port4 :    requires bus access Buses::Ethernet::Ethernet.impl;
-   Supply :   requires bus access buses::V12_Bus.impl;        
+   Supply :   requires bus access buses::misc::V12_Bus.impl;
    proc_evt : out event port;
 end  ROUTER_WIFI;
 device implementation ROUTER_WIFI.impl
 properties
-  Electricity_Properties::Idle_Current => 10.0 mA;  -- no data  
-  Electricity_Properties::Run_Current =>  1000.0 mA; --  no data 
+  Electricity_Properties::Idle_Current => 10.0 mA;  -- no data
+  Electricity_Properties::Run_Current =>  1000.0 mA; --  no data
   Electricity_Properties::Peak_Current => 100.0 mA; -- to measure
-  Electricity_Properties::Core_Voltage => 12.0 V; 
-  Electricity_Properties::VIH_min => 2.0 V; 
-  Electricity_Properties::VIL_max => 1.0 V; 
-  Electricity_Properties::VOH_min => 3.2 V; 
-  Electricity_Properties::VOL_max => 0.4 V;  
+  Electricity_Properties::Core_Voltage => 12.0 V;
+  Electricity_Properties::VIH_min => 2.0 V;
+  Electricity_Properties::VIL_max => 1.0 V;
+  Electricity_Properties::VOH_min => 3.2 V;
+  Electricity_Properties::VOL_max => 0.4 V;
   Electricity_Properties::Acquisition_Time => 0 sec;
   Electricity_Properties::Peak_Time => 0 sec;
-  Electricity_Properties::Device_Type => Master;  
+  Electricity_Properties::Device_Type => Master;
 end ROUTER_WIFI.impl;
-  
-  
+
+
 end devices::router_wifi_wndr3300;
- 

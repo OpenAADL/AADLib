@@ -2,17 +2,17 @@ package devices::ultrasound_sfr08
 public
 
 with types;
-with buses;
+with buses::misc;
 with Buses::I2C;
-with Electricity_Properties; 
+with Electricity_Properties;
 
 -----------------
 --   DEVICE   --
 -----------------
-device US   
+device US
 features
    Serial_Wire :    requires bus access Buses::I2C::I2C.impl;
-   Supply :         requires bus access buses::V5_Bus.impl;      
+   Supply :         requires bus access buses::misc::V5_Bus.impl;
    proc_evt : in event port;
 end  US;
 
@@ -25,13 +25,13 @@ properties
   Electricity_Properties::Core_Voltage => 5.0 V;
   Electricity_Properties::Acquisition_Time => 24 ms; -- depends on distance max
   Electricity_Properties::Peak_Time    => 1 ms; -- extracted from measurement
-  Electricity_Properties::VIH_min      => 2.0 V; 
-  Electricity_Properties::VIL_max      => 1.0 V; 
-  Electricity_Properties::VOH_min      => 3.2 V; 
-  Electricity_Properties::VOL_max      => 0.4 V;  
-  Electricity_Properties::Device_Type  => Slave;  
+  Electricity_Properties::VIH_min      => 2.0 V;
+  Electricity_Properties::VIL_max      => 1.0 V;
+  Electricity_Properties::VOH_min      => 3.2 V;
+  Electricity_Properties::VOL_max      => 0.4 V;
+  Electricity_Properties::Device_Type  => Slave;
 end US.impl;
-  
+
 -----------------------------------
 --  US DRIVER FOR I2C INTERFACE --
 -----------------------------------
@@ -44,7 +44,7 @@ end US_Driver.impl;
 
 -----------------
 -- SUBPROGRAMS --
------------------ 
+-----------------
 -- These subprograms model the high-level view of the serial line
 -- protocol stack. They define an API used by the stack to send and
 -- receive data, and perform node's initialisation.
@@ -57,7 +57,7 @@ end Initialize;
 
 subprogram Read_Acquisition
 features
-  device_address       : in parameter types::I2C_address; 
+  device_address       : in parameter types::I2C_address;
   US_meas              : out parameter types::US_meas_dat;
 properties
   Source_Name => "read_acquisition";
@@ -67,13 +67,12 @@ end Read_Acquisition;
 
 subprogram Start_Acquisition
 features
-  device_address       : in parameter types::I2C_address; 
+  device_address       : in parameter types::I2C_address;
 properties
   Source_Name => "start_acquisition";
   Source_Text => ("ultrasound_sfr08.c");
   Source_Language => (C);
 end Start_Acquisition;
-  
-  
+
+
 end devices::ultrasound_sfr08;
- 

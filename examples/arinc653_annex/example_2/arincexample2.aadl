@@ -37,7 +37,7 @@ package arincexample2
 public
 
   with ARINC653;
-  with buses;
+  with buses::misc;
   with memories;
   with processors;
   -- First, define generic component
@@ -47,8 +47,8 @@ public
   memory memchunk extends memories::ROM end memchunk;
   memory mainmemory extends memories::ROM end mainmemory;
 
-  bus anybus extends buses::generic_bus end anybus;
-  bus implementation anybus.i extends buses::generic_bus.impl end anybus.i;
+  bus anybus extends buses::misc::generic_bus end anybus;
+  bus implementation anybus.i extends buses::misc::generic_bus.impl end anybus.i;
 
   thread network_driver_thread
   properties
@@ -64,13 +64,13 @@ public
  --  JH addition
   abstract network_driver_partition_holder
   end network_driver_partition_holder;
-  
+
   abstract implementation network_driver_partition_holder.i
   subcomponents
     ndp : process network_driver_partition.i;
   end network_driver_partition_holder.i;
   -- /JH addition
-    
+
   process network_driver_partition
   end network_driver_partition;
 

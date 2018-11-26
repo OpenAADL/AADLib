@@ -4,7 +4,7 @@ public
 
     --with AT91SAM7A3;
     --with AT91SAM9G20;
-    with buses;
+    with buses::misc;
 
     with devices::ultrasound_sfr08;
     with devices::odometer_refx;
@@ -32,54 +32,54 @@ public
     system implementation emaxxv2.power
     subcomponents
       --------------------- POWER NETS ----------------
-      VBat_bus       :  bus      buses::VBat_bus.impl;
-      V5_1_bus       :  bus      buses::V5_bus.impl;
-      V5_2_bus       :  bus      buses::V5_bus.impl;
-      --V3v3_bus       :  bus      buses::V3v3_bus.impl;
-      V12_bus        :  bus      buses::V12_bus.impl;
-      VBatmotors_bus :  bus      buses::VBat_bus.impl;
+      VBat_bus       :  bus      buses::misc::VBat_bus.impl;
+      V5_1_bus       :  bus      buses::misc::V5_bus.impl;
+      V5_2_bus       :  bus      buses::misc::V5_bus.impl;
+      --V3v3_bus       :  bus      buses::misc::V3v3_bus.impl;
+      V12_bus        :  bus      buses::misc::V12_bus.impl;
+      VBatmotors_bus :  bus      buses::misc::VBat_bus.impl;
       --------------------- ARM7 ----------------------
       US1        :      device     devices::ultrasound_sfr08::US.impl
       { Electricity_Properties::Power_Level => 2;};
       US2        :      device     devices::ultrasound_sfr08::US.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       ODOMETER1  :      device     devices::odometer_refx::ODOMETER.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       ODOMETER2  :      device     devices::odometer_refx::ODOMETER.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       RECEIVER   :      device     devices::receiver_smc16::RECEIVER.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       --CPU_ARM7   :      processor  AT91SAM7A3::ARM7.impl
       --		{ Electricity_Properties::Power_Level => 3;};
       ---------------------- ARM9 ----------------------
       INERTIAL_GPS  :   device     devices::inertial_gps_ig500n::INERTIAL_GPS.impl
- 		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       TELEMETER     :   device     devices::telemeter_utm30lx::TELEMETER.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       CAMERA_IP     :   device     devices::camera_nc353l::CAMERA_IP.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       ROUTER_WIFI   :   device     devices::router_wifi_wndr3300::ROUTER_WIFI.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       VARIATOR      :   device     devices::variator_evx::VARIATOR.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       MOTORS        :   device     devices::motor_tm550::MOTOR_TM550.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       --CPU_ARM9      :   processor  AT91SAM9G20::ARM9.impl
       --		{ Electricity_Properties::Power_Level => 2;};
       --------------------- REGULATORS -----------------
       REG_5V_1      :   device      devices::regulator_TSI10N::REG_5V.impl -- reg embedded into ARM7 board
         { Electricity_Properties::Power_Level => 1;};
       REG_5V_2      :   device      devices::regulator_TSI10N::REG_5V.impl
-		{ Electricity_Properties::Power_Level => 1;};
+                { Electricity_Properties::Power_Level => 1;};
       REG_12V       :   device      devices::regulator_ten40_4812::REG_12V.impl
-		{ Electricity_Properties::Power_Level => 1;};
+                { Electricity_Properties::Power_Level => 1;};
       REG_3V3      :   device      devices::regulator_reg113_33::REG_3V3.impl
-		{ Electricity_Properties::Power_Level => 2;};
+                { Electricity_Properties::Power_Level => 2;};
       --------------------- BATERIES -----------------
       BAT_14V_CALC    :   device      devices::battery_14v_4ah::BAT_14V_4AH.impl
-		{ Electricity_Properties::Power_Level => 0;};
+                { Electricity_Properties::Power_Level => 0;};
       BAT_14V_MOTORS  :   device      devices::battery_14v_4ah::BAT_14V_4AH.impl
-		{ Electricity_Properties::Power_Level => 0;};
+                { Electricity_Properties::Power_Level => 0;};
     connections
 
       ------------------------------------------------------------------

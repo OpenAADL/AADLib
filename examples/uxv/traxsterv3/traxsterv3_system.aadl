@@ -1,10 +1,10 @@
 package traxsterv3_system
-public 
+public
   with Deployment;
   with Processors::ARM;
   with Electricity_Properties;
 
-  with buses;
+  with buses::misc;
   with Buses::I2C;
   with Buses::UART;
   with Buses::USB;
@@ -16,21 +16,21 @@ public
   with devices::telemeter_urg04lx;
   with devices::camera_usb;
   with traxsterv3_sw;
-  
+
   ------------
   -- System --
   ------------
 
-  system traxsterv3 
+  system traxsterv3
   end traxsterv3;
-  
+
   system implementation traxsterv3.impl
   subcomponents
     ------------------------------------------------------------------
     -- IPC bus between CICAS & CCDS
     ------------------------------------------------------------------
     UART_IPC_bus      :  bus      buses::UART::UART.impl;
-    
+
     ------------------------------------------------------------------
     -- Node #1 hardware components : CICAS (ARM7 card)
     ------------------------------------------------------------------
@@ -39,8 +39,8 @@ public
     -- through various protocols
     ------------------------------------------------------------------
     I2C_bus            :      bus        buses::I2C::I2C.impl;
-    three_phases_1_bus :      bus        buses::three_phases_bus.impl;
-    three_phases_2_bus :      bus        buses::three_phases_bus.impl;
+    three_phases_1_bus :      bus        buses::misc::three_phases_bus.impl;
+    three_phases_2_bus :      bus        buses::misc::three_phases_bus.impl;
     ------------------------------------------------------------------
     --  Hardware components for CICAS configuration
     ------------------------------------------------------------------
@@ -49,13 +49,13 @@ public
     ------------------------------------------------------------------
     --  Processor peripherals for CICAS communication with sensors
     ------------------------------------------------------------------
-    TWI_ARM7       :      device     Processors::ARM::TWI_Peripheral.impl;	   
+    TWI_ARM7       :      device     Processors::ARM::TWI_Peripheral.impl;
     UART0_ARM7     :      device     Processors::ARM::USART0_Peripheral.impl
-    {Electricity_Properties::Device_Type => Master; };	
+    {Electricity_Properties::Device_Type => Master; };
     ------------------------------------------------------------------
     -- End Node #1
     ------------------------------------------------------------------
-    
+
     ------------------------------------------------------------------
     -- Node #2 hardware components : CCDS (ARM9 card)
     ------------------------------------------------------------------
@@ -73,15 +73,15 @@ public
     ------------------------------------------------------------------
     --  Processor peripherals for CCDS communication with sensors
     ------------------------------------------------------------------
-    UART0_ARM9      :      device     Processors::ARM::USART0_Peripheral.impl; 
-    UART1_ARM9      :      device     Processors::ARM::USART1_Peripheral.impl;    
-    UART2_ARM9      :      device     Processors::ARM::USART2_Peripheral.impl; 
-    USB1_ARM9      :       device     Processors::ARM::USB1_Peripheral.impl; 
-    USB2_ARM9      :       device     Processors::ARM::USB2_Peripheral.impl; 
+    UART0_ARM9      :      device     Processors::ARM::USART0_Peripheral.impl;
+    UART1_ARM9      :      device     Processors::ARM::USART1_Peripheral.impl;
+    UART2_ARM9      :      device     Processors::ARM::USART2_Peripheral.impl;
+    USB1_ARM9      :       device     Processors::ARM::USB1_Peripheral.impl;
+    USB2_ARM9      :       device     Processors::ARM::USB2_Peripheral.impl;
     ------------------------------------------------------------------
     -- End Node #2
     ------------------------------------------------------------------
-    
+
     ------------------------------------------------------------------
     --  List of sensors/actuators
     ------------------------------------------------------------------
@@ -98,26 +98,26 @@ public
     { Deployment::Location => "xxx";}; -- define here the address of the I2C device
     VARIATOR_2  :     device     devices::variator_blctlv12::VARIATOR.impl
     { Deployment::Location => "xxx";}; -- define here the address of the I2C device
-    
+
     ---------------------- ARM9 ----------------------
     INERTIAL_GPS :   device     devices::inertial_gps_ig500n::INERTIAL_GPS.impl;
     TELEMETER    :   device     devices::telemeter_urg04lx::TELEMETER.impl;
     CAMERA       :   device     devices::camera_usb::CAMERA.impl;
-    
+
   connections
     ------------------------------------------------------------------
-    -- System bus connections : between CCDS & CICAS 
+    -- System bus connections : between CCDS & CICAS
     -- USART serial line, it is shared by CICAS and CCDS to support
     -- communication through the serial line.
     ------------------------------------------------------------------
     N1:bus access UART_IPC_bus -> UART0_ARM9.Serial_Wire;
     N2:bus access UART_IPC_bus -> UART0_ARM7.Serial_Wire;
- 
+
     ------------------------------------------------------------------
     -- Node #1 bus connections : CICAS (ARM7 card)
     ------------------------------------------------------------------
     N3:bus access I2C_bus -> TWI_ARM7.Serial_Wire;
-    
+
     N4:bus access I2C_bus -> US1.Serial_Wire;
     N5:bus access I2C_bus -> US2.Serial_Wire;
     N6:bus access I2C_bus -> COMPASS.Serial_Wire;
@@ -141,39 +141,39 @@ public
     --
     N17:bus access USB2_bus -> USB2_ARM9.Serial_Wire;
     N18:bus access USB2_bus -> TELEMETER.Serial_Wire;
-    
+
   properties
     Actual_Processor_Binding => (reference (CPU_ARM7)) applies to proc_1;
     Actual_Processor_Binding => (reference (CPU_ARM9)) applies to proc_2;
     --Actual_Processor_Binding => (reference (CPU_ARM7)) applies to I2C_Cnx;
-    
-     annex 
+
+     annex
     real_specification {**
-    	
+
     theorem Electricity_Prop_Defined
     foreach e in Device_Set do
     requires(Electricity_Prop_Defined and test_device);
     check(1=1);
     end Electricity_Prop_Defined;
-    
+
     theorem Utilization_prop_def
     foreach e in Thread_Set do
     requires(Utilization_prop_def);
     check(1=1);
     end Utilization_prop_def;
-    
+
     theorem Current_Drain
     foreach e in System_Set do
     requires(Current_Drain);
     check(1=1);
     end Current_Drain;
-    
+
     theorem Electrical_Compatibility
     foreach e in Bus_Set do
     requires(Electrical_Compatibility);
     check(1=1);
     end Electrical_Compatibility;
-    
+
   **};
   end traxsterv3.impl;
 
