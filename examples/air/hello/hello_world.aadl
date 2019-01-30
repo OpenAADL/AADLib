@@ -9,7 +9,7 @@ public
 
   subprogram Hello_Spg_1
   properties
-    Source_Language => C;
+    Source_Language => (C);
     Source_Name     => "user_Hello_Spg_1";
     Source_Text     => ("hello.c");
   end Hello_Spg_1;
