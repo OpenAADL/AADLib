@@ -32,7 +32,7 @@ public
 
   processor TSC695F extends ERC32
   properties
-    Data_Sheet::UUID => 
+    Data_Sheet::UUID =>
        "http://www.atmel.com:80/dyn/products/product_card.asp?part_id=2332";
   end TSC695F;
 
@@ -54,9 +54,40 @@ public
 
   processor AT697F extends LEON2
   properties
-    Data_Sheet::UUID => 
+    Data_Sheet::UUID =>
        "http://www.atmel.com:80/dyn/products/product_card.asp?part_id=4599";
   end AT697F;
+
+  -----------
+  -- LEON4 --
+  -----------
+
+  --  The LEON4 is a 4-core processor, each core being a regular LEON core
+
+  --  See http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=P4080
+  --  for more details
+
+  virtual processor leon_core
+  end leon_core;
+
+  virtual processor implementation leon_core.impl
+  end leon_core.impl;
+
+  processor LEON4
+  properties
+    Data_Sheet::UUID =>
+       "https://www.gaisler.com/index.php/products/processors/leon4";
+  end LEON4;
+
+  processor implementation LEON4.impl
+  subcomponents
+    Core_1 : virtual processor leon_core.impl { Processor_Properties::Core_Id => 0;};
+    Core_2 : virtual processor leon_core.impl { Processor_Properties::Core_Id => 1;};
+    Core_3 : virtual processor leon_core.impl { Processor_Properties::Core_Id => 2;};
+    Core_4 : virtual processor leon_core.impl { Processor_Properties::Core_Id => 3;};
+
+  end LEON4.impl;
+
 
 end Processors::SPARC;
 
