@@ -1,0 +1,133 @@
+package SMP01
+
+--  This example demonstrates how to bind one partition to all cores
+--  of a processor
+
+public
+  with Deployment;
+  with ARINC653;
+  with Processors::SPARC;
+
+  -----------------
+  -- Subprograms --
+  -----------------
+
+  subprogram Hello_Spg_1
+  properties
+    Source_Language => (C);
+    Source_Name     => "user_Hello_Spg_1";
+    Source_Text     => ("hello.c");
+  end Hello_Spg_1;
+
+  -------------
+  -- Threads --
+  -------------
+
+  thread Task
+  end Task;
+
+  thread implementation Task.impl_1
+  calls
+    Mycalls: {
+    P_Spg : subprogram Hello_Spg_1;
+    };
+  properties
+    Priority => 100;
+    Dispatch_Protocol                  => Periodic;
+    Period                             => 100 ms;
+    Compute_Execution_time             => 0 ms .. 3 ms;
+  end Task.impl_1;
+
+  -------------
+  -- Process --
+  -------------
+
+  process node_a
+  end node_a;
+
+  process implementation node_a.impl
+  subcomponents
+    Task1 : thread Task.impl_1;
+  end node_a.impl;
+
+
+  ---------------
+  -- Processor --
+  ---------------
+
+  virtual processor partition_runtime
+  end partition_runtime;
+
+  virtual processor implementation partition_runtime.i
+  end partition_runtime.i;
+
+  processor CPU extends Processors::SPARC::Leon4
+  properties
+    Deployment::Execution_Platform => AIR;
+  end CPU;
+
+  processor implementation CPU.impl extends Processors::SPARC::Leon4.impl
+  subcomponents
+    --  Definition of the software partition as a subcomponent
+    P0 : virtual processor partition_runtime.i
+    { Deployment::Execution_Platform => AIR;
+      ARINC653::Partition_Identifier => 0;
+      ARINC653::Partition_Name       => "P0";
+    };
+
+    --  Note: through the extends mechanism, this processor also embeddeds
+    --  the 4 phyiscal cores.
+  properties
+    ARINC653::Module_Major_Frame => 1 sec;
+    ARINC653::Module_Schedule =>
+            ( [Partition => reference (P0);
+               Duration  => 300 ms;
+               Periodic_Processing_Start => true;]
+            );
+  end CPU.impl;
+
+  memory myram end myram;
+  memory segment end segment;
+
+  memory implementation segment.i
+  end segment.i;
+
+  memory implementation  myram.stram
+  properties
+    Base_Address => 40000000;
+    Byte_Count   => 16#400000#;
+  end myram.stram;
+
+  memory implementation myram.sdram
+  subcomponents
+    segment1 : memory segment.i {Base_Address => 40100000; Byte_Count => 16#400000#;};
+  properties
+    Base_Address => 40000000;
+    Byte_Count   => 16#400000#;
+  end myram.sdram;
+
+  ------------
+  -- System --
+  ------------
+
+  system smp01
+  end smp01;
+
+  system implementation smp01.impl
+  subcomponents
+    node_a : process node_a.impl;
+    cpu : processor CPU.impl;
+
+    mem    :  memory myram.sdram;
+  properties
+    Actual_Processor_Binding => (reference (cpu.p0)) applies to node_a;
+
+    Actual_Processor_Binding =>
+      (reference (CPU.Core_1), reference (CPU.Core_2),
+       reference (CPU.Core_3), reference (CPU.Core_4))
+    applies to CPU.P0;
+
+    Actual_Memory_Binding => (reference (mem.segment1)) applies to Node_A;
+  end smp01.impl;
+
+end SMP01;

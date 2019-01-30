@@ -1,4 +1,4 @@
-SUBDIRS= hello ping
+SUBDIRS= hello ping smp01
 
 EXTRA_DIST=$(srcdir)/README.md
 
