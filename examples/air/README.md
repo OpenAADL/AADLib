@@ -7,6 +7,7 @@ The following examples are available:
 
 * hello: basic example with one partition
 * ping: example of two partitions with inter-partition communication
+* smp01: example of a system with multiple cores
 
 To compile these examples, run `make air_conf c build_air` from the terminal
 
