@@ -5,7 +5,6 @@ public
    with ASN1_Configuration;
    with Buses::UART;
 
-
   -- This driver works for RTEMS 5 (presumably RTEMS 4.11) based on
   -- drvmgr driver subsystem, using APBUART driver.
   --
