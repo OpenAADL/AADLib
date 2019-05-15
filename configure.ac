@@ -97,7 +97,7 @@ AC_OUTPUT([
 	examples/isr/Makefile
 	examples/line_follower/Makefile
 	examples/memory/Makefile
-        examples/minepump/Makefile
+	examples/minepump/Makefile
 	examples/mixin/Makefile
 	examples/mjpeg/Makefile
 	examples/mosart/Makefile
@@ -106,6 +106,7 @@ AC_OUTPUT([
 	examples/pathfinder_system/Makefile
 	examples/perseus/Makefile
 	examples/producer_consumer/Makefile
+	examples/producer_consumer_ba/Makefile
 	examples/radar/Makefile
 	examples/rap/Makefile
 	examples/rap_code/Makefile
