@@ -1,0 +1,61 @@
+package Native_Sockets
+
+public
+  with Deployment;
+  with ASN1_Configuration;
+with Buses::Ethernet;
+
+  -- This drivers provide a Socket connectivity based on BSD socket
+  -- API. It is supported on Linux and macOS
+
+  device Native_Sockets extends Buses::Ethernet::Generic_Ethernet
+  end Native_Sockets;
+
+  device implementation Native_Sockets.pohic
+  properties
+    Deployment::Driver_Name       => "sockets";
+    Device_Driver                 => classifier (sockets_impl.i);
+    Initialize_Entrypoint         => classifier (spg_sockets_init);
+  end Native_Sockets.pohic;
+
+  ------------
+  -- DRIVER --
+  ------------
+
+  --  XXX This driver is spawning a background task, this should be
+  --  removed
+
+  abstract sockets_impl
+  properties
+    Deployment::Configuration_Type =>
+      classifier (ASN1_Configuration::configuration_type_ip);
+    Deployment::Version  => "0.1beta";
+    Deployment::Help     => "Write your ASN.1 configuration here";
+  end sockets_impl;
+
+  abstract implementation sockets_impl.i
+  subcomponents
+    sender   : subprogram   spg_eth_linux_sender.i;
+  end sockets_impl.i;
+
+  -----------------
+  -- SUBPROGRAMS --
+  -----------------
+
+  subprogram spg_sockets_init
+  properties
+    Source_Language   => (C);
+    Source_Name       => "__po_hi_driver_sockets_init";
+  end spg_sockets_init;
+
+  subprogram spg_eth_linux_sender
+  properties
+    Source_Language   => (C);
+    Source_Name       => "__po_hi_driver_sockets_send";
+  end spg_eth_linux_sender;
+
+  subprogram implementation spg_eth_linux_sender.i
+  end spg_eth_linux_sender.i;
+
+
+end ocarina_drivers_ip_pohic;
