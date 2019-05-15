@@ -1,9 +1,8 @@
 package Native_Sockets
-
 public
   with Deployment;
   with ASN1_Configuration;
-with Buses::Ethernet;
+  with Buses::Ethernet;
 
   -- This drivers provide a Socket connectivity based on BSD socket
   -- API. It is supported on Linux and macOS
@@ -58,4 +57,4 @@ with Buses::Ethernet;
   end spg_eth_linux_sender.i;
 
 
-end ocarina_drivers_ip_pohic;
+end Native_Sockets;
