@@ -1,0 +1,236 @@
+package MinePump
+public
+
+  with Data_Model; --  For data representation (integer, ...)
+  with Deployment; --  For execution platform
+
+  --  Basic integer data type
+
+  data Int
+  --  Definition of an integer type
+  properties
+    Data_Model::Data_Representation => Integer;
+  end Int;
+  
+  -- ReadHLS Subprogram
+  subprogram ReadHLS
+  features
+    HLS : out parameter Int;
+  properties
+    Source_Language => (C);
+    Source_Name     => "readhls";
+    Source_Text     => ("simu.c");
+  end ReadHLS;
+  
+  -- ReadLLS Subprogram
+  subprogram ReadLLS
+  features
+    LLS : out parameter Int;
+  properties
+    Source_Language => (C);
+    Source_Name     => "readlls";
+    Source_Text     => ("simu.c");
+  end ReadLLS;
+
+  -- ReadMS Subprogram
+  subprogram ReadMS
+  features
+    MS : out parameter Int;
+  properties
+    Source_Language => (C);
+    Source_Name     => "readms";
+    Source_Text     => ("simu.c");
+  end ReadMS;
+
+  -- CmdPump Subprogram
+  subprogram CmdPump
+  features
+    cmd : in parameter Int;
+  properties
+    Source_Language => (C);
+    Source_Name     => "cmdpump";
+    Source_Text     => ("simu.c");
+  end CmdPump;
+
+  -- CmdAlarm Subprogram
+  subprogram CmdAlarm
+  features
+    cmd : in parameter Int;
+  properties
+    Source_Language => (C);
+    Source_Name     => "cmdalarm";
+    Source_Text     => ("simu.c");
+  end CmdAlarm;
+
+  --  WaterLevelMonitorig task
+
+  thread WaterLevelMonitoring
+  features
+    WaterAlarm : out data port Int;
+  properties
+    Dispatch_Protocol => Periodic;         --  Concurrency configuration
+    Period => 250 ms;
+    Compute_Execution_Time => 1 ms .. 2 ms;
+    Priority => 2;
+  annex behavior_specification {**
+        variables
+  		HLS, LLS : Int;
+  		waterlvl : Int;
+  	states 
+  		s : initial complete final state;
+	transitions
+		s -[on dispatch]-> s 
+		{ 
+			ReadHLS!(HLS);
+			if (HLS = 1)
+			   waterlvl := 1
+			else 
+			   ReadLLS!(LLS);
+			   if (LLs = 0)
+			      waterlvl := 0
+			   end if
+			end if;
+			WaterAlarm!(waterlvl)
+		};
+    **};
+  end WaterLevelMonitoring;
+  
+  --  MethaneMonitoring task
+
+    thread MethaneMonitoring
+  features
+    MethaneLevel : out data port int;
+  properties
+    Dispatch_Protocol => Periodic;         --  Concurrency configuration
+    Period => 100 ms;
+    Compute_Execution_Time => 1 ms .. 2 ms;
+    Priority => 2;
+  annex behavior_specification {**
+  	variables
+  		MS    : Int;
+  		level : Int;
+  	states 
+  		s : initial complete final state;
+	transitions
+		s -[on dispatch]-> s 
+		{
+		   ReadMS!(MS);
+           if (MS > 100) 
+           level := 2
+           elsif (MS > 70)
+           level := 1
+           else
+           level := 0
+           end if;
+           MethaneLevel!(level)
+		};
+  **};
+  end MethaneMonitoring;
+
+  thread PumpCtrl
+  features
+    MethaneLevel : in event data port Int;
+    WaterLevel   : in event data port Int;
+    WaterAlarm   : out data port Int;
+  properties
+    Dispatch_Protocol => Sporadic;         --  Concurrency configuration
+    Period => 100 ms;
+    Compute_Execution_Time => 1 ms .. 2 ms;
+    Priority => 2;
+  annex behavior_specification {**
+  	variables
+  		niveau_eau, niveau_alarme, alarme : Int;
+		cmd : Int;
+  	states 
+  		s : initial complete final state;     
+	transitions
+		s -[on dispatch MethaneLevel and WaterLevel]-> s 
+		{
+		   cmd := 0;
+		   niveau_alarme := MethaneLevel;
+                   if (niveau_alarme = 0) 
+                       alarme := 0
+                   else 
+                       alarme := 1
+                   end if;
+
+                   WaterAlarm!(alarme);
+
+		   if (niveau_alarme = 2)
+			cmd := 0
+		   else 
+                        niveau_eau := WaterLevel;
+			if (niveau_eau = 1) 
+			     cmd := 1
+			elsif (niveau_eau = 0) 
+			     cmd := 0
+			end if
+		   end if;
+                   cmdpump!(cmd)
+		};
+  **};
+  end PumpCtrl;
+
+  thread WaterAlarm
+  features
+    WaterAlarm : in event data port Int;
+
+  properties
+    Dispatch_Protocol => Sporadic;         --  Concurrency configuration
+    Period => 100 ms;
+    Compute_Execution_Time => 1 ms .. 2 ms;
+    Priority => 2;
+  annex behavior_specification {**
+  	variables
+  		value : Int;
+  	states 
+  		s : initial complete final state;     
+	transitions
+		s -[on dispatch WaterAlarm]-> s 
+		{
+		   value := WaterAlarm;
+		   CmdAlarm!(value)
+		};
+  **};
+  end WaterAlarm;
+
+  --  MinePump software process
+
+  process MinePump_Software
+  end MinePump_Software;
+
+  process implementation MinePump_Software.impl
+  subcomponents
+    WaterLevelMonitoring_Thread : thread WaterLevelMonitoring;
+    MethaneMonitoring_Thread    : thread MethaneMonitoring;
+    PumpCtrl_Thread             : thread PumpCtrl;
+    WaterAlarm_Thread           : thread WaterAlarm;
+
+  connections
+    C1 : port MethaneMonitoring_Thread.MethaneLevel
+                -> PumpCtrl_Thread.MethaneLevel;
+    C2 : port WaterLevelMonitoring_Thread.WaterAlarm
+                -> PumpCtrl_Thread.WaterLevel;
+
+    C3 : port PumpCtrl_Thread.WaterAlarm
+                -> WaterAlarm_Thread.WaterAlarm;
+  end MinePump_Software.impl;
+
+  processor CPU
+  properties
+    Scheduling_Protocol => (POSIX_1003_HIGHEST_PRIORITY_FIRST_PROTOCOL);
+    Deployment::Execution_Platform => Native;
+  end CPU;
+
+  system MinePump
+  end MinePump;
+
+  system implementation MinePump.impl
+  subcomponents
+    Software : process MinePump_Software.impl;
+    Hardware : processor CPU;
+  properties
+    Actual_Processor_Binding => (reference (Hardware)) applies to Software;
+  end MinePump.impl;
+
+end MinePump;

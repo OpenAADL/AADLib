@@ -98,6 +98,7 @@ AC_OUTPUT([
 	examples/line_follower/Makefile
 	examples/memory/Makefile
 	examples/minepump/Makefile
+	examples/minepump_ba/Makefile
 	examples/mixin/Makefile
 	examples/mjpeg/Makefile
 	examples/mosart/Makefile
