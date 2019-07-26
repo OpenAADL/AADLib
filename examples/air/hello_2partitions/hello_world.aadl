@@ -1,0 +1,132 @@
+package Hello_World
+public
+  with Deployment;
+  with ARINC653;
+
+  -----------------
+  -- Subprograms --
+  -----------------
+
+  subprogram Hello_Spg_1
+  properties
+    Source_Language => (C);
+    Source_Name     => "user_Hello_Spg_1";
+    Source_Text     => ("hello.c");
+  end Hello_Spg_1;
+
+  -------------
+  -- Threads --
+  -------------
+
+  thread Task
+  end Task;
+
+  thread implementation Task.impl_1
+  calls
+    Mycalls: {
+    P_Spg : subprogram Hello_Spg_1;
+    };
+  properties
+    Priority => 100;
+    Dispatch_Protocol                  => Periodic;
+    Period                             => 100 ms;
+    Compute_Execution_time             => 0 ms .. 3 ms;
+  end Task.impl_1;
+
+  -------------
+  -- Process --
+  -------------
+
+  process node_a
+  end node_a;
+
+  process implementation node_a.impl
+  subcomponents
+    Task1 : thread Task.impl_1;
+  end node_a.impl;
+
+
+  ---------------
+  -- Processor --
+  ---------------
+
+  virtual processor partition_runtime
+  end partition_runtime;
+
+  virtual processor implementation partition_runtime.i
+  end partition_runtime.i;
+
+  processor cpurm
+  properties
+    Deployment::Execution_Platform => AIR;
+  end cpurm;
+
+  processor implementation cpurm.impl
+  subcomponents
+    P0 : virtual processor partition_runtime.i
+    { Deployment::Execution_Platform => AIR;
+      ARINC653::Partition_Identifier => 0;
+      ARINC653::Partition_Name       => "P0";
+    };
+    P1 : virtual processor partition_runtime.i
+    { Deployment::Execution_Platform => AIR;
+      ARINC653::Partition_Identifier => 1;
+      ARINC653::Partition_Name       => "P1";
+    };
+
+  properties
+    ARINC653::Module_Major_Frame => 1 sec;
+    ARINC653::Module_Schedule =>
+            ( [Partition => reference (P0);
+               Duration  => 300 ms;
+               Periodic_Processing_Start => true;],
+              [Partition => reference (P1);
+               Duration  => 300 ms;
+               Periodic_Processing_Start => true;]
+            );
+  end cpurm.impl;
+
+  memory myram end myram;
+  memory segment end segment;
+
+  memory implementation segment.i
+  end segment.i;
+
+  memory implementation  myram.stram
+  properties
+    Base_Address => 40000000;
+    Byte_Count   => 16#400000#;
+  end myram.stram;
+
+  memory implementation myram.sdram
+  subcomponents
+    segment1 : memory segment.i {Base_Address => 40100000; Byte_Count => 16#400000#;};
+    segment2 : memory segment.i {Base_Address => 40200000; Byte_Count => 16#400000#;};
+  properties
+    Base_Address => 40000000;
+    Byte_Count   => 16#400000#;
+  end myram.sdram;
+
+  ------------
+  -- System --
+  ------------
+
+  system hello
+  end hello;
+
+  system implementation hello.impl
+  subcomponents
+    node_a : process node_a.impl;
+    node_b : process node_a.impl;
+    cpu_rm : processor cpurm.impl;
+
+    mem    :  memory myram.sdram;
+  properties
+    Actual_Processor_Binding => (reference (cpu_rm.p0)) applies to node_a;
+    actual_memory_binding => (reference (mem.segment1)) applies to Node_A;
+
+    Actual_Processor_Binding => (reference (cpu_rm.p1)) applies to node_b;
+    actual_memory_binding => (reference (mem.segment2)) applies to Node_b;
+  end hello.impl;
+
+end Hello_World;
