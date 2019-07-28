@@ -15,3 +15,11 @@ to
 * generate the AIR XML configuration file (`air_conf` target)
 * generate C code using PolyORB-HI/C (`c` target)
 * generate AIR-specific code and compile the generated code (`build_air` target)
+
+NOTE:
+-----
+
+The following environment variables must be defined
+
+* AIR : AIR base source directory
+* RTEMS_MAKEFILE_PATH=$AIR/air/install/pos/rtems5/rtems5-install/sparc-rtems5/leon3
