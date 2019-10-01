@@ -30,7 +30,7 @@ public
   features
     Data_Sink : in parameter Simple_Type;
   properties
-    Source_Language => C;
+    Source_Language => (C);
     Source_Name     => "user_ping_spg";
     Source_Text     => ("ping.c");
   end Ping_Spg;
@@ -50,7 +50,7 @@ public
     P_Spg : subprogram Do_Ping_Spg;
     };
   connections
-    parameter P_Spg.Data_Source -> Data_Source;
+    P1 : parameter P_Spg.Data_Source -> Data_Source;
   properties
     Dispatch_Protocol                  => Periodic;
     Period                             => 2000 Ms;
@@ -70,7 +70,7 @@ public
     Q_Spg : subprogram Ping_Spg;
     };
   connections
-    parameter Data_Sink -> Q_Spg.Data_Sink;
+    P1 : parameter Data_Sink -> Q_Spg.Data_Sink;
   properties
     Dispatch_Protocol                  => Sporadic;
     Period                             => 10 Ms;

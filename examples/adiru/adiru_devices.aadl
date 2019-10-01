@@ -3,7 +3,6 @@ public
 
   with SHM_DataType;
   with ADIRU_errLibrary;
-  with emv2;
   
   -- ACC_DEVICE
   -- Physical device that produces the acc data that is then

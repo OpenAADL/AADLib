@@ -7,7 +7,7 @@ public
 
  subprogram do_ports_polling
   properties
-    source_language => C;
+    source_language => (C);
     source_name     => "user_ports_polling";
     source_text     => ("air_polling.c");
   end do_ports_polling;
@@ -39,7 +39,7 @@ public
   subcomponents
     Pinger        : thread Software::P.Impl;
   connections
-    port Pinger.Data_Source -> Data_Source;
+    C1 : port Pinger.Data_Source -> Data_Source;
   end A.Impl;
 
   process B
@@ -49,10 +49,10 @@ public
 
   process implementation B.Impl
   subcomponents
-    Ping_Me        : thread Software::Q.Impl ;
+    Ping_Me        : thread Software::Q.Impl;
     poll_port      : thread port_poller.i;
   connections
-    port Data_Sink -> Ping_Me.Data_Sink;
+    C1 : port Data_Sink -> Ping_Me.Data_Sink;
   end B.Impl;
 
   memory myram
