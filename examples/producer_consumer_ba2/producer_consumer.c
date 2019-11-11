@@ -2,7 +2,6 @@
 #include<types.h>
 
 void print_spg
-//(producer__consumer__alpha_type a_data_in) {
 (test__ba__backend__a_struct_impl a_data_in) {
 
   printf("****************************************** \n");
@@ -17,7 +16,6 @@ void print_spg
   printf("****************************************** \n");
 }
 
-//void consume_spg (producer__consumer__alpha_type data)
 void consume_spg (test__ba__backend__a_struct_impl data)
 {
    printf ("Consume %d\n", data.elem);
