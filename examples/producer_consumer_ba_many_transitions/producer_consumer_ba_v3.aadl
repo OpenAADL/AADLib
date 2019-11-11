@@ -1,0 +1,305 @@
+package Test::BA::Backend
+public
+  with Deployment;
+  with Data_Model;
+  with Buses::Ethernet;
+  with Processors;
+  with Native_Sockets;
+  with Base_Types;
+
+  ----------
+  -- Data --
+  ----------
+
+  data Alpha_Type
+  	properties
+  		Data_Model::Data_Representation => Integer;
+  end Alpha_Type;
+  
+  data One_Dimension_Array
+  	properties
+  		Data_Model::Data_Representation => Array;
+  		Data_Model::Base_Type => (classifier (Base_Types::Integer));
+  		Data_Model::Dimension => (10);
+  end One_Dimension_Array;
+  
+  data A_Struct
+  	properties
+  		Data_Model::Data_Representation => Struct;
+  end A_Struct;
+
+  data implementation A_Struct.impl
+  	subcomponents
+  		All_elems : data One_Dimension_Array;
+  		elem      : data Base_Types::Integer;  
+  end A_Struct.impl;
+  
+  -----------------
+  -- Subprograms --
+  -----------------
+
+  subprogram Compute_Spg
+  features
+    A_Data_Out : out parameter Alpha_Type;
+  properties
+    Source_Language => (C);
+    Source_Name     => "compute_spg";
+    Source_Text     => ("producer_consumer.c");
+  end Compute_Spg;
+  
+  subprogram Print_Thread_Begin_Execution
+  properties
+    Source_Language => (C);
+    Source_Name     => "print_thread_begin_execution";
+    Source_Text     => ("producer_consumer.c");
+  end Print_Thread_Begin_Execution;
+  
+  subprogram Print_Spg
+  features
+    A_Data_In  : in parameter A_Struct.impl;
+  properties
+    Source_Language => (C);
+    Source_Name     => "print_spg";
+    Source_Text     => ("producer_consumer.c");
+  end Print_Spg;
+  
+  -------------
+  -- Threads --
+  -------------
+  
+  thread Computation_Th
+  features
+    Data_Out : out data port Base_Types::Integer;
+  properties
+    Dispatch_Protocol => Periodic;
+    Period => 500 ms;
+    Compute_Execution_Time => 1 ms .. 5 ms;
+    Priority => 1;
+  annex behavior_specification {**
+  variables
+  	 tmp : Alpha_Type;
+  states
+     s : initial complete final state;
+  transitions
+     s -[ on dispatch ]-> s {
+     	Compute_Spg!(tmp);
+     	Data_Out!(tmp)
+     };
+  **};
+  end Computation_Th;
+
+  thread Producer_Th
+  features
+  	Data_In      : in data port Base_Types::Integer;	
+    Data_Source1 : out event data port A_Struct.impl;
+    Data_Source2 : out event data port A_Struct.impl; 
+    Pr_Index     : out event data port Base_Types::Integer;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 1 ms .. 10 ms;
+    Priority => 1;
+    Period => 500 ms;
+  annex behavior_specification {**
+  variables
+	 tmp  : Base_Types::Integer;
+	 tmp2 : Alpha_Type;
+  states
+     si : initial state; 
+     s1, s2 : state;
+     sf : complete final state;
+  transitions
+     si -[Data_In <= 10]-> s1 {tmp := Data_In * 2};
+     
+     si -[otherwise]-> s2 {tmp := Data_In - 1};
+     
+     si -[Data_In > 10]-> s2 {tmp := Data_In - 10};
+     
+     s1 -[tmp < 10]-> s2 {tmp := 10};
+     
+     s1 -[tmp >= 12 and tmp <= 16]-> s1 {tmp := 1}; 
+     
+     s1 -[otherwise]-> sf 
+     {
+     	Data_Source1.elem := 10;
+     		
+     	for (d : Base_Types::Integer in 1 .. Data_Source1.elem)           
+	    {
+	    	Data_Source2.elem := d - 1;
+	    	
+            Data_Source1.All_elems [Data_Source2.elem] := d * 2;
+            Data_Source2.All_elems [Data_Source2.elem] := Data_Source1.All_elems [Data_Source2.elem] + 1        
+		};
+		Data_Source1!;
+		Data_Source2.elem := Data_Source2.elem + 1;
+		Data_Source2!;
+		
+    	Pr_Index!(2);
+    	Pr_Index!(2)
+     	
+     };
+     
+     s2 -[]-> sf
+     {
+     	Data_Source1.elem := 10;
+     		
+     	for (d : Base_Types::Integer in 1 .. Data_Source1.elem)           
+	    {
+	    	Data_Source2.elem := d - 1;
+	    	
+            Data_Source1.All_elems [Data_Source2.elem] := d;
+            Data_Source2.All_elems [Data_Source2.elem] := d + 1        
+		};
+		Data_Source1!;
+		Data_Source2.elem := Data_Source2.elem + 1;
+		Data_Source2!;
+		
+		tmp := Data_In;
+     	Pr_Index!(tmp);
+     	Compute_Spg!(tmp2);
+     	Pr_Index!(tmp2)
+     };
+     
+     sf -[on dispatch]-> s1 
+     {
+        tmp := Data_In
+	 };
+  **};
+  end Producer_Th;
+ 
+  thread Consumer_Th
+  features
+    Data_Sink1 : in event data port A_Struct.impl; 
+    Data_Sink2 : in event data port A_Struct.impl;
+    Cr_Index   : in event data port Base_Types::Integer {Queue_Size => 4;};
+  properties
+    Dispatch_Protocol => Sporadic;
+    Compute_Execution_Time => 1 ms .. 20 ms;
+    Priority => 2;
+    Period => 10 ms;
+  annex behavior_specification {**
+  variables
+	 tmp1, tmp2 : A_Struct.impl;
+  states
+     s : initial complete final state;
+  transitions
+     s -[on dispatch]-> s {
+     
+     Print_Thread_Begin_Execution!;
+     for (b : Base_Types::Integer in 1 .. 1)
+     {
+     	Data_Sink1?(tmp1);
+     	Print_Spg!(tmp1); 
+     
+     	Data_Sink2?(tmp2);
+     	Print_Spg!(tmp2)
+     };
+     
+     tmp2.elem := 9;
+     tmp2.All_elems [0] := Cr_Index'count; --tmp1.All_elems [Cr_Index'count];
+     tmp2.All_elems [1] := Cr_Index?; --tmp1.All_elems [Cr_Index?];
+     tmp2.All_elems [2] := Cr_Index?; --Cr_Index'count;
+     
+     for (b : Base_Types::Integer in 3 .. tmp2.elem)
+     {
+     	tmp2.All_elems [b] := tmp1.All_elems [1]
+     };
+     tmp2.elem := tmp2.elem + 1;
+     Print_Spg!(tmp2)
+     
+     };
+     
+  **};
+  end Consumer_Th;
+
+  ---------------
+  -- Processor --
+  ---------------
+
+  processor the_processor
+  properties
+    Deployment::Execution_Platform => Native;
+  end the_processor;
+
+  ---------------
+  -- Processes --
+  ---------------
+ 
+  process A
+  features
+    Alpha1 : out data port A_Struct.impl;
+    Alpha2 : out data port A_Struct.impl;
+    Alpha3 : out data port Base_Types::Integer;
+  end A;
+
+  process implementation A.Impl
+  subcomponents
+  	Computation : thread Computation_Th;
+    Producer    : thread Producer_Th;
+  connections
+    Z3:port Producer.Data_Source1 -> Alpha1;
+    Z5:port Producer.Data_Source2 -> Alpha2;
+    Z9:port Producer.Pr_Index -> Alpha3;
+    Z12:port Computation.Data_Out -> Producer.Data_In;
+  end A.Impl;
+
+  process B
+  features
+    Beta1  : in data port A_Struct.impl;
+    Beta2  : in data port A_Struct.impl;
+    Beta3  : in data port Base_Types::Integer;
+  end B;
+
+  process implementation B.Impl
+  subcomponents
+    Consumer  : thread Consumer_Th;
+  connections
+    Z4 : port Beta1 -> Consumer.Data_Sink1;
+    Z7 : port Beta2 -> Consumer.Data_Sink2;
+    Z10: port Beta3 -> Consumer.Cr_Index;
+  end B.Impl;
+  
+  ------------
+  -- System --
+  ------------
+
+  system PC_Simple
+  end PC_Simple;
+
+  system implementation PC_Simple.Native
+  subcomponents
+    pr_A : process A.Impl;
+    pr_B : process B.Impl {Deployment::port_number => 4002;};
+    Device_A : device Native_Sockets::Native_Sockets.pohic
+    {Source_Text => ("devicesconf.c");};
+    Device_B : device Native_Sockets::Native_Sockets.pohic
+    {Source_Text => ("devicesconf.c");};
+
+    CPU_A   : processor the_processor;
+    CPU_B   : processor the_processor;
+    the_bus : bus Buses::Ethernet::Ethernet.impl;
+  connections
+    Z1 : bus access the_bus -> Device_A.Eth;
+    Z2 : bus access the_bus -> Device_B.Eth;
+    Z6 : port pr_A.Alpha1 -> pr_B.Beta1;
+    Z8 : port pr_A.Alpha2 -> pr_B.Beta2;
+    Z11: port pr_A.Alpha3 -> pr_B.Beta3;
+  properties
+    Actual_Processor_Binding => (reference (CPU_A)) applies to pr_A;
+    Actual_Processor_Binding => (reference (CPU_B)) applies to pr_B;
+
+    Actual_Connection_Binding => (reference (the_bus)) applies to Z6;
+    Actual_Connection_Binding => (reference (the_bus)) applies to Z8;
+    Actual_Connection_Binding => (reference (the_bus)) applies to Z11;
+    actual_processor_binding => (reference (CPU_A)) applies to Device_A;
+    actual_processor_binding => (reference (CPU_B)) applies to Device_B;
+
+ annex real_specification {**
+   theorem flow_latency
+      foreach s in system_set do
+         requires (Latency);
+         check (1=1);
+    end flow_latency;
+  **};
+  end PC_Simple.Native;
+
+end Test::BA::Backend;
