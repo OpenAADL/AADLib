@@ -108,6 +108,9 @@ AC_OUTPUT([
 	examples/perseus/Makefile
 	examples/producer_consumer/Makefile
 	examples/producer_consumer_ba/Makefile
+	examples/producer_consumer_ba2/Makefile
+	examples/producer_consumer_ba_many_transitions/Makefile
+	examples/producer_consumer_ba_4ports_manyDispatchTriggers/Makefile
 	examples/radar/Makefile
 	examples/rap/Makefile
 	examples/rap_code/Makefile
