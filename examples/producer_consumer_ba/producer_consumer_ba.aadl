@@ -1,18 +1,15 @@
 package Producer::Consumer
 public
   with Deployment;
-  with Data_Model;
+  with Base_Types;
   with Buses::Ethernet;
-  with Processors;
   with Native_Sockets;
 
   ----------
   -- Data --
   ----------
 
-  data Alpha_Type
-  properties
-    Data_Model::Data_Representation => Integer;
+  data Alpha_Type extends Base_Types::Integer
   end Alpha_Type;
 
   -----------------

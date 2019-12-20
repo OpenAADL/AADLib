@@ -1,23 +1,20 @@
 package test_units
 public
 	with Unit_PS;
-	with Data_Model;
+	with Base_Types;
 	
-	data Distance_Value
+	data Distance_Value extends Base_Types::Float
 	properties
-	    Data_Model::Data_Representation => Integer;
 	    Unit_PS::Measurement_Unit => Unit_PS::Meter;
 	end Distance_Value;
 
-	data Time_Value
+	data Time_Value extends Base_Types::Float
 	properties
-	    Data_Model::Data_Representation => Integer;
 	    Unit_PS::Measurement_Unit => Unit_PS::Second;
 	end Time_Value;
 
-	data Speed_Value
+	data Speed_Value extends Base_Types::Float
 	properties
-	    Data_Model::Data_Representation => Integer;
 	    Unit_PS::Measurement_Unit => Unit_PS::Speed;
 	end Speed_Value;
 

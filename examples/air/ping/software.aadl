@@ -1,6 +1,5 @@
 package Software
 public
-  with Data_Model;
 
   ----------
   -- Data --

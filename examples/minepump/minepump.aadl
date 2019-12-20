@@ -57,7 +57,7 @@ public
 
     Source_Language => (C);                --  Link to code source
     Compute_Entrypoint_Source_Text => "pumpctrl_body";
-    Source_Text => "minepump.c";
+    Source_Text => ("minepump.c");
   end PumpCtrl;
 
   thread WaterAlarm
@@ -72,7 +72,7 @@ public
 
     Source_Language => (C);                --  Link to code source
     Compute_Entrypoint_Source_Text => "wateralarm_body";
-    Source_Text => "minepump.c";
+    Source_Text => ("minepump.c");
   end WaterAlarm;
 
   --  MinePump software process

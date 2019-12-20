@@ -3,7 +3,7 @@
 
 package Boards::GR_XC3S_1500
 public
-  with Processors::SPARC, Memories, Data_Sheet;
+  with Processors::SPARC, Memories;
   with Buses::Ethernet, Buses::UART;
   with Deployment;
   with RTEMS5_UART;
