@@ -19,7 +19,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1576867790851</id>
+			<id>1576874456045</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
@@ -28,7 +28,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1576867790854</id>
+			<id>1576874456047</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
@@ -37,7 +37,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1576867790857</id>
+			<id>1576874456050</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
@@ -46,7 +46,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1576867790860</id>
+			<id>1576874456053</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
@@ -55,7 +55,7 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1576867790863</id>
+			<id>1576874456055</id>
 			<name></name>
 			<type>22</type>
 			<matcher>
@@ -64,12 +64,21 @@
 			</matcher>
 		</filter>
 		<filter>
-			<id>1576867790865</id>
+			<id>1576874456057</id>
 			<name></name>
-			<type>6</type>
+			<type>22</type>
 			<matcher>
 				<id>org.eclipse.ui.ide.multiFilter</id>
 				<arguments>1.0-name-matches-false-true-code_generation_prop*</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1576874456060</id>
+			<name></name>
+			<type>30</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-crazyflie</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>
