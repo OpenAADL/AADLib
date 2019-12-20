@@ -1,0 +1,301 @@
+package Test::BA::Backend
+public
+  with Deployment;
+  with Data_Model;
+  with Buses::Ethernet;
+  with Processors;
+  with Native_Sockets;
+  with Base_Types;
+
+  ----------
+  -- Data --
+  ----------
+
+  data Alpha_Type
+  	properties
+  		Data_Model::Data_Representation => Integer;
+  end Alpha_Type;
+  
+  -----------------
+  -- Subprograms --
+  -----------------
+
+  subprogram Compute_Spg
+  features
+    A_Data_Out : out parameter Alpha_Type;
+  properties
+    Source_Language => (C);
+    Source_Name     => "compute_spg";
+    Source_Text     => ("producer_consumer.c");
+  end Compute_Spg;
+  
+  subprogram Print_Thread_Begin_Execution
+  features
+    Thread_Index : in parameter Base_Types::Integer;
+  properties
+    Source_Language => (C);
+    Source_Name     => "print_thread_begin_execution";
+    Source_Text     => ("producer_consumer.c");
+  end Print_Thread_Begin_Execution;
+  
+  subprogram Print_Spg
+  features
+    A_Data_In  : in parameter Alpha_Type;
+  properties
+    Source_Language => (C);
+    Source_Name     => "print_spg";
+    Source_Text     => ("producer_consumer.c");
+  end Print_Spg;
+  
+  subprogram Print_Spg1
+  features
+    A_Data_In  : in parameter Alpha_Type;
+  properties
+    Source_Language => (C);
+    Source_Name     => "print_spg1";
+    Source_Text     => ("producer_consumer.c");
+  end Print_Spg1;
+  
+  -------------
+  -- Threads --
+  -------------
+  
+  thread Computation_Th
+  features
+    Data_Out : out data port Alpha_Type;
+  properties
+    Dispatch_Protocol => Periodic;
+    Period => 500 ms;
+    Compute_Execution_Time => 1 ms .. 5 ms;
+    Priority => 1;
+  annex behavior_specification {**
+  variables
+  	 tmp : Alpha_Type;
+  states
+     s : initial complete final state;
+  transitions
+     s -[ on dispatch ]-> s {
+     	Compute_Spg!(tmp);
+     	Data_Out!(tmp)
+     };
+  **};
+  end Computation_Th;
+
+  thread Producer_Th
+  features
+  	-- Data_In : in data port Alpha_Type;	
+    p1      : out event data port Alpha_Type;
+    p2      : out event data port Alpha_Type;
+    p3      : out event data port Alpha_Type;
+    p4      : out event data port Alpha_Type;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 1 ms .. 10 ms;
+    Priority => 1;
+    Period => 500 ms;
+  end Producer_Th;
+  
+  thread implementation Producer_Th.Impl
+  subcomponents
+  	x : data Alpha_Type;
+  annex behavior_specification {**
+  variables
+	 tmp : Alpha_Type;
+  states
+     s0 : initial state; 
+     s1 : complete final state;
+  transitions
+     s0 -[]-> s1 {p1!(1); x := 2};
+     
+     s1 -[on dispatch]-> s1 
+     {
+     	Print_Spg1!(x);
+     	if (x mod 2 = 0)
+     	    Compute_Spg!(tmp);
+     		p2!(tmp);
+     		Compute_Spg!(tmp);
+     		p3!(tmp)
+     	else
+     		Compute_Spg!(tmp);
+     		p1!(tmp);
+     		Compute_Spg!(tmp);
+     		p4!(tmp)
+     	end if;
+     	x := x + 1
+	 };
+  **};
+  end Producer_Th.Impl;
+ 
+  thread Consumer_Th
+  features
+    C1 : in event data port Alpha_Type {Queue_Size => 20;};
+    C2 : in event data port Alpha_Type {Queue_Size => 20;};
+    C3 : in event data port Alpha_Type {Queue_Size => 20;};
+    C4 : in event data port Alpha_Type {Queue_Size => 20;};
+    C_Out : out event data port Alpha_Type;
+  properties
+    Dispatch_Protocol => Sporadic;
+    Compute_Execution_Time => 1 ms .. 20 ms;
+    Priority => 2;
+    Period => 500 ms;
+  end Consumer_Th;
+  
+  thread implementation Consumer_Th.Impl
+  subcomponents
+  	x1 : data Alpha_Type;
+  	x2 : data Alpha_Type;
+  	x3 : data Alpha_Type;
+  	x4 : data Alpha_Type;
+  annex behavior_specification {**
+  variables
+  	 index : Base_Types::Integer;
+  states
+     s0 : initial complete state;
+     next1, next2, next3, next4 : complete final state;
+     exec1, exec2 : state;
+  transitions
+  	 s0 -[on dispatch C1]-> next4 {index := 2; Print_Thread_Begin_Execution!(index); C1?(x1)};
+  	 
+  	 next1 -[on dispatch C1]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C1?(x1); Print_Spg!(x1)};
+  	
+  	 next2 -[on dispatch C2 and C3]-> exec2 {index := 2; Print_Thread_Begin_Execution!(index); C2?(x2); C3?(x3); Print_Spg!(x2); Print_Spg!(x3)};
+  	 next2 -[on dispatch C2 and C1]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C2?(x2); Print_Spg!(x2)};
+  	 
+  	 next3 -[on dispatch C3 and C2]-> exec2 {index := 2; Print_Thread_Begin_Execution!(index); C2?(x2); C3?(x3); Print_Spg!(x2); Print_Spg!(x3)};
+  	 next3 -[on dispatch C3 and C4]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C3?(x3); Print_Spg!(x3)};
+  	 
+  	 next4 -[on dispatch C4]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C4?(x4); Print_Spg!(x4)};
+  	 
+  	 exec1 -[x1 <= x4]-> next1 {C_Out!(x1)};
+  	 
+  	 exec1 -[x1 > x4]-> next2 {C_Out!(x4)};    
+  	 
+  	 exec2 -[x2 <= x3]-> next3 {C_Out!(x2)};
+  	 
+  	 exec2 -[x2 > x3]-> next4 {C_Out!(x3)};    
+  	 
+  **};
+  end Consumer_Th.Impl;
+  
+  thread Receiver_Th
+  features
+    R_In : in event data port Alpha_Type;
+  properties
+    Dispatch_Protocol => Sporadic;
+    Compute_Execution_Time => 1 ms .. 5 ms;
+    Priority => 2;
+    Period => 500 ms;
+  annex behavior_specification {**
+  variables
+  	 tmp : Alpha_Type;
+  states
+     s : initial complete final state;
+  transitions
+     s -[ on dispatch ]-> s {
+     	R_In?(tmp);
+     	Print_Spg!(tmp)
+     };
+  **};
+  end Receiver_Th;
+
+  ---------------
+  -- Processor --
+  ---------------
+
+  processor the_processor
+  properties
+    Deployment::Execution_Platform => Native;
+  end the_processor;
+
+  ---------------
+  -- Processes --
+  ---------------
+ 
+  process A
+  features
+    Alpha1 : out data port Alpha_Type;
+    Alpha2 : out data port Alpha_Type;
+    Alpha3 : out data port Alpha_Type;
+    Alpha4 : out data port Alpha_Type;
+  end A;
+
+  process implementation A.Impl
+  subcomponents
+  	--Computation : thread Computation_Th;
+    Producer    : thread Producer_Th.Impl;
+  connections
+    Z3:  port Producer.p1 -> Alpha1;
+    Z9:  port Producer.p2 -> Alpha2;
+    Z14: port Producer.p3 -> Alpha3;
+    Z15: port Producer.p4 -> Alpha4;
+    --Z12:port Computation.Data_Out -> Producer.Data_In;
+  end A.Impl;
+
+  process B
+  features
+    Beta1  : in data port Alpha_Type;
+    Beta2  : in data port Alpha_Type;
+    Beta3  : in data port Alpha_Type;
+    Beta4  : in data port Alpha_Type;
+  end B;
+
+  process implementation B.Impl
+  subcomponents
+    Consumer  : thread Consumer_Th.Impl;
+    Receiver  : thread Receiver_Th;
+  connections
+    Z4 : port Beta1 -> Consumer.C1;
+    Z7 : port Beta2 -> Consumer.C2;
+    Z16 : port Beta3 -> Consumer.C3;
+    Z17 : port Beta4 -> Consumer.C4;
+    Z13:port Consumer.C_Out -> Receiver.R_In;
+  end B.Impl;
+  
+  ------------
+  -- System --
+  ------------
+
+  system PC_Simple
+  end PC_Simple;
+
+  system implementation PC_Simple.Native
+  subcomponents
+    pr_A : process A.Impl;
+    pr_B : process B.Impl {Deployment::port_number => 4002;};
+    Device_A : device Native_Sockets::Native_Sockets.pohic
+    {Source_Text => ("devicesconf.c");};
+    Device_B : device Native_Sockets::Native_Sockets.pohic
+    {Source_Text => ("devicesconf.c");};
+
+    CPU_A   : processor the_processor;
+    CPU_B   : processor the_processor;
+    the_bus : bus Buses::Ethernet::Ethernet.impl;
+  connections
+    Z1 : bus access the_bus -> Device_A.Eth;
+    Z2 : bus access the_bus -> Device_B.Eth;
+    Z6 : port pr_A.Alpha1 -> pr_B.Beta1;
+    Z8 : port pr_A.Alpha2 -> pr_B.Beta2;
+    Z18 : port pr_A.Alpha3 -> pr_B.Beta3;
+    Z19 : port pr_A.Alpha4 -> pr_B.Beta4;
+  properties
+    Actual_Processor_Binding => (reference (CPU_A)) applies to pr_A;
+    Actual_Processor_Binding => (reference (CPU_B)) applies to pr_B;
+
+    Actual_Connection_Binding => (reference (the_bus)) applies to Z6;
+    Actual_Connection_Binding => (reference (the_bus)) applies to Z8;
+    Actual_Connection_Binding => (reference (the_bus)) applies to Z18;
+    Actual_Connection_Binding => (reference (the_bus)) applies to Z19;
+    
+    actual_processor_binding => (reference (CPU_A)) applies to Device_A;
+    actual_processor_binding => (reference (CPU_B)) applies to Device_B;
+
+ annex real_specification {**
+   theorem flow_latency
+      foreach s in system_set do
+         requires (Latency);
+         check (1=1);
+    end flow_latency;
+  **};
+  end PC_Simple.Native;
+
+end Test::BA::Backend;
