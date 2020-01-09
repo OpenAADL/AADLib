@@ -25,4 +25,7 @@ public
     UART : requires bus access UART.impl;
   end Generic_UART;
 
+  device implementation Generic_UART.impl	
+  end Generic_UART.impl;
+
 end Buses::UART;

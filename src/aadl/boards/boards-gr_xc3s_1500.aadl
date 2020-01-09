@@ -29,8 +29,8 @@ public
     LEON_Core : processor Processors::SPARC::LEON2;
     SRAM      : memory    Memories::SRAM {Memory_size => 64 MByte;};
     Eth_0     : device    Buses::Ethernet::Generic_Ethernet;
-    UART_1    : device    Buses::UART::Generic_UART;
-    UART_2    : device    Buses::UART::Generic_UART;
+    UART_1    : device    Buses::UART::Generic_UART.impl;
+    UART_2    : device    Buses::UART::Generic_UART.impl;
 
   connections
      C1 : bus access UART_Bus_0 -> UART_1.UART;
@@ -44,8 +44,8 @@ public
     LEON_Core : refined to processor
     { Deployment::Execution_Platform => LEON_RTEMS;};
 
-    UART_1 : refined to device RTEMS5_UART::RTEMS5_APBUART.impl;
-    UART_2 : refined to device RTEMS5_UART::RTEMS5_APBUART.impl;
+    UART_1 : refined to device RTEMS5_UART::RTEMS5_APBUART.impl { Classifier_Substitution_Rule => Signature_Match;};
+    UART_2 : refined to device RTEMS5_UART::RTEMS5_APBUART.impl { Classifier_Substitution_Rule => Signature_Match;};
   end GR_XC3S_1500.rtems;
 
 end Boards::GR_XC3S_1500;

@@ -1,4 +1,4 @@
-package Producer::Consumer
+package Producer::Consumer_BA
 public
   with Deployment;
   with Base_Types;
@@ -171,4 +171,4 @@ public
   **};
   end PC_Simple.Native;
 
-end Producer::Consumer;
+end Producer::Consumer_BA;

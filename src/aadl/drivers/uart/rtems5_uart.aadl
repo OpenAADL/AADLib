@@ -13,7 +13,7 @@ public
   device RTEMS5_APBUART extends Buses::UART::Generic_UART
   end RTEMS5_APBUART;
 
-  device implementation RTEMS5_APBUART.impl
+  device implementation RTEMS5_APBUART.impl extends Buses::UART::Generic_UART.impl
   properties
     Deployment::Driver_Name    => "RTEMS5_APBUART";
     Device_Driver              => classifier (serial_driver.impl);

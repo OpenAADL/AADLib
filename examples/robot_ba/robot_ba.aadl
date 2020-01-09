@@ -69,10 +69,10 @@ public
       s0 : initial complete final state;
     transitions
       s0 -[on dispatch]-> s0 {
-        computation(1ms);
+        computation(1 ms);
         evenement := true};
       s0 -[on dispatch]-> s0 {
-        computation(1ms);
+        computation(1 ms);
         evenement := false};
   **};
   end capteur.i;

@@ -1,9 +1,8 @@
-package Test::BA::Backend
+package Test::BA::Backend_BA_V2
 public
   with Deployment;
   with Data_Model;
   with Buses::Ethernet;
-  with Processors;
   with Native_Sockets;
   with Using::Types::Defined::by::Base_Types;
 
@@ -279,4 +278,4 @@ public
   **};
   end PC_Simple.Native;
 
-end Test::BA::Backend;
+end Test::BA::Backend_BA_V2;
