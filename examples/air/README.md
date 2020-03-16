@@ -22,4 +22,4 @@ NOTE:
 The following environment variables must be defined
 
 * AIR : AIR base source directory
-* RTEMS_MAKEFILE_PATH=$AIR/air/install/pos/rtems5/rtems5-install/sparc-rtems5/leon3
+* RTEMS_MAKEFILE_PATH=$AIR/install/pos/rtems5/rtems5-install/sparc-rtems5/leon3
