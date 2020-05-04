@@ -12,7 +12,7 @@ public
 
   data Alpha_Type extends Base_Types::Integer
   end Alpha_Type;
-  
+
   -----------------
   -- Subprograms --
   -----------------
@@ -25,16 +25,16 @@ public
     Source_Name     => "compute_spg";
     Source_Text     => ("producer_consumer.c");
   end Compute_Spg;
-  
+
   subprogram Print_Thread_Begin_Execution
   features
-    Thread_Index : in parameter Base_Types::Integer;
+    Thread_Index : in parameter Alpha_Type;
   properties
     Source_Language => (C);
     Source_Name     => "print_thread_begin_execution";
     Source_Text     => ("producer_consumer.c");
   end Print_Thread_Begin_Execution;
-  
+
   subprogram Print_Spg
   features
     A_Data_In  : in parameter Alpha_Type;
@@ -43,7 +43,7 @@ public
     Source_Name     => "print_spg";
     Source_Text     => ("producer_consumer.c");
   end Print_Spg;
-  
+
   subprogram Print_Spg1
   features
     A_Data_In  : in parameter Alpha_Type;
@@ -52,11 +52,11 @@ public
     Source_Name     => "print_spg1";
     Source_Text     => ("producer_consumer.c");
   end Print_Spg1;
-  
+
   -------------
   -- Threads --
   -------------
-  
+
   thread Computation_Th
   features
     Data_Out : out data port Alpha_Type;
@@ -67,20 +67,20 @@ public
     Priority => 1;
   annex behavior_specification {**
   variables
-  	 tmp : Alpha_Type;
+         tmp : Alpha_Type;
   states
      s : initial complete final state;
   transitions
      s -[ on dispatch ]-> s {
-     	Compute_Spg!(tmp);
-     	Data_Out!(tmp)
+        Compute_Spg!(tmp);
+        Data_Out!(tmp)
      };
   **};
   end Computation_Th;
 
   thread Producer_Th
   features
-  	-- Data_In : in data port Alpha_Type;	
+        -- Data_In : in data port Alpha_Type;
     p1      : out event data port Alpha_Type;
     p2      : out event data port Alpha_Type;
     p3      : out event data port Alpha_Type;
@@ -91,38 +91,38 @@ public
     Priority => 1;
     Period => 500 ms;
   end Producer_Th;
-  
+
   thread implementation Producer_Th.Impl
   subcomponents
-  	x : data Alpha_Type;
+        x : data Alpha_Type;
   annex behavior_specification {**
   variables
-	 tmp : Alpha_Type;
+         tmp : Alpha_Type;
   states
-     s0 : initial state; 
+     s0 : initial state;
      s1 : complete final state;
   transitions
      s0 -[]-> s1 {p1!(1); x := 2};
-     
-     s1 -[on dispatch]-> s1 
+
+     s1 -[on dispatch]-> s1
      {
-     	Print_Spg1!(x);
-     	if (x mod 2 = 0)
-     	    Compute_Spg!(tmp);
-     		p2!(tmp);
-     		Compute_Spg!(tmp);
-     		p3!(tmp)
-     	else
-     		Compute_Spg!(tmp);
-     		p1!(tmp);
-     		Compute_Spg!(tmp);
-     		p4!(tmp)
-     	end if;
-     	x := x + 1
-	 };
+        Print_Spg1!(x);
+        if (x mod 2 = 0)
+            Compute_Spg!(tmp);
+                p2!(tmp);
+                Compute_Spg!(tmp);
+                p3!(tmp)
+        else
+                Compute_Spg!(tmp);
+                p1!(tmp);
+                Compute_Spg!(tmp);
+                p4!(tmp)
+        end if;
+        x := x + 1
+         };
   **};
   end Producer_Th.Impl;
- 
+
   thread Consumer_Th
   features
     C1 : in event data port Alpha_Type {Queue_Size => 20;};
@@ -136,44 +136,44 @@ public
     Priority => 2;
     Period => 500 ms;
   end Consumer_Th;
-  
+
   thread implementation Consumer_Th.Impl
   subcomponents
-  	x1 : data Alpha_Type;
-  	x2 : data Alpha_Type;
-  	x3 : data Alpha_Type;
-  	x4 : data Alpha_Type;
+        x1 : data Alpha_Type;
+        x2 : data Alpha_Type;
+        x3 : data Alpha_Type;
+        x4 : data Alpha_Type;
   annex behavior_specification {**
   variables
-  	 index : Base_Types::Integer;
+         index : Base_Types::Integer;
   states
      s0 : initial complete state;
      next1, next2, next3, next4 : complete final state;
      exec1, exec2 : state;
   transitions
-  	 s0 -[on dispatch C1]-> next4 {index := 2; Print_Thread_Begin_Execution!(index); C1?(x1)};
-  	 
-  	 next1 -[on dispatch C1]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C1?(x1); Print_Spg!(x1)};
-  	
-  	 next2 -[on dispatch C2 and C3]-> exec2 {index := 2; Print_Thread_Begin_Execution!(index); C2?(x2); C3?(x3); Print_Spg!(x2); Print_Spg!(x3)};
-  	 next2 -[on dispatch C2 and C1]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C2?(x2); Print_Spg!(x2)};
-  	 
-  	 next3 -[on dispatch C3 and C2]-> exec2 {index := 2; Print_Thread_Begin_Execution!(index); C2?(x2); C3?(x3); Print_Spg!(x2); Print_Spg!(x3)};
-  	 next3 -[on dispatch C3 and C4]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C3?(x3); Print_Spg!(x3)};
-  	 
-  	 next4 -[on dispatch C4]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C4?(x4); Print_Spg!(x4)};
-  	 
-  	 exec1 -[x1 <= x4]-> next1 {C_Out!(x1)};
-  	 
-  	 exec1 -[x1 > x4]-> next2 {C_Out!(x4)};    
-  	 
-  	 exec2 -[x2 <= x3]-> next3 {C_Out!(x2)};
-  	 
-  	 exec2 -[x2 > x3]-> next4 {C_Out!(x3)};    
-  	 
+         s0 -[on dispatch C1]-> next4 {index := 2; Print_Thread_Begin_Execution!(index); C1?(x1)};
+
+         next1 -[on dispatch C1]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C1?(x1); Print_Spg!(x1)};
+
+         next2 -[on dispatch C2 and C3]-> exec2 {index := 2; Print_Thread_Begin_Execution!(index); C2?(x2); C3?(x3); Print_Spg!(x2); Print_Spg!(x3)};
+         next2 -[on dispatch C2 and C1]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C2?(x2); Print_Spg!(x2)};
+
+         next3 -[on dispatch C3 and C2]-> exec2 {index := 2; Print_Thread_Begin_Execution!(index); C2?(x2); C3?(x3); Print_Spg!(x2); Print_Spg!(x3)};
+         next3 -[on dispatch C3 and C4]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C3?(x3); Print_Spg!(x3)};
+
+         next4 -[on dispatch C4]-> exec1 {index := 2; Print_Thread_Begin_Execution!(index); C4?(x4); Print_Spg!(x4)};
+
+         exec1 -[x1 <= x4]-> next1 {C_Out!(x1)};
+
+         exec1 -[x1 > x4]-> next2 {C_Out!(x4)};
+
+         exec2 -[x2 <= x3]-> next3 {C_Out!(x2)};
+
+         exec2 -[x2 > x3]-> next4 {C_Out!(x3)};
+
   **};
   end Consumer_Th.Impl;
-  
+
   thread Receiver_Th
   features
     R_In : in event data port Alpha_Type;
@@ -184,13 +184,13 @@ public
     Period => 500 ms;
   annex behavior_specification {**
   variables
-  	 tmp : Alpha_Type;
+         tmp : Alpha_Type;
   states
      s : initial complete final state;
   transitions
      s -[ on dispatch ]-> s {
-     	R_In?(tmp);
-     	Print_Spg!(tmp)
+        R_In?(tmp);
+        Print_Spg!(tmp)
      };
   **};
   end Receiver_Th;
@@ -207,7 +207,7 @@ public
   ---------------
   -- Processes --
   ---------------
- 
+
   process A
   features
     Alpha1 : out data port Alpha_Type;
@@ -218,7 +218,7 @@ public
 
   process implementation A.Impl
   subcomponents
-  	--Computation : thread Computation_Th;
+        --Computation : thread Computation_Th;
     Producer    : thread Producer_Th.Impl;
   connections
     Z3:  port Producer.p1 -> Alpha1;
@@ -247,7 +247,7 @@ public
     Z17 : port Beta4 -> Consumer.C4;
     Z13:port Consumer.C_Out -> Receiver.R_In;
   end B.Impl;
-  
+
   ------------
   -- System --
   ------------
@@ -282,7 +282,7 @@ public
     Actual_Connection_Binding => (reference (the_bus)) applies to Z8;
     Actual_Connection_Binding => (reference (the_bus)) applies to Z18;
     Actual_Connection_Binding => (reference (the_bus)) applies to Z19;
-    
+
     actual_processor_binding => (reference (CPU_A)) applies to Device_A;
     actual_processor_binding => (reference (CPU_B)) applies to Device_B;
 
