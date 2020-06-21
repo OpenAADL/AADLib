@@ -1,6 +1,9 @@
 # ATTITUDE HEADING REFERENCE SYSTEM
 
-## Introduction
+by Hariprasath SHANMUGASUNDARAM, Sandeep Gopala Krishnan
+ISAE SupAero, MS EMS students 2015-2016
+
+# Introduction
 
 This project illustrates how to build an Attitude Heading Reference System using FreeRTOS targets on ST Discovery kit using Ocarina tool and PolyORB-HI-C middleware. 
 
@@ -37,14 +40,12 @@ library needs to be commented in the STMCube code.
 
 Following are the files that are required to be modified:
 
-4.  ![](./imgs/image4.png){width="6.768055555555556in"
-    height="0.7515594925634296in"}The file
+4.  ![](./imgs/image4.png)The file
     STM32Cube\_FW\_F4\_V1.15.0/Drivers/BSP/Components/l3gd20/l3gd20.c.
     Function void L3GD20\_ReadXYZAngRate(float \*pfData) needs to be
     updated to remove the sensitivity multiplication.
 
-5.  ![](./imgs/image5.png){width="6.776388888888889in"
-    height="0.8416666666666667in"}The file
+5.  ![](./imgs/image5.png)The file
     STM32Cube\_FW\_F4\_V1.15.0/Drivers/BSP/Components/lsm303dlhc/lsm303dlhc.c :
     Function : void LSM303DLHC\_AccReadXYZ(int16\_t\* pData) needs to be
     modified to remove the sensitivity multiplication.
@@ -60,8 +61,7 @@ MAVLink is a protocol used for interfacing between ground control and drones. In
 *\$ python mavgenerate.py*
 
 ![C:\\Aa\_MS\_EMS\\12\_Integrated Team
-Project\\reports\\mavlinkgenerator.png](./imgs/image6.png){width="3.0966885389326335in"
-height="1.610883639545057in"}
+Project\\reports\\mavlinkgenerator.png](./imgs/image6.png)
 
 Figure 2 mavlink generator GUI
 
@@ -134,7 +134,6 @@ follows.
 
 # Software upload
 
-
 The generated binary can be uploaded on to the STM32F411e board through
 ST-Link using openocd is as follows.
 
@@ -199,8 +198,7 @@ mavlink messages at the serial port.
     name), type (select serial), serial port(choose the serial port
     connected to discovery board) and BaudRate(115200).
 
-4.  ![](./imgs/image10.png){width="6.05in"
-    height="3.301388888888889in"}Enable the serial link with connect
+4.  ![](./imgs/image10.png)Enable the serial link with connect
     button.
 
 Demo
@@ -219,11 +217,9 @@ Demo
     same time the Qgroundcontrol detects the serial connection and looks
     as below.
 
-    ![](./imgs/image11.png){width="5.328856080489939in"
-    height="3.047169728783902in"}
+    ![](./imgs/image11.png)
 
-5.  ![](./imgs/image12.png){width="5.160377296587926in"
-    height="3.565563210848644in"}To view the mavink messages open the
+5.  ![](./imgs/image12.png)To view the mavink messages open the
     Analyze window by 'Widgets -\> Analyze'. The Analyze window displays
     the data received using mavlink messages at the serial interface.
     The typical analyze window with 'rollspeed' 'pitchspeed' and
