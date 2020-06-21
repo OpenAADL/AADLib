@@ -1,173 +1,25 @@
-**ATTITUDE HEADING REFERENCE SYSTEM**
+# ATTITUDE HEADING REFERENCE SYSTEM
 
-**-With STM32F411E discovery board**
+## Introduction
 
-Table of Contents
+This project illustrates how to build an Attitude Heading Reference System using FreeRTOS targets on ST Discovery kit using Ocarina tool and PolyORB-HI-C middleware. 
 
-[1 Introduction 3](#_Toc481000721)
+*Note: this is a proof of concept, made on an old version of FreeRTOS. It might require update to newer version.*
 
-[2 Description 3](#description)
+This demo uses a STM32F411E Discovery board.
 
-[3 Environment Setup 3](#environment-setup)
+# Setup
 
-[3.1 OpenOCD 3](#openocd)
+It is assumed that Ocarina and PolyORB-HI-C are installed in the host machine.
 
-[3.2 GCC Tool chain 4](#gcc-tool-chain)
+In addition, you need to install
+- OpenOCD
+- GCC Tool chain for ARM
+- STM32cube Library, see <http://www.st.com/web/en/catalog/tools/PF259243>. It contains the HAL drivers, Board support packages and a copy of FreeRTOS with the necessary bits for the specific CPU. After download required directory perform the following.
 
-[3.3 STM32cube Library 4](#stm32cube-library)
+# Patch STM32Cube
 
-[3.4 Mavlink Library 5](#mavlink-library)
-
-[3.5 QGroundControl 6](#qgroundcontrol)
-
-[4 Code Generation and Compilation 6](#_Toc481000729)
-
-[5 Software upload 7](#software-upload)
-
-[6 Demonstration 8](#demonstration)
-
-[6.1 Hardware setup 8](#hardware-setup)
-
-[6.2 Qgroundcontrol setup 8](#qgroundcontrol-setup)
-
-[6.3 Demo 9](#demo)
-
-Introduction
-============
-
-The purpose of the project is to auto generate Codes from AADL models of
-an Attitude Heading Reference System and demonstrate the implementation
-of FreeRTOS targets on ST Discovery kit using Ocarina tool and
-PolyORB-HI-C middleware. This document also specifies the steps required
-to integrate the generated code with STMCube Library, FreeRTOS, Mavlink
-and the steps required to link and generate the binary files for
-implementing on the STM32F411E Discovery Board.
-
-![http://www.st.com/st-web-ui/static/active/en/fragment/product\_related/rpn\_information/board\_photo/stm32f411e-disco.jpg](./imgs/image1.jpeg){width="2.0758081802274715in"
-height="3.2334711286089237in"}![](./imgs/image2.png){width="2.8396227034120733in"
-height="2.0685990813648294in"}
-
-Figure 1 STM32F411E Discovery board
-
-Description
-===========
-
-+-----------------------------------+-----------------------------------+
-| -   ahrs-system.aadl              | -   top hierarchy AADL model to   |
-|                                   |     implement the Attitude        |
-|                                   |     Heading Reference             |
-|                                   |     System(AHRS)                  |
-
-+===================================+===================================+
-| -   ahrs-hardware.aadl            | -   AADL model for hardware       |
-|                                   |     specificities. Hardware       |
-|                                   |     architecture of STM32F411E    |
-|                                   |     Discovery kit is used.        |
-+-----------------------------------+-----------------------------------+
-| -   ahrs-software.aadl            | -   AADL model for the software   |
-|                                   |     components                    |
-+-----------------------------------+-----------------------------------+
-| -   ahrs-subprograms.aadl         | -   AADL model for the            |
-|                                   |     subprograms to link           |
-|                                   |     userdefined subroutines with  |
-|                                   |     AADL model.                   |
-+-----------------------------------+-----------------------------------+
-| -   ahrs-data\_types.aadl         | -   AADL model for the            |
-|                                   |     declaration of data types     |
-+-----------------------------------+-----------------------------------+
-| -   threads.cpp                   | -   contains userdefined          |
-|                                   |     subroutines                   |
-+-----------------------------------+-----------------------------------+
-| -   userdefined.mk                | -   configuration for Compiler    |
-|                                   |     Linker Flags, FreeRTOS        |
-|                                   |     components, userdefined       |
-|                                   |     sources, path for STM32Cube   |
-|                                   |     libraries and path for        |
-|                                   |     Mavlink headerss              |
-+-----------------------------------+-----------------------------------+
-| -   LinkerScript.ld               | -   used by linker                |
-+-----------------------------------+-----------------------------------+
-| -   stlink-v2.cfg                 | -   ST-link configuration file    |
-|                                   |     used by openocd               |
-+-----------------------------------+-----------------------------------+
-| -   stm32f4discovery.cfg          | -   stm32f4 discovery kit         |
-|                                   |     configuration file used by    |
-|                                   |     openocd                       |
-+-----------------------------------+-----------------------------------+
-| -   /include                      | -   contains user defined         |
-|                                   |     libraries                     |
-+-----------------------------------+-----------------------------------+
-| -   /src                          | -   stm32f4 discovery kit         |
-|                                   |     configuration file used by    |
-|                                   |     openocd                       |
-+-----------------------------------+-----------------------------------+
-
-Environment Setup
-=================
-
-It is assumed that Ocarina and PolyORB-HI-C are installed in the host
-machine
-
-OpenOCD
--------
-
-The OpenOCD is used to download the binaries from host machine to the
-STM32f4 discovery board via USB ST-LINK interface . The OpenOCD 0.9.0
-can be installed from the following location:
-
-<http://sourceforge.net/projects/openocd/files/openocd/0.9.0/openocd-0.9.0.tar.bz2/download>
-
-Once the tar is downloaded and extracted the following commands are
-executed to install the application:
-
-1.  \$ cd openocd-0.9.0
-
-2.  \$ ./Configure
-
-3.  \$ make
-
-4.  \$ sudo make install
-
-Once successfully installed, check the installation summary at the
-terminal that the support for ST-Link is enabled. Build dependencies are
-as follows.
-
--   make
-
--   libtool
-
--   pkg-config
-
--   libusb-1.0
-
-While here, copy contrib/99-openocd.rules in /etc/udev/rules.d/ and add
-users needing to flash the card into the plugdev group if required.
-
-GCC Tool chain
---------------
-
-GCC tool chain is required for cross compilation of the source code to
-generate binaries for execution on the STM32 board. Recommended version
-of the cross-compilation chain is gcc-4.9.3. It can be downloaded from
-the link below. Export the PATH of arm-none-eabi\* binaries.
-
-<https://launchpadlibrarian.net/218827486/gcc-arm-none-eabi-4_9-2015q3-20150921-linux.tar.bz2>.
-
-The tool chain can also be downloaded using apt-get using commands on
-the link:
-<https://launchpad.net/~terry.guo/+archive/ubuntu/gcc-arm-embedded>
-
-STM32cube Library
------------------
-
-The STM32CUBE can be downloaded from the link:
-<http://www.st.com/web/en/catalog/tools/PF259243>. It contains the HAL
-drivers, Board support packages and a copy of FreeRTOS with the
-necessary bits for the specific CPU. After download required directory
-perform the following.
-
-1.  ![](./imgs/image3.png){width="5.75625in"
-    height="2.4430555555555555in"}Define the macros 'STM32F411xE' and
+1.  ![](./imgs/image3.png)Define the macros 'STM32F411xE' and
     'USE\_HAL\_DRIVER' in the STM32cube libraires
     STM32Cube\_FW\_F4\_V1.15.0\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\
     Include\\stm32f4xx.h
@@ -197,14 +49,9 @@ Following are the files that are required to be modified:
     Function : void LSM303DLHC\_AccReadXYZ(int16\_t\* pData) needs to be
     modified to remove the sensitivity multiplication.
 
-Mavlink Library
----------------
+# Mavlink Library
 
-MAVLink is a protocol used for interfacing between ground control and
-drones. In the sample application, the MAVLINK communication is
-established between the qgroundcontrol application on PC and STM32, via
-a UART interface. To download and generate MAVLINK header files for
-C-lanugage use the following:
+MAVLink is a protocol used for interfacing between ground control and drones. In the sample application, the MAVLINK communication is established between the qgroundcontrol application on PC and STM32, via a UART interface. To download and generate MAVLINK header files for C-lanugage use the following:
 
 *\$ git clone* <https://github.com/mavlink/mavlink/>*.*
 
@@ -240,7 +87,7 @@ compilation. Set the mavlink header path in userdefined.mk as below
     file. Set the path for \"MAVLINK\_HEADERS\". For example.
     ' MAVLINK\_HEADERS=\$(HOME)/ local/ mavlink/mavlink-headers'
 
-QGroundControl
+# QGroundControl
 --------------
 
 QGroundControl provides full ground station support and configuration
@@ -285,8 +132,8 @@ follows.
 
 *\$ make all*
 
-Software upload
-===============
+# Software upload
+
 
 The generated binary can be uploaded on to the STM32F411e board through
 ST-Link using openocd is as follows.
