@@ -1,51 +1,86 @@
 package Native_Sockets
+
+-- This package models a TCP/IP based protocol layer for the
+-- PolyORB-HI/Ada and PolyORB-HI/C AADL runtimes. It defines the
+-- subprograms and threads to be integrated with the runtime low level
+-- interface.
+--
+-- To configure this interface, you should use the
+-- Deployment::Configuration property with the following format:
+--     "ip <ipv4_addresse> <ipv4_port>"
+--
+-- e.g.
+--
+--     netif : device TCP_IP_Protocol::TCP_IP_Device
+--            {Deployment::Configuration => "ip 192.168.0.10 45678";}:
+
 public
   with Deployment;
   with ASN1_Configuration;
   with Buses::Ethernet;
 
-  -- This drivers provide a Socket connectivity based on BSD socket
+  -- This driver provides a socket connectivity using the BSD socket
   -- API. It is supported on Linux and macOS
 
   device Native_Sockets extends Buses::Ethernet::Generic_Ethernet
+  properties
+    Deployment::Driver_Name => "sockets";
   end Native_Sockets;
 
-  device implementation Native_Sockets.pohic
+  --  PolyORB-HI/C variant of the driver
+  device implementation Native_Sockets.POHI_C
   properties
-    Deployment::Driver_Name       => "sockets";
-    Device_Driver                 => classifier (sockets_impl.i);
-    Initialize_Entrypoint         => classifier (spg_sockets_init);
-  end Native_Sockets.pohic;
+    Device_Driver         => classifier (BSD_Sockets_Driver.POHI_C);
+    Initialize_Entrypoint => classifier (PolyORB_HI_C_BSD_Socket_init);
+  end Native_Sockets.POHI_C;
+
+  --  PolyORB-HI/Ada variant of the driver
+  device implementation Native_Sockets.POHI_ADA
+  properties
+    Device_Driver         => classifier (BSD_Sockets_Driver.POHI_Ada);
+    Initialize_Entrypoint => classifier (PolyORB_HI_Ada_BSD_Socket_Initialize);
+  end Native_Sockets.POHI_ADA;
 
   ------------
   -- DRIVER --
   ------------
 
-  --  XXX This driver is spawning a background task, this should be
-  --  removed
+   -- Ocarina assumes the implementation of a driver to be using an
+   -- abstract component.
+   --
+   -- Note: respect the name of the subcomponents
 
-  abstract sockets_impl
+  abstract BSD_Sockets_Driver
   properties
     Deployment::Configuration_Type =>
       classifier (ASN1_Configuration::configuration_type_ip);
-    Deployment::Version  => "0.1beta";
+    Deployment::Version  => "1.0";
     Deployment::Help     => "Write your ASN.1 configuration here";
-  end sockets_impl;
+  end BSD_Sockets_Driver;
 
-  abstract implementation sockets_impl.i
+  abstract implementation BSD_Sockets_Driver.POHI_C
   subcomponents
-    sender   : subprogram   spg_eth_linux_sender.i;
-  end sockets_impl.i;
+    sender : subprogram spg_eth_linux_sender.i;
+  end BSD_Sockets_Driver.POHI_C;
 
-  -----------------
-  -- SUBPROGRAMS --
-  -----------------
+  abstract implementation BSD_Sockets_Driver.POHI_Ada
+  subcomponents
+    receiver : thread PolyORB_HI_Ada_BSD_Socket_thread_receiver.impl;
+    sender : subprogram PolyORB_HI_Ada_BSD_Socket_Send;
+  end BSD_Sockets_Driver.POHI_Ada;
 
-  subprogram spg_sockets_init
+  ------------------
+  -- PolyORB-HI/C --
+  ------------------
+
+  --  XXX This driver is spawning a background task, this should be
+  --  removed
+
+  subprogram PolyORB_HI_C_BSD_Socket_init
   properties
     Source_Language   => (C);
     Source_Name       => "__po_hi_driver_sockets_init";
-  end spg_sockets_init;
+  end PolyORB_HI_C_BSD_Socket_init;
 
   subprogram spg_eth_linux_sender
   properties
@@ -56,5 +91,74 @@ public
   subprogram implementation spg_eth_linux_sender.i
   end spg_eth_linux_sender.i;
 
+  --------------------
+  -- PolyORB-HI/Ada --
+  --------------------
+
+  -- This thread handles the execution logic of the protocol
+  -- stack. It relies on the previous subprograms to receive
+  -- messages.
+
+  thread PolyORB_HI_Ada_BSD_Socket_thread_receiver
+
+    -- This thread is dispatched when an event is detected on the
+    -- real hardware. It then calls receive to handle the incoming
+    -- event.
+
+  properties
+    Dispatch_Protocol => Background;
+  end PolyORB_HI_Ada_BSD_Socket_thread_receiver;
+
+  thread implementation PolyORB_HI_Ada_BSD_Socket_thread_receiver.impl
+  calls
+    call1 : { spg : subprogram PolyORB_HI_Ada_BSD_Socket_Receive; };
+  end PolyORB_HI_Ada_BSD_Socket_thread_receiver.impl;
+
+  -- These subprograms model the high-level view of the TCP/IP
+  -- protocol stack. They define an API used by the stack to send and
+  -- receive data, and perform node's initialisation.
+
+  subprogram PolyORB_HI_Ada_BSD_Socket_Initialize
+
+    -- Initialize the different internal resources for managing
+    -- connections on a node. This subprogram has no formal visible
+    -- parameters, but relies on well-known data structures and
+    -- variables to configure the stack.
+
+  properties
+    Source_Name => "PolyORB_HI_Drivers_Native_TCP_IP.Initialize";
+    Source_Language => (Ada);
+  end PolyORB_HI_Ada_BSD_Socket_Initialize;
+
+  subprogram PolyORB_HI_Ada_BSD_Socket_Initialize_Receiver
+
+    -- Initialize the receiver thread
+
+  properties
+    Source_Name => "PolyORB_HI_Drivers_Native_TCP_IP.Initialize_Receiver";
+    Source_Language => (Ada);
+  end PolyORB_HI_Ada_BSD_Socket_Initialize_Receiver;
+
+  subprogram PolyORB_HI_Ada_BSD_Socket_Receive
+
+    -- Receive data and dispatch them to the receiving entity. This
+    -- program and its sibling (send) share a common protocol, not
+    -- defined in the AADL model.
+
+  properties
+    Source_Name => "PolyORB_HI_Drivers_Native_TCP_IP.Receive";
+    Source_Language => (Ada);
+  end PolyORB_HI_Ada_BSD_Socket_Receive;
+
+  subprogram PolyORB_HI_Ada_BSD_Socket_Send
+
+    -- Send data to a remote node. This program and its sibling
+    -- (receive) share a common protocol, not defined in the AADL
+    -- model.
+
+  properties
+    Source_Name => "PolyORB_HI_Drivers_Native_TCP_IP.Send";
+    Source_Language => (Ada);
+  end PolyORB_HI_Ada_BSD_Socket_Send;
 
 end Native_Sockets;
