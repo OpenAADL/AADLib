@@ -4,6 +4,7 @@ public
   with Data_Model;
   with Buses::Ethernet;
   with Processors;
+  with Native_Sockets;
 
   ----------
   -- Data --
@@ -81,24 +82,12 @@ public
     Z2:parameter Data_Sink -> Q_Spg.Data_Sink;
   end Q.Impl;
 
-  ---------
-  -- Bus --
-  ---------
-
-  bus Ethernet_Bus extends buses::ethernet::ethernet
-  properties
-    Deployment::Transport_API => BSD_Sockets;
-  end Ethernet_Bus;
-
   ---------------
   -- Processor --
   ---------------
 
   processor the_processor extends processors::Generic_cpu
-  features
-    ETH : requires bus access Ethernet_Bus;
   properties
-    Deployment::location           => "127.0.0.1";
     Deployment::Execution_Platform => Native;
   end the_processor;
 
@@ -140,24 +129,35 @@ public
   system implementation PC_Simple.Native
   subcomponents
     pr_A : process A.Impl;
-    pr_B : process B.Impl {Deployment::port_number => 4002;};
+    CPU_A     : processor the_processor;
+    Eth1   : device Native_Sockets::Native_Sockets.POHI_Ada
+    { Deployment::Location    => "ip 127.0.0.1 1233"; };
 
-    CPU     : processor the_processor;
-    the_bus : bus Ethernet_Bus;
+    pr_B : process B.Impl {Deployment::port_number => 4002;};
+    CPU_B     : processor the_processor;
+    Eth2   : device Native_Sockets::Native_Sockets.POHI_Ada
+    { Deployment::Location    => "ip 127.0.0.1 1234"; };
+
+    the_bus: bus Buses::Ethernet::Ethernet.impl;
+
   connections
-    Z5:bus access the_bus -> CPU.ETH;
+    Z5:bus access the_bus -> Eth1.Eth;
+    Z5b:bus access the_bus -> Eth2.Eth;
     Z6:port pr_A.Alpha -> pr_B.Beta;
   properties
-    Actual_Processor_Binding => (reference (CPU)) applies to pr_A;
-    Actual_Processor_Binding => (reference (CPU)) applies to pr_B;
+    Actual_Processor_Binding => (reference (CPU_A)) applies to pr_A;
+    Actual_Processor_Binding => (reference (CPU_A)) applies to Eth1;
 
-    Actual_Connection_Binding => (reference (the_bus)) applies to Z6; 	
-    
+    Actual_Processor_Binding => (reference (CPU_B)) applies to pr_B;
+    Actual_Processor_Binding => (reference (CPU_B)) applies to Eth2;
+
+    Actual_Connection_Binding => (reference (the_bus)) applies to Z6;
+
  annex real_specification {**
    theorem flow_latency
       foreach s in system_set do
          requires (Latency);
-	 check (1=1);
+         check (1=1);
     end flow_latency;
   **};
   end PC_Simple.Native;

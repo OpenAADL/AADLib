@@ -140,9 +140,9 @@ public
   subcomponents
     pr_A : process A.Impl;
     pr_B : process B.Impl {Deployment::port_number => 4002;};
-    Device_A : device Native_Sockets::Native_Sockets.pohic
+    Device_A : device Native_Sockets::Native_Sockets.pohi_c
     {Source_Text => ("devicesconf.c");};
-    Device_B : device Native_Sockets::Native_Sockets.pohic
+    Device_B : device Native_Sockets::Native_Sockets.pohi_c
     {Source_Text => ("devicesconf.c");};
 
     CPU_A   : processor the_processor;
