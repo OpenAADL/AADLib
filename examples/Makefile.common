@@ -79,6 +79,10 @@ lnt:
 	$(OCARINA) $(OCARINA_FLAGS) -g lnt -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
 
+asn1:
+	$(OCARINA) $(OCARINA_FLAGS) -g asn1_deployment -r $(AADL_ROOT) \
+		$(AADL_SOURCES)
+
 deos_code:
 	$(OCARINA) $(OCARINA_FLAGS) -g pok_c -k deos -r $(AADL_ROOT) \
 		$(AADL_SOURCES)
