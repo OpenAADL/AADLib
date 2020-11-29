@@ -20,4 +20,4 @@ Import the AADLib examples through the GitHub import facility
 
 ## Q&A
 
-Build status for Linux: [![Build Status](https://travis-ci.org/OpenAADL/AADLib.svg?branch=master)](https://travis-ci.org/OpenAADL/AADLib)
+Build status ![Ocarina / Ubuntu (default GNAT)](https://github.com/OpenAADL/AADLib/workflows/Ocarina%20/%20Ubuntu%20(default%20GNAT)/badge.svg)
