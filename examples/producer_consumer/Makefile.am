@@ -5,11 +5,11 @@ OTHER_FILES = $(srcdir)/producer_consumer.adb	\
 	  $(srcdir)/producer_consumer.ads
 
 CLEANDIRS = pc_simple_native
-CLEANFILES = *.lnt demo.svl
+CLEANFILES = *.lnt demo.svl asn1_deployment.asn
 
 include $(srcdir)/../Makefile.common
 
-AVAILABLE_TARGETS= parse-aadl real petri build_ada lnt stats
+AVAILABLE_TARGETS= parse-aadl real petri build_ada lnt stats asn1
 
 # Note: we overwrite the "real" target to match this project specific
 # constraints.
