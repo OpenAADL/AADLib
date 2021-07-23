@@ -29,7 +29,12 @@ instantiate-aadl:
 
 aadl_xml:
 	$(OCARINA) $(OCARINA_FLAGS) -g aadl_xml -r $(AADL_ROOT) \
-		$(AADL_SOURCES)
+		-o $(AADL_ROOT).xml $(AADL_SOURCES)
+
+# This relies on https://www.npmjs.com/package/xml2json-cli/v/1.1.1
+aadl_json: aadl_xml
+	xml2json $(AADL_ROOT).xml $(AADL_ROOT).json
+	python -c 'import json, sys;json.dump(json.load(sys.stdin), sys.stdout)'  < $(AADL_ROOT).json > $(AADL_ROOT).json.mini
 
 alloy:
 	$(OCARINA) $(OCARINA_FLAGS) -g alloy -o alloy -r $(AADL_ROOT) \
