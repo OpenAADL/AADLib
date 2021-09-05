@@ -1,0 +1,105 @@
+--  This AADL model illustrates how to model a simple interaction
+--  between tasks, in a local or distributed environment.
+--
+--  One task pings another, sending a data periodically.
+--
+
+package Software
+public
+  with Data_Model;
+
+  ----------
+  -- Data --
+  ----------
+
+  data Simple_Type
+  properties
+    Data_Model::Data_Representation => integer;
+  end Simple_Type;
+
+  -----------------
+  -- Subprograms --
+  -----------------
+
+  subprogram Do_Ping_Spg
+  features
+    Data_Source : out parameter Simple_Type;
+  end Do_Ping_Spg;
+
+  subprogram implementation Do_Ping_Spg.Impl
+  properties
+    source_language => (Ada95);
+    source_name     => "Ping.Do_Ping_Spg";
+  end Do_Ping_Spg.Impl;
+
+
+  subprogram Ping_Spg
+  features
+    Data_Sink : in parameter Simple_Type;
+  properties
+    source_language => (Ada95);
+    source_name     => "Pinged.Ping_Spg";
+  end Ping_Spg;
+
+  -------------
+  -- Threads --
+  -------------
+
+  subprogram P_Wrapper
+  features
+    Data_Source : out parameter Simple_Type;
+  end P_Wrapper;
+
+  subprogram implementation P_Wrapper.Impl
+  calls
+    Mycalls : {
+    P_Spg : subprogram Do_Ping_Spg.Impl;
+    };
+  connections
+    parameter P_Spg.Data_Source -> Data_Source;
+  end P_Wrapper.Impl;
+
+  thread P
+  features
+    Data_Source : out event data port Simple_Type;
+  end P;
+
+  thread implementation P.Impl
+  calls
+    Mycall : {
+    P_Spg : subprogram P_Wrapper.Impl;
+    };
+  connections
+    parameter P_Spg.Data_Source -> Data_Source;
+  properties
+    Initialize_Entrypoint_Source_Text  => "Msgs.Welcome_Pinger";
+    Activate_Entrypoint_Source_Text    => "Msgs.Welcome_Pinger";
+    Recover_Entrypoint_Source_Text     => "Msgs.Recover";
+    Dispatch_Protocol                  => Periodic;
+    Period                             => 1000 Ms;
+    Compute_Execution_time             => 0 ms .. 3 ms;
+    Deadline                           => 1000 ms;
+    Priority                           => 2;
+  end P.Impl;
+
+  thread Q
+  features
+    Data_Sink : in event data port Simple_Type;
+  end Q;
+
+  thread implementation Q.Impl
+  calls
+    Mycall : {
+    Q_Spg : subprogram Ping_Spg;
+    };
+  connections
+    parameter Data_Sink -> Q_Spg.Data_Sink;
+  properties
+    Dispatch_Protocol                  => Sporadic;
+    Period                             => 10 Ms;
+    deadline                           => 10 Ms;
+    Compute_Execution_time             => 0 ms .. 3 ms;
+    Priority                           => 1;
+  end Q.Impl;
+
+end Software;

@@ -106,6 +106,7 @@ AC_OUTPUT([
         examples/paparazzi/Makefile
         examples/pathfinder_system/Makefile
         examples/perseus/Makefile
+        examples/ping_spark/Makefile
         examples/producer_consumer/Makefile
         examples/producer_consumer_ba/Makefile
         examples/producer_consumer_ba2/Makefile

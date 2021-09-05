@@ -1,0 +1,75 @@
+--  This model completes the PING example by adding deployment
+--  information.
+--
+--  In this deployment, only one node is defined.
+--
+--  $Id: ping-local.aadl 7043 2009-10-08 14:20:49Z hugues $
+
+
+package PING_Local
+public
+  with Software;
+  with Deployment;
+
+  ---------------
+  -- Processor --
+  ---------------
+
+  processor the_processor
+  end the_processor;
+
+  processor implementation the_processor.Impl
+  properties
+    Scheduling_Protocol => (Posix_1003_Highest_Priority_First_Protocol);
+
+  end the_processor.Impl;
+
+  ---------------
+  -- Processes --
+  ---------------
+
+  process A
+  end A;
+
+  process implementation A.Impl
+  subcomponents
+    Pinger        : thread Software::P.Impl;
+    Ping_Me       : thread Software::Q.Impl;
+  connections
+    port Pinger.Data_Source -> Ping_Me.Data_Sink;
+  end A.Impl;
+
+  ------------
+  -- System --
+  ------------
+
+  system PING
+  end PING;
+
+  system implementation PING.LEON
+  subcomponents
+    Node_A : process A.Impl;
+
+    CPU : processor the_processor.Impl
+    {Priority_Range => 0 .. 255;
+    Deployment::Execution_Platform => LEON_ORK;};
+  properties
+    actual_processor_binding => (reference (CPU)) applies to Node_A;
+  end PING.LEON;
+
+  system implementation PING.LEON_GNAT extends PING.LEON
+  properties
+   Deployment::Execution_Platform => LEON_GNAT applies to CPU;
+  end PING.LEON_GNAT;
+
+  system implementation PING.MARTE extends PING.LEON
+  properties
+    Deployment::Execution_Platform => MARTE_OS applies to CPU;
+  end PING.MARTE;
+
+  system implementation PING.Local extends PING.LEON
+  properties
+    Deployment::Execution_Platform => Native applies to CPU;
+  end PING.Local;
+
+end PING_Local;

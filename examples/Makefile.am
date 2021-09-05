@@ -7,7 +7,7 @@ SUBDIRS= adiru ahrs_discovery aocs aram ardupilot arinc653_annex asl	\
 	  stm32discovery_ada robot_ba pacemaker doors rosace mjpeg	\
 	  air minepump producer_consumer_ba minepump_ba			\
 	  producer_consumer_ba2 producer_consumer_ba_many_transitions	\
-	  producer_consumer_ba_4ports_manyDispatchTriggers
+	  producer_consumer_ba_4ports_manyDispatchTriggers ping_spark
 
 EXTRA_DIST=$(srcdir)/Makefile.common
 
