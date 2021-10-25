@@ -3,7 +3,7 @@ AADL_ROOT    = ping.local
 
 OTHER_FILES = $(srcdir)/msgs.adb $(srcdir)/msgs.ads		\
 	$(srcdir)/ping.adb $(srcdir)/ping.ads $(srcdir)/pinged.adb	\
-	$(srcdir)/pinged.ads
+	$(srcdir)/pinged.ads $(srcdir)/software.aadl
 
 CLEANDIRS = ping_local
 CLEANFILES = *.lnt demo.svl asn1_deployment.asn
